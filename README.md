@@ -1,9 +1,9 @@
 sql-dao-generator
 ==============
 
-Generate code from your SQL schema and queries for type safety and development speed.
+Generate data-access-objects from your domain-objects.
 
-Generates type definitions and query functions with a single command!
+Generates sql-schema, sql-control, type definitions, query functions, tests, and bundles it all up into daos with a single command!
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/sql-dao-generator.svg)](https://npmjs.org/package/sql-dao-generator)
@@ -17,27 +17,30 @@ Generates type definitions and query functions with a single command!
 - [Installation](#installation)
 - [Usage](#usage)
 - [Commands](#commands)
-  - [`schema-control generate`](#schema-control-generate)
-  - [`schema-control help [COMMAND]`](#schema-control-help-command)
+  - [`sql-dao-generator generate`](#sql-dao-generator-generate)
+  - [`sql-dao-generator help [COMMAND]`](#sql-dao-generator-help-command)
 - [Contribution](#contribution)
 <!-- tocstop -->
 
 # Goals
 
-The goal of `sql-dao-generator` is to use the SQL you've already defined in order to speed up development and eliminate errors. This is done by extracting type definitions from sql and exposing those type definitions in code, automatically generating the interface that bridges your sql and your primary development language.
+The goal of `sql-dao-generator` is to use the `domain-objects` you've already defined in order to speed up development and eliminate errors. This is done by composing several libraries that already do the individual steps and bundling them up into a fully functional `data-access-object`.
 
 This includes:
-- generating type definitions from SQL resources (e.g., tables, views, functions, procedures)
-- generating type definitions from SQL queries (e.g., `select * from table`)
-- generating typed functions that execute SQL queries from SQL queries (e.g., `const sqlQueryFindAllUsersByName = async ({ input: InputType }): Promise<OutputType>`)
+- generating sql schema resources with [`sql-schema-generator`](https://github.com/uladkasach/sql-schema-generator)
+- generating sql control config for use with [`sql-schema-control`](https://github.com/uladkasach/sql-schema-control)
+- generating standard queries for each domain object (e.g., `upsert`, `findById`, `findByUnique`) and leaving an easily extensible pattern
+- generating typescript type definitions for each sql resource and query with [`sql-schema-control`](https://github.com/uladkasach/sql-schema-control)
+
+Powered by:
+- extracting the domain information you've already encoded in your [domain-objects](https://github.com/uladkasach/domain-objects) using [domain-objects-metadata](https://github.com/uladkasach/domain-objects-metadata).
 
 This enables:
-- controlling and mastering database logic fully in SQL
-- strictly bound types between sql and typescript for compile time error checking
-- strongly typed, auto-generated database query functions for speed, consistency, and encoding of best practices
-- autocompletion and explore-ability of sql resources in your IDE
+- creating a fully functional data-access-object, using best practices, simply by defining your [`domain-objects`](https://github.com/uladkasach/domain-objects)
+- easily extending your generated data-access-objects, because you control the code completely
+- instantly leveraging the best practices and safety features implemented in the libraries that this library composes
 
-Inspired by [graphql-code-generator](https://graphql-code-generator.com/)
+Like an ORM, but without any magic or limitations - the code is in your hands and ready to mod as needed.
 
 # Installation
 
@@ -48,21 +51,31 @@ Inspired by [graphql-code-generator](https://graphql-code-generator.com/)
 
 ## 2. Define a config yml
 
-This file will define the sql language to extract type definitions from, where your sql resources and sql queries are, and where to output the generated types and query functions. By default, the generator looks for a file named `codegen.sql.yml` in your projects root.
+This file will define which `domain-objects` you want to generate `data-access-objects` for - as well as where we can find the config for the libraries this one composes.
 
 For example:
 ```yml
-language: postgres # note: mysql is supported, too
+language: postgres
 dialect: 10.7
-resources: # where to find your tables, functions, views, procedures
-  - "schema/**/*.sql"
-queries: # where to find your queries
-  - "src/dao/**/*.ts"
-  - "!src/**/*.test.ts"
-  - "!src/**/*.test.integration.ts"
-generates: # where to output the generated code
-  types: src/dao/generated/types.ts
-  queryFunctions: src/dao/generated/queryFunctions.ts
+for:
+  objects:
+    search:
+      - 'src/domain/objects/*.ts'
+    exclude:
+      - 'TrainLocatedEvent' # we track this one in dynamodb, so no sql dao needed
+generates:
+  daos:
+    to: src/data/dao
+    using:
+      log: src/util/log#log
+      DatabaseConnection: src/util/database/getDbConnection#DatabaseConnection
+  schema:
+    config: codegen.schema.yml
+  control:
+    config: provision/schema/control.yml
+  code:
+    config: codegen.sql.yml
+
 ```
 
 ## 3. Test it out!
@@ -74,96 +87,14 @@ generates: # where to output the generated code
 
 # Usage
 
-## Resources
-
-Resources should be defined in `.sql` files. We'll extract both the name and the type from the create definition automatically. For example:
-```sql
-CREATE TABLE photo (
-  id bigserial NOT NULL,
-  uuid uuid NOT NULL,
-  created_at timestamp with time zone NOT NULL DEFAULT now(),
-  url varchar NOT NULL,
-  description varchar NULL,
-  CONSTRAINT photo_pk PRIMARY KEY (id),
-  CONSTRAINT photo_ux1 UNIQUE (url, description)
-);
-```
-
-The above definition would generate the following typescript type definitions:
+Define your domain objects
 ```ts
-// types for table 'photo'
-export interface SqlTablePhoto {
-  id: number;
-  uuid: string;
-  created_at: Date;
-  url: string;
-  description: string | null;
+export interface Geocode {
+  id?: number;
+  latitude: number;
+  longitude: number;
 }
-```
-
-## Queries
-Queries can be defined in `.ts` or `.sql` files. If in a `.ts` file, this file should contain a named export called `sql` exporting the sql of your query. We'll extract the name of the query from a specially formatted comment in your sql, e.g.: `-- query_name = find_photos_by_url` would resolve a query name of `find_photos_by_url`. For example:
-
-```ts
-export const sql = `
--- query_name = find_photos_by_url
-SELECT
-  p.uuid,
-  p.url,
-  p.description
-FROM photo p
-WHERE p.url = :url
-`.trim();
-```
-
-The above definition would generate the following typescript type definitions:
-```ts
-// types for query 'find_photos_by_url'
-export interface SqlQueryFindPhotosByUrlInput {
-  url: SqlTablePhoto['url'];
-}
-export interface SqlQueryFindPhotosByUrlOutput {
-  uuid: SqlTablePhoto['uuid'];
-  url: SqlTablePhoto['url'];
-  description: SqlTablePhoto['caption'];
-}
-```
-
-And that same definition would also generate the following typescript query function:
-```ts
-import { pg as prepare } from 'yesql';
-import { sql as sqlQueryFindPhotosByUrlSql } from '../../dao/user/findAllByName';
-import { SqlQueryFindPhotosByUrlInput, SqlQueryFindPhotosByUrlOutput } from './types';
-
-// typedefs common to each query function
-export type DatabaseExecuteCommand = (args: { sql: string; values: any[] }) => Promise<any[]>;
-export type LogMethod = (message: string, metadata: any) => void;
-
-// client method for query 'find_photos_by_url'
-export const sqlQueryFindPhotosByUrl = async ({
-  dbExecute,
-  logDebug,
-  input,
-}: {
-  dbExecute: DatabaseExecuteCommand;
-  logDebug: LogMethod;
-  input: SqlQueryFindPhotosByUrlInput;
-}): Promise<SqlQueryFindPhotosByUrlOutput[]> => {
-  // 1. define the query with yesql
-  const { text: preparedSql, values: preparedValues } = prepare(sqlQueryFindPhotosByUrlSql)(input);
-
-  // 2. log that we're running the request
-  logDebug('sqlQueryFindPhotosByUrl.input', { input });
-
-  // 3. execute the query
-  const output = await dbExecute({ sql: preparedSql, values: preparedValues });
-
-  // 4. log that we've executed the request
-  logDebug('sqlQueryFindPhotosByUrl.output', { output });
-
-  // 5. return the output
-  return output;
-};
+export class Geocode extends DomainValueObject<Geocode> implements Geocode {}
 ```
 
 # Commands
@@ -173,7 +104,7 @@ export const sqlQueryFindPhotosByUrl = async ({
 
 ## `sql-dao-generator generate`
 
-generate typescript code by parsing sql definitions for types and usage
+generate data-access-objects by parsing domain-objects
 
 ```
 USAGE
