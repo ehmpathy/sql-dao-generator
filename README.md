@@ -86,10 +86,12 @@ generates:
   $ npx sql-dao-generator generate
 ```
 
+# Examples
 
-# Usage
+### a simple value object dao
 
-1. Define your domain objects
+**Input:** Say you have the following domain object
+
 ```ts
 export interface Geocode {
   id?: number;
@@ -99,11 +101,169 @@ export interface Geocode {
 export class Geocode extends DomainValueObject<Geocode> implements Geocode {}
 ```
 
-2. Define your config
+**Output:** Running this sql-dao-generator on this domain object will:
 
-3. Apply the sql schema to your database with `[sql-schema-control](https://github.com/uladkasach/sql-schema-control)`
+1. generate the `sql-schema-generator` sql-schema-definition-object
+    ```ts
+    import { prop, ValueObject } from 'sql-schema-generator';
 
-4. Use the generated daos in your code 🎉
+    export const geocode = new ValueObject({
+      name: 'geocode',
+      properties: {
+        latitude: prop.NUMERIC(),
+        longitude: prop.NUMERIC(),
+      }
+    })
+    ```
+
+2. run `sql-schema-generator` on the generated sql-schema-definition-object to generate the sql-schema-resources
+
+3. generate the `sql-schema-control` control file, `domain-objects.ts`, to control the generated sql-schema-resources
+    ```yml
+    # geocode
+    - type: resource
+      path: ./tables/geocode.sql
+    - type: resource
+      path: ./functions/upsert_geocode.sql
+    ```
+
+4. generate the dao files
+    1. `geocodeDao/index.ts`
+        ```ts
+        import { findById } from './findById';
+        import { findByUnique } from './findByUnique'
+        import { upsert } from './upsert';
+
+        export const geocodeDao = {
+          findById,
+          findByUnique,
+          upsert,
+        }
+        ```
+    2. `geocodeDao/findById.query.ts`
+        ```ts
+        export const sql = `
+        -- query_name = find_geocode_by_id
+        select
+          g.id,
+          g.latitude,
+          g.longitude
+        from geocode g
+        where g.id = :id
+        `.trim();
+
+        export const findById = async ({
+          dbConnection,
+          id,
+        }: {
+          dbConnection: DatabaseConnection;
+          id: number;
+        }) => {
+          const results = await sqlQueryFindGeocodeById({
+            dbExecute: dbConnection.query,
+            logDebug: log.debug,
+            input: { id },
+          });
+          if (results.length > 1) throw new Error('should only be one');
+          if (!results.length) return null;
+          return fromDatabaseObject({ dbObject: results[0] });
+        };
+        ```
+    3. `geocodeDao/findByUnique.query.ts`
+       ```ts
+        export const sql = `
+        -- query_name = find_geocode_by_unique
+        select
+          g.id,
+          g.latitude,
+          g.longitude
+        from geocode g
+        where 1=1
+          and g.latitude = :latitude
+          and g.longitude = :longitude
+        `.trim();
+
+        export const findByUnique = async ({
+          dbConnection,
+          latitude,
+          longitude,
+        }: {
+          dbConnection: DatabaseConnection;
+          latitude: string;
+          longitude: string;
+        }) => {
+          const results = await sqlQueryFindGeocodeByUnique({
+            dbExecute: dbConnection.query,
+            logDebug: log.debug,
+            input: { latitude, longitude },
+          });
+          if (results.length > 1) throw new Error('should only be one');
+          if (!results.length) return null;
+          return fromDatabaseObject({ dbObject: results[0] });
+        };
+       ```
+    4. `geocodeDao/upsert.query.ts`
+       ```ts
+       export const upsert = async ({
+         dbConnection,
+         geocode,
+        }: {
+          dbConnection: DatabaseConnection;
+          geocode: Geocode;
+        }) => {
+          const result = await sqlQueryUpsertGeocode({
+            dbExecute: dbConnection.query,
+            logDebug: log.debug,
+            input: {
+              latitude: geocode.latitude,
+              longitude: geocode.longitude,
+            },
+          });
+          const id = result[0].id;
+          return new Geocode({ ...geocode, id }) as HasId<Geocode>;
+        };
+       ```
+    5. `geocodeDao/utils/fromDatabaseObject.ts`
+       ```ts
+       export const fromDatabaseObject = async ({
+          dbConnection,
+          dbObject,
+        }: {
+          dbConnection: DatabaseConnection;
+          dbObject: SqlQueryFindGeocodeByIdOutput;
+        }) => {
+          return new Geocode({
+            id: dbObject.id,
+            latitude: dbObject.latitude,
+            longitude: dbObject.longitude,
+          });
+        };
+       ```
+
+5. run `sql-code-generator` on the generated sql-schema-resources and dao query-files to output the typescript sql-type-definitions and sql-query-functions
+
+
+# Features
+
+### Guard Rails
+
+The sql-dao-generator has many guardrails in place to make sure that you're following best practices and avoiding potential maintainability problems.
+
+Specifically:
+- unique + updatable properties need to be specified or not depending on the domain-object variant
+  - `domain-value-objects` may not explicitly specify unique or updatable properties, since these are defined implicitly by the definition of a value object
+    - i.e., nothing is updatable
+    - i.e., unique on all natural properties
+  - `domain-entities` must specify at least one key on which they are unique and must explicitly specify the list of updatable properties (even if the list is empty)
+  - `domain-events` must specify at least one key on which they are unique
+- `domain-entities` should not be nested in other domain objects
+  - experience has shown that nesting domain-entities inside of other domain-objects results in maintainability issues and complexity
+    - this is because, in the backend
+      - we typically do not have the state of the nested domain-entity in memory already when dealing with the domain-object that references it
+      - the domain-entity being referenced has its own lifecycle and it's state typically needs to be explicitly managed with its own logic
+    - _note, in the frontend, the opposite is typically true_. nesting domain-entities inside of other domain-objects is a common way to simplify your code in the frontend. (just not in the backend)
+  - instead, this library shows you how you can achieve the same `database foreign key constraints` without explicitly nesting domain-entities inside of other domain-objects, by using `implicit uuid references`
+    - e.g., instead of `user: User` use `userUuid: string`, and this library takes care of creating the foreign key in the db if `User` is also part of this service's dao
 
 # Commands
 <!-- commands -->
