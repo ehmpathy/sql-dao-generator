@@ -3,40 +3,30 @@ import { readConfig } from '../../config/getConfig/readConfig';
 import { saveCode } from '../../fileio/saveCode';
 
 export const generate = async ({ configPath }: { configPath: string }) => {
-  //  read the declarations from config
-  const config = await readConfig({ filePath: configPath });
+  // read the declarations from config
+  console.log(`${chalk.bold('🔎 Loading domain objects:')} using domain-objects-metadata...\n`); // tslint:disable-line no-console
+  const config = await readConfig({ configPath });
 
-  // get type definitions for each resource and query
-  console.log(chalk.bold('Parsing sql and extracting type definitions...\n')); // tslint:disable-line no-console
-  const definitions = extractTypeDefinitionsFromDeclarations({
-    language: config.language,
-    declarations: config.declarations,
-  });
+  // output the sql-schema-generator entities
+  console.log(`${chalk.bold('🏗️️  Generating the sql schema:')} using sql-schema-generator...\n`); // tslint:disable-line no-console
+  // const sqlSchemaGeneratorCode = defineSqlSchemaGeneratorCode({
+  //   domainObjectMetadatas: config.for.objects,
+  //   schemaConfig: config.generates,
+  // });
+  // TODO: output each {code, destination} pair
+  // TODO: run sql-schema-generator on the entities
 
-  // begin generating the output code files
-  console.log(chalk.bold('Generating code...\n')); // tslint:disable-line no-console
+  // output the sql-schema-control `domains.yml` file
+  console.log(`${chalk.bold('🔧 Generating schema-control config:')} for use with sql-schema-control...\n`); // tslint:disable-line no-console
+  // TODO
 
-  // output the type definitions code
-  const typescriptTypesFileCode = defineTypescriptTypesFileCodeFromTypeDefinitions({
-    definitions,
-  });
-  await saveCode({
-    rootDir: config.rootDir,
-    filePath: config.generates.types,
-    code: typescriptTypesFileCode,
-  });
+  // output the dao functions
+  console.log(`${chalk.bold('️🔨 Generating data-access-objects:')} methods, casters, tests, and named exports...\n`); // tslint:disable-line no-console
+  // TODO
 
-  // output the query functions (if requested)
-  if (config.generates.queryFunctions) {
-    const typescriptQueryFunctionsFileCode = defineTypescriptQueryFunctionsFileCodeFromTypeDefinitions({
-      definitions,
-      language: config.language,
-      generatedOutputPaths: config.generates,
-    });
-    await saveCode({
-      rootDir: config.rootDir,
-      filePath: config.generates.queryFunctions,
-      code: typescriptQueryFunctionsFileCode,
-    });
-  }
+  // output the sql types and query functions
+  console.log(
+    `${chalk.bold('🗜️  Generating typescript from sql:')} type defs and query funcs using sql-code-generator...\n`,
+  ); // tslint:disable-line no-console
+  // TODO
 };

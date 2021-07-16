@@ -36,11 +36,11 @@ export const readConfig = async ({ configPath }: { configPath: string }): Promis
     throw new Error(
       'config.generates.daos.using.DatabaseConnection must specify where to find your DatabaseConnection type definition',
     );
-  if (!contents.generates.schema)
+  if (!contents.generates.schema?.config)
     throw new Error('config.generates.schema must specify the path to your sql-schema-generator config');
-  if (!contents.generates.control)
+  if (!contents.generates.control?.config)
     throw new Error('config.generates.control must specify the path to your sql-schema-control config');
-  if (!contents.generates.code)
+  if (!contents.generates.code?.config)
     throw new Error('config.generates.code must specify the path to your sql-code-generator config');
   const generates: GeneratorConfig['generates'] = {
     daos: {
@@ -51,13 +51,13 @@ export const readConfig = async ({ configPath }: { configPath: string }): Promis
       },
     },
     schema: {
-      config: contents.generates.schema,
+      config: contents.generates.schema.config,
     },
     control: {
-      config: contents.generates.control,
+      config: contents.generates.control.config,
     },
     code: {
-      config: contents.generates.code,
+      config: contents.generates.code.config,
     },
   };
 
@@ -73,12 +73,12 @@ export const readConfig = async ({ configPath }: { configPath: string }): Promis
   if (!contents.for?.objects?.exclude)
     console.log('config.for.objects.exclude was not defined, not excluding any domain objects found by default');
   const exclude: string | string[] | null = contents.for?.objects?.exclude ?? null;
-  const searchPaths = await getAllPathsMatchingGlobs({
+  const relativeSearchPaths = await getAllPathsMatchingGlobs({
     globs: Array.isArray(searchGlobs) ? searchGlobs : [searchGlobs],
     root: configDir,
   });
   const domainObjectMetadatas = await extractDomainObjectMetadatasFromConfigCriteria({
-    searchPaths,
+    searchPaths: relativeSearchPaths.map((relPath) => `${configDir}/${relPath}`), // give absolute paths
     include: Array.isArray(include) ? include : include ? [include] : null,
     exclude: Array.isArray(exclude) ? exclude : exclude ? [exclude] : null,
   });

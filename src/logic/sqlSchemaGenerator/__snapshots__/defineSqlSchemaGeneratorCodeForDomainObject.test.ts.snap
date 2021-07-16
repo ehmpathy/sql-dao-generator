@@ -1,0 +1,135 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants domain entity should create a correct looking sql-schema-generator object for a domain-entity 1`] = `
+"import { Entity, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain entity 'Carriage'
+ */
+export const carriage = new Entity({
+  name: 'carriage',
+  properties: {
+    cin: prop.VARCHAR(),
+    carries: prop.ENUM(['PASSENGER', 'FREIGHT']),
+    capacity: { ...prop.NUMERIC(), nullable: true },
+  },
+  unique: ['cin'],
+});"
+`;
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants domain event should create a correct looking sql-schema-generator object for a domain-event 1`] = `
+"import { Event, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain event 'TrainLocatedEvent'
+ */
+export const trainLocatedEvent = new Event({
+  name: 'train_located_event',
+  properties: {
+    train_uuid: prop.VARCHAR(),
+    occurred_at: prop.TIMESTAMPTZ(),
+    geocode_id: prop.REFERENCES(geocode),
+  },
+  unique: ['train_uuid', 'occurred_at'],
+});"
+`;
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants domain value object should create a correct looking sql-schema-generator object for a domain-value-object 1`] = `
+"import { prop, ValueObject } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain value object 'Geocode'
+ */
+export const geocode = new ValueObject({
+  name: 'geocode',
+  properties: {
+    latitude: prop.NUMERIC(),
+    longitude: prop.NUMERIC(),
+  },
+});"
+`;
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject names should add the _id suffix to directly nested reference property names 1`] = `
+"import { Entity, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain entity 'TrainEngineer'
+ */
+export const trainEngineer = new Entity({
+  name: 'train_engineer',
+  properties: {
+    social_security_number_hash: prop.VARCHAR(),
+    name: { ...prop.VARCHAR(), updatable: true },
+    steam_engine_certificate_id: prop.REFERENCES(certificate),
+  },
+  unique: ['social_security_number_hash'],
+});"
+`;
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject names should add the _id suffix to inferred uuid reference property names 1`] = `
+"import { Entity, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain entity 'TrainEngineer'
+ */
+export const trainEngineer = new Entity({
+  name: 'train_engineer',
+  properties: {
+    social_security_number_hash: prop.VARCHAR(),
+    name: { ...prop.VARCHAR(), updatable: true },
+    steam_engine_certificate_id: { ...prop.REFERENCES(certificate), updatable: true },
+  },
+  unique: ['social_security_number_hash'],
+});"
+`;
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject names should add the _ids suffix and strip plurality to directly nested reference array property names 1`] = `
+"import { Entity, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain entity 'TrainEngineer'
+ */
+export const trainEngineer = new Entity({
+  name: 'train_engineer',
+  properties: {
+    social_security_number_hash: prop.VARCHAR(),
+    name: { ...prop.VARCHAR(), updatable: true },
+    engine_certificate_ids: { ...prop.ARRAY_OF(prop.REFERENCES(certificate)), updatable: true },
+  },
+  unique: ['social_security_number_hash'],
+});"
+`;
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject names should add the _ids suffix and strip plurality to inferred uuid reference array property names 1`] = `
+"import { Entity, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain entity 'TrainEngineer'
+ */
+export const trainEngineer = new Entity({
+  name: 'train_engineer',
+  properties: {
+    social_security_number_hash: prop.VARCHAR(),
+    name: { ...prop.VARCHAR(), updatable: true },
+    engine_certificate_ids: { ...prop.ARRAY_OF(prop.REFERENCES(certificate)), updatable: true },
+  },
+  unique: ['social_security_number_hash'],
+});"
+`;
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject names should define property names in snake case 1`] = `
+"import { Entity, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain entity 'TrainEngineer'
+ */
+export const trainEngineer = new Entity({
+  name: 'train_engineer',
+  properties: {
+    social_security_number_hash: prop.VARCHAR(),
+    name: { ...prop.VARCHAR(), updatable: true },
+    has_certificate: { ...prop.BOOLEAN(), updatable: true, nullable: true },
+  },
+  unique: ['social_security_number_hash'],
+});"
+`;

@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`defineSqlSchemaGeneratorPropertyForDomainObjectProperty base property reference types reference entity should throw an error if user attempts to directly reference an entity 1`] = `
+"DomainEntity found nested inside of another domain object. 'Profile.user' references 'User'
+
+This is not allowed, as this is bad practice when persisting domain-objects. It will lead to maintainability problems in your backend code, since the referenced domain entity has its own lifecycle.
+
+Instead, reference the entity by 'uuid' in the backend. For example:
+
+\`\`\`ts
+-- say you're referencing this domain-entity
+export class User extends DomainEntity<User> implements User {};
+
+-- instead of this
+interface Profile {
+  user: User; -- forbidden: referencing domain entity by nesting
+  ...
+}
+
+-- do this
+interface Profile {
+  userUuid: string; -- suggested: reference it by uuid
+  ...
+}
+\`\`\`
+
+Note: the generated sql-schema will be the same as if it was a nested reference, but the domain-object referencing by uuid will make your backend code easier to maintain."
+`;
+
+exports[`defineSqlSchemaGeneratorPropertyForDomainObjectProperty base property reference types reference entity should throw an error if user attempts to directly reference an entity in an array 1`] = `
+"DomainEntity found nested inside of another domain object. 'Profile.users' references 'User'
+
+This is not allowed, as this is bad practice when persisting domain-objects. It will lead to maintainability problems in your backend code, since the referenced domain entity has its own lifecycle.
+
+Instead, reference the entity by 'uuid' in the backend. For example:
+
+\`\`\`ts
+-- say you're referencing this domain-entity
+export class User extends DomainEntity<User> implements User {};
+
+-- instead of this
+interface Profile {
+  user: User; -- forbidden: referencing domain entity by nesting
+  ...
+}
+
+-- do this
+interface Profile {
+  userUuid: string; -- suggested: reference it by uuid
+  ...
+}
+\`\`\`
+
+Note: the generated sql-schema will be the same as if it was a nested reference, but the domain-object referencing by uuid will make your backend code easier to maintain."
+`;

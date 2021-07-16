@@ -55,6 +55,8 @@ This file will define which `domain-objects` you want to generate `data-access-o
 
 For example:
 ```yml
+# codegen.sql.dao.yml
+
 language: postgres
 dialect: 10.7
 for:
@@ -70,11 +72,11 @@ generates:
       log: src/util/log#log
       DatabaseConnection: src/util/database/getDbConnection#DatabaseConnection
   schema:
-    config: codegen.schema.yml
+    config: codegen.sql.schema.yml
   control:
     config: provision/schema/control.yml
   code:
-    config: codegen.sql.yml
+    config: codegen.sql.types.yml
 
 ```
 
@@ -87,7 +89,7 @@ generates:
 
 # Usage
 
-Define your domain objects
+1. Define your domain objects
 ```ts
 export interface Geocode {
   id?: number;
@@ -96,6 +98,12 @@ export interface Geocode {
 }
 export class Geocode extends DomainValueObject<Geocode> implements Geocode {}
 ```
+
+2. Define your config
+
+3. Apply the sql schema to your database with `[sql-schema-control](https://github.com/uladkasach/sql-schema-control)`
+
+4. Use the generated daos in your code 🎉
 
 # Commands
 <!-- commands -->
