@@ -256,14 +256,25 @@ Specifically:
     - i.e., unique on all natural properties
   - `domain-entities` must specify at least one key on which they are unique and must explicitly specify the list of updatable properties (even if the list is empty)
   - `domain-events` must specify at least one key on which they are unique
-- `domain-entities` should not be nested in other domain objects
+- properties which reference domain-objects must be named after the domain-object they reference
+  - this makes sure that properties are easy to understand when reading code -> increasing maintainability
+    - makes it easier to understand relationships for new folks looking at your project
+    - makes it easier to understand relationships for yourself when you come back to your project after a while and don't remember everything
+  - for example:
+    - allowed:
+      - `address: Address`
+      - `homeAddress: Address`
+    - not allowed:
+      - `home: Address`
+- `domain-entities` should not be nested in other domain objects; they should use implicit uuid references instead
   - experience has shown that nesting domain-entities inside of other domain-objects results in maintainability issues and complexity
     - this is because, in the backend
       - we typically do not have the state of the nested domain-entity in memory already when dealing with the domain-object that references it
       - the domain-entity being referenced has its own lifecycle and it's state typically needs to be explicitly managed with its own logic
     - _note, in the frontend, the opposite is typically true_. nesting domain-entities inside of other domain-objects is a common way to simplify your code in the frontend. (just not in the backend)
-  - instead, this library shows you how you can achieve the same `database foreign key constraints` without explicitly nesting domain-entities inside of other domain-objects, by using `implicit uuid references`
-    - e.g., instead of `user: User` use `userUuid: string`, and this library takes care of creating the foreign key in the db if `User` is also part of this service's dao
+  - instead, this library allows you to achieve the same `database foreign key constraints` without explicitly nesting domain-entities inside of other domain-objects, by using `implicit uuid references`
+    - e.g., instead of `user: User` use `userUuid: string`
+    - this library takes care of creating the foreign key in the db and mapping `uuid <-> id` to and from the database in the data-access-object
 
 # Commands
 <!-- commands -->

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants domain entity should create a correct looking sql-schema-generator object for a domain-entity 1`] = `
+exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants should create a correct looking sql-schema-generator object for a domain-entity 1`] = `
 "import { Entity, prop } from 'sql-schema-generator';
 
 /**
@@ -17,8 +17,11 @@ export const carriage = new Entity({
 });"
 `;
 
-exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants domain event should create a correct looking sql-schema-generator object for a domain-event 1`] = `
+exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants should create a correct looking sql-schema-generator object for a domain-event 1`] = `
 "import { Event, prop } from 'sql-schema-generator';
+
+import { geocode } from './geocode';
+import { train } from './train';
 
 /**
  * sql-schema for the domain event 'TrainLocatedEvent'
@@ -26,15 +29,15 @@ exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants doma
 export const trainLocatedEvent = new Event({
   name: 'train_located_event',
   properties: {
-    train_uuid: prop.VARCHAR(),
+    train_id: prop.REFERENCES(train),
     occurred_at: prop.TIMESTAMPTZ(),
     geocode_id: prop.REFERENCES(geocode),
   },
-  unique: ['train_uuid', 'occurred_at'],
+  unique: ['train_id', 'occurred_at'],
 });"
 `;
 
-exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants domain value object should create a correct looking sql-schema-generator object for a domain-value-object 1`] = `
+exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants should create a correct looking sql-schema-generator object for a domain-value-object 1`] = `
 "import { prop, ValueObject } from 'sql-schema-generator';
 
 /**
@@ -49,87 +52,40 @@ export const geocode = new ValueObject({
 });"
 `;
 
-exports[`defineSqlSchemaGeneratorCodeForDomainObject names should add the _id suffix to directly nested reference property names 1`] = `
+exports[`defineSqlSchemaGeneratorCodeForDomainObject imports should create an import for each directly nested and uuid inferred reference, sorted 1`] = `
 "import { Entity, prop } from 'sql-schema-generator';
 
+import { badge } from './badge';
+import { engineer } from './engineer';
+import { locomotive } from './locomotive';
+import { station } from './station';
+
 /**
- * sql-schema for the domain entity 'TrainEngineer'
+ * sql-schema for the domain entity 'Train'
  */
-export const trainEngineer = new Entity({
-  name: 'train_engineer',
+export const train = new Entity({
+  name: 'train',
   properties: {
-    social_security_number_hash: prop.VARCHAR(),
-    name: { ...prop.VARCHAR(), updatable: true },
-    steam_engine_certificate_id: prop.REFERENCES(certificate),
+    home_station_id: { ...prop.REFERENCES(station), updatable: true },
+    badge_ids: { ...prop.ARRAY_OF(prop.REFERENCES(badge)), updatable: true },
+    locomotive_ids: { ...prop.ARRAY_OF(prop.REFERENCES(locomotive)), updatable: true },
+    lead_engineer_id: { ...prop.REFERENCES(engineer), updatable: true },
   },
-  unique: ['social_security_number_hash'],
+  unique: ['uuid'],
 });"
 `;
 
-exports[`defineSqlSchemaGeneratorCodeForDomainObject names should add the _id suffix to inferred uuid reference property names 1`] = `
-"import { Entity, prop } from 'sql-schema-generator';
+exports[`defineSqlSchemaGeneratorCodeForDomainObject imports should not have extra new lines if there are no imports 1`] = `
+"import { prop, ValueObject } from 'sql-schema-generator';
 
 /**
- * sql-schema for the domain entity 'TrainEngineer'
+ * sql-schema for the domain value object 'Geocode'
  */
-export const trainEngineer = new Entity({
-  name: 'train_engineer',
+export const geocode = new ValueObject({
+  name: 'geocode',
   properties: {
-    social_security_number_hash: prop.VARCHAR(),
-    name: { ...prop.VARCHAR(), updatable: true },
-    steam_engine_certificate_id: { ...prop.REFERENCES(certificate), updatable: true },
+    latitude: prop.NUMERIC(),
+    longitude: prop.NUMERIC(),
   },
-  unique: ['social_security_number_hash'],
-});"
-`;
-
-exports[`defineSqlSchemaGeneratorCodeForDomainObject names should add the _ids suffix and strip plurality to directly nested reference array property names 1`] = `
-"import { Entity, prop } from 'sql-schema-generator';
-
-/**
- * sql-schema for the domain entity 'TrainEngineer'
- */
-export const trainEngineer = new Entity({
-  name: 'train_engineer',
-  properties: {
-    social_security_number_hash: prop.VARCHAR(),
-    name: { ...prop.VARCHAR(), updatable: true },
-    engine_certificate_ids: { ...prop.ARRAY_OF(prop.REFERENCES(certificate)), updatable: true },
-  },
-  unique: ['social_security_number_hash'],
-});"
-`;
-
-exports[`defineSqlSchemaGeneratorCodeForDomainObject names should add the _ids suffix and strip plurality to inferred uuid reference array property names 1`] = `
-"import { Entity, prop } from 'sql-schema-generator';
-
-/**
- * sql-schema for the domain entity 'TrainEngineer'
- */
-export const trainEngineer = new Entity({
-  name: 'train_engineer',
-  properties: {
-    social_security_number_hash: prop.VARCHAR(),
-    name: { ...prop.VARCHAR(), updatable: true },
-    engine_certificate_ids: { ...prop.ARRAY_OF(prop.REFERENCES(certificate)), updatable: true },
-  },
-  unique: ['social_security_number_hash'],
-});"
-`;
-
-exports[`defineSqlSchemaGeneratorCodeForDomainObject names should define property names in snake case 1`] = `
-"import { Entity, prop } from 'sql-schema-generator';
-
-/**
- * sql-schema for the domain entity 'TrainEngineer'
- */
-export const trainEngineer = new Entity({
-  name: 'train_engineer',
-  properties: {
-    social_security_number_hash: prop.VARCHAR(),
-    name: { ...prop.VARCHAR(), updatable: true },
-    has_certificate: { ...prop.BOOLEAN(), updatable: true, nullable: true },
-  },
-  unique: ['social_security_number_hash'],
 });"
 `;

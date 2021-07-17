@@ -17,4 +17,5 @@ export interface Carriage {
 }
 export class Carriage extends DomainEntity<Carriage> implements Carriage {
   public static unique = ['cin'];
+  public static updatable = [];
 }

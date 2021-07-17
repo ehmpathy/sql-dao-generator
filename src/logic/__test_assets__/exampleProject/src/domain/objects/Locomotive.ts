@@ -5,7 +5,7 @@ export enum LocomotiveFuel {
   COAL = 'COAL',
   DIESEL = 'DIESEL',
   BATTERY = 'BATTERY',
-  ATOMIC = 'ATOMIC',
+  FISSION = 'FISSION',
 }
 
 /**
@@ -23,6 +23,6 @@ export interface Locomotive {
   milage: number; // updated at the end of each day
 }
 export class Locomotive extends DomainEntity<Locomotive> implements Locomotive {
-  public static unique = ['engineId'];
+  public static unique = ['ein'];
   public static updatable = ['milage'];
 }

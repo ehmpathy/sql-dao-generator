@@ -1,0 +1,486 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example project 1`] = `
+Array [
+  SqlSchemaToDomainObjectRelationship {
+    "decorations": Object {
+      "unique": Object {
+        "domainObject": Array [
+          "cin",
+        ],
+        "sqlSchema": Array [
+          "cin",
+        ],
+      },
+    },
+    "name": Object {
+      "domainObject": "Carriage",
+      "sqlSchema": "carriage",
+    },
+    "properties": Array [
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "cin",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "cin",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "carries",
+          "nullable": false,
+          "of": Array [
+            "PASSENGER",
+            "FREIGHT",
+          ],
+          "required": true,
+          "type": "ENUM",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "carries",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "capacity",
+          "nullable": false,
+          "required": true,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "capacity",
+          "reference": null,
+        },
+      },
+    ],
+  },
+  SqlSchemaToDomainObjectRelationship {
+    "decorations": Object {
+      "unique": Object {
+        "domainObject": Array [
+          "socialSecurityNumberHash",
+        ],
+        "sqlSchema": Array [
+          "social_security_number_hash",
+        ],
+      },
+    },
+    "name": Object {
+      "domainObject": "Engineer",
+      "sqlSchema": "engineer",
+    },
+    "properties": Array [
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "socialSecurityNumberHash",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "social_security_number_hash",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "name",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": true,
+          "name": "name",
+          "reference": null,
+        },
+      },
+    ],
+  },
+  SqlSchemaToDomainObjectRelationship {
+    "decorations": Object {
+      "unique": Object {
+        "domainObject": null,
+        "sqlSchema": null,
+      },
+    },
+    "name": Object {
+      "domainObject": "Geocode",
+      "sqlSchema": "geocode",
+    },
+    "properties": Array [
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "latitude",
+          "nullable": false,
+          "required": true,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "latitude",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "longitude",
+          "nullable": false,
+          "required": true,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "longitude",
+          "reference": null,
+        },
+      },
+    ],
+  },
+  SqlSchemaToDomainObjectRelationship {
+    "decorations": Object {
+      "unique": Object {
+        "domainObject": Array [
+          "combinationId",
+        ],
+        "sqlSchema": Array [
+          "combination_id",
+        ],
+      },
+    },
+    "name": Object {
+      "domainObject": "Train",
+      "sqlSchema": "train",
+    },
+    "properties": Array [
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "homeStationGeocode",
+          "nullable": false,
+          "of": DomainObjectReferenceMetadata {
+            "extends": "DomainValueObject",
+            "name": "Geocode",
+          },
+          "required": true,
+          "type": "REFERENCE",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "home_station_geocode_id",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "DIRECT_BY_NESTING",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainValueObject",
+              "name": "Geocode",
+            },
+          },
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "combinationId",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "combination_id",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "locomotiveUuids",
+          "nullable": false,
+          "of": Object {
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "required": true,
+          "type": "ARRAY",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "locomotive_ids",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "IMPLICIT_BY_UUID",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainEntity",
+              "name": "Locomotive",
+            },
+          },
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "carriageUuids",
+          "nullable": false,
+          "of": Object {
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "required": true,
+          "type": "ARRAY",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "carriage_ids",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "IMPLICIT_BY_UUID",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainEntity",
+              "name": "Carriage",
+            },
+          },
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "engineerUuids",
+          "nullable": false,
+          "of": Object {
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "required": true,
+          "type": "ARRAY",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "engineer_ids",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "IMPLICIT_BY_UUID",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainEntity",
+              "name": "Engineer",
+            },
+          },
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "status",
+          "nullable": false,
+          "of": Array [
+            "ASSEMBLED",
+            "DISASSEMBLED",
+          ],
+          "required": true,
+          "type": "ENUM",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": true,
+          "name": "status",
+          "reference": null,
+        },
+      },
+    ],
+  },
+  SqlSchemaToDomainObjectRelationship {
+    "decorations": Object {
+      "unique": Object {
+        "domainObject": Array [
+          "ein",
+        ],
+        "sqlSchema": Array [
+          "ein",
+        ],
+      },
+    },
+    "name": Object {
+      "domainObject": "Locomotive",
+      "sqlSchema": "locomotive",
+    },
+    "properties": Array [
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "ein",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "ein",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "fuel",
+          "nullable": false,
+          "of": Array [
+            "STEAM",
+            "COAL",
+            "DIESEL",
+            "BATTERY",
+            "FISSION",
+          ],
+          "required": true,
+          "type": "ENUM",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "fuel",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "capacity",
+          "nullable": false,
+          "required": true,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "capacity",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "milage",
+          "nullable": false,
+          "required": true,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": true,
+          "name": "milage",
+          "reference": null,
+        },
+      },
+    ],
+  },
+  SqlSchemaToDomainObjectRelationship {
+    "decorations": Object {
+      "unique": Object {
+        "domainObject": Array [
+          "trainUuid",
+          "occurredAt",
+        ],
+        "sqlSchema": Array [
+          "train_id",
+          "occurred_at",
+        ],
+      },
+    },
+    "name": Object {
+      "domainObject": "TrainLocatedEvent",
+      "sqlSchema": "train_located_event",
+    },
+    "properties": Array [
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "trainUuid",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "train_id",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "IMPLICIT_BY_UUID",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainEntity",
+              "name": "Train",
+            },
+          },
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "occurredAt",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "occurred_at",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "geocode",
+          "nullable": false,
+          "of": DomainObjectReferenceMetadata {
+            "extends": "DomainValueObject",
+            "name": "Geocode",
+          },
+          "required": true,
+          "type": "REFERENCE",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "geocode_id",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "DIRECT_BY_NESTING",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainValueObject",
+              "name": "Geocode",
+            },
+          },
+        },
+      },
+    ],
+  },
+]
+`;

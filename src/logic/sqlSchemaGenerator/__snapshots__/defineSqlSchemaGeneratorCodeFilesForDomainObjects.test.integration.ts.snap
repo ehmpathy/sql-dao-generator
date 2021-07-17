@@ -1,0 +1,138 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`defineSqlSchemaGeneratorCodeFilesForDomainObjects should work on the example project 1`] = `
+Array [
+  GeneratedCodeFile {
+    "content": "import { carriage } from './carriage';
+import { engineer } from './engineer';
+import { geocode } from './geocode';
+import { locomotive } from './locomotive';
+import { train } from './train';
+import { trainLocatedEvent } from './trainLocatedEvent';
+
+/**
+ * all of the domain objects which we want to create sql-schema-resources for with sql-schema-generator
+ */
+export const generateSqlSchemasFor = [
+  'carriage',
+  'engineer',
+  'geocode',
+  'train',
+  'locomotive',
+  'trainLocatedEvent',
+];",
+    "relpath": "index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain entity 'Carriage'
+ */
+export const carriage = new Entity({
+  name: 'carriage',
+  properties: {
+    cin: prop.VARCHAR(),
+    carries: prop.ENUM(['PASSENGER', 'FREIGHT']),
+    capacity: prop.NUMERIC(),
+  },
+  unique: ['cin'],
+});",
+    "relpath": "carriage.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain entity 'Engineer'
+ */
+export const engineer = new Entity({
+  name: 'engineer',
+  properties: {
+    social_security_number_hash: prop.VARCHAR(),
+    name: { ...prop.VARCHAR(), updatable: true },
+  },
+  unique: ['social_security_number_hash'],
+});",
+    "relpath": "engineer.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { prop, ValueObject } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain value object 'Geocode'
+ */
+export const geocode = new ValueObject({
+  name: 'geocode',
+  properties: {
+    latitude: prop.NUMERIC(),
+    longitude: prop.NUMERIC(),
+  },
+});",
+    "relpath": "geocode.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+import { carriage } from './carriage';
+import { engineer } from './engineer';
+import { geocode } from './geocode';
+import { locomotive } from './locomotive';
+
+/**
+ * sql-schema for the domain entity 'Train'
+ */
+export const train = new Entity({
+  name: 'train',
+  properties: {
+    home_station_geocode_id: prop.REFERENCES(geocode),
+    combination_id: prop.VARCHAR(),
+    locomotive_ids: prop.ARRAY_OF(prop.REFERENCES(locomotive)),
+    carriage_ids: prop.ARRAY_OF(prop.REFERENCES(carriage)),
+    engineer_ids: prop.ARRAY_OF(prop.REFERENCES(engineer)),
+    status: { ...prop.ENUM(['ASSEMBLED', 'DISASSEMBLED']), updatable: true },
+  },
+  unique: ['combination_id'],
+});",
+    "relpath": "train.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain entity 'Locomotive'
+ */
+export const locomotive = new Entity({
+  name: 'locomotive',
+  properties: {
+    ein: prop.VARCHAR(),
+    fuel: prop.ENUM(['STEAM', 'COAL', 'DIESEL', 'BATTERY', 'FISSION']),
+    capacity: prop.NUMERIC(),
+    milage: { ...prop.NUMERIC(), updatable: true },
+  },
+  unique: ['ein'],
+});",
+    "relpath": "locomotive.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Event, prop } from 'sql-schema-generator';
+
+import { geocode } from './geocode';
+import { train } from './train';
+
+/**
+ * sql-schema for the domain event 'TrainLocatedEvent'
+ */
+export const trainLocatedEvent = new Event({
+  name: 'train_located_event',
+  properties: {
+    train_id: prop.REFERENCES(train),
+    occurred_at: prop.VARCHAR(),
+    geocode_id: prop.REFERENCES(geocode),
+  },
+  unique: ['train_id', 'occurred_at'],
+});",
+    "relpath": "trainLocatedEvent.ts",
+  },
+]
+`;
