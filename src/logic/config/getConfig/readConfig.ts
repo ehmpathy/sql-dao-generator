@@ -67,11 +67,11 @@ export const readConfig = async ({ configPath }: { configPath: string }): Promis
       'config.for.objects.search must specify which files to start the search for domain objects [format: glob]',
     );
   const searchGlobs: string | string[] = contents.for.objects.search;
-  if (!contents.for?.objects?.include)
-    console.log('config.for.objects.include was not defined, including all domain objects found by default');
+  // if (!contents.for?.objects?.include)
+  //   console.log('config.for.objects.include was not defined, including all domain objects found by default');
   const include: string | string[] | null = contents.for?.objects?.include ?? null;
-  if (!contents.for?.objects?.exclude)
-    console.log('config.for.objects.exclude was not defined, not excluding any domain objects found by default');
+  // if (!contents.for?.objects?.exclude)
+  //   console.log('config.for.objects.exclude was not defined, not excluding any domain objects found by default');
   const exclude: string | string[] | null = contents.for?.objects?.exclude ?? null;
   const relativeSearchPaths = await getAllPathsMatchingGlobs({
     globs: Array.isArray(searchGlobs) ? searchGlobs : [searchGlobs],

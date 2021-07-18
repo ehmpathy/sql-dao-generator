@@ -1,8 +1,9 @@
 // tslint:disable: max-classes-per-file
 
-import { snakeCase } from 'change-case';
+import { camelCase, snakeCase } from 'change-case';
 import { DomainObjectMetadata, DomainObjectPropertyMetadata, DomainObjectPropertyType } from 'domain-objects-metadata';
 import { isPresent } from 'simple-type-guards';
+
 import { SqlSchemaPropertyMetadata } from '../../domain/objects/SqlSchemaPropertyMetadata';
 
 export const defineSqlSchemaGeneratorCodeForProperty = ({
@@ -18,14 +19,14 @@ export const defineSqlSchemaGeneratorCodeForProperty = ({
   const baseSchemaProperty = (() => {
     // handle references (do them first, since some "uuid" based references have type string)
     if (sqlSchemaProperty.reference && !sqlSchemaProperty.isArray) {
-      return `prop.REFERENCES(${snakeCase(sqlSchemaProperty.reference.of!.name)})`;
+      return `prop.REFERENCES(${camelCase(sqlSchemaProperty.reference.of!.name)})`;
     }
     if (domainObjectProperty.type === DomainObjectPropertyType.ARRAY) {
       if (!sqlSchemaProperty.reference)
         throw new Error(
           `currently, only arrays of referenced domain objects are supported by sql-schema-generator. '${domainObject.name}.${domainObjectProperty.name}' does not meet this criteria.`,
         );
-      return `prop.ARRAY_OF(prop.REFERENCES(${snakeCase(sqlSchemaProperty.reference.of.name)}))`;
+      return `prop.ARRAY_OF(prop.REFERENCES(${camelCase(sqlSchemaProperty.reference.of.name)}))`;
     }
 
     // handle primitives

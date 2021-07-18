@@ -112,6 +112,27 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
       });
       expect(property).toEqual('home_address_id: prop.REFERENCES(address),');
     });
+    it('should generate correctly for reference - name in prop reference should be camelCase', () => {
+      const property = defineSqlSchemaGeneratorCodeForProperty({
+        domainObject: createExampleDomainObjectMetadata(),
+        domainObjectProperty: {
+          name: 'homeAddress',
+          type: DomainObjectPropertyType.REFERENCE,
+          of: { name: 'HomeAddress', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+        },
+        sqlSchemaProperty: {
+          name: 'home_address_id',
+          isArray: false,
+          isNullable: false,
+          isUpdatable: false,
+          reference: {
+            method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
+            of: { name: 'HomeAddress', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+          },
+        },
+      });
+      expect(property).toEqual('home_address_id: prop.REFERENCES(homeAddress),');
+    });
     it('should generate correctly for reference array', () => {
       const property = defineSqlSchemaGeneratorCodeForProperty({
         domainObject: createExampleDomainObjectMetadata(),
@@ -134,7 +155,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           },
         },
       });
-      expect(property).toEqual('external_id_ids: prop.ARRAY_OF(prop.REFERENCES(plane_external_id)),');
+      expect(property).toEqual('external_id_ids: prop.ARRAY_OF(prop.REFERENCES(planeExternalId)),'); // note the camel case inside prop.REFERENCES
     });
   });
   describe('modifiers', () => {
@@ -178,7 +199,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
         },
       });
       expect(property).toEqual(
-        'external_id_ids: { ...prop.ARRAY_OF(prop.REFERENCES(plane_external_id)), nullable: true },',
+        'external_id_ids: { ...prop.ARRAY_OF(prop.REFERENCES(planeExternalId)), nullable: true },',
       );
     });
     it('should generate properties with both modifiers correctly', () => {

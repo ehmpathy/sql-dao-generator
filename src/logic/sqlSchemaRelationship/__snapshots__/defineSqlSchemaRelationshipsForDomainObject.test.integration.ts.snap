@@ -81,8 +81,8 @@ Array [
       },
     },
     "name": Object {
-      "domainObject": "Engineer",
-      "sqlSchema": "engineer",
+      "domainObject": "TrainEngineer",
+      "sqlSchema": "train_engineer",
     },
     "properties": Array [
       Object {
@@ -290,7 +290,7 @@ Array [
             "method": "IMPLICIT_BY_UUID",
             "of": DomainObjectReferenceMetadata {
               "extends": "DomainEntity",
-              "name": "Engineer",
+              "name": "TrainEngineer",
             },
           },
         },

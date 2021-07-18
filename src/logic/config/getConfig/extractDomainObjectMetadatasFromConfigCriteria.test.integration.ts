@@ -34,9 +34,9 @@ describe('extractDomainObjectMetadatasFromConfigCriteria', () => {
       exclude: null,
     });
     // console.log(JSON.stringify(metadatas, null, 2));
-    expect(metadatas.length).toEqual(4);
+    expect(metadatas.length).toEqual(2);
     expect(metadatas.map((metadata) => metadata.name)).not.toContain('TrainLocatedEvent'); // Train does not reference TrainLocatedEvent
-    expect(metadatas.map((metadata) => metadata.name)).not.toContain('Geocode'); // Train does not reference Geocode
+    expect(metadatas.map((metadata) => metadata.name)).not.toContain('TrainEngineer'); // Train does not reference Geocode
   });
   it('should filter out the ones named in the `exclude` list', async () => {
     const metadatas = await extractDomainObjectMetadatasFromConfigCriteria({

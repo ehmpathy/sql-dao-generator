@@ -16,18 +16,18 @@ describe('readConfig', () => {
           log: 'src/util/log#log',
           DatabaseConnection: 'src/util/database/getDbConnection#DatabaseConnection',
         },
-        schema: {
-          config: 'codegen.schema.yml',
-        },
-        control: {
-          config: 'provision/schema/control.yml',
-        },
-        code: {
-          config: 'codegen.sql.yml',
-        },
+      },
+      schema: {
+        config: 'codegen.sql.schema.yml',
+      },
+      control: {
+        config: 'provision/schema/control.yml',
+      },
+      code: {
+        config: 'codegen.sql.types.yml',
       },
     });
-    expect(config.for.objects.length).toEqual(6);
+    expect(config.for.objects.length).toEqual(5);
     expect(config).toMatchSnapshot({ rootDir: expect.anything() }); // to log an example of the output; ignore the rootDir, to make it machine independent
   });
 });

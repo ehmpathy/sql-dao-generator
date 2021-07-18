@@ -36,8 +36,6 @@ export const generate = async ({ configPath }: { configPath: string }) => {
   // TODO
 
   // output the sql types and query functions
-  console.log(
-    `${chalk.bold('🗜️  Generating typescript from sql:')} type defs and query funcs using sql-code-generator...\n`,
-  ); // tslint:disable-line no-console
+  console.log(`${chalk.bold('🗜️  Generating typescript from sql:')} types and funcs using sql-code-generator...\n`); // tslint:disable-line no-console
   // TODO
 };

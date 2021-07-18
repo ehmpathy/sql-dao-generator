@@ -1,0 +1,286 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`readConfig should be able to read the example config provisioned in __test_assets__ 1`] = `
+Object {
+  "dialect": "10.7",
+  "for": Object {
+    "objects": Array [
+      DomainObjectMetadata {
+        "decorations": Object {
+          "unique": Array [
+            "cin",
+          ],
+          "updatable": Array [],
+        },
+        "extends": "DomainEntity",
+        "name": "Carriage",
+        "properties": Object {
+          "capacity": DomainObjectPropertyMetadata {
+            "name": "capacity",
+            "nullable": false,
+            "required": true,
+            "type": "NUMBER",
+          },
+          "carries": DomainObjectPropertyMetadata {
+            "name": "carries",
+            "nullable": false,
+            "of": Array [
+              "PASSENGER",
+              "FREIGHT",
+            ],
+            "required": true,
+            "type": "ENUM",
+          },
+          "cin": DomainObjectPropertyMetadata {
+            "name": "cin",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "id": DomainObjectPropertyMetadata {
+            "name": "id",
+            "nullable": false,
+            "required": false,
+            "type": "NUMBER",
+          },
+          "uuid": DomainObjectPropertyMetadata {
+            "name": "uuid",
+            "nullable": false,
+            "required": false,
+            "type": "STRING",
+          },
+        },
+      },
+      DomainObjectMetadata {
+        "decorations": Object {
+          "unique": Array [
+            "socialSecurityNumberHash",
+          ],
+          "updatable": Array [
+            "name",
+          ],
+        },
+        "extends": "DomainEntity",
+        "name": "TrainEngineer",
+        "properties": Object {
+          "id": DomainObjectPropertyMetadata {
+            "name": "id",
+            "nullable": false,
+            "required": false,
+            "type": "NUMBER",
+          },
+          "name": DomainObjectPropertyMetadata {
+            "name": "name",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "socialSecurityNumberHash": DomainObjectPropertyMetadata {
+            "name": "socialSecurityNumberHash",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "uuid": DomainObjectPropertyMetadata {
+            "name": "uuid",
+            "nullable": false,
+            "required": false,
+            "type": "STRING",
+          },
+        },
+      },
+      DomainObjectMetadata {
+        "decorations": Object {
+          "unique": null,
+          "updatable": null,
+        },
+        "extends": "DomainValueObject",
+        "name": "Geocode",
+        "properties": Object {
+          "id": DomainObjectPropertyMetadata {
+            "name": "id",
+            "nullable": false,
+            "required": false,
+            "type": "NUMBER",
+          },
+          "latitude": DomainObjectPropertyMetadata {
+            "name": "latitude",
+            "nullable": false,
+            "required": true,
+            "type": "NUMBER",
+          },
+          "longitude": DomainObjectPropertyMetadata {
+            "name": "longitude",
+            "nullable": false,
+            "required": true,
+            "type": "NUMBER",
+          },
+        },
+      },
+      DomainObjectMetadata {
+        "decorations": Object {
+          "unique": Array [
+            "ein",
+          ],
+          "updatable": Array [
+            "milage",
+          ],
+        },
+        "extends": "DomainEntity",
+        "name": "Locomotive",
+        "properties": Object {
+          "capacity": DomainObjectPropertyMetadata {
+            "name": "capacity",
+            "nullable": false,
+            "required": true,
+            "type": "NUMBER",
+          },
+          "ein": DomainObjectPropertyMetadata {
+            "name": "ein",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "fuel": DomainObjectPropertyMetadata {
+            "name": "fuel",
+            "nullable": false,
+            "of": Array [
+              "STEAM",
+              "COAL",
+              "DIESEL",
+              "BATTERY",
+              "FISSION",
+            ],
+            "required": true,
+            "type": "ENUM",
+          },
+          "id": DomainObjectPropertyMetadata {
+            "name": "id",
+            "nullable": false,
+            "required": false,
+            "type": "NUMBER",
+          },
+          "milage": DomainObjectPropertyMetadata {
+            "name": "milage",
+            "nullable": false,
+            "required": true,
+            "type": "NUMBER",
+          },
+          "uuid": DomainObjectPropertyMetadata {
+            "name": "uuid",
+            "nullable": false,
+            "required": false,
+            "type": "STRING",
+          },
+        },
+      },
+      DomainObjectMetadata {
+        "decorations": Object {
+          "unique": Array [
+            "combinationId",
+          ],
+          "updatable": Array [
+            "engineers",
+            "status",
+          ],
+        },
+        "extends": "DomainEntity",
+        "name": "Train",
+        "properties": Object {
+          "carriageUuids": DomainObjectPropertyMetadata {
+            "name": "carriageUuids",
+            "nullable": false,
+            "of": Object {
+              "nullable": false,
+              "required": true,
+              "type": "STRING",
+            },
+            "required": true,
+            "type": "ARRAY",
+          },
+          "combinationId": DomainObjectPropertyMetadata {
+            "name": "combinationId",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "engineerUuids": DomainObjectPropertyMetadata {
+            "name": "engineerUuids",
+            "nullable": false,
+            "of": Object {
+              "nullable": false,
+              "required": true,
+              "type": "STRING",
+            },
+            "required": true,
+            "type": "ARRAY",
+          },
+          "homeStationGeocode": DomainObjectPropertyMetadata {
+            "name": "homeStationGeocode",
+            "nullable": false,
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainValueObject",
+              "name": "Geocode",
+            },
+            "required": true,
+            "type": "REFERENCE",
+          },
+          "id": DomainObjectPropertyMetadata {
+            "name": "id",
+            "nullable": false,
+            "required": false,
+            "type": "NUMBER",
+          },
+          "locomotiveUuids": DomainObjectPropertyMetadata {
+            "name": "locomotiveUuids",
+            "nullable": false,
+            "of": Object {
+              "nullable": false,
+              "required": true,
+              "type": "STRING",
+            },
+            "required": true,
+            "type": "ARRAY",
+          },
+          "status": DomainObjectPropertyMetadata {
+            "name": "status",
+            "nullable": false,
+            "of": Array [
+              "ASSEMBLED",
+              "DISASSEMBLED",
+            ],
+            "required": true,
+            "type": "ENUM",
+          },
+          "uuid": DomainObjectPropertyMetadata {
+            "name": "uuid",
+            "nullable": false,
+            "required": false,
+            "type": "STRING",
+          },
+        },
+      },
+    ],
+  },
+  "generates": Object {
+    "code": Object {
+      "config": "codegen.sql.types.yml",
+    },
+    "control": Object {
+      "config": "provision/schema/control.yml",
+    },
+    "daos": Object {
+      "to": "src/data/dao",
+      "using": Object {
+        "DatabaseConnection": "src/util/database/getDbConnection#DatabaseConnection",
+        "log": "src/util/log#log",
+      },
+    },
+    "schema": Object {
+      "config": "codegen.sql.schema.yml",
+    },
+  },
+  "language": "postgres",
+  "rootDir": Anything,
+}
+`;
