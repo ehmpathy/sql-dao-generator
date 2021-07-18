@@ -1,6 +1,6 @@
 // tslint:disable: max-classes-per-file
 
-import { camelCase, snakeCase } from 'change-case';
+import { camelCase } from 'change-case';
 import { DomainObjectMetadata, DomainObjectPropertyMetadata, DomainObjectPropertyType } from 'domain-objects-metadata';
 import { isPresent } from 'simple-type-guards';
 

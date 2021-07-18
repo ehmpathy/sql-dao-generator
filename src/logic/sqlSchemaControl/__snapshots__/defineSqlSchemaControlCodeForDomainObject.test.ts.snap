@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`defineSqlSchemaControlCodeForDomainObject should look right for a domain object with static array properties 1`] = `
+"# train_located_event
+- type: resource
+  path: ./tables/train_located_event.sql
+- type: resource
+  path: ./tables/train_located_event_to_geocode.sql
+- type: resource
+  path: ./views/view_train_located_event_current.sql
+- type: resource
+  path: ./functions/upsert_train_located_event.sql"
+`;
+
+exports[`defineSqlSchemaControlCodeForDomainObject should look right for a domain object with updatable array properties 1`] = `
+"# train
+- type: resource
+  path: ./tables/train.sql
+- type: resource
+  path: ./tables/train_to_badge.sql
+- type: resource
+  path: ./tables/train_version.sql
+- type: resource
+  path: ./tables/train_version_to_locomotive.sql
+- type: resource
+  path: ./tables/train_cvp.sql
+- type: resource
+  path: ./views/view_train_current.sql
+- type: resource
+  path: ./functions/upsert_train.sql"
+`;
+
+exports[`defineSqlSchemaControlCodeForDomainObject should look right for a domain object with updatable properties 1`] = `
+"# carriage
+- type: resource
+  path: ./tables/carriage.sql
+- type: resource
+  path: ./tables/carriage_version.sql
+- type: resource
+  path: ./tables/carriage_cvp.sql
+- type: resource
+  path: ./views/view_carriage_current.sql
+- type: resource
+  path: ./functions/upsert_carriage.sql"
+`;
+
+exports[`defineSqlSchemaControlCodeForDomainObject should look right for a simple domain value object 1`] = `
+"# geocode
+- type: resource
+  path: ./tables/geocode.sql
+- type: resource
+  path: ./functions/upsert_geocode.sql"
+`;

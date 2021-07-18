@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`defineSqlSchemaControlCodeFilesForDomainObjects should work on the example project 1`] = `
+GeneratedCodeFile {
+  "content": "# carriage
+- type: resource
+  path: ./tables/carriage.sql
+- type: resource
+  path: ./functions/upsert_carriage.sql
+
+# train_engineer
+- type: resource
+  path: ./tables/train_engineer.sql
+- type: resource
+  path: ./tables/train_engineer_version.sql
+- type: resource
+  path: ./tables/train_engineer_cvp.sql
+- type: resource
+  path: ./views/view_train_engineer_current.sql
+- type: resource
+  path: ./functions/upsert_train_engineer.sql
+
+# geocode
+- type: resource
+  path: ./tables/geocode.sql
+- type: resource
+  path: ./functions/upsert_geocode.sql
+
+# locomotive
+- type: resource
+  path: ./tables/locomotive.sql
+- type: resource
+  path: ./tables/locomotive_version.sql
+- type: resource
+  path: ./tables/locomotive_cvp.sql
+- type: resource
+  path: ./views/view_locomotive_current.sql
+- type: resource
+  path: ./functions/upsert_locomotive.sql
+
+# train_located_event
+- type: resource
+  path: ./tables/train_located_event.sql
+- type: resource
+  path: ./functions/upsert_train_located_event.sql
+
+# train
+- type: resource
+  path: ./tables/train.sql
+- type: resource
+  path: ./tables/train_to_locomotive.sql
+- type: resource
+  path: ./tables/train_to_carriage.sql
+- type: resource
+  path: ./tables/train_to_train_engineer.sql
+- type: resource
+  path: ./tables/train_version.sql
+- type: resource
+  path: ./tables/train_cvp.sql
+- type: resource
+  path: ./views/view_train_current.sql
+- type: resource
+  path: ./functions/upsert_train.sql",
+  "relpath": "./domain.control.yml",
+}
+`;
