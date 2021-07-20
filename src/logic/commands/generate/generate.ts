@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { readConfig } from '../../config/getConfig/readConfig';
-import { saveCode } from '../../fileio/saveCode';
+import { saveCode } from '../../utils/fileio/saveCode';
 import { defineSqlSchemaGeneratorCodeFilesForDomainObjects } from '../../sqlSchemaGenerator/defineSqlSchemaGeneratorCodeFilesForDomainObjects';
 import { defineSqlSchemaRelationshipsForDomainObjects } from '../../sqlSchemaRelationship/defineSqlSchemaRelationshipsForDomainObjects';
 

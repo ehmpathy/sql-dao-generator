@@ -1,8 +1,8 @@
 import { camelCase, noCase } from 'change-case';
 import { DomainObjectMetadata, DomainObjectVariant } from 'domain-objects-metadata';
 import { isPresent } from 'simple-type-guards';
-import { SqlSchemaToDomainObjectRelationship } from '../../domain/objects/SqlSchemaToDomainObjectRelationship';
 
+import { SqlSchemaToDomainObjectRelationship } from '../../domain/objects/SqlSchemaToDomainObjectRelationship';
 import { defineSqlSchemaGeneratorCodeForProperty } from './defineSqlSchemaGeneratorCodeForProperty';
 
 export const defineSqlSchemaGeneratorCodeForDomainObject = ({
@@ -32,9 +32,11 @@ export const defineSqlSchemaGeneratorCodeForDomainObject = ({
   );
 
   // define the code for the unique properties
-  const schemaGeneratorUnique = sqlSchemaRelationship.decorations.unique.sqlSchema
-    ? `unique: [${sqlSchemaRelationship.decorations.unique.sqlSchema.map((s) => `'${s}'`).join(', ')}],`
-    : null;
+  const schemaGeneratorUnique =
+    sqlSchemaRelationship.decorations.unique.sqlSchema &&
+    domainObject.extends !== DomainObjectVariant.DOMAIN_VALUE_OBJECT
+      ? `unique: [${sqlSchemaRelationship.decorations.unique.sqlSchema.map((s) => `'${s}'`).join(', ')}],`
+      : null;
 
   // define the imported props from sql-schema-generator based on this
   const schemaGeneratorImports = [schemaGeneratorClass, 'prop']

@@ -121,7 +121,10 @@ Array [
     "decorations": Object {
       "unique": Object {
         "domainObject": null,
-        "sqlSchema": null,
+        "sqlSchema": Array [
+          "latitude",
+          "longitude",
+        ],
       },
     },
     "name": Object {

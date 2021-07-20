@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { mkdir, writeFile } from '../commands/utils/fileIO';
+import { mkdir, writeFile } from '../../commands/utils/fileIO';
 
 export const saveCode = async ({
   rootDir,

@@ -10,14 +10,10 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
         name: 'PreciseGeocode',
         extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
         properties: {
-          latitude: {
-            name: 'latitude',
-            type: DomainObjectPropertyType.NUMBER,
-          },
-          longitude: {
-            name: 'longitude',
-            type: DomainObjectPropertyType.NUMBER,
-          },
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+          latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
+          longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
         },
         decorations: {
           unique: null,
@@ -28,7 +24,8 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
     });
     expect(relationship.name.sqlSchema).toEqual('precise_geocode'); // should be snake case
     expect(relationship.properties.length).toEqual(2); // sanity check
-    expect(relationship.decorations.unique.sqlSchema).toEqual(null); // sanity check
+    expect(relationship.decorations.unique.domainObject).toEqual(null); // it wasn't defined, since domain value object
+    expect(relationship.decorations.unique.sqlSchema).toEqual(['latitude', 'longitude']); // should be all of the properties, since domain value object
     expect(relationship).toMatchSnapshot();
   });
   it('should look right for a domain-entity', () => {

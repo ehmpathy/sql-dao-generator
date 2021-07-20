@@ -1,0 +1,722 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for a domain event with a static referenced array 1`] = `
+"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryFindTrainLocatedEventById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { fromDatabaseObject } from './cast/fromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_located_event_by_id
+  SELECT
+    train_located_event.id,
+    train_located_event.uuid,
+    train_located_event.train_uuid,
+    train_located_event.occurred_at,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', geocode.id,
+            'uuid', geocode.uuid,
+            'latitude', geocode.latitude,
+            'longitude', geocode.longitude
+          )
+          ORDER BY geocode_ref.array_order_index
+        ),
+        array[]::json[]
+      ) AS json_agg
+      FROM geocode
+      JOIN unnest(train_located_event.geocode_ids) WITH ORDINALITY
+        AS geocode_ref (id, array_order_index)
+        ON geocode.id = geocode_ref.id
+    ) AS geocodes
+  FROM view_train_located_event_current AS train_located_event
+  WHERE train_located_event.id = :id;
+\`;
+
+export const findById = async ({
+  dbConnection,
+  id,
+}: {
+  dbConnection: DatabaseConnection;
+  id: number;
+}): Promise<HasId<TrainLocatedEvent>> => {
+  const results = await sqlQueryFindTrainLocatedEventById({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      id,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+};"
+`;
+
+exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
+"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryFindTrainById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { fromDatabaseObject } from './cast/fromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_by_id
+  SELECT
+    train.id,
+    train.uuid,
+    train.tin,
+    (
+      SELECT json_build_object(
+        'id', geocode.id,
+        'uuid', geocode.uuid,
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      )
+      FROM geocode WHERE geocode.id = train.home_station_geocode_id
+    ) AS home_station_geocode,
+    (
+      SELECT train_engineer.uuid
+      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
+    ) AS lead_engineer_uuid,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', train_badge.id,
+            'uuid', train_badge.uuid,
+            'name', train_badge.name,
+            'description', train_badge.description,
+            'rank', train_badge.rank
+          )
+          ORDER BY train_badge_ref.array_order_index
+        ),
+        array[]::json[]
+      ) AS json_agg
+      FROM train_badge
+      JOIN unnest(train.badge_ids) WITH ORDINALITY
+        AS train_badge_ref (id, array_order_index)
+        ON train_badge.id = train_badge_ref.id
+    ) AS badges,
+    (
+      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::varchar[]) AS array_agg
+      FROM locomotive
+      JOIN unnest(train.locomotive_ids) WITH ORDINALITY
+        AS locomotive_ref (id, array_order_index)
+        ON locomotive.id = locomotive_ref.id
+    ) AS locomotive_uuids
+  FROM view_train_current AS train
+  WHERE train.id = :id;
+\`;
+
+export const findById = async ({
+  dbConnection,
+  id,
+}: {
+  dbConnection: DatabaseConnection;
+  id: number;
+}): Promise<HasId<HasUuid<Train>>> => {
+  const results = await sqlQueryFindTrainById({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      id,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+};"
+`;
+
+exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for simple domain entity 1`] = `
+"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryFindCarriageById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { fromDatabaseObject } from './cast/fromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_carriage_by_id
+  SELECT
+    carriage.id,
+    carriage.uuid,
+    carriage.cin,
+    carriage.carries,
+    carriage.capacity
+  FROM view_carriage_current AS carriage
+  WHERE carriage.id = :id;
+\`;
+
+export const findById = async ({
+  dbConnection,
+  id,
+}: {
+  dbConnection: DatabaseConnection;
+  id: number;
+}): Promise<HasId<HasUuid<Carriage>>> => {
+  const results = await sqlQueryFindCarriageById({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      id,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+};"
+`;
+
+exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for simple value object 1`] = `
+"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryFindGeocodeById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { fromDatabaseObject } from './cast/fromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_geocode_by_id
+  SELECT
+    geocode.id,
+    geocode.uuid,
+    geocode.latitude,
+    geocode.longitude
+  FROM geocode
+  WHERE geocode.id = :id;
+\`;
+
+export const findById = async ({
+  dbConnection,
+  id,
+}: {
+  dbConnection: DatabaseConnection;
+  id: number;
+}): Promise<HasId<Geocode>> => {
+  const results = await sqlQueryFindGeocodeById({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      id,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+};"
+`;
+
+exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for a domain event with a static referenced array 1`] = `
+"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryFindTrainLocatedEventByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { fromDatabaseObject } from './cast/fromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_located_event_by_unique
+  SELECT
+    train_located_event.id,
+    train_located_event.uuid,
+    train_located_event.train_uuid,
+    train_located_event.occurred_at,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', geocode.id,
+            'uuid', geocode.uuid,
+            'latitude', geocode.latitude,
+            'longitude', geocode.longitude
+          )
+          ORDER BY geocode_ref.array_order_index
+        ),
+        array[]::json[]
+      ) AS json_agg
+      FROM geocode
+      JOIN unnest(train_located_event.geocode_ids) WITH ORDINALITY
+        AS geocode_ref (id, array_order_index)
+        ON geocode.id = geocode_ref.id
+    ) AS geocodes
+  FROM view_train_located_event_current AS train_located_event
+  WHERE 1=1
+    AND train_located_event.train_uuid = :trainUuid
+    AND train_located_event.occurred_at = :occurredAt;
+\`;
+
+export const findByUnique = async ({
+  dbConnection,
+  trainUuid,
+  occurredAt,
+}: {
+  dbConnection: DatabaseConnection;
+  trainUuid: string;
+  occurredAt: Date;
+}): Promise<HasId<TrainLocatedEvent>> => {
+  const results = await sqlQueryFindTrainLocatedEventByUnique({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      trainUuid,
+      occurredAt,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+};"
+`;
+
+exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for domain entity that is unique on references, solo and array, implicit and nested 1`] = `
+"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryFindTrainByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { fromDatabaseObject } from './cast/fromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_by_unique
+  SELECT
+    train.id,
+    train.uuid,
+    train.tin,
+    (
+      SELECT json_build_object(
+        'id', geocode.id,
+        'uuid', geocode.uuid,
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      )
+      FROM geocode WHERE geocode.id = train.home_station_geocode_id
+    ) AS home_station_geocode,
+    (
+      SELECT train_engineer.uuid
+      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
+    ) AS lead_engineer_uuid,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', train_badge.id,
+            'uuid', train_badge.uuid,
+            'name', train_badge.name,
+            'description', train_badge.description,
+            'rank', train_badge.rank
+          )
+          ORDER BY train_badge_ref.array_order_index
+        ),
+        array[]::json[]
+      ) AS json_agg
+      FROM train_badge
+      JOIN unnest(train.badge_ids) WITH ORDINALITY
+        AS train_badge_ref (id, array_order_index)
+        ON train_badge.id = train_badge_ref.id
+    ) AS badges,
+    (
+      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::varchar[]) AS array_agg
+      FROM locomotive
+      JOIN unnest(train.locomotive_ids) WITH ORDINALITY
+        AS locomotive_ref (id, array_order_index)
+        ON locomotive.id = locomotive_ref.id
+    ) AS locomotive_uuids
+  FROM view_train_current AS train
+  WHERE 1=1
+    AND train.home_station_geocode_id = :homeStationGeocodeId
+    AND train.badge_ids = :badgeIds
+    AND train.locomotive_ids = (
+      SELECT COALESCE(array_agg(locomotive.id ORDER BY locomotive_ref.array_order_index), array[]::bigint[]) AS array_agg
+      FROM locomotive
+      JOIN unnest(:locomotiveUuids) WITH ORDINALITY
+        AS locomotive_ref (uuid, array_order_index)
+        ON locomotive.uuid = locomotive_ref.uuid
+    )
+    AND train.lead_engineer_id = (SELECT id FROM train_engineer WHERE train_engineer.uuid = :leadEngineerUuid);
+\`;
+
+export const findByUnique = async ({
+  dbConnection,
+  homeStationGeocode,
+  badges,
+  locomotiveUuids,
+  leadEngineerUuid,
+}: {
+  dbConnection: DatabaseConnection;
+  homeStationGeocode: HasId<Geocode>;
+  badges: HasId<TrainBadge>[];
+  locomotiveUuids: string[];
+  leadEngineerUuid: string;
+}): Promise<HasId<HasUuid<Train>>> => {
+  const results = await sqlQueryFindTrainByUnique({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      homeStationGeocodeId: homeStationGeocode.id,
+      badgeIds: badges.map((trainBadge) => trainBadge.id),
+      locomotiveUuids,
+      leadEngineerUuid,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+};"
+`;
+
+exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
+"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryFindTrainByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { fromDatabaseObject } from './cast/fromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_by_unique
+  SELECT
+    train.id,
+    train.uuid,
+    train.tin,
+    (
+      SELECT json_build_object(
+        'id', geocode.id,
+        'uuid', geocode.uuid,
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      )
+      FROM geocode WHERE geocode.id = train.home_station_geocode_id
+    ) AS home_station_geocode,
+    (
+      SELECT train_engineer.uuid
+      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
+    ) AS lead_engineer_uuid,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', train_badge.id,
+            'uuid', train_badge.uuid,
+            'name', train_badge.name,
+            'description', train_badge.description,
+            'rank', train_badge.rank
+          )
+          ORDER BY train_badge_ref.array_order_index
+        ),
+        array[]::json[]
+      ) AS json_agg
+      FROM train_badge
+      JOIN unnest(train.badge_ids) WITH ORDINALITY
+        AS train_badge_ref (id, array_order_index)
+        ON train_badge.id = train_badge_ref.id
+    ) AS badges,
+    (
+      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::varchar[]) AS array_agg
+      FROM locomotive
+      JOIN unnest(train.locomotive_ids) WITH ORDINALITY
+        AS locomotive_ref (id, array_order_index)
+        ON locomotive.id = locomotive_ref.id
+    ) AS locomotive_uuids
+  FROM view_train_current AS train
+  WHERE 1=1
+    AND train.tin = :tin;
+\`;
+
+export const findByUnique = async ({
+  dbConnection,
+  tin,
+}: {
+  dbConnection: DatabaseConnection;
+  tin: string;
+}): Promise<HasId<HasUuid<Train>>> => {
+  const results = await sqlQueryFindTrainByUnique({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      tin,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+};"
+`;
+
+exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple domain entity 1`] = `
+"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryFindCarriageByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { fromDatabaseObject } from './cast/fromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_carriage_by_unique
+  SELECT
+    carriage.id,
+    carriage.uuid,
+    carriage.cin,
+    carriage.carries,
+    carriage.capacity
+  FROM view_carriage_current AS carriage
+  WHERE 1=1
+    AND carriage.cin = :cin;
+\`;
+
+export const findByUnique = async ({
+  dbConnection,
+  cin,
+}: {
+  dbConnection: DatabaseConnection;
+  cin: string;
+}): Promise<HasId<HasUuid<Carriage>>> => {
+  const results = await sqlQueryFindCarriageByUnique({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      cin,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+};"
+`;
+
+exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple value object 1`] = `
+"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryFindGeocodeByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { fromDatabaseObject } from './cast/fromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_geocode_by_unique
+  SELECT
+    geocode.id,
+    geocode.uuid,
+    geocode.latitude,
+    geocode.longitude
+  FROM geocode
+  WHERE 1=1
+    AND geocode.latitude = :latitude
+    AND geocode.longitude = :longitude;
+\`;
+
+export const findByUnique = async ({
+  dbConnection,
+  latitude,
+  longitude,
+}: {
+  dbConnection: DatabaseConnection;
+  latitude: number;
+  longitude: number;
+}): Promise<HasId<Geocode>> => {
+  const results = await sqlQueryFindGeocodeByUnique({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      latitude,
+      longitude,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+};"
+`;
+
+exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for a domain event with a static referenced array 1`] = `
+"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryFindTrainLocatedEventByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { fromDatabaseObject } from './cast/fromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_located_event_by_uuid
+  SELECT
+    train_located_event.id,
+    train_located_event.uuid,
+    train_located_event.train_uuid,
+    train_located_event.occurred_at,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', geocode.id,
+            'uuid', geocode.uuid,
+            'latitude', geocode.latitude,
+            'longitude', geocode.longitude
+          )
+          ORDER BY geocode_ref.array_order_index
+        ),
+        array[]::json[]
+      ) AS json_agg
+      FROM geocode
+      JOIN unnest(train_located_event.geocode_ids) WITH ORDINALITY
+        AS geocode_ref (id, array_order_index)
+        ON geocode.id = geocode_ref.id
+    ) AS geocodes
+  FROM view_train_located_event_current AS train_located_event
+  WHERE train_located_event.uuid = :uuid;
+\`;
+
+export const findByUuid = async ({
+  dbConnection,
+  uuid,
+}: {
+  dbConnection: DatabaseConnection;
+  uuid: string;
+}): Promise<HasId<TrainLocatedEvent>> => {
+  const results = await sqlQueryFindTrainLocatedEventByUuid({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      uuid,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+};"
+`;
+
+exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
+"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryFindTrainByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { fromDatabaseObject } from './cast/fromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_by_uuid
+  SELECT
+    train.id,
+    train.uuid,
+    train.tin,
+    (
+      SELECT json_build_object(
+        'id', geocode.id,
+        'uuid', geocode.uuid,
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      )
+      FROM geocode WHERE geocode.id = train.home_station_geocode_id
+    ) AS home_station_geocode,
+    (
+      SELECT train_engineer.uuid
+      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
+    ) AS lead_engineer_uuid,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', train_badge.id,
+            'uuid', train_badge.uuid,
+            'name', train_badge.name,
+            'description', train_badge.description,
+            'rank', train_badge.rank
+          )
+          ORDER BY train_badge_ref.array_order_index
+        ),
+        array[]::json[]
+      ) AS json_agg
+      FROM train_badge
+      JOIN unnest(train.badge_ids) WITH ORDINALITY
+        AS train_badge_ref (id, array_order_index)
+        ON train_badge.id = train_badge_ref.id
+    ) AS badges,
+    (
+      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::varchar[]) AS array_agg
+      FROM locomotive
+      JOIN unnest(train.locomotive_ids) WITH ORDINALITY
+        AS locomotive_ref (id, array_order_index)
+        ON locomotive.id = locomotive_ref.id
+    ) AS locomotive_uuids
+  FROM view_train_current AS train
+  WHERE train.uuid = :uuid;
+\`;
+
+export const findByUuid = async ({
+  dbConnection,
+  uuid,
+}: {
+  dbConnection: DatabaseConnection;
+  uuid: string;
+}): Promise<HasId<HasUuid<Train>>> => {
+  const results = await sqlQueryFindTrainByUuid({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      uuid,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+};"
+`;
+
+exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for simple domain entity 1`] = `
+"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryFindCarriageByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { fromDatabaseObject } from './cast/fromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_carriage_by_uuid
+  SELECT
+    carriage.id,
+    carriage.uuid,
+    carriage.cin,
+    carriage.carries,
+    carriage.capacity
+  FROM view_carriage_current AS carriage
+  WHERE carriage.uuid = :uuid;
+\`;
+
+export const findByUuid = async ({
+  dbConnection,
+  uuid,
+}: {
+  dbConnection: DatabaseConnection;
+  uuid: string;
+}): Promise<HasId<HasUuid<Carriage>>> => {
+  const results = await sqlQueryFindCarriageByUuid({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      uuid,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+};"
+`;
+
+exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for simple value object 1`] = `
+"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryFindGeocodeByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { fromDatabaseObject } from './cast/fromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_geocode_by_uuid
+  SELECT
+    geocode.id,
+    geocode.uuid,
+    geocode.latitude,
+    geocode.longitude
+  FROM geocode
+  WHERE geocode.uuid = :uuid;
+\`;
+
+export const findByUuid = async ({
+  dbConnection,
+  uuid,
+}: {
+  dbConnection: DatabaseConnection;
+  uuid: string;
+}): Promise<HasId<Geocode>> => {
+  const results = await sqlQueryFindGeocodeByUuid({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      uuid,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+};"
+`;

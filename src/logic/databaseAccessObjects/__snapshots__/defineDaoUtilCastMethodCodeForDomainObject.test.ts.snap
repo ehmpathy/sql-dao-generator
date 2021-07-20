@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for a domain event with a static referenced array 1`] = `
+"import { HasId } from 'simple-type-guards';
+import { Geocode, TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = ({
+  dbObject,
+}: {
+  dbObject: SqlQueryFindTrainLocatedEventByIdOutput;
+}): HasId<TrainLocatedEvent> =>
+  new TrainLocatedEvent({
+    id: dbObject.id,
+    trainUuid: dbObject.train_uuid,
+    occurredAt: dbObject.occurred_at,
+    geocodes: dbObject.geocodes.map((geocode) => new Geocode(geocode)),
+  }) as HasId<TrainLocatedEvent>;"
+`;
+
+exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
+"import { HasId, HasUuid } from 'simple-type-guards';
+import { Geocode, Train, TrainBadge } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = ({
+  dbObject,
+}: {
+  dbObject: SqlQueryFindTrainByIdOutput;
+}): HasId<HasUuid<Train>> =>
+  new Train({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    tin: dbObject.tin,
+    homeStationGeocode: new Geocode(dbObject.home_station_geocode),
+    leadEngineerUuid: dbObject.lead_engineer_uuid,
+    badges: dbObject.badges.map((trainBadge) => new TrainBadge(trainBadge)),
+    locomotiveUuids: dbObject.locomotive_uuids,
+  }) as HasId<HasUuid<Train>>;"
+`;
+
+exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for simple domain entity 1`] = `
+"import { HasId, HasUuid } from 'simple-type-guards';
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCarriageByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = ({
+  dbObject,
+}: {
+  dbObject: SqlQueryFindCarriageByIdOutput;
+}): HasId<HasUuid<Carriage>> =>
+  new Carriage({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    cin: dbObject.cin,
+    carries: dbObject.carries,
+    capacity: dbObject.capacity,
+  }) as HasId<HasUuid<Carriage>>;"
+`;
+
+exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for simple value object 1`] = `
+"import { HasId } from 'simple-type-guards';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = ({
+  dbObject,
+}: {
+  dbObject: SqlQueryFindGeocodeByIdOutput;
+}): HasId<Geocode> =>
+  new Geocode({
+    id: dbObject.id,
+    latitude: dbObject.latitude,
+    longitude: dbObject.longitude,
+  }) as HasId<Geocode>;"
+`;

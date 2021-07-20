@@ -5,6 +5,7 @@ import { Geocode } from './Geocode';
  * tracking the location of trains over time
  */
 export interface TrainLocatedEvent {
+  id?: number;
   trainUuid: string;
   occurredAt: string;
   geocode: Geocode;

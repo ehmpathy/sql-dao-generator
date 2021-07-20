@@ -1,5 +1,5 @@
 import { DatabaseLanguage, GeneratorConfig } from '../../../domain';
-import { readYmlFile } from '../../fileio/readYmlFile';
+import { readYmlFile } from '../../utils/fileio/readYmlFile';
 import { extractDomainObjectMetadatasFromConfigCriteria } from './extractDomainObjectMetadatasFromConfigCriteria';
 import { getAllPathsMatchingGlobs } from './getAllPathsMatchingGlobs';
 
