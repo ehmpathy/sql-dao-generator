@@ -1,5 +1,5 @@
 import { Command, flags } from '@oclif/command';
-import { generate } from '../../logic/commands/generate/generate';
+import { generate } from '../../logic/commands/generate';
 
 export default class Generate extends Command {
   public static description = 'generate data-access-objects from domain-objects';
