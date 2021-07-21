@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { readConfig } from '../../config/getConfig/readConfig';
-import { saveCode } from '../../utils/fileio/saveCode';
+import { defineDaoCodeFilesForDomainObjects } from '../../databaseAccessObjects/defineDaoCodeFilesForDomainObjects';
+import { defineSqlSchemaControlCodeFilesForDomainObjects } from '../../sqlSchemaControl/defineSqlSchemaControlCodeFilesForDomainObjects';
 import { defineSqlSchemaGeneratorCodeFilesForDomainObjects } from '../../sqlSchemaGenerator/defineSqlSchemaGeneratorCodeFilesForDomainObjects';
 import { defineSqlSchemaRelationshipsForDomainObjects } from '../../sqlSchemaRelationship/defineSqlSchemaRelationshipsForDomainObjects';
 
@@ -20,22 +21,26 @@ export const generate = async ({ configPath }: { configPath: string }) => {
     domainObjects,
     sqlSchemaRelationships,
   });
-  // const sqlSchemaGeneratorCode = defineSqlSchemaGeneratorCode({
-  //   domainObjectMetadatas: config.for.objects,
-  //   schemaConfig: config.generates,
-  // });
   // TODO: output each {code, destination} pair
   // TODO: run sql-schema-generator on the entities
 
   // output the sql-schema-control `domains.yml` file
   console.log(`${chalk.bold('🔧 Generating schema-control config:')} for use with sql-schema-control...\n`); // tslint:disable-line no-console
-  // TODO
+  const sqlSchemaControlCodeFiles = defineSqlSchemaControlCodeFilesForDomainObjects({
+    domainObjects,
+    sqlSchemaRelationships,
+  });
+  // TODO: output each
 
   // output the dao functions
   console.log(`${chalk.bold('️🔨 Generating data-access-objects:')} methods, casters, tests, and named exports...\n`); // tslint:disable-line no-console
-  // TODO
+  const daoCodeFiles = defineDaoCodeFilesForDomainObjects({
+    domainObjects,
+    sqlSchemaRelationships,
+  });
+  // TODO: output each
 
   // output the sql types and query functions
   console.log(`${chalk.bold('🗜️  Generating typescript from sql:')} types and funcs using sql-code-generator...\n`); // tslint:disable-line no-console
-  // TODO
+  // TODO: run the command
 };

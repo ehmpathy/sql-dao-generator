@@ -1,7 +1,10 @@
 import { DatabaseLanguage, GeneratorConfig } from '../../../domain';
-import { readYmlFile } from '../../utils/fileio/readYmlFile';
+import { readYmlFile } from '../../../utils/fileio/readYmlFile';
 import { extractDomainObjectMetadatasFromConfigCriteria } from './extractDomainObjectMetadatasFromConfigCriteria';
 import { getAllPathsMatchingGlobs } from './getAllPathsMatchingGlobs';
+import { getRelevantContentsOfSqlCodeGeneratorConfig } from './referencedConfigs/getRelevantContentsOfSqlCodeGeneratorConfig';
+import { getRelevantContentsOfSqlSchemaControlConfig } from './referencedConfigs/getRelevantContentsOfSqlSchemaControlConfig';
+import { getRelevantContentsOfSqlSchemaGeneratorConfig } from './referencedConfigs/getRelevantContentsOfSqlSchemaGeneratorConfig';
 
 /*
   1. read the config
@@ -12,6 +15,7 @@ export const readConfig = async ({ configPath }: { configPath: string }): Promis
     .split('/')
     .slice(0, -1)
     .join('/'); // drops the file name
+  const getAbsolutePathFromRelativeToConfigPath = (relpath: string) => `${configDir}/${relpath}`;
 
   // get the yml
   const contents = await readYmlFile({ filePath: configPath });
@@ -51,13 +55,28 @@ export const readConfig = async ({ configPath }: { configPath: string }): Promis
       },
     },
     schema: {
-      config: contents.generates.schema.config,
+      config: {
+        path: contents.generates.schema.config,
+        content: await getRelevantContentsOfSqlSchemaGeneratorConfig({
+          pathToConfig: getAbsolutePathFromRelativeToConfigPath(contents.generates.schema.config),
+        }),
+      },
     },
     control: {
-      config: contents.generates.control.config,
+      config: {
+        path: contents.generates.control.config,
+        content: await getRelevantContentsOfSqlSchemaControlConfig({
+          pathToConfig: getAbsolutePathFromRelativeToConfigPath(contents.generates.control.config),
+        }),
+      },
     },
     code: {
-      config: contents.generates.code.config,
+      config: {
+        path: contents.generates.code.config,
+        content: await getRelevantContentsOfSqlCodeGeneratorConfig({
+          pathToConfig: getAbsolutePathFromRelativeToConfigPath(contents.generates.code.config),
+        }),
+      },
     },
   };
 
@@ -78,7 +97,7 @@ export const readConfig = async ({ configPath }: { configPath: string }): Promis
     root: configDir,
   });
   const domainObjectMetadatas = await extractDomainObjectMetadatasFromConfigCriteria({
-    searchPaths: relativeSearchPaths.map((relPath) => `${configDir}/${relPath}`), // give absolute paths
+    searchPaths: relativeSearchPaths.map((relPath) => getAbsolutePathFromRelativeToConfigPath(relPath)), // give absolute paths
     include: Array.isArray(include) ? include : include ? [include] : null,
     exclude: Array.isArray(exclude) ? exclude : exclude ? [exclude] : null,
   });

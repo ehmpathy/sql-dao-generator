@@ -264,10 +264,36 @@ Object {
   },
   "generates": Object {
     "code": Object {
-      "config": "codegen.sql.types.yml",
+      "config": Object {
+        "content": Object {
+          "generates": Object {
+            "queryFunctions": "src/data/dao/.generated/queryFunctions.ts",
+            "types": "src/data/dao/.generated/types.ts",
+          },
+          "queries": Array [
+            "src/data/dao/**/*.query.ts",
+            "!src/**/*.test.ts",
+            "!src/**/*.test.integration.ts",
+          ],
+          "resources": Array [
+            "provision/schema/sql/tables/**/*.sql",
+            "provision/schema/sql/views/**/*.sql",
+            "provision/schema/sql/functions/**/*.sql",
+          ],
+        },
+        "path": "codegen.sql.types.yml",
+      },
     },
     "control": Object {
-      "config": "provision/schema/control.yml",
+      "config": Object {
+        "content": Object {
+          "definitions": Array [
+            "./sql/init.yml",
+            "./sql/domain.yml",
+          ],
+        },
+        "path": "provision/schema/control.yml",
+      },
     },
     "daos": Object {
       "to": "src/data/dao",
@@ -277,7 +303,17 @@ Object {
       },
     },
     "schema": Object {
-      "config": "codegen.sql.schema.yml",
+      "config": Object {
+        "content": Object {
+          "declarations": "provision/schema/declarations/index.ts",
+          "generates": Object {
+            "sql": Object {
+              "to": "provision/schema/sql",
+            },
+          },
+        },
+        "path": "codegen.sql.schema.yml",
+      },
     },
   },
   "language": "postgres",

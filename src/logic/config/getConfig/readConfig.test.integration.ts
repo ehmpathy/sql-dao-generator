@@ -9,7 +9,7 @@ describe('readConfig', () => {
     expect(config).toBeInstanceOf(GeneratorConfig);
     expect(config.language).toEqual('postgres');
     expect(config.dialect).toEqual('10.7');
-    expect(config.generates).toEqual({
+    expect(config.generates).toMatchObject({
       daos: {
         to: 'src/data/dao',
         using: {
@@ -18,13 +18,22 @@ describe('readConfig', () => {
         },
       },
       schema: {
-        config: 'codegen.sql.schema.yml',
+        config: {
+          path: 'codegen.sql.schema.yml',
+          content: expect.anything(),
+        },
       },
       control: {
-        config: 'provision/schema/control.yml',
+        config: {
+          path: 'provision/schema/control.yml',
+          content: expect.anything(),
+        },
       },
       code: {
-        config: 'codegen.sql.types.yml',
+        config: {
+          path: 'codegen.sql.types.yml',
+          content: expect.anything(),
+        },
       },
     });
     expect(config.for.objects.length).toEqual(5);

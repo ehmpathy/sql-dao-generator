@@ -22,13 +22,22 @@ const schema = Joi.object().keys({
       }),
     }),
     schema: Joi.object().keys({
-      config: Joi.string().required(),
+      config: Joi.object().keys({
+        path: Joi.string().required(),
+        content: Joi.any().required(),
+      }),
     }),
     control: Joi.object().keys({
-      config: Joi.string().required(),
+      config: Joi.object().keys({
+        path: Joi.string().required(),
+        content: Joi.any().required(),
+      }),
     }),
     code: Joi.object().keys({
-      config: Joi.string().required(),
+      config: Joi.object().keys({
+        path: Joi.string().required(),
+        content: Joi.any().required(),
+      }),
     }),
   }),
   for: Joi.object().keys({
@@ -52,13 +61,38 @@ export interface GeneratorConfig {
       };
     };
     schema: {
-      config: string; // path to sql-schema-generator config
+      config: {
+        path: string; // path to sql-schema-generator config
+        content: {
+          declarations: string;
+          generates: {
+            sql: {
+              to: string;
+            };
+          };
+        };
+      };
     };
     control: {
-      config: string; // path to sql-schema-control config
+      config: {
+        path: string; // path to sql-schema-control config
+        content: {
+          definitions: string[];
+        };
+      };
     };
     code: {
-      config: string; // path to sql-code-generator config
+      config: {
+        path: string; // path to sql-code-generator config
+        content: {
+          resources: string[];
+          queries: string[];
+          generates: {
+            types: string;
+            queryFunctions: string;
+          };
+        };
+      };
     };
   };
 }

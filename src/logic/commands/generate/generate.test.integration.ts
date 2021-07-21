@@ -1,5 +1,5 @@
 import { generate } from './generate';
-import { readFile } from '../utils/fileIO';
+import { readFile } from '../../../utils/fileio/fileIO';
 
 describe('generate', () => {
   const testAssetPaths = {
