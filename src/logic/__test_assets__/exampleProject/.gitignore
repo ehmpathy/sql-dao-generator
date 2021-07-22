@@ -1,0 +1,4 @@
+provision/schema/declarations/**/*
+provision/schema/sql/**/*
+provision/schema/sql/**/*
+src/data/dao

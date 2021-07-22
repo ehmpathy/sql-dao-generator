@@ -40,7 +40,7 @@ ${imports.join('\n')}
  * all of the domain objects which we want to create sql-schema-resources for with sql-schema-generator
  */
 export const generateSqlSchemasFor = [
-  ${domainObjects.map(({ name }) => `'${camelCase(name)}'`).join(',\n  ')},
+  ${domainObjects.map(({ name }) => `${camelCase(name)}`).join(',\n  ')},
 ];
   `.trim();
   const indexCodeFile = new GeneratedCodeFile({

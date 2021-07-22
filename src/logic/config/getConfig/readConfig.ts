@@ -1,5 +1,6 @@
 import { DatabaseLanguage, GeneratorConfig } from '../../../domain';
 import { readYmlFile } from '../../../utils/fileio/readYmlFile';
+import { getDirOfPath } from '../../../utils/filepaths/getDirOfPath';
 import { extractDomainObjectMetadatasFromConfigCriteria } from './extractDomainObjectMetadatasFromConfigCriteria';
 import { getAllPathsMatchingGlobs } from './getAllPathsMatchingGlobs';
 import { getRelevantContentsOfSqlCodeGeneratorConfig } from './referencedConfigs/getRelevantContentsOfSqlCodeGeneratorConfig';
@@ -11,10 +12,7 @@ import { getRelevantContentsOfSqlSchemaGeneratorConfig } from './referencedConfi
   2. validate the config
 */
 export const readConfig = async ({ configPath }: { configPath: string }): Promise<GeneratorConfig> => {
-  const configDir = configPath
-    .split('/')
-    .slice(0, -1)
-    .join('/'); // drops the file name
+  const configDir = getDirOfPath(configPath);
   const getAbsolutePathFromRelativeToConfigPath = (relpath: string) => `${configDir}/${relpath}`;
 
   // get the yml

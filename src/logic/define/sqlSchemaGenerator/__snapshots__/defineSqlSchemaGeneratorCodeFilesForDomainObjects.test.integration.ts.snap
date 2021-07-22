@@ -14,12 +14,12 @@ import { trainLocatedEvent } from './trainLocatedEvent';
  * all of the domain objects which we want to create sql-schema-resources for with sql-schema-generator
  */
 export const generateSqlSchemasFor = [
-  'carriage',
-  'trainEngineer',
-  'geocode',
-  'train',
-  'locomotive',
-  'trainLocatedEvent',
+  carriage,
+  trainEngineer,
+  geocode,
+  train,
+  locomotive,
+  trainLocatedEvent,
 ];",
     "relpath": "index.ts",
   },

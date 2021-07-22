@@ -12,8 +12,8 @@ export const geocodeDao = {
   findById,
   findByUnique,
   findByUuid,
-  upsert
-}",
+  upsert,
+};",
     "relpath": "geocodeDao/index.ts",
   },
   GeneratedCodeFile {
@@ -200,8 +200,8 @@ import { upsert } from './upsert';
 export const geocodeDao = {
   findById,
   findByUnique,
-  upsert
-}",
+  upsert,
+};",
     "relpath": "geocodeDao/index.ts",
   },
   GeneratedCodeFile {

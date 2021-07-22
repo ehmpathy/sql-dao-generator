@@ -51,8 +51,8 @@ export const defineDaoCodeFilesForDomainObject = ({
 ${indexImports.join('\n')}
 
 export const ${castDomainObjectNameToDaoName(domainObject.name)} = {
-  ${daoMethodNames.join(',\n  ')}
-}
+  ${daoMethodNames.join(',\n  ')},
+};
     `.trim(),
   });
 

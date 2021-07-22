@@ -28,8 +28,9 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
   const imports = [
     // always present imports
     `import { HasId${hasUuidProperty ? ', HasUuid' : ''} } from 'simple-type-guards';`,
+    '', // split module from relative imports
     "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
-    `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`, // import this domain object; note: higher level function will swap out the import path
+    `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`,
     "import { log } from '$PATH_TO_LOG_OBJECT';",
     `import { sqlQueryUpsert${domainObject.name} } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';`,
     ...sqlSchemaRelationship.properties

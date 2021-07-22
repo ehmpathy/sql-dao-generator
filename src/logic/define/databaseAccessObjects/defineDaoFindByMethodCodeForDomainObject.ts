@@ -53,6 +53,7 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
   findByQueryType: FindByQueryType;
 }) => {
   // define some useful constants
+  const hasUuidProperty = !!domainObject.properties.uuid;
   const sqlSchemaName = sqlSchemaRelationship.name.sqlSchema;
   const hasCurrentView = sqlSchemaRelationship.properties.some(
     ({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.isUpdatable || sqlSchemaProperty.isArray,
@@ -61,10 +62,13 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
   // define the imports
   const imports = [
     // always present imports
+    `import { HasId${hasUuidProperty ? ', HasUuid' : ''} } from 'simple-type-guards';`,
+    '', // split module from relative imports
     "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
     "import { log } from '$PATH_TO_LOG_OBJECT';",
+    `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`,
     `import { sqlQueryFind${domainObject.name}By${findByQueryType} } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';`,
-    "import { fromDatabaseObject } from './cast/fromDatabaseObject';",
+    "import { castFromDatabaseObject } from './castFromDatabaseObject';",
   ];
 
   // define the where conditions
@@ -185,7 +189,7 @@ export const findBy${findByQueryType} = async ({
   ${Object.entries(parameters)
     .map((entry) => `${entry[0]}: ${entry[1]}`)
     .join(';\n  ')};
-}): Promise<${outputType}> => {
+}): Promise<${outputType} | null> => {
   const results = await sqlQueryFind${domainObject.name}By${findByQueryType}({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -195,7 +199,7 @@ export const findBy${findByQueryType} = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };
 
 `.trim();

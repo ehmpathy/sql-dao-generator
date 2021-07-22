@@ -4,4 +4,5 @@ import util from 'util';
 // export these from a seperate file to make testing easier (i.e., easier to define the mocks)
 const mkdir = util.promisify(fs.mkdir);
 
-export const makeDirectoryAsync = async ({ directoryPath }: { directoryPath: string }) => mkdir(directoryPath);
+export const makeDirectoryAsync = async ({ directoryPath }: { directoryPath: string }) =>
+  mkdir(directoryPath, { recursive: true });

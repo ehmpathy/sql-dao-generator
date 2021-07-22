@@ -40,8 +40,9 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
   const imports = [
     // always present imports
     `import { HasId${hasUuidProperty ? ', HasUuid' : ''} } from 'simple-type-guards';`,
+    '', // split module from relative imports
     `import { ${[domainObject.name, ...nestedDomainObjectNames].sort().join(', ')} } from '$PATH_TO_DOMAIN_OBJECT';`, // import this domain object; note: higher level function will swap out the import path
-    `import { sqlQueryFind${domainObject.name}ByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';`,
+    `import { SqlQueryFind${domainObject.name}ByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';`,
   ];
 
   // define the output type
