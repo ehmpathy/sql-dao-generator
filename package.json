@@ -51,7 +51,8 @@
     "test:format": "prettier --parser typescript --check 'src/**/*.ts' --config ./prettier.config.js",
     "test:lint": "tslint -c tslint.json -p tsconfig.json",
     "test:unit": "FORCE_COLOR=1 TZ=UTC jest --forceExit --coverage --verbose",
-    "test:integration": "FORCE_COLOR=1 TZ=UTC jest -c ./jest.integration.config.js --forceExit --coverage --verbose --runInBand",
+    "test:integration:provision-generated-files-to-import": "npx jest src/logic/commands/generate.test.ts",
+    "test:integration": "npm run test:integration:provision-generated-files-to-import && FORCE_COLOR=1 TZ=UTC jest -c ./jest.integration.config.js --forceExit --coverage --verbose --runInBand",
     "test": "npm run test:types && npm run test:format && npm run test:lint && npm run test:unit && npm run test:integration",
     "preversion": "npm run test && npm run build",
     "postversion": "git push origin HEAD --tags --no-verify",
@@ -79,7 +80,7 @@
     "shelljs": "0.8.4",
     "sql-code-generator": "0.8.1",
     "sql-schema-control": "0.7.3",
-    "sql-schema-generator": "0.20.1",
+    "sql-schema-generator": "0.20.2",
     "stdout-stderr": "0.1.9",
     "ts-jest": "26.1.1",
     "tslint": "5.11.0",
@@ -113,6 +114,6 @@
   },
   "peerDependencies": {
     "sql-code-generator": ">= 0.8.1 < 1",
-    "sql-schema-generator": ">= 0.20.1 < 1"
+    "sql-schema-generator": ">= 0.20.2 < 1"
   }
 }

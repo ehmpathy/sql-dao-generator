@@ -17,4 +17,7 @@
   "atom": {
     "rewriteTsconfig": false
   },
+  "exclude": [
+    "src/logic/commands/generate.test.integration.ts"
+  ],
 }

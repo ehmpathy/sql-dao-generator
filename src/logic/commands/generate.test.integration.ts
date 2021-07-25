@@ -1,6 +1,7 @@
 import shell from 'shelljs';
 import { HasId, HasUuid } from 'simple-type-guards';
 import { v4 } from 'uuid';
+
 import { carriageDao } from '../__test_assets__/exampleProject/src/data/dao/carriageDao';
 import { geocodeDao } from '../__test_assets__/exampleProject/src/data/dao/geocodeDao';
 import { locomotiveDao } from '../__test_assets__/exampleProject/src/data/dao/locomotiveDao';
@@ -17,8 +18,8 @@ import {
   TrainStatus,
 } from '../__test_assets__/exampleProject/src/domain';
 import {
-  getDatabaseConnection,
   DatabaseConnection,
+  getDatabaseConnection,
 } from '../__test_assets__/exampleProject/src/util/database/getDbConnection';
 
 jest.setTimeout(60 * 1000);
