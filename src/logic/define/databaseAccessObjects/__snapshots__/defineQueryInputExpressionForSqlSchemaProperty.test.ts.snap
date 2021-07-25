@@ -4,7 +4,7 @@ exports[`defineQueryInputExpressionForSqlSchemaProperty should define the input 
 "(
       SELECT COALESCE(array_agg(train_engineer.id ORDER BY train_engineer_ref.array_order_index), array[]::bigint[]) AS array_agg
       FROM train_engineer
-      JOIN unnest(:assignedEngineerUuids) WITH ORDINALITY
+      JOIN unnest(:assignedEngineerUuids::uuid[]) WITH ORDINALITY
         AS train_engineer_ref (uuid, array_order_index)
         ON train_engineer.uuid = train_engineer_ref.uuid
     )"

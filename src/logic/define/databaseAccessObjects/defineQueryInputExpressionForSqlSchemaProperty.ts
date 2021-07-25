@@ -47,7 +47,7 @@ export const defineQueryInputExpressionForSqlSchemaProperty = ({
     (
       SELECT COALESCE(array_agg(${referencedSqlSchemaName}.id ORDER BY ${referencedSqlSchemaName}_ref.array_order_index), array[]::bigint[]) AS array_agg
       FROM ${referencedSqlSchemaName}
-      JOIN unnest(:${domainObjectProperty.name}) WITH ORDINALITY
+      JOIN unnest(:${domainObjectProperty.name}::uuid[]) WITH ORDINALITY
         AS ${referencedSqlSchemaName}_ref (uuid, array_order_index)
         ON ${referencedSqlSchemaName}.uuid = ${referencedSqlSchemaName}_ref.uuid
     )

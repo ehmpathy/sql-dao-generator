@@ -90,6 +90,7 @@ export const train = new Entity({
     locomotive_ids: prop.ARRAY_OF(prop.REFERENCES(locomotive)),
     carriage_ids: prop.ARRAY_OF(prop.REFERENCES(carriage)),
     engineer_ids: prop.ARRAY_OF(prop.REFERENCES(trainEngineer)),
+    lead_engineer_id: prop.REFERENCES(trainEngineer),
     status: { ...prop.ENUM(['ASSEMBLED', 'DISASSEMBLED']), updatable: true },
   },
   unique: ['combination_id'],

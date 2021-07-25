@@ -300,6 +300,27 @@ Array [
       },
       Object {
         "domainObject": DomainObjectPropertyMetadata {
+          "name": "leadEngineerUuid",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "lead_engineer_id",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "IMPLICIT_BY_UUID",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainEntity",
+              "name": "TrainEngineer",
+            },
+          },
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
           "name": "status",
           "nullable": false,
           "of": Array [

@@ -14,6 +14,7 @@ export interface Train {
   locomotiveUuids: string[]; // all of the locomotives used to power the train. may be one or more, in many configurations
   carriageUuids: string[]; // of all the carriages being moved in the train
   engineerUuids: string[]; // all of the engineers assigned to the train at the time
+  leadEngineerUuid: string;
   status: TrainStatus;
 }
 export class Train extends DomainEntity<Train> implements Train {

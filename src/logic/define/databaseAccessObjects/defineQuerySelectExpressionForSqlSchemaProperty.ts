@@ -82,7 +82,7 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
     if (sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.IMPLICIT_BY_UUID) {
       return `
     (
-      SELECT COALESCE(array_agg(${referencedSqlSchemaName}.uuid ORDER BY ${referencedSqlSchemaName}_ref.array_order_index), array[]::varchar[]) AS array_agg
+      SELECT COALESCE(array_agg(${referencedSqlSchemaName}.uuid ORDER BY ${referencedSqlSchemaName}_ref.array_order_index), array[]::uuid[]) AS array_agg
       FROM ${referencedSqlSchemaName}
       JOIN unnest(${sqlSchemaName}.${sqlSchemaProperty.name}) WITH ORDINALITY
         AS ${referencedSqlSchemaName}_ref (id, array_order_index)

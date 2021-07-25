@@ -63,7 +63,7 @@ export const sql = \`
     (
       SELECT COALESCE(array_agg(locomotive.id ORDER BY locomotive_ref.array_order_index), array[]::bigint[]) AS array_agg
       FROM locomotive
-      JOIN unnest(:locomotiveUuids) WITH ORDINALITY
+      JOIN unnest(:locomotiveUuids::uuid[]) WITH ORDINALITY
         AS locomotive_ref (uuid, array_order_index)
         ON locomotive.uuid = locomotive_ref.uuid
     )

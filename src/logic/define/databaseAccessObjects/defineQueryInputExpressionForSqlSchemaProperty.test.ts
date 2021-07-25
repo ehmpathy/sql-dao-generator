@@ -129,7 +129,7 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
     expect(expression).toContain('COALESCE(array_agg(train_engineer.id'); // should select an array of ids, with coalesce to treat empty array
     expect(expression).toContain('array_agg(train_engineer.id ORDER BY train_engineer_ref.array_order_index)'); // should select them by persisted array order
     expect(expression).toContain('FROM train_engineer'); // from the right table
-    expect(expression).toContain('JOIN unnest(:assignedEngineerUuids) WITH ORDINALITY'); // using 'unnest' for performance gains,  using "ordinality" so that we can preserve persisted array_order_index
+    expect(expression).toContain('JOIN unnest(:assignedEngineerUuids::uuid[]) WITH ORDINALITY'); // using 'unnest' for performance gains,  using "ordinality" so that we can preserve persisted array_order_index
     expect(expression).toContain('train_engineer_ref (uuid, array_order_index)'); // name the unnested w/ ordinality table well
     expect(expression).toContain('ON train_engineer.uuid = train_engineer_ref.uuid'); // filtered on the right id
     expect(expression).toMatchSnapshot();

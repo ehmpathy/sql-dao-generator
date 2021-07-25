@@ -42,7 +42,7 @@ exports[`defineQuerySelectExpressionForSqlSchemaProperty should define the selec
 
 exports[`defineQuerySelectExpressionForSqlSchemaProperty should define the select expression correctly for an array of IMPLICIT_BY_UUID references 1`] = `
 "(
-      SELECT COALESCE(array_agg(train_engineer.uuid ORDER BY train_engineer_ref.array_order_index), array[]::varchar[]) AS array_agg
+      SELECT COALESCE(array_agg(train_engineer.uuid ORDER BY train_engineer_ref.array_order_index), array[]::uuid[]) AS array_agg
       FROM train_engineer
       JOIN unnest(train.assigned_engineer_ids) WITH ORDINALITY
         AS train_engineer_ref (id, array_order_index)

@@ -231,6 +231,12 @@ Object {
             "required": false,
             "type": "NUMBER",
           },
+          "leadEngineerUuid": DomainObjectPropertyMetadata {
+            "name": "leadEngineerUuid",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
           "locomotiveUuids": DomainObjectPropertyMetadata {
             "name": "locomotiveUuids",
             "nullable": false,
@@ -289,7 +295,6 @@ Object {
       "config": Object {
         "content": Object {
           "definitions": Array [
-            "./sql/init.yml",
             "./sql/domain.yml",
           ],
         },

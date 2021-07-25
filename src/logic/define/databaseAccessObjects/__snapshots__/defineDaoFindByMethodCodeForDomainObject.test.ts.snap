@@ -106,7 +106,7 @@ export const sql = \`
         ON train_badge.id = train_badge_ref.id
     ) AS badges,
     (
-      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::varchar[]) AS array_agg
+      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
       FROM locomotive
       JOIN unnest(train.locomotive_ids) WITH ORDINALITY
         AS locomotive_ref (id, array_order_index)
@@ -328,7 +328,7 @@ export const sql = \`
         ON train_badge.id = train_badge_ref.id
     ) AS badges,
     (
-      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::varchar[]) AS array_agg
+      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
       FROM locomotive
       JOIN unnest(train.locomotive_ids) WITH ORDINALITY
         AS locomotive_ref (id, array_order_index)
@@ -341,7 +341,7 @@ export const sql = \`
     AND train.locomotive_ids = (
       SELECT COALESCE(array_agg(locomotive.id ORDER BY locomotive_ref.array_order_index), array[]::bigint[]) AS array_agg
       FROM locomotive
-      JOIN unnest(:locomotiveUuids) WITH ORDINALITY
+      JOIN unnest(:locomotiveUuids::uuid[]) WITH ORDINALITY
         AS locomotive_ref (uuid, array_order_index)
         ON locomotive.uuid = locomotive_ref.uuid
     )
@@ -425,7 +425,7 @@ export const sql = \`
         ON train_badge.id = train_badge_ref.id
     ) AS badges,
     (
-      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::varchar[]) AS array_agg
+      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
       FROM locomotive
       JOIN unnest(train.locomotive_ids) WITH ORDINALITY
         AS locomotive_ref (id, array_order_index)
@@ -649,7 +649,7 @@ export const sql = \`
         ON train_badge.id = train_badge_ref.id
     ) AS badges,
     (
-      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::varchar[]) AS array_agg
+      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
       FROM locomotive
       JOIN unnest(train.locomotive_ids) WITH ORDINALITY
         AS locomotive_ref (id, array_order_index)
