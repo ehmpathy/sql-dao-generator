@@ -53,44 +53,6 @@ Object {
       },
       DomainObjectMetadata {
         "decorations": Object {
-          "unique": Array [
-            "socialSecurityNumberHash",
-          ],
-          "updatable": Array [
-            "name",
-          ],
-        },
-        "extends": "DomainEntity",
-        "name": "TrainEngineer",
-        "properties": Object {
-          "id": DomainObjectPropertyMetadata {
-            "name": "id",
-            "nullable": false,
-            "required": false,
-            "type": "NUMBER",
-          },
-          "name": DomainObjectPropertyMetadata {
-            "name": "name",
-            "nullable": false,
-            "required": true,
-            "type": "STRING",
-          },
-          "socialSecurityNumberHash": DomainObjectPropertyMetadata {
-            "name": "socialSecurityNumberHash",
-            "nullable": false,
-            "required": true,
-            "type": "STRING",
-          },
-          "uuid": DomainObjectPropertyMetadata {
-            "name": "uuid",
-            "nullable": false,
-            "required": false,
-            "type": "STRING",
-          },
-        },
-      },
-      DomainObjectMetadata {
-        "decorations": Object {
           "unique": null,
           "updatable": null,
         },
@@ -257,6 +219,44 @@ Object {
             ],
             "required": true,
             "type": "ENUM",
+          },
+          "uuid": DomainObjectPropertyMetadata {
+            "name": "uuid",
+            "nullable": false,
+            "required": false,
+            "type": "STRING",
+          },
+        },
+      },
+      DomainObjectMetadata {
+        "decorations": Object {
+          "unique": Array [
+            "socialSecurityNumberHash",
+          ],
+          "updatable": Array [
+            "name",
+          ],
+        },
+        "extends": "DomainEntity",
+        "name": "TrainEngineer",
+        "properties": Object {
+          "id": DomainObjectPropertyMetadata {
+            "name": "id",
+            "nullable": false,
+            "required": false,
+            "type": "NUMBER",
+          },
+          "name": DomainObjectPropertyMetadata {
+            "name": "name",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "socialSecurityNumberHash": DomainObjectPropertyMetadata {
+            "name": "socialSecurityNumberHash",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
           },
           "uuid": DomainObjectPropertyMetadata {
             "name": "uuid",

@@ -10,7 +10,7 @@ export default class Generate extends Command {
       char: 'c',
       description: 'path to config yml',
       required: true,
-      default: 'codegen.dao.yml',
+      default: 'codegen.sql.dao.yml',
     }),
   };
 

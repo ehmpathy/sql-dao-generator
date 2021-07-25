@@ -70,14 +70,12 @@ export const saveGeneratedDatabaseAccessObjectCodeFiles = async ({
       }),
   );
 
-  // save the generated files
-  await Promise.all(
-    filesWithHydratedImportPaths.map(async (file) =>
-      saveCode({
-        rootDir: projectRootDir,
-        relativeFilePath: getNormalizedPath(`${relativeRootDirOfDaoFiles}/${file.relpath}`),
-        code: file.content,
-      }),
-    ),
-  );
+  // save the generated files (using a for loop to preserve order of when each file is saved -> output message display order)
+  for (const file of filesWithHydratedImportPaths) {
+    await saveCode({
+      rootDir: projectRootDir,
+      relativeFilePath: getNormalizedPath(`${relativeRootDirOfDaoFiles}/${file.relpath}`),
+      code: file.content,
+    });
+  }
 };

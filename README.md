@@ -290,7 +290,7 @@ USAGE
   $ sql-dao-generator generate
 
 OPTIONS
-  -c, --config=config  (required) [default: codegen.sql.yml] path to config yml
+  -c, --config=config  (required) [default: codegen.sql.dao.yml] path to config yml
   -h, --help           show CLI help
 ```
 

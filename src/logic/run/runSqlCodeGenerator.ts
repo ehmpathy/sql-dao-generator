@@ -6,9 +6,8 @@ export const runSqlCodeGenerator = async ({ config }: { config: GeneratorConfig 
   // run the generator to actually generate the files
   shell.cd(config.rootDir);
   const result = await shell.exec(`npx sql-code-generator generate --config=${config.generates.code.config.path}`, {
-    // silent: true,
+    silent: true,
   });
-  // console.log(result);
   if (result.stderr) throw new Error(result.stderr);
 
   // log that we've successfully run

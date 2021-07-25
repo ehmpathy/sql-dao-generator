@@ -13,12 +13,12 @@ import { saveGeneratedSqlSchemaGeneratorCodeFiles } from '../save/saveGeneratedS
 
 export const generate = async ({ configPath }: { configPath: string }) => {
   // read the declarations from config
-  console.log(`${chalk.bold('\n🔎 Loading domain objects:')} using domain-objects-metadata...\n`); // tslint:disable-line no-console
+  console.log(`${chalk.bold('\n🔎 Loading domain objects:')} using domain-objects-metadata...`); // tslint:disable-line no-console
   const config = await readConfig({ configPath });
   const domainObjects = config.for.objects;
 
   // derive sql schema relationships from the domain objects
-  console.log(`${chalk.bold('\n🧠 Defining sql relationships:')} conventions, references, modifiers...\n`); // tslint:disable-line no-console
+  console.log(`${chalk.bold('\n🧠 Defining sql relationships:')} conventions, references, modifiers...`); // tslint:disable-line no-console
   const sqlSchemaRelationships = defineSqlSchemaRelationshipsForDomainObjects({ domainObjects });
 
   // output the sql-schema-generator entities

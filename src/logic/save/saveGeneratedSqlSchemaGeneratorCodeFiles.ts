@@ -17,14 +17,12 @@ export const saveGeneratedSqlSchemaGeneratorCodeFiles = async ({
     `${getDirOfPath(config.generates.schema.config.path)}/${config.generates.schema.config.content.declarations}`,
   );
 
-  // save the generated files
-  await Promise.all(
-    files.map(async (file) =>
-      saveCode({
-        rootDir: projectRootDir,
-        relativeFilePath: `${relativeRootDirOfGeneratorInputFiles}/${file.relpath}`,
-        code: file.content,
-      }),
-    ),
-  );
+  // save the generated files (using a for loop to preserve order of when each file is saved -> output message display order)
+  for (const file of files) {
+    await saveCode({
+      rootDir: projectRootDir,
+      relativeFilePath: `${relativeRootDirOfGeneratorInputFiles}/${file.relpath}`,
+      code: file.content,
+    });
+  }
 };

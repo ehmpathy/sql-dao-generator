@@ -22,6 +22,6 @@ export const extractDomainObjectMetadatasFromConfigCriteria = async ({
     ? metadatasAfterInclusion.filter((metadata) => !exclude.includes(metadata.name)) // if defined, skip the ones in the list
     : metadatasAfterInclusion; // default to "none are exluded"
 
-  // and give the metadatas after doing both of the above
-  return metadatasAfterExclusion;
+  // and give the metadatas after doing both of the above (and sorting)
+  return metadatasAfterExclusion.sort((a, b) => (a.name < b.name ? -1 : 1));
 };
