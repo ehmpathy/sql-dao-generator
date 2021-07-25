@@ -18,8 +18,9 @@ export const geocodeDao = {
   },
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
-import { sqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = ({
   dbObject,
@@ -35,10 +36,13 @@ export const castFromDatabaseObject = ({
     "relpath": "geocodeDao/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_geocode_by_id
@@ -57,7 +61,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<HasUuid<Geocode>>> => {
+}): Promise<HasId<HasUuid<Geocode>> | null> => {
   const results = await sqlQueryFindGeocodeById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -67,15 +71,18 @@ export const findById = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "geocodeDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_geocode_by_unique
@@ -98,7 +105,7 @@ export const findByUnique = async ({
   dbConnection: DatabaseConnection;
   latitude: number;
   longitude: number;
-}): Promise<HasId<HasUuid<Geocode>>> => {
+}): Promise<HasId<HasUuid<Geocode>> | null> => {
   const results = await sqlQueryFindGeocodeByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -109,15 +116,18 @@ export const findByUnique = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "geocodeDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_geocode_by_uuid
@@ -136,7 +146,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<HasUuid<Geocode>>> => {
+}): Promise<HasId<HasUuid<Geocode>> | null> => {
   const results = await sqlQueryFindGeocodeByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -146,12 +156,13 @@ export const findByUuid = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "geocodeDao/findByUuid.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -160,11 +171,11 @@ import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 export const sql = \`
   -- query_name = upsert_geocode
   SELECT
-    id, uuid
+    dgv.id, dgv.uuid
   FROM upsert_geocode(
     :latitude,
     :longitude
-  );
+  ) as dgv;
 \`;
 
 export const upsert = async ({
@@ -182,7 +193,7 @@ export const upsert = async ({
       longitude: geocode.longitude,
     },
   });
-  const { id, uuid } = result[0]; // grab the db generated values
+  const { id, uuid } = results[0]; // grab the db generated values
   return new Geocode({ ...geocode, id, uuid }) as HasId<HasUuid<Geocode>>;
 };",
     "relpath": "geocodeDao/upsert.ts",
@@ -206,8 +217,9 @@ export const geocodeDao = {
   },
   GeneratedCodeFile {
     "content": "import { HasId } from 'simple-type-guards';
+
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
-import { sqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = ({
   dbObject,
@@ -222,10 +234,13 @@ export const castFromDatabaseObject = ({
     "relpath": "geocodeDao/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_geocode_by_id
@@ -244,7 +259,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<Geocode>> => {
+}): Promise<HasId<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -254,15 +269,18 @@ export const findById = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "geocodeDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_geocode_by_unique
@@ -285,7 +303,7 @@ export const findByUnique = async ({
   dbConnection: DatabaseConnection;
   latitude: number;
   longitude: number;
-}): Promise<HasId<Geocode>> => {
+}): Promise<HasId<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -296,12 +314,13 @@ export const findByUnique = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "geocodeDao/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId } from 'simple-type-guards';
+
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -310,11 +329,11 @@ import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 export const sql = \`
   -- query_name = upsert_geocode
   SELECT
-    id, uuid
+    dgv.id, dgv.uuid
   FROM upsert_geocode(
     :latitude,
     :longitude
-  );
+  ) as dgv;
 \`;
 
 export const upsert = async ({
@@ -332,7 +351,7 @@ export const upsert = async ({
       longitude: geocode.longitude,
     },
   });
-  const { id } = result[0]; // grab the db generated values
+  const { id } = results[0]; // grab the db generated values
   return new Geocode({ ...geocode, id }) as HasId<Geocode>;
 };",
     "relpath": "geocodeDao/upsert.ts",

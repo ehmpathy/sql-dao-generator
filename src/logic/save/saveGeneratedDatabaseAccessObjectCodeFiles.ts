@@ -32,7 +32,7 @@ export const saveGeneratedDatabaseAccessObjectCodeFiles = async ({
               from: getAbsolutePathOfDaoFile(file),
               to: getNormalizedPath(
                 `${projectRootDir}/${config.generates.daos.using.DatabaseConnection.split('#')[0]}`,
-              ),
+              ).replace(/\.ts$/, ''),
             }),
           )
           .replace(
@@ -40,20 +40,22 @@ export const saveGeneratedDatabaseAccessObjectCodeFiles = async ({
             getRelativePath({
               from: getAbsolutePathOfDaoFile(file),
               to: getNormalizedPath(`${projectRootDir}/${config.generates.daos.using.log.split('#')[0]}`),
-            }),
+            }).replace(/\.ts$/, ''),
           )
           .replace(
             '$PATH_TO_DOMAIN_OBJECT',
             getRelativePath({
               from: getAbsolutePathOfDaoFile(file),
               to: getNormalizedPath(`${projectRootDir}/src/domain`), // TODO: get this from domain objects metadata, per domain object
-            }),
+            }).replace(/\.ts$/, ''),
           )
           .replace(
             '$PATH_TO_GENERATED_SQL_TYPES',
             getRelativePath({
               from: getAbsolutePathOfDaoFile(file),
-              to: getNormalizedPath(`${projectRootDir}/${config.generates.code.config.content.generates.types}`),
+              to: getNormalizedPath(
+                `${projectRootDir}/${config.generates.code.config.content.generates.types}`,
+              ).replace(/\.ts$/, ''),
             }),
           )
           .replace(
@@ -62,7 +64,7 @@ export const saveGeneratedDatabaseAccessObjectCodeFiles = async ({
               from: getAbsolutePathOfDaoFile(file),
               to: getNormalizedPath(
                 `${projectRootDir}/${config.generates.code.config.content.generates.queryFunctions}`,
-              ),
+              ).replace(/\.ts$/, ''),
             }),
           ),
       }),

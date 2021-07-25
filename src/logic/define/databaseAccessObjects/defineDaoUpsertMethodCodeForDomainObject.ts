@@ -78,10 +78,10 @@ ${imports.join('\n')}
 export const sql = \`
   -- query_name = upsert_${sqlSchemaName}
   SELECT
-    id, uuid
+    dgv.id, dgv.uuid
   FROM upsert_${sqlSchemaName}(
     ${queryInputExpressions.join(',\n    ')}
-  );
+  ) as dgv;
 \`;
 
 export const upsert = async ({
@@ -98,7 +98,7 @@ export const upsert = async ({
       ${queryFunctionInputExpressions.join(',\n      ')},
     },
   });
-  const { id${hasUuidProperty ? ', uuid' : ''} } = result[0]; // grab the db generated values
+  const { id${hasUuidProperty ? ', uuid' : ''} } = results[0]; // grab the db generated values
   return new ${domainObject.name}({ ...${camelCase(domainObject.name)}, id${
     hasUuidProperty ? ', uuid' : ''
   } }) as ${outputType};

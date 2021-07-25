@@ -52,22 +52,41 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
     'id: dbObject.id',
     hasUuidProperty ? 'uuid: dbObject.uuid' : null,
     ...sqlSchemaRelationship.properties.map(({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) => {
+      // enum case
+      if (domainObjectProperty.type === DomainObjectPropertyType.ENUM)
+        return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name} as ${domainObject.name}['${domainObjectProperty.name}']`;
+
       // non-reference case
       if (!sqlSchemaProperty.reference) return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name}`;
 
-      if (sqlSchemaProperty.reference.method !== SqlSchemaReferenceMethod.DIRECT_BY_NESTING)
-        return `${domainObjectProperty.name}: dbObject.${snakeCase(domainObjectProperty.name)}`;
+      // referenced by uuid case
+      if (sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.IMPLICIT_BY_UUID) {
+        // solo reference case
+        if (!sqlSchemaProperty.isArray)
+          return `${domainObjectProperty.name}: dbObject.${snakeCase(domainObjectProperty.name)}`;
 
-      // solo reference case
-      if (!sqlSchemaProperty.isArray)
-        return `${domainObjectProperty.name}: new ${sqlSchemaProperty.reference.of.name}(dbObject.${snakeCase(
-          domainObjectProperty.name,
-        )})`;
+        // array reference case
+        return `${domainObjectProperty.name}: dbObject.${snakeCase(domainObjectProperty.name)} as string[]`; // as string array since we have an array of uuids - but the type defs generated from sql will complain that it could be string[] or number[] or null (not smart enough to look all the way through fn defs yet)
+      }
 
-      // array reference case
-      return `${domainObjectProperty.name}: dbObject.${snakeCase(domainObjectProperty.name)}.map((${camelCase(
-        sqlSchemaProperty.reference.of.name,
-      )}) => new ${sqlSchemaProperty.reference.of.name}(${camelCase(sqlSchemaProperty.reference.of.name)}))`;
+      // directly nested case
+      if (sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.DIRECT_BY_NESTING) {
+        // solo reference case
+        if (!sqlSchemaProperty.isArray)
+          return `${domainObjectProperty.name}: new ${sqlSchemaProperty.reference.of.name}(dbObject.${snakeCase(
+            domainObjectProperty.name,
+          )} as ${sqlSchemaProperty.reference.of.name})`;
+
+        // array reference case
+        return `${domainObjectProperty.name}: dbObject.${snakeCase(domainObjectProperty.name)}.map((${camelCase(
+          sqlSchemaProperty.reference.of.name,
+        )}) => new ${sqlSchemaProperty.reference.of.name}(${camelCase(sqlSchemaProperty.reference.of.name)} as ${
+          sqlSchemaProperty.reference.of.name
+        }))`;
+      }
+
+      // handle unexpected case (each case should have been handled above)
+      throw new Error('unexpected property type. this is a bug within sql-dao-generator'); // fail fast if reached here
     }),
   ].filter(isPresent);
 

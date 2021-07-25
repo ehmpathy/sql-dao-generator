@@ -1,5 +1,6 @@
 import { generate } from './generate';
 
+jest.setTimeout(60 * 1000);
 describe('generate', () => {
   const testAssetPaths = {
     codegenYml: `${__dirname}/../__test_assets__/exampleProject/codegen.sql.dao.yml`,

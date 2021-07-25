@@ -12,14 +12,15 @@ export const carriageDao = {
   findById,
   findByUnique,
   findByUuid,
-  upsert
-}",
+  upsert,
+};",
     "relpath": "carriageDao/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
-import { sqlQueryFindCarriageByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindCarriageByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = ({
   dbObject,
@@ -30,16 +31,19 @@ export const castFromDatabaseObject = ({
     id: dbObject.id,
     uuid: dbObject.uuid,
     cin: dbObject.cin,
-    carries: dbObject.carries,
+    carries: dbObject.carries as Carriage['carries'],
     capacity: dbObject.capacity,
   }) as HasId<HasUuid<Carriage>>;",
     "relpath": "carriageDao/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCarriageById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_carriage_by_id
@@ -59,7 +63,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<HasUuid<Carriage>>> => {
+}): Promise<HasId<HasUuid<Carriage>> | null> => {
   const results = await sqlQueryFindCarriageById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -69,15 +73,18 @@ export const findById = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "carriageDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCarriageByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_carriage_by_unique
@@ -98,7 +105,7 @@ export const findByUnique = async ({
 }: {
   dbConnection: DatabaseConnection;
   cin: string;
-}): Promise<HasId<HasUuid<Carriage>>> => {
+}): Promise<HasId<HasUuid<Carriage>> | null> => {
   const results = await sqlQueryFindCarriageByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -108,15 +115,18 @@ export const findByUnique = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "carriageDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCarriageByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_carriage_by_uuid
@@ -136,7 +146,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<HasUuid<Carriage>>> => {
+}): Promise<HasId<HasUuid<Carriage>> | null> => {
   const results = await sqlQueryFindCarriageByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -146,12 +156,13 @@ export const findByUuid = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "carriageDao/findByUuid.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -160,12 +171,12 @@ import { sqlQueryUpsertCarriage } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 export const sql = \`
   -- query_name = upsert_carriage
   SELECT
-    id, uuid
+    dgv.id, dgv.uuid
   FROM upsert_carriage(
     :cin,
     :carries,
     :capacity
-  );
+  ) as dgv;
 \`;
 
 export const upsert = async ({
@@ -184,7 +195,7 @@ export const upsert = async ({
       capacity: carriage.capacity,
     },
   });
-  const { id, uuid } = result[0]; // grab the db generated values
+  const { id, uuid } = results[0]; // grab the db generated values
   return new Carriage({ ...carriage, id, uuid }) as HasId<HasUuid<Carriage>>;
 };",
     "relpath": "carriageDao/upsert.ts",
@@ -199,14 +210,15 @@ export const trainEngineerDao = {
   findById,
   findByUnique,
   findByUuid,
-  upsert
-}",
+  upsert,
+};",
     "relpath": "trainEngineerDao/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
-import { sqlQueryFindTrainEngineerByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindTrainEngineerByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = ({
   dbObject,
@@ -222,10 +234,13 @@ export const castFromDatabaseObject = ({
     "relpath": "trainEngineerDao/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainEngineerById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_engineer_by_id
@@ -244,7 +259,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<HasUuid<TrainEngineer>>> => {
+}): Promise<HasId<HasUuid<TrainEngineer>> | null> => {
   const results = await sqlQueryFindTrainEngineerById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -254,15 +269,18 @@ export const findById = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "trainEngineerDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainEngineerByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_engineer_by_unique
@@ -282,7 +300,7 @@ export const findByUnique = async ({
 }: {
   dbConnection: DatabaseConnection;
   socialSecurityNumberHash: string;
-}): Promise<HasId<HasUuid<TrainEngineer>>> => {
+}): Promise<HasId<HasUuid<TrainEngineer>> | null> => {
   const results = await sqlQueryFindTrainEngineerByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -292,15 +310,18 @@ export const findByUnique = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "trainEngineerDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainEngineerByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_engineer_by_uuid
@@ -319,7 +340,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<HasUuid<TrainEngineer>>> => {
+}): Promise<HasId<HasUuid<TrainEngineer>> | null> => {
   const results = await sqlQueryFindTrainEngineerByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -329,12 +350,13 @@ export const findByUuid = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "trainEngineerDao/findByUuid.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -343,11 +365,11 @@ import { sqlQueryUpsertTrainEngineer } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTI
 export const sql = \`
   -- query_name = upsert_train_engineer
   SELECT
-    id, uuid
+    dgv.id, dgv.uuid
   FROM upsert_train_engineer(
     :socialSecurityNumberHash,
     :name
-  );
+  ) as dgv;
 \`;
 
 export const upsert = async ({
@@ -365,7 +387,7 @@ export const upsert = async ({
       name: trainEngineer.name,
     },
   });
-  const { id, uuid } = result[0]; // grab the db generated values
+  const { id, uuid } = results[0]; // grab the db generated values
   return new TrainEngineer({ ...trainEngineer, id, uuid }) as HasId<HasUuid<TrainEngineer>>;
 };",
     "relpath": "trainEngineerDao/upsert.ts",
@@ -378,14 +400,15 @@ import { upsert } from './upsert';
 export const geocodeDao = {
   findById,
   findByUnique,
-  upsert
-}",
+  upsert,
+};",
     "relpath": "geocodeDao/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId } from 'simple-type-guards';
+
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
-import { sqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = ({
   dbObject,
@@ -400,10 +423,13 @@ export const castFromDatabaseObject = ({
     "relpath": "geocodeDao/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_geocode_by_id
@@ -422,7 +448,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<Geocode>> => {
+}): Promise<HasId<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -432,15 +458,18 @@ export const findById = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "geocodeDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_geocode_by_unique
@@ -463,7 +492,7 @@ export const findByUnique = async ({
   dbConnection: DatabaseConnection;
   latitude: number;
   longitude: number;
-}): Promise<HasId<Geocode>> => {
+}): Promise<HasId<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -474,12 +503,13 @@ export const findByUnique = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "geocodeDao/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId } from 'simple-type-guards';
+
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -488,11 +518,11 @@ import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 export const sql = \`
   -- query_name = upsert_geocode
   SELECT
-    id, uuid
+    dgv.id, dgv.uuid
   FROM upsert_geocode(
     :latitude,
     :longitude
-  );
+  ) as dgv;
 \`;
 
 export const upsert = async ({
@@ -510,7 +540,7 @@ export const upsert = async ({
       longitude: geocode.longitude,
     },
   });
-  const { id } = result[0]; // grab the db generated values
+  const { id } = results[0]; // grab the db generated values
   return new Geocode({ ...geocode, id }) as HasId<Geocode>;
 };",
     "relpath": "geocodeDao/upsert.ts",
@@ -525,14 +555,15 @@ export const trainDao = {
   findById,
   findByUnique,
   findByUuid,
-  upsert
-}",
+  upsert,
+};",
     "relpath": "trainDao/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { Geocode, Train } from '$PATH_TO_DOMAIN_OBJECT';
-import { sqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = ({
   dbObject,
@@ -542,20 +573,23 @@ export const castFromDatabaseObject = ({
   new Train({
     id: dbObject.id,
     uuid: dbObject.uuid,
-    homeStationGeocode: new Geocode(dbObject.home_station_geocode),
+    homeStationGeocode: new Geocode(dbObject.home_station_geocode as Geocode),
     combinationId: dbObject.combination_id,
-    locomotiveUuids: dbObject.locomotive_uuids,
-    carriageUuids: dbObject.carriage_uuids,
-    engineerUuids: dbObject.engineer_uuids,
-    status: dbObject.status,
+    locomotiveUuids: dbObject.locomotive_uuids as string[],
+    carriageUuids: dbObject.carriage_uuids as string[],
+    engineerUuids: dbObject.engineer_uuids as string[],
+    status: dbObject.status as Train['status'],
   }) as HasId<HasUuid<Train>>;",
     "relpath": "trainDao/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_by_id
@@ -568,7 +602,7 @@ export const sql = \`
         'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
-      )
+      ) AS json_build_object
       FROM geocode WHERE geocode.id = train.home_station_geocode_id
     ) AS home_station_geocode,
     train.combination_id,
@@ -604,7 +638,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<HasUuid<Train>>> => {
+}): Promise<HasId<HasUuid<Train>> | null> => {
   const results = await sqlQueryFindTrainById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -614,15 +648,18 @@ export const findById = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "trainDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_by_unique
@@ -635,7 +672,7 @@ export const sql = \`
         'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
-      )
+      ) AS json_build_object
       FROM geocode WHERE geocode.id = train.home_station_geocode_id
     ) AS home_station_geocode,
     train.combination_id,
@@ -672,7 +709,7 @@ export const findByUnique = async ({
 }: {
   dbConnection: DatabaseConnection;
   combinationId: string;
-}): Promise<HasId<HasUuid<Train>>> => {
+}): Promise<HasId<HasUuid<Train>> | null> => {
   const results = await sqlQueryFindTrainByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -682,15 +719,18 @@ export const findByUnique = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "trainDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_by_uuid
@@ -703,7 +743,7 @@ export const sql = \`
         'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
-      )
+      ) AS json_build_object
       FROM geocode WHERE geocode.id = train.home_station_geocode_id
     ) AS home_station_geocode,
     train.combination_id,
@@ -739,7 +779,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<HasUuid<Train>>> => {
+}): Promise<HasId<HasUuid<Train>> | null> => {
   const results = await sqlQueryFindTrainByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -749,12 +789,13 @@ export const findByUuid = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "trainDao/findByUuid.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -764,7 +805,7 @@ import { geocodeDao } from '../geocodeDao';
 export const sql = \`
   -- query_name = upsert_train
   SELECT
-    id, uuid
+    dgv.id, dgv.uuid
   FROM upsert_train(
     :homeStationGeocodeId,
     :combinationId,
@@ -790,7 +831,7 @@ export const sql = \`
         ON train_engineer.uuid = train_engineer_ref.uuid
     ),
     :status
-  );
+  ) as dgv;
 \`;
 
 export const upsert = async ({
@@ -812,7 +853,7 @@ export const upsert = async ({
       status: train.status,
     },
   });
-  const { id, uuid } = result[0]; // grab the db generated values
+  const { id, uuid } = results[0]; // grab the db generated values
   return new Train({ ...train, id, uuid }) as HasId<HasUuid<Train>>;
 };",
     "relpath": "trainDao/upsert.ts",
@@ -827,14 +868,15 @@ export const locomotiveDao = {
   findById,
   findByUnique,
   findByUuid,
-  upsert
-}",
+  upsert,
+};",
     "relpath": "locomotiveDao/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
-import { sqlQueryFindLocomotiveByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindLocomotiveByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = ({
   dbObject,
@@ -845,17 +887,20 @@ export const castFromDatabaseObject = ({
     id: dbObject.id,
     uuid: dbObject.uuid,
     ein: dbObject.ein,
-    fuel: dbObject.fuel,
+    fuel: dbObject.fuel as Locomotive['fuel'],
     capacity: dbObject.capacity,
     milage: dbObject.milage,
   }) as HasId<HasUuid<Locomotive>>;",
     "relpath": "locomotiveDao/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindLocomotiveById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_locomotive_by_id
@@ -876,7 +921,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<HasUuid<Locomotive>>> => {
+}): Promise<HasId<HasUuid<Locomotive>> | null> => {
   const results = await sqlQueryFindLocomotiveById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -886,15 +931,18 @@ export const findById = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "locomotiveDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindLocomotiveByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_locomotive_by_unique
@@ -916,7 +964,7 @@ export const findByUnique = async ({
 }: {
   dbConnection: DatabaseConnection;
   ein: string;
-}): Promise<HasId<HasUuid<Locomotive>>> => {
+}): Promise<HasId<HasUuid<Locomotive>> | null> => {
   const results = await sqlQueryFindLocomotiveByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -926,15 +974,18 @@ export const findByUnique = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "locomotiveDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindLocomotiveByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_locomotive_by_uuid
@@ -955,7 +1006,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<HasUuid<Locomotive>>> => {
+}): Promise<HasId<HasUuid<Locomotive>> | null> => {
   const results = await sqlQueryFindLocomotiveByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -965,12 +1016,13 @@ export const findByUuid = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "locomotiveDao/findByUuid.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -979,13 +1031,13 @@ import { sqlQueryUpsertLocomotive } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS
 export const sql = \`
   -- query_name = upsert_locomotive
   SELECT
-    id, uuid
+    dgv.id, dgv.uuid
   FROM upsert_locomotive(
     :ein,
     :fuel,
     :capacity,
     :milage
-  );
+  ) as dgv;
 \`;
 
 export const upsert = async ({
@@ -1005,7 +1057,7 @@ export const upsert = async ({
       milage: locomotive.milage,
     },
   });
-  const { id, uuid } = result[0]; // grab the db generated values
+  const { id, uuid } = results[0]; // grab the db generated values
   return new Locomotive({ ...locomotive, id, uuid }) as HasId<HasUuid<Locomotive>>;
 };",
     "relpath": "locomotiveDao/upsert.ts",
@@ -1018,14 +1070,15 @@ import { upsert } from './upsert';
 export const trainLocatedEventDao = {
   findById,
   findByUnique,
-  upsert
-}",
+  upsert,
+};",
     "relpath": "trainLocatedEventDao/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId } from 'simple-type-guards';
+
 import { Geocode, TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
-import { sqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = ({
   dbObject,
@@ -1036,15 +1089,18 @@ export const castFromDatabaseObject = ({
     id: dbObject.id,
     trainUuid: dbObject.train_uuid,
     occurredAt: dbObject.occurred_at,
-    geocode: new Geocode(dbObject.geocode),
+    geocode: new Geocode(dbObject.geocode as Geocode),
   }) as HasId<TrainLocatedEvent>;",
     "relpath": "trainLocatedEventDao/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainLocatedEventById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_located_event_by_id
@@ -1062,7 +1118,7 @@ export const sql = \`
         'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
-      )
+      ) AS json_build_object
       FROM geocode WHERE geocode.id = train_located_event.geocode_id
     ) AS geocode
   FROM train_located_event
@@ -1075,7 +1131,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<TrainLocatedEvent>> => {
+}): Promise<HasId<TrainLocatedEvent> | null> => {
   const results = await sqlQueryFindTrainLocatedEventById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -1085,15 +1141,18 @@ export const findById = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "trainLocatedEventDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainLocatedEventByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_located_event_by_unique
@@ -1111,7 +1170,7 @@ export const sql = \`
         'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
-      )
+      ) AS json_build_object
       FROM geocode WHERE geocode.id = train_located_event.geocode_id
     ) AS geocode
   FROM train_located_event
@@ -1128,7 +1187,7 @@ export const findByUnique = async ({
   dbConnection: DatabaseConnection;
   trainUuid: string;
   occurredAt: string;
-}): Promise<HasId<TrainLocatedEvent>> => {
+}): Promise<HasId<TrainLocatedEvent> | null> => {
   const results = await sqlQueryFindTrainLocatedEventByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -1139,12 +1198,13 @@ export const findByUnique = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };",
     "relpath": "trainLocatedEventDao/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId } from 'simple-type-guards';
+
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -1154,12 +1214,12 @@ import { geocodeDao } from '../geocodeDao';
 export const sql = \`
   -- query_name = upsert_train_located_event
   SELECT
-    id, uuid
+    dgv.id, dgv.uuid
   FROM upsert_train_located_event(
     (SELECT id FROM train WHERE train.uuid = :trainUuid),
     :occurredAt,
     :geocodeId
-  );
+  ) as dgv;
 \`;
 
 export const upsert = async ({
@@ -1178,7 +1238,7 @@ export const upsert = async ({
       geocodeId: trainLocatedEvent.geocode.id ? trainLocatedEvent.geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: trainLocatedEvent.geocode })).id,
     },
   });
-  const { id } = result[0]; // grab the db generated values
+  const { id } = results[0]; // grab the db generated values
   return new TrainLocatedEvent({ ...trainLocatedEvent, id }) as HasId<TrainLocatedEvent>;
 };",
     "relpath": "trainLocatedEventDao/upsert.ts",

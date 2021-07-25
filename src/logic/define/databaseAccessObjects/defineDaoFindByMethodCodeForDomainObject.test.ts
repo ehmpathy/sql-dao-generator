@@ -684,7 +684,7 @@ async ({
   dbConnection: DatabaseConnection;
   latitude: number;
   longitude: number;
-}): Promise<HasId<Geocode>> =>
+}): Promise<HasId<Geocode> | null> =>
         `.trim(),
       );
       expect(code).toContain('await sqlQueryFindGeocodeByUnique({');
@@ -1160,7 +1160,7 @@ async ({
   badges: HasId<TrainBadge>[];
   locomotiveUuids: string[];
   leadEngineerUuid: string;
-}): Promise<HasId<HasUuid<Train>>> =>
+}): Promise<HasId<HasUuid<Train>> | null> =>
       `.trim(),
       );
       expect(code).toContain('await sqlQueryFindTrainByUnique(');

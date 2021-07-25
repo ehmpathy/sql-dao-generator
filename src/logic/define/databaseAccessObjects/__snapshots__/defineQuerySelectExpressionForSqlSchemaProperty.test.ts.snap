@@ -7,7 +7,7 @@ exports[`defineQuerySelectExpressionForSqlSchemaProperty should define the selec
         'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
-      )
+      ) AS json_build_object
       FROM geocode WHERE geocode.id = train_located_event.geocode_id
     ) AS geocode"
 `;

@@ -69,7 +69,7 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
               `'${referencedSqlSchemaProperty.name}', ${referencedSqlSchemaName}.${referencedSqlSchemaProperty.name}`,
           )
           .join(',\n        ')}
-      )
+      ) AS json_build_object
       FROM ${referencedSqlSchemaName} WHERE ${referencedSqlSchemaName}.id = ${sqlSchemaName}.${sqlSchemaProperty.name}
     ) AS ${snakeCase(domainObjectProperty.name)}
         `.trim();

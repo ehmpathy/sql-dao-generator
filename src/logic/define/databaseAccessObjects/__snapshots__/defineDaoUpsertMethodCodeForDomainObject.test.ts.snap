@@ -2,6 +2,7 @@
 
 exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for a domain event with a static referenced array 1`] = `
 "import { HasId } from 'simple-type-guards';
+
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -11,12 +12,12 @@ import { geocodeDao } from '../geocodeDao';
 export const sql = \`
   -- query_name = upsert_train_located_event
   SELECT
-    id, uuid
+    dgv.id, dgv.uuid
   FROM upsert_train_located_event(
     :trainUuid,
     :occurredAt,
     :geocodeIds
-  );
+  ) as dgv;
 \`;
 
 export const upsert = async ({
@@ -35,13 +36,14 @@ export const upsert = async ({
       geocodeIds: await Promise.all(trainLocatedEvent.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await geocodeDao.upsert({ dbConnection, geocode })).id)),
     },
   });
-  const { id } = result[0]; // grab the db generated values
+  const { id } = results[0]; // grab the db generated values
   return new TrainLocatedEvent({ ...trainLocatedEvent, id }) as HasId<TrainLocatedEvent>;
 };"
 `;
 
 exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
 "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -52,7 +54,7 @@ import { trainBadgeDao } from '../trainBadgeDao';
 export const sql = \`
   -- query_name = upsert_train
   SELECT
-    id, uuid
+    dgv.id, dgv.uuid
   FROM upsert_train(
     :tin,
     :homeStationGeocodeId,
@@ -65,7 +67,7 @@ export const sql = \`
         AS locomotive_ref (uuid, array_order_index)
         ON locomotive.uuid = locomotive_ref.uuid
     )
-  );
+  ) as dgv;
 \`;
 
 export const upsert = async ({
@@ -86,13 +88,14 @@ export const upsert = async ({
       locomotiveUuids: train.locomotiveUuids,
     },
   });
-  const { id, uuid } = result[0]; // grab the db generated values
+  const { id, uuid } = results[0]; // grab the db generated values
   return new Train({ ...train, id, uuid }) as HasId<HasUuid<Train>>;
 };"
 `;
 
 exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for simple domain entity 1`] = `
 "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -101,12 +104,12 @@ import { sqlQueryUpsertCarriage } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 export const sql = \`
   -- query_name = upsert_carriage
   SELECT
-    id, uuid
+    dgv.id, dgv.uuid
   FROM upsert_carriage(
     :cin,
     :carries,
     :capacity
-  );
+  ) as dgv;
 \`;
 
 export const upsert = async ({
@@ -125,13 +128,14 @@ export const upsert = async ({
       capacity: carriage.capacity,
     },
   });
-  const { id, uuid } = result[0]; // grab the db generated values
+  const { id, uuid } = results[0]; // grab the db generated values
   return new Carriage({ ...carriage, id, uuid }) as HasId<HasUuid<Carriage>>;
 };"
 `;
 
 exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for simple value object 1`] = `
 "import { HasId } from 'simple-type-guards';
+
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -140,11 +144,11 @@ import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 export const sql = \`
   -- query_name = upsert_geocode
   SELECT
-    id, uuid
+    dgv.id, dgv.uuid
   FROM upsert_geocode(
     :latitude,
     :longitude
-  );
+  ) as dgv;
 \`;
 
 export const upsert = async ({
@@ -162,7 +166,7 @@ export const upsert = async ({
       longitude: geocode.longitude,
     },
   });
-  const { id } = result[0]; // grab the db generated values
+  const { id } = results[0]; // grab the db generated values
   return new Geocode({ ...geocode, id }) as HasId<Geocode>;
 };"
 `;

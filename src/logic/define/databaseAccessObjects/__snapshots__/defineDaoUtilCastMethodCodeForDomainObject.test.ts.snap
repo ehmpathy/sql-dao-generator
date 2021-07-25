@@ -2,8 +2,9 @@
 
 exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for a domain event with a static referenced array 1`] = `
 "import { HasId } from 'simple-type-guards';
+
 import { Geocode, TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
-import { sqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = ({
   dbObject,
@@ -14,14 +15,15 @@ export const castFromDatabaseObject = ({
     id: dbObject.id,
     trainUuid: dbObject.train_uuid,
     occurredAt: dbObject.occurred_at,
-    geocodes: dbObject.geocodes.map((geocode) => new Geocode(geocode)),
+    geocodes: dbObject.geocodes.map((geocode) => new Geocode(geocode as Geocode)),
   }) as HasId<TrainLocatedEvent>;"
 `;
 
 exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
 "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { Geocode, Train, TrainBadge } from '$PATH_TO_DOMAIN_OBJECT';
-import { sqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = ({
   dbObject,
@@ -32,17 +34,18 @@ export const castFromDatabaseObject = ({
     id: dbObject.id,
     uuid: dbObject.uuid,
     tin: dbObject.tin,
-    homeStationGeocode: new Geocode(dbObject.home_station_geocode),
+    homeStationGeocode: new Geocode(dbObject.home_station_geocode as Geocode),
     leadEngineerUuid: dbObject.lead_engineer_uuid,
-    badges: dbObject.badges.map((trainBadge) => new TrainBadge(trainBadge)),
-    locomotiveUuids: dbObject.locomotive_uuids,
+    badges: dbObject.badges.map((trainBadge) => new TrainBadge(trainBadge as TrainBadge)),
+    locomotiveUuids: dbObject.locomotive_uuids as string[],
   }) as HasId<HasUuid<Train>>;"
 `;
 
 exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for simple domain entity 1`] = `
 "import { HasId, HasUuid } from 'simple-type-guards';
+
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
-import { sqlQueryFindCarriageByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindCarriageByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = ({
   dbObject,
@@ -53,15 +56,16 @@ export const castFromDatabaseObject = ({
     id: dbObject.id,
     uuid: dbObject.uuid,
     cin: dbObject.cin,
-    carries: dbObject.carries,
+    carries: dbObject.carries as Carriage['carries'],
     capacity: dbObject.capacity,
   }) as HasId<HasUuid<Carriage>>;"
 `;
 
 exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for simple value object 1`] = `
 "import { HasId } from 'simple-type-guards';
+
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
-import { sqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = ({
   dbObject,

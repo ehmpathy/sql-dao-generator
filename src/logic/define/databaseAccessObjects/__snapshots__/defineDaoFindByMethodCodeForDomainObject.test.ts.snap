@@ -1,10 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for a domain event with a static referenced array 1`] = `
-"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+"import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainLocatedEventById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_located_event_by_id
@@ -41,7 +44,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<TrainLocatedEvent>> => {
+}): Promise<HasId<TrainLocatedEvent> | null> => {
   const results = await sqlQueryFindTrainLocatedEventById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -51,15 +54,18 @@ export const findById = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };"
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
-"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+"import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_by_id
@@ -73,7 +79,7 @@ export const sql = \`
         'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
-      )
+      ) AS json_build_object
       FROM geocode WHERE geocode.id = train.home_station_geocode_id
     ) AS home_station_geocode,
     (
@@ -116,7 +122,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<HasUuid<Train>>> => {
+}): Promise<HasId<HasUuid<Train>> | null> => {
   const results = await sqlQueryFindTrainById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -126,15 +132,18 @@ export const findById = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };"
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for simple domain entity 1`] = `
-"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+"import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCarriageById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_carriage_by_id
@@ -154,7 +163,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<HasUuid<Carriage>>> => {
+}): Promise<HasId<HasUuid<Carriage>> | null> => {
   const results = await sqlQueryFindCarriageById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -164,15 +173,18 @@ export const findById = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };"
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for simple value object 1`] = `
-"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+"import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_geocode_by_id
@@ -191,7 +203,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<Geocode>> => {
+}): Promise<HasId<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -201,15 +213,18 @@ export const findById = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };"
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for a domain event with a static referenced array 1`] = `
-"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+"import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainLocatedEventByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_located_event_by_unique
@@ -250,7 +265,7 @@ export const findByUnique = async ({
   dbConnection: DatabaseConnection;
   trainUuid: string;
   occurredAt: Date;
-}): Promise<HasId<TrainLocatedEvent>> => {
+}): Promise<HasId<TrainLocatedEvent> | null> => {
   const results = await sqlQueryFindTrainLocatedEventByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -261,15 +276,18 @@ export const findByUnique = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };"
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for domain entity that is unique on references, solo and array, implicit and nested 1`] = `
-"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+"import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_by_unique
@@ -283,7 +301,7 @@ export const sql = \`
         'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
-      )
+      ) AS json_build_object
       FROM geocode WHERE geocode.id = train.home_station_geocode_id
     ) AS home_station_geocode,
     (
@@ -342,7 +360,7 @@ export const findByUnique = async ({
   badges: HasId<TrainBadge>[];
   locomotiveUuids: string[];
   leadEngineerUuid: string;
-}): Promise<HasId<HasUuid<Train>>> => {
+}): Promise<HasId<HasUuid<Train>> | null> => {
   const results = await sqlQueryFindTrainByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -355,15 +373,18 @@ export const findByUnique = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };"
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
-"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+"import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_by_unique
@@ -377,7 +398,7 @@ export const sql = \`
         'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
-      )
+      ) AS json_build_object
       FROM geocode WHERE geocode.id = train.home_station_geocode_id
     ) AS home_station_geocode,
     (
@@ -421,7 +442,7 @@ export const findByUnique = async ({
 }: {
   dbConnection: DatabaseConnection;
   tin: string;
-}): Promise<HasId<HasUuid<Train>>> => {
+}): Promise<HasId<HasUuid<Train>> | null> => {
   const results = await sqlQueryFindTrainByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -431,15 +452,18 @@ export const findByUnique = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };"
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple domain entity 1`] = `
-"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+"import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCarriageByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_carriage_by_unique
@@ -460,7 +484,7 @@ export const findByUnique = async ({
 }: {
   dbConnection: DatabaseConnection;
   cin: string;
-}): Promise<HasId<HasUuid<Carriage>>> => {
+}): Promise<HasId<HasUuid<Carriage>> | null> => {
   const results = await sqlQueryFindCarriageByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -470,15 +494,18 @@ export const findByUnique = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };"
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple value object 1`] = `
-"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+"import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_geocode_by_unique
@@ -501,7 +528,7 @@ export const findByUnique = async ({
   dbConnection: DatabaseConnection;
   latitude: number;
   longitude: number;
-}): Promise<HasId<Geocode>> => {
+}): Promise<HasId<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -512,15 +539,18 @@ export const findByUnique = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };"
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for a domain event with a static referenced array 1`] = `
-"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+"import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainLocatedEventByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_located_event_by_uuid
@@ -557,7 +587,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<TrainLocatedEvent>> => {
+}): Promise<HasId<TrainLocatedEvent> | null> => {
   const results = await sqlQueryFindTrainLocatedEventByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -567,15 +597,18 @@ export const findByUuid = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };"
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
-"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+"import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_train_by_uuid
@@ -589,7 +622,7 @@ export const sql = \`
         'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
-      )
+      ) AS json_build_object
       FROM geocode WHERE geocode.id = train.home_station_geocode_id
     ) AS home_station_geocode,
     (
@@ -632,7 +665,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<HasUuid<Train>>> => {
+}): Promise<HasId<HasUuid<Train>> | null> => {
   const results = await sqlQueryFindTrainByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -642,15 +675,18 @@ export const findByUuid = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };"
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for simple domain entity 1`] = `
-"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+"import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCarriageByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_carriage_by_uuid
@@ -670,7 +706,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<HasUuid<Carriage>>> => {
+}): Promise<HasId<HasUuid<Carriage>> | null> => {
   const results = await sqlQueryFindCarriageByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -680,15 +716,18 @@ export const findByUuid = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };"
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for simple value object 1`] = `
-"import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+"import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { fromDatabaseObject } from './cast/fromDatabaseObject';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = \`
   -- query_name = find_geocode_by_uuid
@@ -707,7 +746,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<Geocode>> => {
+}): Promise<HasId<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -717,6 +756,6 @@ export const findByUuid = async ({
   });
   if (results.length > 1) throw new Error('should only be one');
   if (!results.length) return null;
-  return fromDatabaseObject({ dbConnection, dbObject: results[0] });
+  return castFromDatabaseObject({ dbObject: results[0] });
 };"
 `;

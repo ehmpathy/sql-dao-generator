@@ -1,2 +1,2 @@
 *.md
-src/**/generated/fromSql/*.ts
+src/**/__test_assets__/exampleProject/*

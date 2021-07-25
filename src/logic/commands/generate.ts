@@ -5,6 +5,8 @@ import { defineDaoCodeFilesForDomainObjects } from '../define/databaseAccessObje
 import { defineSqlSchemaControlCodeFilesForDomainObjects } from '../define/sqlSchemaControl/defineSqlSchemaControlCodeFilesForDomainObjects';
 import { defineSqlSchemaGeneratorCodeFilesForDomainObjects } from '../define/sqlSchemaGenerator/defineSqlSchemaGeneratorCodeFilesForDomainObjects';
 import { defineSqlSchemaRelationshipsForDomainObjects } from '../define/sqlSchemaRelationship/defineSqlSchemaRelationshipsForDomainObjects';
+import { runSqlCodeGenerator } from '../run/runSqlCodeGenerator';
+import { runSqlSchemaGenerator } from '../run/runSqlSchemaGenerator';
 import { saveGeneratedDatabaseAccessObjectCodeFiles } from '../save/saveGeneratedDatabaseAccessObjectCodeFiles';
 import { saveGeneratedSqlSchemaControlCodeFiles } from '../save/saveGeneratedSqlSchemaControlCodeFiles';
 import { saveGeneratedSqlSchemaGeneratorCodeFiles } from '../save/saveGeneratedSqlSchemaGeneratorCodeFiles';
@@ -26,7 +28,7 @@ export const generate = async ({ configPath }: { configPath: string }) => {
     sqlSchemaRelationships,
   });
   await saveGeneratedSqlSchemaGeneratorCodeFiles({ config, files: sqlSchemaGeneratorCodeFiles });
-  // TODO: run sql-schema-generator on the entities
+  await runSqlSchemaGenerator({ config });
 
   // output the sql-schema-control `domains.yml` file
   console.log(`${chalk.bold('\n🔧 Generating schema-control config:')} for use with sql-schema-control...\n`); // tslint:disable-line no-console
@@ -46,5 +48,5 @@ export const generate = async ({ configPath }: { configPath: string }) => {
 
   // output the sql types and query functions
   console.log(`${chalk.bold('\n🗜️  Generating typescript from sql:')} types and funcs using sql-code-generator...\n`); // tslint:disable-line no-console
-  // TODO: run the command
+  await runSqlCodeGenerator({ config });
 };

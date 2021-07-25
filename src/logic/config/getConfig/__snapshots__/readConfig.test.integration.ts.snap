@@ -271,9 +271,10 @@ Object {
             "types": "src/data/dao/.generated/types.ts",
           },
           "queries": Array [
-            "src/data/dao/**/*.query.ts",
+            "src/data/dao/**/*.ts",
+            "!src/data/dao/**/index.ts",
+            "!src/data/dao/**/castFromDatabaseObject.ts",
             "!src/**/*.test.ts",
-            "!src/**/*.test.integration.ts",
           ],
           "resources": Array [
             "provision/schema/sql/tables/**/*.sql",
