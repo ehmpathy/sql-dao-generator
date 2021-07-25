@@ -30,7 +30,7 @@ This includes:
 - generating sql schema resources with [`sql-schema-generator`](https://github.com/uladkasach/sql-schema-generator)
 - generating sql control config for use with [`sql-schema-control`](https://github.com/uladkasach/sql-schema-control)
 - generating standard queries for each domain object (e.g., `upsert`, `findById`, `findByUnique`) and leaving an easily extensible pattern
-- generating typescript type definitions for each sql resource and query with [`sql-schema-control`](https://github.com/uladkasach/sql-schema-control)
+- generating typescript type definitions for each sql resource and query with [`sql-code-generator`](https://github.com/uladkasach/sql-code-generator)
 
 Powered by:
 - extracting the domain information you've already encoded in your [domain-objects](https://github.com/uladkasach/domain-objects) using [domain-objects-metadata](https://github.com/uladkasach/domain-objects-metadata).
