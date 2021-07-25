@@ -54,7 +54,7 @@
     "test:integration": "FORCE_COLOR=1 TZ=UTC jest -c ./jest.integration.config.js --forceExit --coverage --verbose --runInBand",
     "test": "npm run test:types && npm run test:format && npm run test:lint && npm run test:unit && npm run test:integration",
     "preversion": "npm run test && npm run build",
-    "postversion": "git push origin master --tags --no-verify",
+    "postversion": "git push origin HEAD --tags --no-verify",
     "prepublish": "npm run build"
   },
   "devDependencies": {
