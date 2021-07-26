@@ -171,7 +171,7 @@ import { sqlQueryUpsertCarriage } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 export const sql = \`
   -- query_name = upsert_carriage
   SELECT
-    dgv.id, dgv.uuid
+    dgv.id
   FROM upsert_carriage(
     :uuid,
     :cin,
@@ -197,8 +197,8 @@ export const upsert = async ({
       capacity: carriage.capacity,
     },
   });
-  const { id, uuid } = results[0]; // grab the db generated values
-  return new Carriage({ ...carriage, id, uuid }) as HasId<HasUuid<Carriage>>;
+  const { id } = results[0]; // grab the db generated values
+  return new Carriage({ ...carriage, id }) as HasId<HasUuid<Carriage>>;
 };",
     "relpath": "carriageDao/upsert.ts",
   },
@@ -518,7 +518,7 @@ import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 export const sql = \`
   -- query_name = upsert_geocode
   SELECT
-    dgv.id, dgv.uuid
+    dgv.id
   FROM upsert_geocode(
     :latitude,
     :longitude
@@ -1055,7 +1055,7 @@ import { sqlQueryUpsertLocomotive } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS
 export const sql = \`
   -- query_name = upsert_locomotive
   SELECT
-    dgv.id, dgv.uuid
+    dgv.id, dgv.uuid, dgv.created_at, dgv.effective_at, dgv.updated_at
   FROM upsert_locomotive(
     :ein,
     :fuel,
@@ -1081,8 +1081,8 @@ export const upsert = async ({
       milage: locomotive.milage,
     },
   });
-  const { id, uuid } = results[0]; // grab the db generated values
-  return new Locomotive({ ...locomotive, id, uuid }) as HasId<HasUuid<Locomotive>>;
+  const { id, uuid, created_at: createdAt, effective_at: effectiveAt, updated_at: updatedAt } = results[0]; // grab the db generated values
+  return new Locomotive({ ...locomotive, id, uuid, createdAt, effectiveAt, updatedAt }) as HasId<HasUuid<Locomotive>>;
 };",
     "relpath": "locomotiveDao/upsert.ts",
   },
@@ -1234,7 +1234,7 @@ import { geocodeDao } from '../geocodeDao';
 export const sql = \`
   -- query_name = upsert_train_located_event
   SELECT
-    dgv.id, dgv.uuid
+    dgv.id
   FROM upsert_train_located_event(
     (SELECT id FROM train WHERE train.uuid = :trainUuid),
     :occurredAt,

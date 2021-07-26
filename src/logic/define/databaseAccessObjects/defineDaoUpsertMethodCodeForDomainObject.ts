@@ -75,6 +75,14 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
   // define the output type
   const outputType = defineOutputTypeOfFoundDomainObject(domainObject);
 
+  // define the db generated properties that the user has defined on their domain object
+  const dbGeneratedPropertiesOnDomainObject = Object.values(sqlSchemaRelationship.properties)
+    .filter(
+      ({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
+        sqlSchemaProperty.isDatabaseGenerated && !!domainObjectProperty, // pick the properties that are db generated and defined on the domain object
+    )
+    .map(({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.name);
+
   // define the content
   const code = `
 ${imports.join('\n')}
@@ -82,7 +90,7 @@ ${imports.join('\n')}
 export const sql = \`
   -- query_name = upsert_${sqlSchemaName}
   SELECT
-    dgv.id, dgv.uuid
+    ${dbGeneratedPropertiesOnDomainObject.map((name) => `dgv.${name}`).join(', ')}
   FROM upsert_${sqlSchemaName}(
     ${queryInputExpressions.join(',\n    ')}
   ) as dgv;
@@ -102,10 +110,18 @@ export const upsert = async ({
       ${queryFunctionInputExpressions.join(',\n      ')},
     },
   });
-  const { id${hasUuidProperty ? ', uuid' : ''} } = results[0]; // grab the db generated values
-  return new ${domainObject.name}({ ...${camelCase(domainObject.name)}, id${
-    hasUuidProperty ? ', uuid' : ''
-  } }) as ${outputType};
+  const { ${dbGeneratedPropertiesOnDomainObject
+    .map((sqlSchemaPropertyName) => {
+      const domainObjectPropertyName = camelCase(sqlSchemaPropertyName);
+      if (domainObjectPropertyName === sqlSchemaPropertyName) return `${domainObjectPropertyName}`;
+      return `${sqlSchemaPropertyName}: ${domainObjectPropertyName}`;
+    })
+    .join(', ')} } = results[0]; // grab the db generated values
+  return new ${domainObject.name}({ ...${camelCase(
+    domainObject.name,
+  )}, ${dbGeneratedPropertiesOnDomainObject
+    .map((sqlSchemaPropertyName) => camelCase(sqlSchemaPropertyName))
+    .join(', ')} }) as ${outputType};
 };
 `.trim();
 

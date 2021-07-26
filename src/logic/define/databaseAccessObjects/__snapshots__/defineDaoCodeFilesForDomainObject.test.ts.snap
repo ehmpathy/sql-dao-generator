@@ -327,7 +327,7 @@ import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 export const sql = \`
   -- query_name = upsert_geocode
   SELECT
-    dgv.id, dgv.uuid
+    dgv.id
   FROM upsert_geocode(
     :latitude,
     :longitude
