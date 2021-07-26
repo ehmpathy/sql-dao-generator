@@ -13,7 +13,6 @@ export const sql = \`
   -- query_name = find_train_located_event_by_id
   SELECT
     train_located_event.id,
-    train_located_event.uuid,
     train_located_event.train_uuid,
     train_located_event.occurred_at,
     (
@@ -21,7 +20,6 @@ export const sql = \`
         json_agg(
           json_build_object(
             'id', geocode.id,
-            'uuid', geocode.uuid,
             'latitude', geocode.latitude,
             'longitude', geocode.longitude
           )
@@ -90,8 +88,6 @@ export const sql = \`
       SELECT COALESCE(
         json_agg(
           json_build_object(
-            'id', train_badge.id,
-            'uuid', train_badge.uuid,
             'name', train_badge.name,
             'description', train_badge.description,
             'rank', train_badge.rank
@@ -178,7 +174,7 @@ export const findById = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for simple value object 1`] = `
-"import { HasId } from 'simple-type-guards';
+"import { HasId, HasUuid } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -203,7 +199,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<Geocode> | null> => {
+}): Promise<HasId<HasUuid<Geocode>> | null> => {
   const results = await sqlQueryFindGeocodeById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -230,15 +226,12 @@ export const sql = \`
   -- query_name = find_train_located_event_by_unique
   SELECT
     train_located_event.id,
-    train_located_event.uuid,
     train_located_event.train_uuid,
     train_located_event.occurred_at,
     (
       SELECT COALESCE(
         json_agg(
           json_build_object(
-            'id', geocode.id,
-            'uuid', geocode.uuid,
             'latitude', geocode.latitude,
             'longitude', geocode.longitude
           )
@@ -298,7 +291,6 @@ export const sql = \`
     (
       SELECT json_build_object(
         'id', geocode.id,
-        'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
       ) AS json_build_object
@@ -394,8 +386,6 @@ export const sql = \`
     train.tin,
     (
       SELECT json_build_object(
-        'id', geocode.id,
-        'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
       ) AS json_build_object
@@ -409,8 +399,6 @@ export const sql = \`
       SELECT COALESCE(
         json_agg(
           json_build_object(
-            'id', train_badge.id,
-            'uuid', train_badge.uuid,
             'name', train_badge.name,
             'description', train_badge.description,
             'rank', train_badge.rank
@@ -498,6 +486,47 @@ export const findByUnique = async ({
 };"
 `;
 
+exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple domain entity unique only on uuid 1`] = `
+"import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCarriageByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_carriage_by_unique
+  SELECT
+    carriage.id,
+    carriage.uuid,
+    carriage.carries,
+    carriage.capacity
+  FROM view_carriage_current AS carriage
+  WHERE 1=1
+    AND carriage.uuid = :uuid;
+\`;
+
+export const findByUnique = async ({
+  dbConnection,
+  uuid,
+}: {
+  dbConnection: DatabaseConnection;
+  uuid: string;
+}): Promise<HasId<HasUuid<Carriage>> | null> => {
+  const results = await sqlQueryFindCarriageByUnique({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      uuid,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return castFromDatabaseObject({ dbObject: results[0] });
+};"
+`;
+
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple value object 1`] = `
 "import { HasId } from 'simple-type-guards';
 
@@ -511,7 +540,6 @@ export const sql = \`
   -- query_name = find_geocode_by_unique
   SELECT
     geocode.id,
-    geocode.uuid,
     geocode.latitude,
     geocode.longitude
   FROM geocode
@@ -556,15 +584,12 @@ export const sql = \`
   -- query_name = find_train_located_event_by_uuid
   SELECT
     train_located_event.id,
-    train_located_event.uuid,
     train_located_event.train_uuid,
     train_located_event.occurred_at,
     (
       SELECT COALESCE(
         json_agg(
           json_build_object(
-            'id', geocode.id,
-            'uuid', geocode.uuid,
             'latitude', geocode.latitude,
             'longitude', geocode.longitude
           )
@@ -618,8 +643,6 @@ export const sql = \`
     train.tin,
     (
       SELECT json_build_object(
-        'id', geocode.id,
-        'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
       ) AS json_build_object
@@ -633,8 +656,6 @@ export const sql = \`
       SELECT COALESCE(
         json_agg(
           json_build_object(
-            'id', train_badge.id,
-            'uuid', train_badge.uuid,
             'name', train_badge.name,
             'description', train_badge.description,
             'rank', train_badge.rank
@@ -733,7 +754,6 @@ export const sql = \`
   -- query_name = find_geocode_by_uuid
   SELECT
     geocode.id,
-    geocode.uuid,
     geocode.latitude,
     geocode.longitude
   FROM geocode

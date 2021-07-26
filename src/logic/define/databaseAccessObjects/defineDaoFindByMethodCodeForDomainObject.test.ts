@@ -11,14 +11,10 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         name: 'Geocode',
         extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
         properties: {
-          latitude: {
-            name: 'latitude',
-            type: DomainObjectPropertyType.NUMBER,
-          },
-          longitude: {
-            name: 'longitude',
-            type: DomainObjectPropertyType.NUMBER,
-          },
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+          latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
+          longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
         },
         decorations: {
           unique: null,
@@ -134,14 +130,9 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           name: 'Geocode',
           extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
           properties: {
-            latitude: {
-              name: 'latitude',
-              type: DomainObjectPropertyType.NUMBER,
-            },
-            longitude: {
-              name: 'longitude',
-              type: DomainObjectPropertyType.NUMBER,
-            },
+            id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
+            latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
+            longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
           },
           decorations: {
             unique: null,
@@ -227,14 +218,10 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           name: 'Geocode',
           extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
           properties: {
-            latitude: {
-              name: 'latitude',
-              type: DomainObjectPropertyType.NUMBER,
-            },
-            longitude: {
-              name: 'longitude',
-              type: DomainObjectPropertyType.NUMBER,
-            },
+            id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+            uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+            latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
+            longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
           },
           decorations: {
             unique: null,
@@ -273,7 +260,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         domainObject: new DomainObjectMetadata({
           name: 'Locomotive',
           extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: {}, // domain entity reference, so we dont need to look at properties
+          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
           decorations: { unique: ['uuid'], updatable: [] },
         }),
         allDomainObjects: [domainObject],
@@ -282,7 +269,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         domainObject: new DomainObjectMetadata({
           name: 'TrainEngineer',
           extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: {}, // domain entity reference, so we dont need to look at properties
+          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
           decorations: { unique: ['uuid'], updatable: [] },
         }),
         allDomainObjects: [domainObject],
@@ -324,14 +311,9 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         name: 'Geocode',
         extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
         properties: {
-          latitude: {
-            name: 'latitude',
-            type: DomainObjectPropertyType.NUMBER,
-          },
-          longitude: {
-            name: 'longitude',
-            type: DomainObjectPropertyType.NUMBER,
-          },
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
+          longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
         },
         decorations: {
           unique: null,
@@ -354,7 +336,6 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       // log an example
       expect(code).toContain('-- query_name = find_geocode_by_uuid'); // name of query
       expect(code).toContain('geocode.id,'); // select expressions
-      expect(code).toContain('geocode.uuid,');
       expect(code).toContain('geocode.latitude,');
       expect(code).toContain('geocode.longitude'); // last select expression does not have comma
       expect(code).toContain('FROM geocode'); // table to query
@@ -586,7 +567,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         domainObject: new DomainObjectMetadata({
           name: 'Locomotive',
           extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: {}, // domain entity reference, so we dont need to look at properties
+          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
           decorations: { unique: ['uuid'], updatable: [] },
         }),
         allDomainObjects: [domainObject],
@@ -595,7 +576,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         domainObject: new DomainObjectMetadata({
           name: 'TrainEngineer',
           extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: {}, // domain entity reference, so we dont need to look at properties
+          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
           decorations: { unique: ['uuid'], updatable: [] },
         }),
         allDomainObjects: [domainObject],
@@ -637,14 +618,9 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         name: 'Geocode',
         extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
         properties: {
-          latitude: {
-            name: 'latitude',
-            type: DomainObjectPropertyType.NUMBER,
-          },
-          longitude: {
-            name: 'longitude',
-            type: DomainObjectPropertyType.NUMBER,
-          },
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
+          longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
         },
         decorations: {
           unique: null,
@@ -667,7 +643,6 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       // log an example
       expect(code).toContain('-- query_name = find_geocode_by_unique'); // name of query
       expect(code).toContain('geocode.id,'); // select expressions
-      expect(code).toContain('geocode.uuid,');
       expect(code).toContain('geocode.latitude,');
       expect(code).toContain('geocode.longitude'); // last select expression does not have comma
       expect(code).toContain('FROM geocode'); // table to query
@@ -743,6 +718,63 @@ async ({
 }: {
   dbConnection: DatabaseConnection;
   cin: string;
+})
+      `.trim(),
+      );
+      expect(code).toContain('await sqlQueryFindCarriageByUnique({');
+      expect(code).toMatchSnapshot();
+    });
+    it('should look correct for simple domain entity unique only on uuid', () => {
+      // define what we're testing on
+      const domainObject = new DomainObjectMetadata({
+        name: 'Carriage',
+        extends: DomainObjectVariant.DOMAIN_ENTITY,
+        properties: {
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
+          carries: {
+            name: 'carries',
+            type: DomainObjectPropertyType.ENUM,
+            of: ['PASSENGER', 'FREIGHT'],
+            required: true,
+          },
+          capacity: { name: 'capacity', type: DomainObjectPropertyType.NUMBER, nullable: true },
+        },
+        decorations: {
+          unique: ['uuid'],
+          updatable: ['capacity'],
+        },
+      });
+      const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+        domainObject,
+        allDomainObjects: [domainObject],
+      });
+
+      // run it
+      const code = defineDaoFindByMethodCodeForDomainObject({
+        domainObject,
+        sqlSchemaRelationship,
+        allSqlSchemaRelationships: [sqlSchemaRelationship],
+        findByQueryType: FindByQueryType.UNIQUE,
+      });
+
+      // log an example
+      expect(code).toContain('-- query_name = find_carriage_by_unique'); // name of query
+      expect(code).toContain('carriage.id,'); // select expressions
+      expect(code).toContain('carriage.uuid,');
+      expect(code).toContain('carriage.carries,');
+      expect(code).toContain('carriage.capacity');
+      expect(code).toContain('FROM view_carriage_current AS carriage'); // table to query (view, in this case)
+      expect(code).toContain('WHERE 1=1'); // condition
+      expect(code).toContain('  AND carriage.uuid = :uuid'); // condition
+      expect(code).toContain(
+        `
+async ({
+  dbConnection,
+  uuid,
+}: {
+  dbConnection: DatabaseConnection;
+  uuid: string;
 })
       `.trim(),
       );
@@ -941,7 +973,7 @@ async ({
         domainObject: new DomainObjectMetadata({
           name: 'Locomotive',
           extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: {}, // domain entity reference, so we dont need to look at properties
+          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
           decorations: { unique: ['uuid'], updatable: [] },
         }),
         allDomainObjects: [domainObject],
@@ -950,7 +982,7 @@ async ({
         domainObject: new DomainObjectMetadata({
           name: 'TrainEngineer',
           extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: {}, // domain entity reference, so we dont need to look at properties
+          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
           decorations: { unique: ['uuid'], updatable: [] },
         }),
         allDomainObjects: [domainObject],
@@ -1046,14 +1078,9 @@ async ({
           name: 'Geocode',
           extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
           properties: {
-            latitude: {
-              name: 'latitude',
-              type: DomainObjectPropertyType.NUMBER,
-            },
-            longitude: {
-              name: 'longitude',
-              type: DomainObjectPropertyType.NUMBER,
-            },
+            id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+            latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
+            longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
           },
           decorations: {
             unique: null,
@@ -1067,14 +1094,10 @@ async ({
           name: 'TrainBadge',
           extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
           properties: {
-            name: {
-              name: 'name',
-              type: DomainObjectPropertyType.STRING,
-            },
-            description: {
-              name: 'description',
-              type: DomainObjectPropertyType.STRING,
-            },
+            id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+            uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+            name: { name: 'name', type: DomainObjectPropertyType.STRING },
+            description: { name: 'description', type: DomainObjectPropertyType.STRING },
             rank: {
               name: 'rank',
               type: DomainObjectPropertyType.ENUM,
@@ -1092,7 +1115,7 @@ async ({
         domainObject: new DomainObjectMetadata({
           name: 'Locomotive',
           extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: {}, // domain entity reference, so we dont need to look at properties
+          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
           decorations: { unique: ['uuid'], updatable: [] },
         }),
         allDomainObjects: [domainObject],
@@ -1101,7 +1124,7 @@ async ({
         domainObject: new DomainObjectMetadata({
           name: 'TrainEngineer',
           extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: {}, // domain entity reference, so we dont need to look at properties
+          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
           decorations: { unique: ['uuid'], updatable: [] },
         }),
         allDomainObjects: [domainObject],

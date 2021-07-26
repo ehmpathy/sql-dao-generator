@@ -8,7 +8,7 @@ Object {
       DomainObjectMetadata {
         "decorations": Object {
           "unique": Array [
-            "cin",
+            "uuid",
           ],
           "updatable": Array [],
         },
@@ -97,6 +97,18 @@ Object {
             "required": true,
             "type": "NUMBER",
           },
+          "createdAt": DomainObjectPropertyMetadata {
+            "name": "createdAt",
+            "nullable": false,
+            "required": false,
+            "type": "DATE",
+          },
+          "effectiveAt": DomainObjectPropertyMetadata {
+            "name": "effectiveAt",
+            "nullable": false,
+            "required": false,
+            "type": "DATE",
+          },
           "ein": DomainObjectPropertyMetadata {
             "name": "ein",
             "nullable": false,
@@ -127,6 +139,12 @@ Object {
             "nullable": false,
             "required": true,
             "type": "NUMBER",
+          },
+          "updatedAt": DomainObjectPropertyMetadata {
+            "name": "updatedAt",
+            "nullable": false,
+            "required": false,
+            "type": "DATE",
           },
           "uuid": DomainObjectPropertyMetadata {
             "name": "uuid",

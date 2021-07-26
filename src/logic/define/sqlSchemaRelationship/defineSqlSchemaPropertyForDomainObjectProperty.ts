@@ -2,6 +2,7 @@ import { camelCase, snakeCase } from 'change-case';
 import { DomainObjectMetadata, DomainObjectPropertyMetadata, DomainObjectPropertyType } from 'domain-objects-metadata';
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
+import { defineDatabaseGeneratedSqlSchemaPropertiesForDomainObject } from './defineDatabaseGeneratedPropertiesForDomainObject';
 import { defineSqlSchemaReferenceForDomainObjectProperty } from './defineSqlSchemaReferenceForDomainObjectProperty';
 
 export const defineSqlSchemaPropertyForDomainObjectProperty = ({
@@ -17,6 +18,13 @@ export const defineSqlSchemaPropertyForDomainObjectProperty = ({
   if (camelCase(property.name) !== property.name)
     throw new Error(
       `Property names must be camel case. '${domainObject.name}.${property.name}' does not meet this criteria`,
+    );
+
+  // sanity check that this is not called for a database generated property (since that should be handled elsewhere)
+  const databaseGeneratedProperties = defineDatabaseGeneratedSqlSchemaPropertiesForDomainObject({ domainObject });
+  if (databaseGeneratedProperties.map(({ name }) => name).includes(snakeCase(property.name)))
+    throw new Error(
+      `defineSqlSchemaPropertyForDomainObjectProperty was called for an db-generated property '${domainObject.name}.${property.name}'. this should not occur. this is a bug within sql-dao-generator`, // fail fast
     );
 
   // define data about this property
@@ -53,6 +61,7 @@ export const defineSqlSchemaPropertyForDomainObjectProperty = ({
     isUpdatable,
     isNullable,
     isArray,
+    isDatabaseGenerated: false, // this method is only called for properties that are not database generated (as checked above)
     reference,
   });
 };

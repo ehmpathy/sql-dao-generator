@@ -3,6 +3,24 @@ import { createExampleDomainObjectMetadata } from '../../__test_assets__/createE
 import { defineSqlSchemaPropertyForDomainObjectProperty } from './defineSqlSchemaPropertyForDomainObjectProperty';
 
 describe('defineSqlSchemaPropertyForDomainObjectProperty', () => {
+  it('should throw an error if attempted to be run on a database generated value', () => {
+    try {
+      defineSqlSchemaPropertyForDomainObjectProperty({
+        property: {
+          name: 'createdAt',
+          type: DomainObjectPropertyType.STRING,
+          required: true,
+        },
+        domainObject: createExampleDomainObjectMetadata(),
+        allDomainObjects: [],
+      });
+      throw new Error('should not reach here');
+    } catch (error) {
+      expect(error.message).toContain(
+        'defineSqlSchemaPropertyForDomainObjectProperty was called for an db-generated property',
+      );
+    }
+  });
   describe('names', () => {
     it('should define regular property names in snake case', () => {
       const sqlSchemaProperty = defineSqlSchemaPropertyForDomainObjectProperty({

@@ -9,7 +9,7 @@ describe('defineDaoCodeFilesForDomainObject', () => {
       extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
       properties: {
         id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
-        uuid: { name: 'id', type: DomainObjectPropertyType.STRING },
+        uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
         latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
         longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
       },

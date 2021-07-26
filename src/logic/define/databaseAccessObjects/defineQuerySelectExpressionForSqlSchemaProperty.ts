@@ -61,9 +61,8 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
       return `
     (
       SELECT json_build_object(
-        'id', ${referencedSqlSchemaName}.id,
-        'uuid', ${referencedSqlSchemaName}.uuid,
         ${referencedSqlSchemaRelationship.properties
+          .filter(({ domainObject: referencedDomainObjectProperty }) => !!referencedDomainObjectProperty)
           .map(
             ({ sqlSchema: referencedSqlSchemaProperty }) =>
               `'${referencedSqlSchemaProperty.name}', ${referencedSqlSchemaName}.${referencedSqlSchemaProperty.name}`,
@@ -98,9 +97,8 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
       SELECT COALESCE(
         json_agg(
           json_build_object(
-            'id', ${referencedSqlSchemaName}.id,
-            'uuid', ${referencedSqlSchemaName}.uuid,
             ${referencedSqlSchemaRelationship.properties
+              .filter(({ domainObject: referencedDomainObjectProperty }) => !!referencedDomainObjectProperty)
               .map(
                 ({ sqlSchema: referencedSqlSchemaProperty }) =>
                   `'${referencedSqlSchemaProperty.name}', ${referencedSqlSchemaName}.${referencedSqlSchemaProperty.name}`,

@@ -11,11 +11,11 @@ export enum CarriagePurpose {
 export interface Carriage {
   id?: number;
   uuid?: string;
-  cin: string; // a "carriage identification number", like a vin on a car
+  cin: string; // human readable identifier for carriage
   carries: CarriagePurpose;
   capacity: number; // for passenger carriages, number of passengers; for freight, the volume
 }
 export class Carriage extends DomainEntity<Carriage> implements Carriage {
-  public static unique = ['cin'];
+  public static unique = ['uuid']; // there is nothing that naturally identifies a carriage -> it is unique only on the unique identifier tracked in our db
   public static updatable = [];
 }

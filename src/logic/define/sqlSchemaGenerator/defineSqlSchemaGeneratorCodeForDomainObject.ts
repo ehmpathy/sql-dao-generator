@@ -3,6 +3,7 @@ import { DomainObjectMetadata, DomainObjectVariant } from 'domain-objects-metada
 import { isPresent } from 'simple-type-guards';
 
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
+import { isNotADatabaseGeneratedProperty } from '../sqlSchemaRelationship/isNotADatabaseGeneratedProperty';
 import { defineSqlSchemaGeneratorCodeForProperty } from './defineSqlSchemaGeneratorCodeForProperty';
 
 export const defineSqlSchemaGeneratorCodeForDomainObject = ({
@@ -23,13 +24,16 @@ export const defineSqlSchemaGeneratorCodeForDomainObject = ({
   })();
 
   // define the code for each property
-  const schemaGeneratorProperties = sqlSchemaRelationship.properties.map((propertyRelationship) =>
-    defineSqlSchemaGeneratorCodeForProperty({
-      domainObject,
-      domainObjectProperty: propertyRelationship.domainObject,
-      sqlSchemaProperty: propertyRelationship.sqlSchema,
-    }),
-  );
+  const schemaGeneratorProperties = sqlSchemaRelationship.properties
+    .filter(isNotADatabaseGeneratedProperty) // filter out all db generated properties, since sql-schema-generator will complain if they're included
+    .filter((propertyRelationship) => propertyRelationship.domainObject.name !== 'uuid') // we also can't use the "uuid" property, even if its not db generated, since sql-schema-generator will still complain even if entity is unique on it
+    .map((propertyRelationship) =>
+      defineSqlSchemaGeneratorCodeForProperty({
+        domainObject,
+        domainObjectProperty: propertyRelationship.domainObject,
+        sqlSchemaProperty: propertyRelationship.sqlSchema,
+      }),
+    );
 
   // define the code for the unique properties
   const schemaGeneratorUnique =

@@ -19,12 +19,76 @@ SqlSchemaToDomainObjectRelationship {
   "properties": Array [
     Object {
       "domainObject": Object {
+        "name": "id",
+        "required": false,
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "id",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": Object {
+        "name": "uuid",
+        "required": false,
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "uuid",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "created_at",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "effective_at",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "updated_at",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": Object {
         "name": "cin",
         "required": true,
         "type": "STRING",
       },
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
+        "isDatabaseGenerated": false,
         "isNullable": false,
         "isUpdatable": false,
         "name": "cin",
@@ -43,6 +107,7 @@ SqlSchemaToDomainObjectRelationship {
       },
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
+        "isDatabaseGenerated": false,
         "isNullable": false,
         "isUpdatable": false,
         "name": "carries",
@@ -57,8 +122,9 @@ SqlSchemaToDomainObjectRelationship {
       },
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
+        "isDatabaseGenerated": false,
         "isNullable": true,
-        "isUpdatable": false,
+        "isUpdatable": true,
         "name": "capacity",
         "reference": null,
       },
@@ -74,6 +140,7 @@ SqlSchemaToDomainObjectRelationship {
       },
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
+        "isDatabaseGenerated": false,
         "isNullable": false,
         "isUpdatable": false,
         "name": "manufacturer_id",
@@ -111,12 +178,50 @@ SqlSchemaToDomainObjectRelationship {
   "properties": Array [
     Object {
       "domainObject": Object {
+        "name": "id",
+        "required": false,
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "id",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "uuid",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "created_at",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": Object {
         "name": "trainUuid",
         "required": true,
         "type": "STRING",
       },
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
+        "isDatabaseGenerated": false,
         "isNullable": false,
         "isUpdatable": false,
         "name": "train_id",
@@ -137,6 +242,7 @@ SqlSchemaToDomainObjectRelationship {
       },
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
+        "isDatabaseGenerated": false,
         "isNullable": false,
         "isUpdatable": false,
         "name": "occurred_at",
@@ -155,6 +261,7 @@ SqlSchemaToDomainObjectRelationship {
       },
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
+        "isDatabaseGenerated": false,
         "isNullable": false,
         "isUpdatable": false,
         "name": "geocode_id",
@@ -189,11 +296,51 @@ SqlSchemaToDomainObjectRelationship {
   "properties": Array [
     Object {
       "domainObject": Object {
+        "name": "id",
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "id",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": Object {
+        "name": "uuid",
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "uuid",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "created_at",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": Object {
         "name": "latitude",
         "type": "NUMBER",
       },
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
+        "isDatabaseGenerated": false,
         "isNullable": false,
         "isUpdatable": false,
         "name": "latitude",
@@ -207,6 +354,7 @@ SqlSchemaToDomainObjectRelationship {
       },
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
+        "isDatabaseGenerated": false,
         "isNullable": false,
         "isUpdatable": false,
         "name": "longitude",

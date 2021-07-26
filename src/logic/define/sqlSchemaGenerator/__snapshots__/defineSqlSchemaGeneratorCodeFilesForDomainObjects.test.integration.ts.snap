@@ -36,7 +36,7 @@ export const carriage = new Entity({
     carries: prop.ENUM(['PASSENGER', 'FREIGHT']),
     capacity: prop.NUMERIC(),
   },
-  unique: ['cin'],
+  unique: ['uuid'],
 });",
     "relpath": "carriage.ts",
   },

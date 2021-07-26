@@ -12,6 +12,7 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
         isArray: false,
         isNullable: false,
         isUpdatable: false,
+        isDatabaseGenerated: false,
         reference: null,
       },
       domainObjectProperty: {
@@ -30,6 +31,7 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
         isArray: false,
         isNullable: false,
         isUpdatable: false,
+        isDatabaseGenerated: false,
         reference: {
           method: SqlSchemaReferenceMethod.IMPLICIT_BY_UUID,
           of: {
@@ -60,6 +62,7 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
         isArray: false,
         isNullable: false,
         isUpdatable: false,
+        isDatabaseGenerated: false,
         reference: {
           method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
           of: {
@@ -82,11 +85,25 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
           properties: [
             {
               domainObject: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
-              sqlSchema: { name: 'latitude', isArray: false, isNullable: false, isUpdatable: false, reference: null },
+              sqlSchema: {
+                name: 'latitude',
+                isArray: false,
+                isNullable: false,
+                isUpdatable: false,
+                isDatabaseGenerated: false,
+                reference: null,
+              },
             },
             {
               domainObject: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
-              sqlSchema: { name: 'longitude', isArray: false, isNullable: false, isUpdatable: false, reference: null },
+              sqlSchema: {
+                name: 'longitude',
+                isArray: false,
+                isNullable: false,
+                isUpdatable: false,
+                isDatabaseGenerated: false,
+                reference: null,
+              },
             },
           ],
           decorations: { unique: { sqlSchema: null, domainObject: null } },
@@ -103,6 +120,7 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
         isArray: true,
         isNullable: false,
         isUpdatable: false,
+        isDatabaseGenerated: false,
         reference: {
           method: SqlSchemaReferenceMethod.IMPLICIT_BY_UUID,
           of: {
@@ -142,6 +160,7 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
         isArray: true,
         isNullable: false,
         isUpdatable: false,
+        isDatabaseGenerated: false,
         reference: {
           method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
           of: {
@@ -167,11 +186,25 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
           properties: [
             {
               domainObject: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
-              sqlSchema: { name: 'latitude', isArray: false, isNullable: false, isUpdatable: false, reference: null },
+              sqlSchema: {
+                name: 'latitude',
+                isArray: false,
+                isNullable: false,
+                isUpdatable: false,
+                isDatabaseGenerated: false,
+                reference: null,
+              },
             },
             {
               domainObject: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
-              sqlSchema: { name: 'longitude', isArray: false, isNullable: false, isUpdatable: false, reference: null },
+              sqlSchema: {
+                name: 'longitude',
+                isArray: false,
+                isNullable: false,
+                isUpdatable: false,
+                isDatabaseGenerated: false,
+                reference: null,
+              },
             },
           ],
           decorations: { unique: { sqlSchema: null, domainObject: null } },

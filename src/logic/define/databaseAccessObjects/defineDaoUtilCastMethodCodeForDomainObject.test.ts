@@ -10,14 +10,9 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
       name: 'Geocode',
       extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
       properties: {
-        latitude: {
-          name: 'latitude',
-          type: DomainObjectPropertyType.NUMBER,
-        },
-        longitude: {
-          name: 'longitude',
-          type: DomainObjectPropertyType.NUMBER,
-        },
+        id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+        latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
+        longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
       },
       decorations: {
         unique: null,

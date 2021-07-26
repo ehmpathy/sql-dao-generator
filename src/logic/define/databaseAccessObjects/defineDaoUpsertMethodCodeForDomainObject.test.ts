@@ -335,7 +335,7 @@ async ({
       domainObject: new DomainObjectMetadata({
         name: 'Locomotive',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
-        properties: {}, // domain entity reference, so we dont need to look at properties
+        properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } },
         decorations: { unique: ['uuid'], updatable: [] },
       }),
       allDomainObjects: [domainObject],
@@ -344,7 +344,7 @@ async ({
       domainObject: new DomainObjectMetadata({
         name: 'TrainEngineer',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
-        properties: {}, // domain entity reference, so we dont need to look at properties
+        properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
         decorations: { unique: ['uuid'], updatable: [] },
       }),
       allDomainObjects: [domainObject],

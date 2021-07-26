@@ -160,7 +160,7 @@ describe('generate', () => {
           }),
         });
         const foundLocomotive = await locomotiveDao.findById({ dbConnection, id: locomotive.id });
-        expect(foundLocomotive).toEqual(locomotive);
+        expect(foundLocomotive).toMatchObject(locomotive);
       });
       it('should be able to find by uuid', async () => {
         const locomotive = await locomotiveDao.upsert({
@@ -173,7 +173,7 @@ describe('generate', () => {
           }),
         });
         const foundLocomotive = await locomotiveDao.findByUuid({ dbConnection, uuid: locomotive.uuid });
-        expect(foundLocomotive).toEqual(locomotive);
+        expect(foundLocomotive).toMatchObject(locomotive);
       });
       it('should be able to find by unique', async () => {
         const locomotive = await locomotiveDao.upsert({
@@ -186,7 +186,85 @@ describe('generate', () => {
           }),
         });
         const foundLocomotive = await locomotiveDao.findByUnique({ dbConnection, ein: locomotive.ein });
-        expect(foundLocomotive).toEqual(locomotive);
+        expect(foundLocomotive).toMatchObject(locomotive);
+      });
+    });
+    describe('carriageDao', () => {
+      it('it should be able to upsert', async () => {
+        const carriage = new Carriage({
+          uuid: v4(),
+          cin: 'carriage-to-test',
+          carries: CarriagePurpose.FREIGHT,
+          capacity: 821,
+        }) as HasUuid<Carriage>;
+        const upsertedCarriage = await carriageDao.upsert({
+          dbConnection,
+          carriage,
+        });
+        // console.log(upsertedGeocode);
+        expect(upsertedCarriage).toMatchObject(carriage);
+        expect(upsertedCarriage).toHaveProperty('id', expect.any(Number));
+        expect(upsertedCarriage).toHaveProperty('uuid', expect.any(String));
+      });
+      it('should return the same entity if the unique property is the same', async () => {
+        const carriage = await carriageDao.upsert({
+          dbConnection,
+          carriage: new Carriage({
+            uuid: v4(),
+            cin: 'carriage-to-test',
+            carries: CarriagePurpose.FREIGHT,
+            capacity: 821,
+          }) as HasUuid<Carriage>,
+        });
+        const carriageNow = await carriageDao.upsert({
+          dbConnection,
+          carriage: new Carriage({
+            ...carriage,
+            capacity: 721,
+          }) as HasUuid<Carriage>,
+        });
+
+        // check that its the same locomotive
+        expect(carriageNow.id).toEqual(carriage.id);
+      });
+      it('should be able to find by id', async () => {
+        const carriage = await carriageDao.upsert({
+          dbConnection,
+          carriage: new Carriage({
+            uuid: v4(),
+            cin: 'carriage-to-test',
+            carries: CarriagePurpose.FREIGHT,
+            capacity: 821,
+          }) as HasUuid<Carriage>,
+        });
+        const foundCarriage = await carriageDao.findById({ dbConnection, id: carriage.id });
+        expect(foundCarriage).toEqual(carriage);
+      });
+      it('should be able to find by uuid', async () => {
+        const carriage = await carriageDao.upsert({
+          dbConnection,
+          carriage: new Carriage({
+            uuid: v4(),
+            cin: 'carriage-to-test',
+            carries: CarriagePurpose.FREIGHT,
+            capacity: 821,
+          }) as HasUuid<Carriage>,
+        });
+        const foundCarriage = await carriageDao.findByUuid({ dbConnection, uuid: carriage.uuid });
+        expect(foundCarriage).toEqual(carriage);
+      });
+      it('should be able to find by unique', async () => {
+        const carriage = await carriageDao.upsert({
+          dbConnection,
+          carriage: new Carriage({
+            uuid: v4(),
+            cin: 'carriage-to-test',
+            carries: CarriagePurpose.FREIGHT,
+            capacity: 821,
+          }) as HasUuid<Carriage>,
+        });
+        const foundCarriage = await carriageDao.findByUnique({ dbConnection, uuid: carriage.uuid });
+        expect(foundCarriage).toEqual(carriage);
       });
     });
     describe('trainDao', () => {
@@ -208,18 +286,20 @@ describe('generate', () => {
         boosterCarriage = await carriageDao.upsert({
           dbConnection,
           carriage: new Carriage({
+            uuid: v4(),
             cin: 'booster-transport-1',
             carries: CarriagePurpose.FREIGHT,
             capacity: 9001,
-          }),
+          }) as HasUuid<Carriage>,
         });
         crewCarriage = await carriageDao.upsert({
           dbConnection,
           carriage: new Carriage({
+            uuid: v4(),
             cin: 'crew-transport-1',
             carries: CarriagePurpose.PASSENGER,
             capacity: 19,
-          }),
+          }) as HasUuid<Carriage>,
         });
         leadEngineer = await trainEngineerDao.upsert({
           dbConnection,

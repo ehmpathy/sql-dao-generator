@@ -246,7 +246,6 @@ export const sql = \`
   -- query_name = find_geocode_by_id
   SELECT
     geocode.id,
-    geocode.uuid,
     geocode.latitude,
     geocode.longitude
   FROM geocode
@@ -286,7 +285,6 @@ export const sql = \`
   -- query_name = find_geocode_by_unique
   SELECT
     geocode.id,
-    geocode.uuid,
     geocode.latitude,
     geocode.longitude
   FROM geocode

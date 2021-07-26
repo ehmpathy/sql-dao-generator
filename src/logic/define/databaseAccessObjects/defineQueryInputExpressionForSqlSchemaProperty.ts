@@ -14,6 +14,8 @@ export const defineQueryInputExpressionForSqlSchemaProperty = ({
   domainObjectProperty: DomainObjectPropertyMetadata;
   allSqlSchemaRelationships: SqlSchemaToDomainObjectRelationship[];
 }): string => {
+  if (!domainObjectProperty) throw new Error(`no domain object property for sql property ${sqlSchemaProperty.name}`);
+
   // simple case: non references
   if (!sqlSchemaProperty.isArray && !sqlSchemaProperty.reference) return `:${domainObjectProperty.name}`; // yesql notation
 

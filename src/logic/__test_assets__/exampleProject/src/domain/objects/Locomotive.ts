@@ -17,6 +17,9 @@ export enum LocomotiveFuel {
 export interface Locomotive {
   id?: number;
   uuid?: string;
+  createdAt?: Date;
+  effectiveAt?: Date;
+  updatedAt?: Date;
   ein: string; // an "engine identification number", like a vin on a car
   fuel: LocomotiveFuel;
   capacity: number; // in tons

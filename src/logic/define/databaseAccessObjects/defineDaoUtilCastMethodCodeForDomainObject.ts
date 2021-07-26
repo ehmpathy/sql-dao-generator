@@ -48,10 +48,12 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
   // define the output type
   const outputType = defineOutputTypeOfFoundDomainObject(domainObject);
 
+  // define the properties
   const propertiesToInstantiate = [
-    'id: dbObject.id',
-    hasUuidProperty ? 'uuid: dbObject.uuid' : null,
     ...sqlSchemaRelationship.properties.map(({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) => {
+      // if domain object property is not defined, then no need to define how to cast from it
+      if (!domainObjectProperty) return null;
+
       // enum case
       if (domainObjectProperty.type === DomainObjectPropertyType.ENUM)
         return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name} as ${domainObject.name}['${domainObjectProperty.name}']`;

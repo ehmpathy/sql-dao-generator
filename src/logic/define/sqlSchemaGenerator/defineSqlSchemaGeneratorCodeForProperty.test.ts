@@ -17,6 +17,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isArray: false,
           isNullable: false,
           isUpdatable: false,
+          isDatabaseGenerated: false,
           reference: null,
         },
       });
@@ -34,6 +35,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isArray: false,
           isNullable: false,
           isUpdatable: false,
+          isDatabaseGenerated: false,
           reference: null,
         },
       });
@@ -51,6 +53,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isArray: false,
           isNullable: false,
           isUpdatable: false,
+          isDatabaseGenerated: false,
           reference: null,
         },
       });
@@ -68,6 +71,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isArray: false,
           isNullable: false,
           isUpdatable: false,
+          isDatabaseGenerated: false,
           reference: null,
         },
       });
@@ -86,6 +90,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isArray: false,
           isNullable: false,
           isUpdatable: false,
+          isDatabaseGenerated: false,
           reference: null,
         },
       });
@@ -104,6 +109,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isArray: false,
           isNullable: false,
           isUpdatable: false,
+          isDatabaseGenerated: false,
           reference: {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: { name: 'Address', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
@@ -125,6 +131,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isArray: false,
           isNullable: false,
           isUpdatable: false,
+          isDatabaseGenerated: false,
           reference: {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: { name: 'HomeAddress', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
@@ -149,6 +156,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isArray: true,
           isNullable: false,
           isUpdatable: false,
+          isDatabaseGenerated: false,
           reference: {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: { name: 'PlaneExternalId', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
@@ -171,6 +179,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isArray: false,
           isNullable: false,
           isUpdatable: true,
+          isDatabaseGenerated: false,
           reference: null,
         },
       });
@@ -192,6 +201,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isArray: true,
           isNullable: true,
           isUpdatable: false,
+          isDatabaseGenerated: false,
           reference: {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: { name: 'PlaneExternalId', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
@@ -215,6 +225,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isArray: false,
           isNullable: true,
           isUpdatable: true,
+          isDatabaseGenerated: false,
           reference: null,
         },
       });

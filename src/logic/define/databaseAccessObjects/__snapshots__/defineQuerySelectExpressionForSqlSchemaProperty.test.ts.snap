@@ -3,8 +3,6 @@
 exports[`defineQuerySelectExpressionForSqlSchemaProperty should define the select expression correctly for a solo DIRECT_BY_NESTING reference 1`] = `
 "(
       SELECT json_build_object(
-        'id', geocode.id,
-        'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
       ) AS json_build_object
@@ -24,8 +22,6 @@ exports[`defineQuerySelectExpressionForSqlSchemaProperty should define the selec
       SELECT COALESCE(
         json_agg(
           json_build_object(
-            'id', geocode.id,
-            'uuid', geocode.uuid,
             'latitude', geocode.latitude,
             'longitude', geocode.longitude
           )

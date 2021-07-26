@@ -96,21 +96,21 @@ export const sql = \`
     carriage.capacity
   FROM carriage
   WHERE 1=1
-    AND carriage.cin = :cin;
+    AND carriage.uuid = :uuid;
 \`;
 
 export const findByUnique = async ({
   dbConnection,
-  cin,
+  uuid,
 }: {
   dbConnection: DatabaseConnection;
-  cin: string;
+  uuid: string;
 }): Promise<HasId<HasUuid<Carriage>> | null> => {
   const results = await sqlQueryFindCarriageByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
     input: {
-      cin,
+      uuid,
     },
   });
   if (results.length > 1) throw new Error('should only be one');
@@ -173,6 +173,7 @@ export const sql = \`
   SELECT
     dgv.id, dgv.uuid
   FROM upsert_carriage(
+    :uuid,
     :cin,
     :carries,
     :capacity
@@ -184,12 +185,13 @@ export const upsert = async ({
   carriage,
 }: {
   dbConnection: DatabaseConnection;
-  carriage: Carriage;
+  carriage: HasUuid<Carriage>;
 }): Promise<HasId<HasUuid<Carriage>>> => {
   const results = await sqlQueryUpsertCarriage({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
     input: {
+      uuid: carriage.uuid,
       cin: carriage.cin,
       carries: carriage.carries,
       capacity: carriage.capacity,
@@ -435,7 +437,6 @@ export const sql = \`
   -- query_name = find_geocode_by_id
   SELECT
     geocode.id,
-    geocode.uuid,
     geocode.latitude,
     geocode.longitude
   FROM geocode
@@ -475,7 +476,6 @@ export const sql = \`
   -- query_name = find_geocode_by_unique
   SELECT
     geocode.id,
-    geocode.uuid,
     geocode.latitude,
     geocode.longitude
   FROM geocode
@@ -600,7 +600,6 @@ export const sql = \`
     (
       SELECT json_build_object(
         'id', geocode.id,
-        'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
       ) AS json_build_object
@@ -674,7 +673,6 @@ export const sql = \`
     (
       SELECT json_build_object(
         'id', geocode.id,
-        'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
       ) AS json_build_object
@@ -749,7 +747,6 @@ export const sql = \`
     (
       SELECT json_build_object(
         'id', geocode.id,
-        'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
       ) AS json_build_object
@@ -901,6 +898,9 @@ export const castFromDatabaseObject = ({
   new Locomotive({
     id: dbObject.id,
     uuid: dbObject.uuid,
+    createdAt: dbObject.created_at,
+    effectiveAt: dbObject.effective_at,
+    updatedAt: dbObject.updated_at,
     ein: dbObject.ein,
     fuel: dbObject.fuel as Locomotive['fuel'],
     capacity: dbObject.capacity,
@@ -922,6 +922,9 @@ export const sql = \`
   SELECT
     locomotive.id,
     locomotive.uuid,
+    locomotive.created_at,
+    locomotive.effective_at,
+    locomotive.updated_at,
     locomotive.ein,
     locomotive.fuel,
     locomotive.capacity,
@@ -964,6 +967,9 @@ export const sql = \`
   SELECT
     locomotive.id,
     locomotive.uuid,
+    locomotive.created_at,
+    locomotive.effective_at,
+    locomotive.updated_at,
     locomotive.ein,
     locomotive.fuel,
     locomotive.capacity,
@@ -1007,6 +1013,9 @@ export const sql = \`
   SELECT
     locomotive.id,
     locomotive.uuid,
+    locomotive.created_at,
+    locomotive.effective_at,
+    locomotive.updated_at,
     locomotive.ein,
     locomotive.fuel,
     locomotive.capacity,
@@ -1121,7 +1130,6 @@ export const sql = \`
   -- query_name = find_train_located_event_by_id
   SELECT
     train_located_event.id,
-    train_located_event.uuid,
     (
       SELECT train.uuid
       FROM train WHERE train.id = train_located_event.train_id
@@ -1130,7 +1138,6 @@ export const sql = \`
     (
       SELECT json_build_object(
         'id', geocode.id,
-        'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
       ) AS json_build_object
@@ -1173,7 +1180,6 @@ export const sql = \`
   -- query_name = find_train_located_event_by_unique
   SELECT
     train_located_event.id,
-    train_located_event.uuid,
     (
       SELECT train.uuid
       FROM train WHERE train.id = train_located_event.train_id
@@ -1182,7 +1188,6 @@ export const sql = \`
     (
       SELECT json_build_object(
         'id', geocode.id,
-        'uuid', geocode.uuid,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
       ) AS json_build_object

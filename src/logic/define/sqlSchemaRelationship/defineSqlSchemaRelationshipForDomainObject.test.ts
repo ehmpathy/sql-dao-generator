@@ -23,7 +23,7 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
       allDomainObjects: [],
     });
     expect(relationship.name.sqlSchema).toEqual('precise_geocode'); // should be snake case
-    expect(relationship.properties.length).toEqual(2); // sanity check
+    expect(relationship.properties.length).toEqual(5); // sanity check
     expect(relationship.decorations.unique.domainObject).toEqual(null); // it wasn't defined, since domain value object
     expect(relationship.decorations.unique.sqlSchema).toEqual(['latitude', 'longitude']); // should be all of the properties, since domain value object
     expect(relationship).toMatchSnapshot();
@@ -52,13 +52,13 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
         },
         decorations: {
           unique: ['cin'],
-          updatable: [],
+          updatable: ['capacity'],
         },
       }),
       allDomainObjects: [],
     });
     expect(relationship.name.sqlSchema).toEqual('train_carriage'); // should be snake case
-    expect(relationship.properties.length).toEqual(4); // only includes the non-auto-generated ones
+    expect(relationship.properties.length).toEqual(9); // only includes the non-auto-generated ones
     expect(relationship.decorations.unique.sqlSchema).toEqual(['cin']); // sanity check
     expect(relationship).toMatchSnapshot();
   });
@@ -91,7 +91,7 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
       ],
     });
     expect(relationship.name.sqlSchema).toEqual('train_located_event'); // should be snake case
-    expect(relationship.properties.length).toEqual(3); // only includes the non-auto-generated ones
+    expect(relationship.properties.length).toEqual(6); // only includes the non-auto-generated ones
     expect(relationship.decorations.unique.sqlSchema).toEqual(['train_id', 'occurred_at']); // notice that `trainUuid` was converted to `train_id`! (since the sql column is called `train_id`, since it references a `train`)
     expect(relationship).toMatchSnapshot();
   });

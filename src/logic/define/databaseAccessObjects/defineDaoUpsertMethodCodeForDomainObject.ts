@@ -3,6 +3,7 @@ import { DomainObjectMetadata } from 'domain-objects-metadata';
 
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
+import { isNotADatabaseGeneratedProperty } from '../sqlSchemaRelationship/isNotADatabaseGeneratedProperty';
 import { castDomainObjectNameToDaoName } from './castDomainObjectNameToDaoName';
 import { defineOutputTypeOfFoundDomainObject } from './defineOutputTypeOfFoundDomainObject';
 import {
@@ -23,6 +24,7 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
   // define some useful constants
   const sqlSchemaName = sqlSchemaRelationship.name.sqlSchema;
   const hasUuidProperty = !!domainObject.properties.uuid;
+  const isUniqueOnUuid = !!domainObject.decorations.unique?.includes('uuid');
 
   // define the imports
   const imports = [
@@ -46,19 +48,21 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
   ];
 
   // define the query input expressions
-  const queryInputExpressions: string[] = Object.values(sqlSchemaRelationship.properties).map(
-    ({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
+  const queryInputExpressions: string[] = Object.values(sqlSchemaRelationship.properties)
+    .filter(isNotADatabaseGeneratedProperty)
+    .map(({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
       defineQueryInputExpressionForSqlSchemaProperty({
         sqlSchemaName,
         sqlSchemaProperty,
         domainObjectProperty,
         allSqlSchemaRelationships,
       }),
-  );
+    );
 
   // define the queryFunctionInputExpressions
-  const queryFunctionInputExpressions: string[] = Object.values(sqlSchemaRelationship.properties).map(
-    ({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
+  const queryFunctionInputExpressions: string[] = Object.values(sqlSchemaRelationship.properties)
+    .filter(isNotADatabaseGeneratedProperty)
+    .map(({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
       defineQueryFunctionInputExpressionForDomainObjectProperty({
         domainObjectName: domainObject.name,
         sqlSchemaProperty,
@@ -66,7 +70,7 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
         allSqlSchemaRelationships,
         context: GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY,
       }),
-  );
+    );
 
   // define the output type
   const outputType = defineOutputTypeOfFoundDomainObject(domainObject);
@@ -89,7 +93,7 @@ export const upsert = async ({
   ${camelCase(domainObject.name)},
 }: {
   dbConnection: DatabaseConnection;
-  ${camelCase(domainObject.name)}: ${domainObject.name};
+  ${camelCase(domainObject.name)}: ${isUniqueOnUuid ? `HasUuid<${domainObject.name}>` : domainObject.name};
 }): Promise<${outputType}> => {
   const results = await sqlQueryUpsert${domainObject.name}({
     dbExecute: dbConnection.query,

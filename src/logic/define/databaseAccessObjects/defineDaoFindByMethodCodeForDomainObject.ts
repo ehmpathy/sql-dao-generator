@@ -1,8 +1,9 @@
 import { snakeCase } from 'change-case';
 import { DomainObjectMetadata, DomainObjectPropertyMetadata, DomainObjectPropertyType } from 'domain-objects-metadata';
+import { isPresent } from 'simple-type-guards';
+
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
-
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
 import { defineOutputTypeOfFoundDomainObject } from './defineOutputTypeOfFoundDomainObject';
 import {
@@ -81,7 +82,13 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
           ({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.name === sqlSchemaPropertyName,
         );
         if (!propertyRelationship)
-          throw new Error('could not find sqlSchemaRelationship for property. this is a bug within sql-dao-generator.'); // fail fast, this should never occur
+          throw new Error(
+            `could not find sqlSchemaRelationship for property '${domainObject.name}.${sqlSchemaPropertyName}'. this is a bug within sql-dao-generator.`,
+          ); // fail fast, this should never occur
+        if (!propertyRelationship.domainObject)
+          throw new Error(
+            `propertyRelationship.domainObject for property was not defined. '${domainObject.name}.${sqlSchemaPropertyName}'. this is a bug within sql-dao-generator.`,
+          ); // fail fast, this should never occur
         const { domainObject: domainObjectProperty, sqlSchema: sqlSchemaProperty } = propertyRelationship;
         return `${sqlSchemaName}.${sqlSchemaPropertyName} = ${defineQueryInputExpressionForSqlSchemaProperty({
           sqlSchemaName,
@@ -110,7 +117,13 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
           ({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.name === sqlSchemaPropertyName,
         );
         if (!propertyRelationship)
-          throw new Error('could not find sqlSchemaRelationship for property. this is a bug within sql-dao-generator.'); // fail fast, this should never occur
+          throw new Error(
+            `could not find sqlSchemaRelationship for property '${domainObject.name}.${sqlSchemaPropertyName}'. this is a bug within sql-dao-generator.`,
+          ); // fail fast, this should never occur
+        if (!propertyRelationship.domainObject)
+          throw new Error(
+            `propertyRelationship.domainObject for property was not defined. '${domainObject.name}.${sqlSchemaPropertyName}'. this is a bug within sql-dao-generator.`,
+          ); // fail fast, this should never occur
         const { domainObject: domainObjectProperty, sqlSchema: sqlSchemaProperty } = propertyRelationship;
         const typeOfProperty = getTypescriptTypeForDomainObjectProperty({
           domainObjectProperty,
@@ -137,7 +150,13 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
           ({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.name === sqlSchemaPropertyName,
         );
         if (!propertyRelationship)
-          throw new Error('could not find sqlSchemaRelationship for property. this is a bug within sql-dao-generator.'); // fail fast, this should never occur
+          throw new Error(
+            `could not find sqlSchemaRelationship for property '${domainObject.name}.${sqlSchemaPropertyName}'. this is a bug within sql-dao-generator.`,
+          ); // fail fast, this should never occur
+        if (!propertyRelationship.domainObject)
+          throw new Error(
+            `propertyRelationship.domainObject for property was not defined. '${domainObject.name}.${sqlSchemaPropertyName}'. this is a bug within sql-dao-generator.`,
+          ); // fail fast, this should never occur
         const { domainObject: domainObjectProperty, sqlSchema: sqlSchemaProperty } = propertyRelationship;
         return defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: domainObject.name,
@@ -164,17 +183,17 @@ ${imports.join('\n')}
 export const sql = \`
   -- query_name = find_${sqlSchemaName}_by_${snakeCase(findByQueryType)}
   SELECT
-    ${sqlSchemaName}.id,
-    ${sqlSchemaName}.uuid,
     ${sqlSchemaRelationship.properties
-      .map(({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
-        defineQuerySelectExpressionForSqlSchemaProperty({
+      .map(({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) => {
+        if (!domainObjectProperty) return null;
+        return defineQuerySelectExpressionForSqlSchemaProperty({
           sqlSchemaName,
           sqlSchemaProperty,
           domainObjectProperty,
           allSqlSchemaRelationships,
-        }),
-      )
+        });
+      })
+      .filter(isPresent)
       .flat()
       .join(',\n    ')}
   FROM ${hasCurrentView ? `view_${sqlSchemaName}_current AS ${sqlSchemaName}` : sqlSchemaName}
