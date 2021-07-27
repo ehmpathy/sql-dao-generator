@@ -1,10 +1,11 @@
-import { snakeCase } from 'change-case';
+import { camelCase, snakeCase } from 'change-case';
 import { DomainObjectMetadata, DomainObjectPropertyMetadata, DomainObjectPropertyType } from 'domain-objects-metadata';
 import { isPresent } from 'simple-type-guards';
 
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
+import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
 import { defineOutputTypeOfFoundDomainObject } from './defineOutputTypeOfFoundDomainObject';
 import {
   defineQueryFunctionInputExpressionForDomainObjectProperty,
@@ -20,9 +21,11 @@ export enum FindByQueryType {
 }
 
 const getTypescriptTypeForDomainObjectProperty = ({
+  domainObjectName,
   domainObjectProperty,
   sqlSchemaProperty,
 }: {
+  domainObjectName: string;
   domainObjectProperty: DomainObjectPropertyMetadata;
   sqlSchemaProperty: SqlSchemaPropertyMetadata;
 }) => {
@@ -39,7 +42,11 @@ const getTypescriptTypeForDomainObjectProperty = ({
     const referencedDomainObjectName = sqlSchemaProperty.reference!.of.name;
     return `HasId<${referencedDomainObjectName}>[]`;
   }
-  throw new Error('unsupported property type. this is a bug with sql-dao-generator'); // fail fast
+  throw new UnexpectedCodePathDetectedError({
+    reason: 'unsupported property type. could not get typescript type for domain object property',
+    domainObjectName,
+    domainObjectPropertyName: domainObjectProperty.name,
+  }); // fail fast
 };
 
 export const defineDaoFindByMethodCodeForDomainObject = ({
@@ -82,13 +89,19 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
           ({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.name === sqlSchemaPropertyName,
         );
         if (!propertyRelationship)
-          throw new Error(
-            `could not find sqlSchemaRelationship for property '${domainObject.name}.${sqlSchemaPropertyName}'. this is a bug within sql-dao-generator.`,
-          ); // fail fast, this should never occur
+          throw new UnexpectedCodePathDetectedError({
+            reason:
+              'propertyRelationship.domainObject for property was not defined, for where conditions in generating find by method',
+            domainObjectName: domainObject.name,
+            domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
+          }); // fail fast, this should never occur
         if (!propertyRelationship.domainObject)
-          throw new Error(
-            `propertyRelationship.domainObject for property was not defined. '${domainObject.name}.${sqlSchemaPropertyName}'. this is a bug within sql-dao-generator.`,
-          ); // fail fast, this should never occur
+          throw new UnexpectedCodePathDetectedError({
+            reason:
+              'could not find sqlSchemaRelationship for property, for where conditions in generating find by method',
+            domainObjectName: domainObject.name,
+            domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
+          }); // fail fast, this should never occur
         const { domainObject: domainObjectProperty, sqlSchema: sqlSchemaProperty } = propertyRelationship;
         return `${sqlSchemaName}.${sqlSchemaPropertyName} = ${defineQueryInputExpressionForSqlSchemaProperty({
           sqlSchemaName,
@@ -98,13 +111,19 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
         })}`;
       });
       if (!conditions)
-        throw new Error('no conditions found for a findByUnique query. this is a bug within sql-dao-generator'); // should not reach here, fail fast
+        throw new UnexpectedCodePathDetectedError({
+          reason: 'no conditions found for a findByUnique query',
+          domainObjectName: domainObject.name,
+        }); // should not reach here, fail fast
       return `
 1=1
   ${conditions.map((condition) => `  AND ${condition}`).join('\n  ')}
       `.trim();
     }
-    throw new Error('unexpected FindByQueryType. this is a bug within sql-dao-generator.'); // fail fast, should never occur
+    throw new UnexpectedCodePathDetectedError({
+      reason: 'unexpected FindByQueryType',
+      domainObjectName: domainObject.name,
+    }); // should not reach here, fail fast
   })();
 
   // define the function parameters (w/ types)
@@ -117,27 +136,39 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
           ({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.name === sqlSchemaPropertyName,
         );
         if (!propertyRelationship)
-          throw new Error(
-            `could not find sqlSchemaRelationship for property '${domainObject.name}.${sqlSchemaPropertyName}'. this is a bug within sql-dao-generator.`,
-          ); // fail fast, this should never occur
+          throw new UnexpectedCodePathDetectedError({
+            reason:
+              'propertyRelationship.domainObject for property was not defined, for parameters in generating find by method',
+            domainObjectName: domainObject.name,
+            domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
+          }); // fail fast, this should never occur
         if (!propertyRelationship.domainObject)
-          throw new Error(
-            `propertyRelationship.domainObject for property was not defined. '${domainObject.name}.${sqlSchemaPropertyName}'. this is a bug within sql-dao-generator.`,
-          ); // fail fast, this should never occur
+          throw new UnexpectedCodePathDetectedError({
+            reason: 'could not find sqlSchemaRelationship for property, for parameters in generating find by method',
+            domainObjectName: domainObject.name,
+            domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
+          }); // fail fast, this should never occur
         const { domainObject: domainObjectProperty, sqlSchema: sqlSchemaProperty } = propertyRelationship;
         const typeOfProperty = getTypescriptTypeForDomainObjectProperty({
           domainObjectProperty,
           sqlSchemaProperty,
+          domainObjectName: domainObject.name,
         });
         return {
           [domainObjectProperty.name]: typeOfProperty,
         };
       });
       if (!conditions)
-        throw new Error('no conditions found for a findByUnique query. this is a bug within sql-dao-generator'); // should not reach here, fail fast
+        throw new UnexpectedCodePathDetectedError({
+          reason: 'no conditions found for a findByUnique query',
+          domainObjectName: domainObject.name,
+        }); // should not reach here, fail fast
       return conditions.reduce((mergedConditions, thisCondition) => ({ ...mergedConditions, ...thisCondition }));
     }
-    throw new Error('unexpected FindByQueryType. this is a bug within sql-dao-generator.'); // fail fast, should never occur
+    throw new UnexpectedCodePathDetectedError({
+      reason: 'unexpected FindByQueryType',
+      domainObjectName: domainObject.name,
+    }); // should not reach here, fail fast
   })();
 
   // define the typescriptInputExpressions
@@ -150,13 +181,19 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
           ({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.name === sqlSchemaPropertyName,
         );
         if (!propertyRelationship)
-          throw new Error(
-            `could not find sqlSchemaRelationship for property '${domainObject.name}.${sqlSchemaPropertyName}'. this is a bug within sql-dao-generator.`,
-          ); // fail fast, this should never occur
+          throw new UnexpectedCodePathDetectedError({
+            reason:
+              'propertyRelationship.domainObject for property was not defined, for query fn input expressions in generating find by method',
+            domainObjectName: domainObject.name,
+            domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
+          }); // fail fast, this should never occur
         if (!propertyRelationship.domainObject)
-          throw new Error(
-            `propertyRelationship.domainObject for property was not defined. '${domainObject.name}.${sqlSchemaPropertyName}'. this is a bug within sql-dao-generator.`,
-          ); // fail fast, this should never occur
+          throw new UnexpectedCodePathDetectedError({
+            reason:
+              'could not find sqlSchemaRelationship for property, for  query fn input expressions  in generating find by method',
+            domainObjectName: domainObject.name,
+            domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
+          }); // fail fast, this should never occur
         const { domainObject: domainObjectProperty, sqlSchema: sqlSchemaProperty } = propertyRelationship;
         return defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: domainObject.name,
@@ -167,10 +204,16 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
         });
       });
       if (!conditions)
-        throw new Error('no conditions found for a findByUnique query. this is a bug within sql-dao-generator'); // should not reach here, fail fast
+        throw new UnexpectedCodePathDetectedError({
+          reason: 'no conditions found for a findByUnique query',
+          domainObjectName: domainObject.name,
+        }); // should not reach here, fail fast
       return conditions;
     }
-    throw new Error('unexpected FindByQueryType. this is a bug within sql-dao-generator.'); // fail fast, should never occur
+    throw new UnexpectedCodePathDetectedError({
+      reason: 'unexpected FindByQueryType',
+      domainObjectName: domainObject.name,
+    }); // should not reach here, fail fast
   })();
 
   // define the output type

@@ -9,6 +9,7 @@ import { isPresent } from 'simple-type-guards';
 
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
+import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
 import { defineOutputTypeOfFoundDomainObject } from './defineOutputTypeOfFoundDomainObject';
 
 export const defineDaoUtilCastMethodCodeForDomainObject = ({
@@ -88,7 +89,11 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
       }
 
       // handle unexpected case (each case should have been handled above)
-      throw new Error('unexpected property type. this is a bug within sql-dao-generator'); // fail fast if reached here
+      throw new UnexpectedCodePathDetectedError({
+        reason: 'unexpected property type to instantiate in dao castFromDatabaseObject to generate',
+        domainObjectName: domainObject.name,
+        domainObjectPropertyName: domainObjectProperty.name,
+      }); // fail fast if reached here
     }),
   ].filter(isPresent);
 

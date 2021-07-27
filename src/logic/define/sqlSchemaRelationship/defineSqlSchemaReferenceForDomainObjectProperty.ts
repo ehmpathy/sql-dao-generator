@@ -13,6 +13,8 @@ import {
   SqlSchemaReferenceMetadata,
   SqlSchemaReferenceMethod,
 } from '../../../domain/objects/SqlSchemaReferenceMetadata';
+import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
+import { UserInputError } from '../../UserInputError';
 import { getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter } from './getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter/getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter';
 
 export class PropertyReferencingDomainObjectNotNamedCorrectlyError extends Error {
@@ -114,7 +116,11 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
       if (isDirectNestedReferenceCandidate) return property.of as DomainObjectReferenceMetadata;
       if (isDirectNestedReferenceArrayCandidate)
         return (property.of as DomainObjectPropertyMetadata).of as DomainObjectReferenceMetadata;
-      throw new Error('should have met one of the above criteria. this means theres a bug'); // fail fast
+      throw new UnexpectedCodePathDetectedError({
+        reason: 'should have met one of the above criteria for sql schema reference definition',
+        domainObjectName: domainObject.name,
+        domainObjectPropertyName: property.name,
+      }); // fail fast
     })();
 
     // check that the property-name is unambiguously and naturally named after this domain object
@@ -159,9 +165,12 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
     if (!foundReferencedDomainObjectMetadata) return null;
     if (foundReferencedDomainObjectMetadata.extends === DomainObjectVariant.DOMAIN_VALUE_OBJECT)
       // safety check
-      throw new Error(
-        `domain-value-objects persisted in the same database as this domain-object should not be referenced by implicit uuid reference. reference them by direct nesting instead. '${domainObject.name}.${property.name}' does not meet this criteria`,
-      );
+      throw new UserInputError({
+        reason:
+          'domain-value-objects persisted in the same database as this domain-object should not be referenced by implicit uuid reference. reference them by direct nesting instead.',
+        domainObjectName: domainObject.name,
+        domainObjectPropertyName: property.name,
+      });
     return foundReferencedDomainObjectMetadata;
   })();
   if (referenceOfUuid)

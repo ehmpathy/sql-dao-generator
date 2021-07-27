@@ -1,5 +1,6 @@
 import { GeneratorConfig } from '../../../../domain';
 import { readYmlFile } from '../../../../utils/fileio/readYmlFile';
+import { UserInputError } from '../../../UserInputError';
 
 export const getRelevantContentsOfSqlCodeGeneratorConfig = async ({
   pathToConfig,
@@ -11,13 +12,21 @@ export const getRelevantContentsOfSqlCodeGeneratorConfig = async ({
 
   // make sure relevant contents are defined
   if (!contents.resources)
-    throw new Error(`sql-code-generator config must have "resources" defined. (see ${pathToConfig})`);
+    throw new UserInputError({
+      reason: `sql-code-generator config must have "resources" defined. (see ${pathToConfig})`,
+    });
   if (!contents.queries)
-    throw new Error(`sql-code-generator config must have "queries" defined. (see ${pathToConfig})`);
+    throw new UserInputError({
+      reason: `sql-code-generator config must have "queries" defined. (see ${pathToConfig})`,
+    });
   if (!contents.generates?.types)
-    throw new Error(`sql-code-generator config must have "generates.types" defined. (see ${pathToConfig})`);
+    throw new UserInputError({
+      reason: `sql-code-generator config must have "generates.types" defined. (see ${pathToConfig})`,
+    });
   if (!contents.generates?.queryFunctions)
-    throw new Error(`sql-code-generator config must have "generates.queryFunctions" defined. (see ${pathToConfig})`);
+    throw new UserInputError({
+      reason: `sql-code-generator config must have "generates.queryFunctions" defined. (see ${pathToConfig})`,
+    });
 
   // return the relevant content
   return {

@@ -1,10 +1,12 @@
-import { camelCase } from 'change-case';
+import { camelCase, snakeCase } from 'change-case';
 import { DomainObjectPropertyMetadata } from 'domain-objects-metadata';
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
+import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
 
 export const defineQueryInputExpressionForSqlSchemaProperty = ({
+  sqlSchemaName,
   sqlSchemaProperty,
   domainObjectProperty,
   allSqlSchemaRelationships,
@@ -14,20 +16,34 @@ export const defineQueryInputExpressionForSqlSchemaProperty = ({
   domainObjectProperty: DomainObjectPropertyMetadata;
   allSqlSchemaRelationships: SqlSchemaToDomainObjectRelationship[];
 }): string => {
-  if (!domainObjectProperty) throw new Error(`no domain object property for sql property ${sqlSchemaProperty.name}`);
+  if (!domainObjectProperty)
+    throw new UnexpectedCodePathDetectedError({
+      reason: 'no domain object property for sql schema property ',
+      domainObjectName: camelCase(sqlSchemaName),
+      domainObjectPropertyName: camelCase(sqlSchemaName),
+    }); // fail fast if our expectation is not met though
 
   // simple case: non references
   if (!sqlSchemaProperty.isArray && !sqlSchemaProperty.reference) return `:${domainObjectProperty.name}`; // yesql notation
 
   // since sql-schema-generator does not support arrays of non-references, we can guarantee that its either a reference or an array of references now
-  if (!sqlSchemaProperty.reference) throw new Error('unexpected code path, not supported. this is probably a bug'); // fail fast if our expectation is not met though
+  if (!sqlSchemaProperty.reference)
+    throw new UnexpectedCodePathDetectedError({
+      reason: 'did not find a reference on sqlSchemaProperty but expected one, for query input expression',
+      domainObjectName: camelCase(sqlSchemaName),
+      domainObjectPropertyName: domainObjectProperty.name,
+    }); // fail fast if our expectation is not met though
 
   // since we know its a reference, lookup the referenced sqlSchemaRelationship
   const referencedSqlSchemaRelationship = allSqlSchemaRelationships.find(
     (rel) => rel.name.domainObject === sqlSchemaProperty.reference!.of.name,
   );
   if (!referencedSqlSchemaRelationship)
-    throw new Error('could not find referenced sql schema relationship. this is a bug within sql-dao-generator'); // fail fast, this should not occur
+    throw new UnexpectedCodePathDetectedError({
+      reason: 'could not find referenced sql schema relationship for defining query input expression',
+      domainObjectName: snakeCase(sqlSchemaName),
+      domainObjectPropertyName: domainObjectProperty.name,
+    }); // fail fast, this should not occur
   const referencedSqlSchemaName = referencedSqlSchemaRelationship.name.sqlSchema;
 
   // handle solo reference
@@ -61,5 +77,9 @@ export const defineQueryInputExpressionForSqlSchemaProperty = ({
   }
 
   // fail fast if we reach here, not expected
-  throw new Error('unexpected code path. this a bug');
+  throw new UnexpectedCodePathDetectedError({
+    reason: 'did not handle the request with any defined conditions, for query input expression',
+    domainObjectName: camelCase(sqlSchemaName),
+    domainObjectPropertyName: domainObjectProperty.name,
+  }); // fail fast if our expectation is not met though
 };

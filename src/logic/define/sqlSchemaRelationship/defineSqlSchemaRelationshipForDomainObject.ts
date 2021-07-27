@@ -1,13 +1,9 @@
 import { snakeCase } from 'change-case';
-import { serialize } from 'domain-objects';
-import {
-  DomainObjectMetadata,
-  DomainObjectPropertyMetadata,
-  DomainObjectPropertyType,
-  DomainObjectVariant,
-} from 'domain-objects-metadata';
+import { DomainObjectMetadata, DomainObjectPropertyType, DomainObjectVariant } from 'domain-objects-metadata';
 
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
+import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
+import { UserInputError } from '../../UserInputError';
 import { assertDomainObjectIsSafeToHaveSqlSchema } from './assertDomainObjectIsSafeToHaveSqlSchema';
 import { defineDatabaseGeneratedSqlSchemaPropertiesForDomainObject } from './defineDatabaseGeneratedPropertiesForDomainObject';
 import { defineSqlSchemaPropertyForDomainObjectProperty } from './defineSqlSchemaPropertyForDomainObjectProperty';
@@ -43,14 +39,18 @@ export const defineSqlSchemaRelationshipForDomainObject = ({
           if (sqlSchemaProperty.name === 'created_at') return DomainObjectPropertyType.DATE;
           if (sqlSchemaProperty.name === 'effective_at') return DomainObjectPropertyType.DATE;
           if (sqlSchemaProperty.name === 'updated_at') return DomainObjectPropertyType.DATE;
-          throw new Error(
-            `unexpected database generated property name. this is a bug within sql-schema-generator. ${sqlSchemaProperty.name}`, // fail fast if expectations not met
-          );
+          throw new UnexpectedCodePathDetectedError({
+            reason: 'unexpected database generated property name. this is a bug within sql-schema-generator.', // fail fast if expectations not met
+            domainObjectName: domainObject.name,
+            domainObjectPropertyName: sqlSchemaProperty.name,
+          });
         })();
         if (domainObjectProperty.type !== expectedType)
-          throw new Error(
-            `reserved database-generated property does not match expected type. for '${domainObject.name}.${domainObjectProperty.name}' expected ${expectedType} but received ${domainObjectProperty.type}`,
-          );
+          throw new UserInputError({
+            reason: `reserved database-generated property does not match expected type. expected ${expectedType} but received ${domainObjectProperty.type}`,
+            domainObjectName: domainObject.name,
+            domainObjectPropertyName: domainObjectProperty.name,
+          });
       }
 
       // return the relationship
@@ -95,13 +95,15 @@ export const defineSqlSchemaRelationshipForDomainObject = ({
           (propertyRelationship) => propertyRelationship.domainObject?.name === domainObjectPropertyName,
         )?.sqlSchema.name;
         if (!sqlSchemaPropertyName)
-          throw new Error(
-            `Unique keys must be properties of the domain object. Was there a typo defining '${
+          throw new UserInputError({
+            reason: 'Unique keys must be properties of the domain object.',
+            domainObjectName: domainObject.name,
+            potentialSolution: ` Was there a typo defining '${
               domainObject.name
-            }.unique' with key name '${domainObjectPropertyName}'. (Is it one of ${JSON.stringify(
+            }.unique' with key name '${domainObjectPropertyName}'? (Is it one of ${JSON.stringify(
               Object.keys(domainObject.properties),
             )}?)`,
-          );
+          });
         return sqlSchemaPropertyName;
       }) ?? null
     );

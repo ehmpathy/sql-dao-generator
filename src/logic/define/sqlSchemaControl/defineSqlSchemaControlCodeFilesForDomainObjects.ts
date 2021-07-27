@@ -3,6 +3,7 @@ import { DomainObjectMetadata } from 'domain-objects-metadata';
 import { isPresent } from 'simple-type-guards';
 import { GeneratedCodeFile } from '../../../domain/objects/GeneratedCodeFile';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
+import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
 import { defineSqlSchemaControlCodeForDomainObject } from './defineSqlSchemaControlCodeForDomainObject';
 
 export const defineSqlSchemaControlCodeFilesForDomainObjects = ({
@@ -35,7 +36,9 @@ export const defineSqlSchemaControlCodeFilesForDomainObjects = ({
     }
     timesLooped += 1;
     if (timesLooped > codePerDomainObject.length * 20)
-      throw new Error('infinite loop prevention error. this indicates that there is a bug in sql-dao-generator'); // fail fast
+      throw new UnexpectedCodePathDetectedError({
+        reason: 'infinite loop prevention error in defining sql schema control code files for domain objects',
+      });
   }
 
   // define the content of the config file

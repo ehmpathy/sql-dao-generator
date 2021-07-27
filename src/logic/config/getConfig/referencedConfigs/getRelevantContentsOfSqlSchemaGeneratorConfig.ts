@@ -1,5 +1,6 @@
 import { GeneratorConfig } from '../../../../domain';
 import { readYmlFile } from '../../../../utils/fileio/readYmlFile';
+import { UserInputError } from '../../../UserInputError';
 
 export const getRelevantContentsOfSqlSchemaGeneratorConfig = async ({
   pathToConfig,
@@ -11,9 +12,13 @@ export const getRelevantContentsOfSqlSchemaGeneratorConfig = async ({
 
   // make sure relevant contents are defined
   if (!contents.declarations)
-    throw new Error(`sql-schema-generator config must have "declarations" defined. (see ${pathToConfig})`);
+    throw new UserInputError({
+      reason: `sql-schema-generator config must have "declarations" defined. (see ${pathToConfig})`,
+    });
   if (!contents.generates?.sql?.to)
-    throw new Error(`sql-schema-generator config must have "generates.sql.to" defined. (see ${pathToConfig})`);
+    throw new UserInputError({
+      reason: `sql-schema-generator config must have "generates.sql.to" defined. (see ${pathToConfig})`,
+    });
 
   // return the relevant content
   return {

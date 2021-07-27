@@ -3,6 +3,7 @@ import { DomainObjectMetadata } from 'domain-objects-metadata';
 
 import { GeneratedCodeFile } from '../../../domain/objects/GeneratedCodeFile';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
+import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
 import { defineSqlSchemaGeneratorCodeForDomainObject } from './defineSqlSchemaGeneratorCodeForDomainObject';
 
 /**
@@ -21,7 +22,10 @@ export const defineSqlSchemaGeneratorCodeFilesForDomainObjects = ({
       (relationship) => relationship.name.domainObject === domainObject.name,
     );
     if (!sqlSchemaRelationship)
-      throw new Error('could not find sql-schema-relationship, this is a bug within sql-dao-generator'); // fail fast if this is met; this should never occur
+      throw new UnexpectedCodePathDetectedError({
+        reason: 'could not find sql-schema-relationship, for defining sql-schema-generator code files',
+        domainObjectName: domainObject.name,
+      });
     const content = defineSqlSchemaGeneratorCodeForDomainObject({ domainObject, sqlSchemaRelationship });
     return new GeneratedCodeFile({
       content,

@@ -5,6 +5,7 @@ import { DomainObjectMetadata, DomainObjectPropertyMetadata, DomainObjectPropert
 import { isPresent } from 'simple-type-guards';
 
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
+import { UserInputError } from '../../UserInputError';
 
 export const defineSqlSchemaGeneratorCodeForProperty = ({
   domainObject,
@@ -23,9 +24,11 @@ export const defineSqlSchemaGeneratorCodeForProperty = ({
     }
     if (domainObjectProperty.type === DomainObjectPropertyType.ARRAY) {
       if (!sqlSchemaProperty.reference)
-        throw new Error(
-          `currently, only arrays of referenced domain objects are supported by sql-schema-generator. '${domainObject.name}.${domainObjectProperty.name}' does not meet this criteria.`,
-        );
+        throw new UserInputError({
+          reason: 'currently, only arrays of referenced domain objects are supported by sql-schema-generator.',
+          domainObjectName: domainObject.name,
+          domainObjectPropertyName: domainObjectProperty.name,
+        });
       return `prop.ARRAY_OF(prop.REFERENCES(${camelCase(sqlSchemaProperty.reference.of.name)}))`;
     }
 

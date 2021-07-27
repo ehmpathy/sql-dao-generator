@@ -4,6 +4,8 @@ import { DomainObjectPropertyMetadata } from 'domain-objects-metadata';
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
+import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
+import { UserInputError } from '../../UserInputError';
 
 export const defineQuerySelectExpressionForSqlSchemaProperty = ({
   sqlSchemaName,
@@ -20,14 +22,23 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
   if (!sqlSchemaProperty.isArray && !sqlSchemaProperty.reference) return `${sqlSchemaName}.${sqlSchemaProperty.name}`;
 
   // since sql-schema-generator does not support arrays of non-references, we can guarantee that its either a reference or an array of references now
-  if (!sqlSchemaProperty.reference) throw new Error('unexpected code path, not supported. this is probably a bug'); // fail fast if our expectation is not met though
+  if (!sqlSchemaProperty.reference)
+    throw new UnexpectedCodePathDetectedError({
+      reason: 'did not find a reference on sqlSchemaProperty but expected one, for query select expression',
+      domainObjectName: camelCase(sqlSchemaName),
+      domainObjectPropertyName: domainObjectProperty.name,
+    }); // fail fast if our expectation is not met though
 
   // since we know its a reference, lookup the referenced sqlSchemaRelationship
   const referencedSqlSchemaRelationship = allSqlSchemaRelationships.find(
     (rel) => rel.name.domainObject === sqlSchemaProperty.reference!.of.name,
   );
   if (!referencedSqlSchemaRelationship)
-    throw new Error('could not find referenced sql schema relationship. this is a bug within sql-dao-generator'); // fail fast, this should not occur
+    throw new UnexpectedCodePathDetectedError({
+      reason: 'could not find referenced sql schema relationship for defining query input expression',
+      domainObjectName: snakeCase(sqlSchemaName),
+      domainObjectPropertyName: domainObjectProperty.name,
+    }); // fail fast, this should not occur
   const referencedSqlSchemaName = referencedSqlSchemaRelationship.name.sqlSchema;
 
   // check that its not a DIRECT_BY_NESTING reference to a domain object (one we know will be a domain-value-object) which has its own references (references in references) - we dont support that yet
@@ -35,13 +46,12 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
     sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.DIRECT_BY_NESTING &&
     referencedSqlSchemaRelationship.properties.some(({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.reference)
   ) {
-    throw new Error(
-      `generating a dao is not supported for domain-value-objects that reference other domain-value-objects yet. '${referencedSqlSchemaName}', referenced by '${camelCase(
-        sqlSchemaName,
-      )}.${
-        domainObjectProperty.name
-      }', does not meet this criteria. if this is a valid use case, please submit a ticket.`,
-    ); //  nesting domain-value-objects within domain-value-objects is probably edge case enough to not worry about for mvp
+    throw new UserInputError({
+      reason:
+        'generating a dao is not supported for domain-value-objects that reference other domain-value-objects yet. if this is a valid use case, please submit a ticket.',
+      domainObjectName: camelCase(sqlSchemaName),
+      domainObjectPropertyName: domainObjectProperty.name,
+    }); //  nesting domain-value-objects within domain-value-objects is probably edge case enough to not worry about for mvp
   }
 
   // single reference case: grab the uuid or properties by id
@@ -119,5 +129,9 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
   }
 
   // fail fast if we reach here, not expected
-  throw new Error('unexpected code path. this a bug');
+  throw new UnexpectedCodePathDetectedError({
+    reason: 'did not handle the request with any defined conditions, for query select expression',
+    domainObjectName: camelCase(sqlSchemaName),
+    domainObjectPropertyName: domainObjectProperty.name,
+  }); // fail fast if our expectation is not met though
 };

@@ -1,5 +1,6 @@
 import { GeneratorConfig } from '../../../../domain';
 import { readYmlFile } from '../../../../utils/fileio/readYmlFile';
+import { UserInputError } from '../../../UserInputError';
 
 export const getRelevantContentsOfSqlSchemaControlConfig = async ({
   pathToConfig,
@@ -11,7 +12,9 @@ export const getRelevantContentsOfSqlSchemaControlConfig = async ({
 
   // make sure relevant contents are defined
   if (!contents.definitions)
-    throw new Error(`sql-schema-control config must have "definitions" defined. (see ${pathToConfig})`);
+    throw new UserInputError({
+      reason: `sql-schema-control config must have "definitions" defined. (see ${pathToConfig})`,
+    });
 
   // return the relevant content
   return {

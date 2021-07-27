@@ -1,5 +1,6 @@
 import { DomainObjectMetadata } from 'domain-objects-metadata';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
+import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
 import { defineDaoCodeFilesForDomainObject } from './defineDaoCodeFilesForDomainObject';
 
 export const defineDaoCodeFilesForDomainObjects = ({
@@ -15,7 +16,11 @@ export const defineDaoCodeFilesForDomainObjects = ({
         (relationship) => relationship.name.domainObject === domainObject.name,
       );
       if (!sqlSchemaRelationship)
-        throw new Error('could not find sql-schema-relationship, this is a bug within sql-dao-generator'); // fail fast if this is met; this should never occur
+        // fail fast if this is met; this should never occur
+        throw new UnexpectedCodePathDetectedError({
+          reason: 'could not find sql-schema-relationship',
+          domainObjectName: domainObject.name,
+        });
       return defineDaoCodeFilesForDomainObject({
         domainObject,
         sqlSchemaRelationship,

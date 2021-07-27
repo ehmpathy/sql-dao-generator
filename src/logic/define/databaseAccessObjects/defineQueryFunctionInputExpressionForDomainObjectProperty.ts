@@ -3,6 +3,7 @@ import { DomainObjectPropertyMetadata } from 'domain-objects-metadata';
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
+import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
 import { castDomainObjectNameToDaoName } from './castDomainObjectNameToDaoName';
 
 export enum GetTypescriptCodeForPropertyContext {
@@ -34,14 +35,23 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
   }
 
   // since sql-schema-generator does not support arrays of non-references, we can guarantee that its either a reference or an array of references now
-  if (!sqlSchemaProperty.reference) throw new Error('unexpected code path, not supported. this is probably a bug'); // fail fast if our expectation is not met though
+  if (!sqlSchemaProperty.reference)
+    throw new UnexpectedCodePathDetectedError({
+      reason: 'did not find a reference on sqlSchemaProperty but expected one, for query function input expression',
+      domainObjectName,
+      domainObjectPropertyName: domainObjectProperty.name,
+    }); // fail fast if our expectation is not met though
 
   // since we know its a reference, lookup the referenced sqlSchemaRelationship
   const referencedSqlSchemaRelationship = allSqlSchemaRelationships.find(
     (rel) => rel.name.domainObject === sqlSchemaProperty.reference!.of.name,
   );
   if (!referencedSqlSchemaRelationship)
-    throw new Error('could not find referenced sql schema relationship. this is a bug within sql-dao-generator'); // fail fast, this should not occur
+    throw new UnexpectedCodePathDetectedError({
+      reason: 'could not find referenced sql schema relationship for defining query fn input expression',
+      domainObjectName,
+      domainObjectPropertyName: domainObjectProperty.name,
+    });
   const referencedSqlSchemaName = referencedSqlSchemaRelationship.name.sqlSchema;
   const referencedDomainObjectName = referencedSqlSchemaRelationship.name.domainObject;
 
@@ -90,5 +100,9 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
   }
 
   // fail fast if we reach here, not expected
-  throw new Error('unexpected code path. this a bug');
+  throw new UnexpectedCodePathDetectedError({
+    reason: 'did not handle the request with any defined conditions, for query function input expression',
+    domainObjectName,
+    domainObjectPropertyName: domainObjectProperty.name,
+  }); // fail fast if our expectation is not met though
 };

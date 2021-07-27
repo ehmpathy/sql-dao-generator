@@ -3,6 +3,7 @@ import { DomainObjectMetadata, DomainObjectVariant } from 'domain-objects-metada
 import { isPresent } from 'simple-type-guards';
 
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
+import { UserInputError } from '../../UserInputError';
 import { isNotADatabaseGeneratedProperty } from '../sqlSchemaRelationship/isNotADatabaseGeneratedProperty';
 import { defineSqlSchemaGeneratorCodeForProperty } from './defineSqlSchemaGeneratorCodeForProperty';
 
@@ -18,9 +19,10 @@ export const defineSqlSchemaGeneratorCodeForDomainObject = ({
     if (domainObject.extends === DomainObjectVariant.DOMAIN_ENTITY) return 'Entity';
     if (domainObject.extends === DomainObjectVariant.DOMAIN_VALUE_OBJECT) return 'ValueObject';
     if (domainObject.extends === DomainObjectVariant.DOMAIN_EVENT) return 'Event';
-    throw new Error(
-      `sql schema can only be created for a domain object which extends DomainEntity, DomainValueObject, or DomainEvent. '${domainObject.name}' does not meet this criteria, as it extends '${domainObject.extends}'`,
-    );
+    throw new UserInputError({
+      reason: `sql schema can only be created for a domain object which extends DomainEntity, DomainValueObject, or DomainEvent. Found extends '${domainObject.extends}'`,
+      domainObjectName: domainObject.name,
+    });
   })();
 
   // define the code for each property
