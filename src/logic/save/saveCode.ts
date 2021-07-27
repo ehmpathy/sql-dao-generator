@@ -30,7 +30,7 @@ export const saveCode = async ({
 
   // log that we have successfully written
   const successMessage = `  ${chalk.green('✔')} ${chalk.green(chalk.bold('[GENERATED]'))} ${chalk.bold(
-    relativeFilePath,
+    relativeFilePath.replace(/^\//, ''), // strip leading `/`'s, since these are all relative paths
   )}`;
   console.log(successMessage); // tslint:disable-line no-console
 };
