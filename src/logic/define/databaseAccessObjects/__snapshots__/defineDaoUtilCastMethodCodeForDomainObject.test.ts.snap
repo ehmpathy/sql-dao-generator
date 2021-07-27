@@ -15,7 +15,7 @@ export const castFromDatabaseObject = ({
     id: dbObject.id,
     trainUuid: dbObject.train_uuid,
     occurredAt: dbObject.occurred_at,
-    geocodes: dbObject.geocodes.map((geocode) => new Geocode(geocode as Geocode)),
+    geocodes: (dbObject.geocodes as Geocode[]).map((geocode) => new Geocode(geocode)),
   }) as HasId<TrainLocatedEvent>;"
 `;
 
@@ -36,7 +36,7 @@ export const castFromDatabaseObject = ({
     tin: dbObject.tin,
     homeStationGeocode: new Geocode(dbObject.home_station_geocode as Geocode),
     leadEngineerUuid: dbObject.lead_engineer_uuid,
-    badges: dbObject.badges.map((trainBadge) => new TrainBadge(trainBadge as TrainBadge)),
+    badges: (dbObject.badges as TrainBadge[]).map((trainBadge) => new TrainBadge(trainBadge)),
     locomotiveUuids: dbObject.locomotive_uuids as string[],
   }) as HasId<HasUuid<Train>>;"
 `;

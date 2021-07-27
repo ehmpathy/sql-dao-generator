@@ -27,7 +27,7 @@ exports[`defineQuerySelectExpressionForSqlSchemaProperty should define the selec
           )
           ORDER BY geocode_ref.array_order_index
         ),
-        array[]::json[]
+        '[]'::json
       ) AS json_agg
       FROM geocode
       JOIN unnest(train_located_event.geocode_ids) WITH ORDINALITY

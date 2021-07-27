@@ -117,7 +117,7 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
           )
           ORDER BY ${referencedSqlSchemaName}_ref.array_order_index
         ),
-        array[]::json[]
+        '[]'::json
       ) AS json_agg
       FROM ${referencedSqlSchemaName}
       JOIN unnest(${sqlSchemaName}.${sqlSchemaProperty.name}) WITH ORDINALITY

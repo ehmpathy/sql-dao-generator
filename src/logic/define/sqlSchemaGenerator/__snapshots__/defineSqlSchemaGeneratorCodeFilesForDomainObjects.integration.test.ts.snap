@@ -60,6 +60,8 @@ export const certificate = new ValueObject({
   GeneratedCodeFile {
     "content": "import { Entity, prop } from 'sql-schema-generator';
 
+import { certificate } from './certificate';
+
 /**
  * sql-schema for the domain entity 'TrainEngineer'
  */
@@ -67,6 +69,7 @@ export const trainEngineer = new Entity({
   name: 'train_engineer',
   properties: {
     social_security_number_hash: prop.VARCHAR(),
+    certificate_ids: { ...prop.ARRAY_OF(prop.REFERENCES(certificate)), updatable: true },
     name: { ...prop.VARCHAR(), updatable: true },
   },
   unique: ['social_security_number_hash'],

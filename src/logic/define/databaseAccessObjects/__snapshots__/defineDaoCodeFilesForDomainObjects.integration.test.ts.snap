@@ -370,7 +370,7 @@ export const trainEngineerDao = {
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
 
-import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
+import { Certificate, TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindTrainEngineerByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = ({
@@ -382,6 +382,7 @@ export const castFromDatabaseObject = ({
     id: dbObject.id,
     uuid: dbObject.uuid,
     socialSecurityNumberHash: dbObject.social_security_number_hash,
+    certificates: (dbObject.certificates as Certificate[]).map((certificate) => new Certificate(certificate)),
     name: dbObject.name,
   }) as HasId<HasUuid<TrainEngineer>>;",
     "relpath": "trainEngineerDao/castFromDatabaseObject.ts",
@@ -401,6 +402,23 @@ export const sql = \`
     train_engineer.id,
     train_engineer.uuid,
     train_engineer.social_security_number_hash,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', certificate.id,
+            'type', certificate.type,
+            'cid', certificate.cid
+          )
+          ORDER BY certificate_ref.array_order_index
+        ),
+        '[]'::json
+      ) AS json_agg
+      FROM certificate
+      JOIN unnest(train_engineer.certificate_ids) WITH ORDINALITY
+        AS certificate_ref (id, array_order_index)
+        ON certificate.id = certificate_ref.id
+    ) AS certificates,
     train_engineer.name
   FROM view_train_engineer_current AS train_engineer
   WHERE train_engineer.id = :id;
@@ -441,6 +459,23 @@ export const sql = \`
     train_engineer.id,
     train_engineer.uuid,
     train_engineer.social_security_number_hash,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', certificate.id,
+            'type', certificate.type,
+            'cid', certificate.cid
+          )
+          ORDER BY certificate_ref.array_order_index
+        ),
+        '[]'::json
+      ) AS json_agg
+      FROM certificate
+      JOIN unnest(train_engineer.certificate_ids) WITH ORDINALITY
+        AS certificate_ref (id, array_order_index)
+        ON certificate.id = certificate_ref.id
+    ) AS certificates,
     train_engineer.name
   FROM view_train_engineer_current AS train_engineer
   WHERE 1=1
@@ -482,6 +517,23 @@ export const sql = \`
     train_engineer.id,
     train_engineer.uuid,
     train_engineer.social_security_number_hash,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', certificate.id,
+            'type', certificate.type,
+            'cid', certificate.cid
+          )
+          ORDER BY certificate_ref.array_order_index
+        ),
+        '[]'::json
+      ) AS json_agg
+      FROM certificate
+      JOIN unnest(train_engineer.certificate_ids) WITH ORDINALITY
+        AS certificate_ref (id, array_order_index)
+        ON certificate.id = certificate_ref.id
+    ) AS certificates,
     train_engineer.name
   FROM view_train_engineer_current AS train_engineer
   WHERE train_engineer.uuid = :uuid;
@@ -514,6 +566,7 @@ import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrainEngineer } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { certificateDao } from '../certificateDao';
 
 export const sql = \`
   -- query_name = upsert_train_engineer
@@ -521,6 +574,7 @@ export const sql = \`
     dgv.id, dgv.uuid
   FROM upsert_train_engineer(
     :socialSecurityNumberHash,
+    :certificateIds,
     :name
   ) as dgv;
 \`;
@@ -537,6 +591,7 @@ export const upsert = async ({
     logDebug: log.debug,
     input: {
       socialSecurityNumberHash: trainEngineer.socialSecurityNumberHash,
+      certificateIds: await Promise.all(trainEngineer.certificates.map(async (certificate) => certificate.id ? certificate.id : (await certificateDao.upsert({ dbConnection, certificate })).id)),
       name: trainEngineer.name,
     },
   });

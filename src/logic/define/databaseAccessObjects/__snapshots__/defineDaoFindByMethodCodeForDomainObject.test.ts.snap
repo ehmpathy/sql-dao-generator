@@ -25,7 +25,7 @@ export const sql = \`
           )
           ORDER BY geocode_ref.array_order_index
         ),
-        array[]::json[]
+        '[]'::json
       ) AS json_agg
       FROM geocode
       JOIN unnest(train_located_event.geocode_ids) WITH ORDINALITY
@@ -94,7 +94,7 @@ export const sql = \`
           )
           ORDER BY train_badge_ref.array_order_index
         ),
-        array[]::json[]
+        '[]'::json
       ) AS json_agg
       FROM train_badge
       JOIN unnest(train.badge_ids) WITH ORDINALITY
@@ -237,7 +237,7 @@ export const sql = \`
           )
           ORDER BY geocode_ref.array_order_index
         ),
-        array[]::json[]
+        '[]'::json
       ) AS json_agg
       FROM geocode
       JOIN unnest(train_located_event.geocode_ids) WITH ORDINALITY
@@ -312,7 +312,7 @@ export const sql = \`
           )
           ORDER BY train_badge_ref.array_order_index
         ),
-        array[]::json[]
+        '[]'::json
       ) AS json_agg
       FROM train_badge
       JOIN unnest(train.badge_ids) WITH ORDINALITY
@@ -405,7 +405,7 @@ export const sql = \`
           )
           ORDER BY train_badge_ref.array_order_index
         ),
-        array[]::json[]
+        '[]'::json
       ) AS json_agg
       FROM train_badge
       JOIN unnest(train.badge_ids) WITH ORDINALITY
@@ -595,7 +595,7 @@ export const sql = \`
           )
           ORDER BY geocode_ref.array_order_index
         ),
-        array[]::json[]
+        '[]'::json
       ) AS json_agg
       FROM geocode
       JOIN unnest(train_located_event.geocode_ids) WITH ORDINALITY
@@ -662,7 +662,7 @@ export const sql = \`
           )
           ORDER BY train_badge_ref.array_order_index
         ),
-        array[]::json[]
+        '[]'::json
       ) AS json_agg
       FROM train_badge
       JOIN unnest(train.badge_ids) WITH ORDINALITY

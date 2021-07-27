@@ -81,11 +81,11 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
           )} as ${sqlSchemaProperty.reference.of.name})`;
 
         // array reference case
-        return `${domainObjectProperty.name}: dbObject.${snakeCase(domainObjectProperty.name)}.map((${camelCase(
-          sqlSchemaProperty.reference.of.name,
-        )}) => new ${sqlSchemaProperty.reference.of.name}(${camelCase(sqlSchemaProperty.reference.of.name)} as ${
+        return `${domainObjectProperty.name}: (dbObject.${snakeCase(domainObjectProperty.name)} as ${
           sqlSchemaProperty.reference.of.name
-        }))`;
+        }[]).map((${camelCase(sqlSchemaProperty.reference.of.name)}) => new ${
+          sqlSchemaProperty.reference.of.name
+        }(${camelCase(sqlSchemaProperty.reference.of.name)}))`;
       }
 
       // handle unexpected case (each case should have been handled above)

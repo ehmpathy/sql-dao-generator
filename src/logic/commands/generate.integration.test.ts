@@ -10,6 +10,8 @@ import { trainEngineerDao } from '../__test_assets__/exampleProject/src/data/dao
 import {
   Carriage,
   CarriagePurpose,
+  Certificate,
+  CertificateType,
   Geocode,
   Locomotive,
   LocomotiveFuel,
@@ -308,6 +310,12 @@ describe('generate', () => {
           dbConnection,
           trainEngineer: new TrainEngineer({
             socialSecurityNumberHash: 'x13!y^a821kx(*12',
+            certificates: [
+              new Certificate({
+                type: CertificateType.LOCOMOTIVE_DRIVING,
+                cid: 'super-train-driving-deluxe-experience',
+              }),
+            ],
             name: 'Burt',
           }),
         });

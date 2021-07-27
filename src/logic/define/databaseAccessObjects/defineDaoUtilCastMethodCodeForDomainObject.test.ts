@@ -120,7 +120,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
     expect(code).toContain("import { SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';");
     expect(code).toContain('dbObject: SqlQueryFindTrainLocatedEventByIdOutput;');
     expect(code).toContain('new TrainLocatedEvent({');
-    expect(code).toContain('geocodes: dbObject.geocodes.map((geocode) => new Geocode(geocode as Geocode))'); // instantiate nested array of geocodes
+    expect(code).toContain('geocodes: (dbObject.geocodes as Geocode[]).map((geocode) => new Geocode(geocode))'); // instantiate nested array of geocodes
     expect(code).toMatchSnapshot();
   });
   it('should look correct for domain entity with references, array and solo, implicit and direct', () => {
@@ -187,7 +187,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
     expect(code).toContain('new Train({');
     expect(code).toContain('homeStationGeocode: new Geocode(dbObject.home_station_geocode as Geocode)'); // instantiate nested array of geocodes
     expect(code).toContain('leadEngineerUuid: dbObject.lead_engineer_uuid');
-    expect(code).toContain('badges: dbObject.badges.map((trainBadge) => new TrainBadge(trainBadge as TrainBadge))'); // instantiate nested array of geocodes
+    expect(code).toContain('badges: (dbObject.badges as TrainBadge[]).map((trainBadge) => new TrainBadge(trainBadge))'); // instantiate nested array of geocodes
     expect(code).toContain('locomotiveUuids: dbObject.locomotive_uuids as string[]');
     expect(code).toMatchSnapshot();
   });

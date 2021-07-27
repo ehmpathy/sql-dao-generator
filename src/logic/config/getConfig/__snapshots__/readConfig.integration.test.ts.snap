@@ -286,11 +286,27 @@ Object {
           ],
           "updatable": Array [
             "name",
+            "certificates",
           ],
         },
         "extends": "DomainEntity",
         "name": "TrainEngineer",
         "properties": Object {
+          "certificates": DomainObjectPropertyMetadata {
+            "name": "certificates",
+            "nullable": false,
+            "of": Object {
+              "nullable": false,
+              "of": DomainObjectReferenceMetadata {
+                "extends": "DomainValueObject",
+                "name": "Certificate",
+              },
+              "required": true,
+              "type": "REFERENCE",
+            },
+            "required": true,
+            "type": "ARRAY",
+          },
           "id": DomainObjectPropertyMetadata {
             "name": "id",
             "nullable": false,
