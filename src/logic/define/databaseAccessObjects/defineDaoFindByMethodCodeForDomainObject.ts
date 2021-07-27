@@ -33,6 +33,8 @@ const getTypescriptTypeForDomainObjectProperty = ({
   if (domainObjectProperty.type === DomainObjectPropertyType.NUMBER) return 'number';
   if (domainObjectProperty.type === DomainObjectPropertyType.BOOLEAN) return 'boolean';
   if (domainObjectProperty.type === DomainObjectPropertyType.DATE) return 'Date';
+  if (domainObjectProperty.type === DomainObjectPropertyType.ENUM)
+    return `${domainObjectName}['${domainObjectProperty.name}']`;
   if (domainObjectProperty.type === DomainObjectPropertyType.REFERENCE) {
     const referencedDomainObjectName = sqlSchemaProperty.reference!.of.name;
     return `HasId<${referencedDomainObjectName}>`;

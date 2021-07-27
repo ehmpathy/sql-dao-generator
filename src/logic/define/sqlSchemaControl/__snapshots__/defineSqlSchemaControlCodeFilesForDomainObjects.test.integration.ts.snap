@@ -8,6 +8,12 @@ GeneratedCodeFile {
 - type: resource
   path: ./functions/upsert_carriage.sql
 
+# certificate
+- type: resource
+  path: ./tables/certificate.sql
+- type: resource
+  path: ./functions/upsert_certificate.sql
+
 # train_engineer
 - type: resource
   path: ./tables/train_engineer.sql

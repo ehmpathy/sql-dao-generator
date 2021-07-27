@@ -57,6 +57,39 @@ Object {
           "updatable": null,
         },
         "extends": "DomainValueObject",
+        "name": "Certificate",
+        "properties": Object {
+          "cid": DomainObjectPropertyMetadata {
+            "name": "cid",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "id": DomainObjectPropertyMetadata {
+            "name": "id",
+            "nullable": false,
+            "required": false,
+            "type": "NUMBER",
+          },
+          "type": DomainObjectPropertyMetadata {
+            "name": "type",
+            "nullable": false,
+            "of": Array [
+              "LOCOMOTIVE_DRIVING",
+              "ENGINE_MAINTENANCE",
+              "CARRIAGE_MAINTENANCE",
+            ],
+            "required": true,
+            "type": "ENUM",
+          },
+        },
+      },
+      DomainObjectMetadata {
+        "decorations": Object {
+          "unique": null,
+          "updatable": null,
+        },
+        "extends": "DomainValueObject",
         "name": "Geocode",
         "properties": Object {
           "id": DomainObjectPropertyMetadata {

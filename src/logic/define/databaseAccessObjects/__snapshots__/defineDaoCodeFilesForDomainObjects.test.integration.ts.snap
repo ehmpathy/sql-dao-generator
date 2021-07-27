@@ -205,6 +205,157 @@ export const upsert = async ({
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
+import { upsert } from './upsert';
+
+export const certificateDao = {
+  findById,
+  findByUnique,
+  upsert,
+};",
+    "relpath": "certificateDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindCertificateByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = ({
+  dbObject,
+}: {
+  dbObject: SqlQueryFindCertificateByIdOutput;
+}): HasId<Certificate> =>
+  new Certificate({
+    id: dbObject.id,
+    type: dbObject.type as Certificate['type'],
+    cid: dbObject.cid,
+  }) as HasId<Certificate>;",
+    "relpath": "certificateDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCertificateById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_certificate_by_id
+  SELECT
+    certificate.id,
+    certificate.type,
+    certificate.cid
+  FROM certificate
+  WHERE certificate.id = :id;
+\`;
+
+export const findById = async ({
+  dbConnection,
+  id,
+}: {
+  dbConnection: DatabaseConnection;
+  id: number;
+}): Promise<HasId<Certificate> | null> => {
+  const results = await sqlQueryFindCertificateById({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      id,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return castFromDatabaseObject({ dbObject: results[0] });
+};",
+    "relpath": "certificateDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCertificateByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_certificate_by_unique
+  SELECT
+    certificate.id,
+    certificate.type,
+    certificate.cid
+  FROM certificate
+  WHERE 1=1
+    AND certificate.type = :type
+    AND certificate.cid = :cid;
+\`;
+
+export const findByUnique = async ({
+  dbConnection,
+  type,
+  cid,
+}: {
+  dbConnection: DatabaseConnection;
+  type: Certificate['type'];
+  cid: string;
+}): Promise<HasId<Certificate> | null> => {
+  const results = await sqlQueryFindCertificateByUnique({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      type,
+      cid,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return castFromDatabaseObject({ dbObject: results[0] });
+};",
+    "relpath": "certificateDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryUpsertCertificate } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+
+export const sql = \`
+  -- query_name = upsert_certificate
+  SELECT
+    dgv.id
+  FROM upsert_certificate(
+    :type,
+    :cid
+  ) as dgv;
+\`;
+
+export const upsert = async ({
+  dbConnection,
+  certificate,
+}: {
+  dbConnection: DatabaseConnection;
+  certificate: Certificate;
+}): Promise<HasId<Certificate>> => {
+  const results = await sqlQueryUpsertCertificate({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      type: certificate.type,
+      cid: certificate.cid,
+    },
+  });
+  const { id } = results[0]; // grab the db generated values
+  return new Certificate({ ...certificate, id }) as HasId<Certificate>;
+};",
+    "relpath": "certificateDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { findById } from './findById';
+import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { upsert } from './upsert';
 

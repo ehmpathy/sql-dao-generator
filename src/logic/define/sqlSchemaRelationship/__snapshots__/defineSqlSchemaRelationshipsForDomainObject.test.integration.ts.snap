@@ -118,6 +118,98 @@ Array [
   SqlSchemaToDomainObjectRelationship {
     "decorations": Object {
       "unique": Object {
+        "domainObject": null,
+        "sqlSchema": Array [
+          "type",
+          "cid",
+        ],
+      },
+    },
+    "name": Object {
+      "domainObject": "Certificate",
+      "sqlSchema": "certificate",
+    },
+    "properties": Array [
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "id",
+          "nullable": false,
+          "required": false,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "id",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "uuid",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "created_at",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "type",
+          "nullable": false,
+          "of": Array [
+            "LOCOMOTIVE_DRIVING",
+            "ENGINE_MAINTENANCE",
+            "CARRIAGE_MAINTENANCE",
+          ],
+          "required": true,
+          "type": "ENUM",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "type",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "cid",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "cid",
+          "reference": null,
+        },
+      },
+    ],
+  },
+  SqlSchemaToDomainObjectRelationship {
+    "decorations": Object {
+      "unique": Object {
         "domainObject": Array [
           "socialSecurityNumberHash",
         ],

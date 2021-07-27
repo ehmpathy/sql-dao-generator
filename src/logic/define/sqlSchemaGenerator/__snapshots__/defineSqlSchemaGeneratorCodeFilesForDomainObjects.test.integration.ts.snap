@@ -4,6 +4,7 @@ exports[`defineSqlSchemaGeneratorCodeFilesForDomainObjects should work on the ex
 Array [
   GeneratedCodeFile {
     "content": "import { carriage } from './carriage';
+import { certificate } from './certificate';
 import { geocode } from './geocode';
 import { locomotive } from './locomotive';
 import { train } from './train';
@@ -15,6 +16,7 @@ import { trainLocatedEvent } from './trainLocatedEvent';
  */
 export const generateSqlSchemasFor = [
   carriage,
+  certificate,
   trainEngineer,
   geocode,
   train,
@@ -39,6 +41,21 @@ export const carriage = new Entity({
   unique: ['uuid'],
 });",
     "relpath": "carriage.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { prop, ValueObject } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain value object 'Certificate'
+ */
+export const certificate = new ValueObject({
+  name: 'certificate',
+  properties: {
+    type: prop.ENUM(['LOCOMOTIVE_DRIVING', 'ENGINE_MAINTENANCE', 'CARRIAGE_MAINTENANCE']),
+    cid: prop.VARCHAR(),
+  },
+});",
+    "relpath": "certificate.ts",
   },
   GeneratedCodeFile {
     "content": "import { Entity, prop } from 'sql-schema-generator';

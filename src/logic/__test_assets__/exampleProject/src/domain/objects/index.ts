@@ -1,4 +1,5 @@
 export * from './Carriage';
+export * from './Certificate';
 export * from './Engineer';
 export * from './Geocode';
 export * from './Train';
