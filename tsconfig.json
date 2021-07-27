@@ -18,6 +18,6 @@
     "rewriteTsconfig": false
   },
   "exclude": [
-    "src/logic/commands/generate.test.integration.ts"
+    "src/logic/commands/generate.integration.test.ts"
   ],
 }
