@@ -364,3 +364,90 @@ SqlSchemaToDomainObjectRelationship {
   ],
 }
 `;
+
+exports[`defineSqlSchemarelationshipForDomainObject should look right for another domain-value-object, one with multi word property names 1`] = `
+SqlSchemaToDomainObjectRelationship {
+  "decorations": Object {
+    "unique": Object {
+      "domainObject": null,
+      "sqlSchema": Array [
+        "role",
+        "external_id",
+      ],
+    },
+  },
+  "name": Object {
+    "domainObject": "ChatParticipant",
+    "sqlSchema": "chat_participant",
+  },
+  "properties": Array [
+    Object {
+      "domainObject": Object {
+        "name": "id",
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "id",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": Object {
+        "name": "uuid",
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "uuid",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "created_at",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": Object {
+        "name": "role",
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "role",
+        "reference": null,
+      },
+    },
+    Object {
+      "domainObject": Object {
+        "name": "externalId",
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "external_id",
+        "reference": null,
+      },
+    },
+  ],
+}
+`;

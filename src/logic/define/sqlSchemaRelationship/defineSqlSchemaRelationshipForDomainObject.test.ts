@@ -28,6 +28,30 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
     expect(relationship.decorations.unique.sqlSchema).toEqual(['latitude', 'longitude']); // should be all of the properties, since domain value object
     expect(relationship).toMatchSnapshot();
   });
+  it('should look right for another domain-value-object, one with multi word property names', () => {
+    const relationship = defineSqlSchemaRelationshipForDomainObject({
+      domainObject: new DomainObjectMetadata({
+        name: 'ChatParticipant',
+        extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+        properties: {
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+          role: { name: 'role', type: DomainObjectPropertyType.STRING },
+          externalId: { name: 'externalId', type: DomainObjectPropertyType.STRING },
+        },
+        decorations: {
+          unique: null,
+          updatable: null,
+        },
+      }),
+      allDomainObjects: [],
+    });
+    expect(relationship.name.sqlSchema).toEqual('chat_participant'); // should be snake case
+    expect(relationship.properties.length).toEqual(5); // sanity check
+    expect(relationship.decorations.unique.domainObject).toEqual(null); // it wasn't defined, since domain value object
+    expect(relationship.decorations.unique.sqlSchema).toEqual(['role', 'external_id']); // should be all of the properties, since domain value object
+    expect(relationship).toMatchSnapshot();
+  });
   it('should look right for a domain-entity', () => {
     const relationship = defineSqlSchemaRelationshipForDomainObject({
       domainObject: new DomainObjectMetadata({
