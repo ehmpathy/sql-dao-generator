@@ -979,5 +979,130 @@ Array [
       },
     ],
   },
+  SqlSchemaToDomainObjectRelationship {
+    "decorations": Object {
+      "unique": Object {
+        "domainObject": Array [
+          "geocode",
+        ],
+        "sqlSchema": Array [
+          "geocode_id",
+        ],
+      },
+    },
+    "name": Object {
+      "domainObject": "TrainStation",
+      "sqlSchema": "train_station",
+    },
+    "properties": Array [
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "id",
+          "nullable": false,
+          "required": false,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "id",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "uuid",
+          "nullable": false,
+          "required": false,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "uuid",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "created_at",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "effective_at",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "updated_at",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "geocode",
+          "nullable": false,
+          "of": DomainObjectReferenceMetadata {
+            "extends": "DomainValueObject",
+            "name": "Geocode",
+          },
+          "required": true,
+          "type": "REFERENCE",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "geocode_id",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "DIRECT_BY_NESTING",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainValueObject",
+              "name": "Geocode",
+            },
+          },
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "name",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": true,
+          "name": "name",
+          "reference": null,
+        },
+      },
+    ],
+  },
 ]
 `;

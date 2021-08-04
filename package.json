@@ -98,7 +98,7 @@
     "change-case": "4.1.1",
     "diff": "4.0.1",
     "domain-objects": "0.7.1",
-    "domain-objects-metadata": "0.3.0",
+    "domain-objects-metadata": "0.4.1",
     "fast-glob": "3.2.2",
     "indent-string": "4.0.0",
     "joi": "17.4.0",

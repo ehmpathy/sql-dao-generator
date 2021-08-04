@@ -6,6 +6,8 @@ import {
   DomainObjectPropertyType,
   DomainObjectReferenceMetadata,
   DomainObjectVariant,
+  isDomainObjectArrayProperty,
+  isDomainObjectReferenceProperty,
 } from 'domain-objects-metadata';
 import omit from 'lodash.omit';
 
@@ -98,15 +100,14 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
   allDomainObjects: DomainObjectMetadata[];
 }): SqlSchemaReferenceMetadata | null => {
   // determine what kind of reference it can be
-  const isDirectNestedReferenceCandidate = property.type === DomainObjectPropertyType.REFERENCE;
+  const isDirectNestedReferenceCandidate = isDomainObjectReferenceProperty(property);
   const isDirectNestedReferenceArrayCandidate =
-    property.type === DomainObjectPropertyType.ARRAY &&
-    (property.of as DomainObjectPropertyMetadata)?.type === DomainObjectPropertyType.REFERENCE;
+    isDomainObjectArrayProperty(property) && isDomainObjectReferenceProperty(property.of);
   const isImplicitUuidReferenceCandidate =
     property.type === DomainObjectPropertyType.STRING && new RegExp(/Uuid/).test(property.name);
   const isImplicitUuidReferenceArrayCandidate =
-    property.type === DomainObjectPropertyType.ARRAY &&
-    (property.of as DomainObjectPropertyMetadata).type === DomainObjectPropertyType.STRING &&
+    isDomainObjectArrayProperty(property) &&
+    property.of.type === DomainObjectPropertyType.STRING &&
     new RegExp(/Uuids/).test(property.name);
 
   // handle direct nested references

@@ -1,9 +1,9 @@
 import { camelCase, snakeCase } from 'change-case';
 import {
   DomainObjectMetadata,
-  DomainObjectPropertyMetadata,
   DomainObjectPropertyType,
-  DomainObjectReferenceMetadata,
+  isDomainObjectArrayProperty,
+  isDomainObjectReferenceProperty,
 } from 'domain-objects-metadata';
 import { isPresent } from 'simple-type-guards';
 
@@ -25,13 +25,9 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
   // define the referenced domain objects to hydrate
   const nestedDomainObjectNames = Object.values(domainObject.properties)
     .map((property) => {
-      if (property.type === DomainObjectPropertyType.REFERENCE)
-        return (property.of as DomainObjectReferenceMetadata).name;
-      if (
-        property.type === DomainObjectPropertyType.ARRAY &&
-        (property.of as DomainObjectPropertyMetadata).type === DomainObjectPropertyType.REFERENCE
-      )
-        return ((property.of as DomainObjectPropertyMetadata).of as DomainObjectReferenceMetadata).name;
+      if (isDomainObjectReferenceProperty(property)) return property.of.name;
+      if (isDomainObjectArrayProperty(property) && isDomainObjectReferenceProperty(property.of))
+        return property.of.of.name;
       return null;
     })
     .filter(isPresent)

@@ -52,6 +52,18 @@ GeneratedCodeFile {
 - type: resource
   path: ./functions/upsert_train_located_event.sql
 
+# train_station
+- type: resource
+  path: ./tables/train_station.sql
+- type: resource
+  path: ./tables/train_station_version.sql
+- type: resource
+  path: ./tables/train_station_cvp.sql
+- type: resource
+  path: ./views/view_train_station_current.sql
+- type: resource
+  path: ./functions/upsert_train_station.sql
+
 # train
 - type: resource
   path: ./tables/train.sql

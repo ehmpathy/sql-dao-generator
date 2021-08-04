@@ -333,6 +333,48 @@ Object {
           },
         },
       },
+      DomainObjectMetadata {
+        "decorations": Object {
+          "unique": Array [
+            "geocode",
+          ],
+          "updatable": Array [
+            "name",
+          ],
+        },
+        "extends": "DomainEntity",
+        "name": "TrainStation",
+        "properties": Object {
+          "geocode": DomainObjectPropertyMetadata {
+            "name": "geocode",
+            "nullable": false,
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainValueObject",
+              "name": "Geocode",
+            },
+            "required": true,
+            "type": "REFERENCE",
+          },
+          "id": DomainObjectPropertyMetadata {
+            "name": "id",
+            "nullable": false,
+            "required": false,
+            "type": "NUMBER",
+          },
+          "name": DomainObjectPropertyMetadata {
+            "name": "name",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "uuid": DomainObjectPropertyMetadata {
+            "name": "uuid",
+            "nullable": false,
+            "required": false,
+            "type": "STRING",
+          },
+        },
+      },
     ],
   },
   "generates": Object {

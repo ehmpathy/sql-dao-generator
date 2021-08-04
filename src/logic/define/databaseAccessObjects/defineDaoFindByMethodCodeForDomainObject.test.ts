@@ -781,6 +781,88 @@ async ({
       expect(code).toContain('await sqlQueryFindCarriageByUnique({');
       expect(code).toMatchSnapshot();
     });
+    it('should look for a domain entity unique on a nested domain object', () => {
+      // define what we're testing on
+      const domainObject = new DomainObjectMetadata({
+        name: 'Station',
+        extends: DomainObjectVariant.DOMAIN_ENTITY,
+        properties: {
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
+          station: {
+            name: 'geocode',
+            type: DomainObjectPropertyType.REFERENCE,
+            of: {
+              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              name: 'Geocode',
+            },
+          },
+          name: { name: 'name', type: DomainObjectPropertyType.STRING, nullable: true },
+        },
+        decorations: {
+          unique: ['geocode'],
+          updatable: ['name'],
+        },
+      });
+      const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+        domainObject,
+        allDomainObjects: [domainObject],
+      });
+
+      // define property that gets referenced
+      const geocodeSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+        domainObject: new DomainObjectMetadata({
+          name: 'Geocode',
+          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+          properties: {
+            latitude: {
+              name: 'latitude',
+              type: DomainObjectPropertyType.NUMBER,
+            },
+            longitude: {
+              name: 'longitude',
+              type: DomainObjectPropertyType.NUMBER,
+            },
+          },
+          decorations: {
+            unique: null,
+            updatable: null,
+          },
+        }),
+        allDomainObjects: [domainObject],
+      });
+
+      // run it
+      const code = defineDaoFindByMethodCodeForDomainObject({
+        domainObject,
+        sqlSchemaRelationship,
+        allSqlSchemaRelationships: [sqlSchemaRelationship, geocodeSqlSchemaRelationship],
+        findByQueryType: FindByQueryType.UNIQUE,
+      });
+
+      // log an example
+      expect(code).toContain('-- query_name = find_station_by_unique'); // name of query
+      expect(code).toContain('station.id,'); // select expressions
+      expect(code).toContain('station.uuid,');
+      expect(code).toContain(') AS geocode,'); // should select the hydratable value object
+      expect(code).toContain('station.name');
+      expect(code).toContain('FROM view_station_current AS station'); // table to query (view, in this case)
+      expect(code).toContain('WHERE 1=1'); // condition
+      expect(code).toContain('  AND station.geocode_id = :geocodeId'); // condition
+      expect(code).toContain(
+        `
+async ({
+  dbConnection,
+  geocode,
+}: {
+  dbConnection: DatabaseConnection;
+  geocode: HasId<Geocode>;
+})
+      `.trim(),
+      );
+      expect(code).toContain('await sqlQueryFindStationByUnique({');
+      expect(code).toMatchSnapshot();
+    });
     it('should look correct for a domain event with a static referenced array', () => {
       // define what we're testing on
       const domainObject = new DomainObjectMetadata({

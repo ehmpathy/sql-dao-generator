@@ -1,5 +1,12 @@
 import { camelCase, snakeCase } from 'change-case';
-import { DomainObjectMetadata, DomainObjectPropertyMetadata, DomainObjectPropertyType } from 'domain-objects-metadata';
+import {
+  DomainObjectMetadata,
+  DomainObjectPropertyMetadata,
+  DomainObjectPropertyType,
+  DomainObjectVariant,
+  isDomainObjectArrayProperty,
+  isDomainObjectReferenceProperty,
+} from 'domain-objects-metadata';
 import { isPresent } from 'simple-type-guards';
 
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
@@ -69,6 +76,41 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
     ({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.isUpdatable || sqlSchemaProperty.isArray,
   );
 
+  // define which domain objects are referenced in this method
+  const referencedDomainObjectNames = [
+    domainObject.name, // the domain object itself is always referenced
+    ...(findByQueryType === FindByQueryType.UNIQUE
+      ? sqlSchemaRelationship.properties
+          .map(({ domainObject: domainObjectProperty }) => {
+            // if its not explicitly defined property, then not needed in imports
+            if (!domainObjectProperty) return null;
+
+            // if its not part of the unique key, then its not needed in imports
+            if (!sqlSchemaRelationship.decorations.unique.domainObject?.includes(domainObjectProperty.name))
+              return null;
+
+            // if its a solo reference to a domain value object, then needed in imports
+            if (
+              isDomainObjectReferenceProperty(domainObjectProperty) &&
+              domainObjectProperty.of.extends === DomainObjectVariant.DOMAIN_VALUE_OBJECT
+            )
+              return domainObjectProperty.of.name;
+
+            // if its a array reference to a domain value object, then we care
+            if (
+              isDomainObjectArrayProperty(domainObjectProperty) &&
+              isDomainObjectReferenceProperty(domainObjectProperty.of) &&
+              domainObjectProperty.of.of.extends === DomainObjectVariant.DOMAIN_VALUE_OBJECT
+            )
+              return domainObjectProperty.of.of.name;
+
+            // otherwise, we dont care about it
+            return null;
+          })
+          .filter(isPresent)
+      : []),
+  ];
+
   // define the imports
   const imports = [
     // always present imports
@@ -76,7 +118,7 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
     '', // split module from relative imports
     "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
     "import { log } from '$PATH_TO_LOG_OBJECT';",
-    `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`,
+    `import { ${referencedDomainObjectNames.sort().join(', ')} } from '$PATH_TO_DOMAIN_OBJECT';`,
     `import { sqlQueryFind${domainObject.name}By${findByQueryType} } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';`,
     "import { castFromDatabaseObject } from './castFromDatabaseObject';",
   ];
@@ -93,14 +135,14 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
         if (!propertyRelationship)
           throw new UnexpectedCodePathDetectedError({
             reason:
-              'propertyRelationship.domainObject for property was not defined, for where conditions in generating find by method',
+              'could not find sqlSchemaRelationship for property, for where conditions in generating find by method',
             domainObjectName: domainObject.name,
             domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
           }); // fail fast, this should never occur
         if (!propertyRelationship.domainObject)
           throw new UnexpectedCodePathDetectedError({
             reason:
-              'could not find sqlSchemaRelationship for property, for where conditions in generating find by method',
+              'propertyRelationship.domainObject for property was not defined, for where conditions in generating find by method',
             domainObjectName: domainObject.name,
             domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
           }); // fail fast, this should never occur
@@ -139,14 +181,14 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
         );
         if (!propertyRelationship)
           throw new UnexpectedCodePathDetectedError({
-            reason:
-              'propertyRelationship.domainObject for property was not defined, for parameters in generating find by method',
+            reason: 'could not find sqlSchemaRelationship for property, for parameters in generating find by method',
             domainObjectName: domainObject.name,
             domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
           }); // fail fast, this should never occur
         if (!propertyRelationship.domainObject)
           throw new UnexpectedCodePathDetectedError({
-            reason: 'could not find sqlSchemaRelationship for property, for parameters in generating find by method',
+            reason:
+              'propertyRelationship.domainObject for property was not defined, for parameters in generating find by method',
             domainObjectName: domainObject.name,
             domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
           }); // fail fast, this should never occur
@@ -185,14 +227,14 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
         if (!propertyRelationship)
           throw new UnexpectedCodePathDetectedError({
             reason:
-              'propertyRelationship.domainObject for property was not defined, for query fn input expressions in generating find by method',
+              'could not find sqlSchemaRelationship for property, for  query fn input expressions  in generating find by method',
             domainObjectName: domainObject.name,
             domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
           }); // fail fast, this should never occur
         if (!propertyRelationship.domainObject)
           throw new UnexpectedCodePathDetectedError({
             reason:
-              'could not find sqlSchemaRelationship for property, for  query fn input expressions  in generating find by method',
+              'propertyRelationship.domainObject for property was not defined, for query fn input expressions in generating find by method',
             domainObjectName: domainObject.name,
             domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
           }); // fail fast, this should never occur

@@ -10,6 +10,7 @@ import { locomotive } from './locomotive';
 import { train } from './train';
 import { trainEngineer } from './trainEngineer';
 import { trainLocatedEvent } from './trainLocatedEvent';
+import { trainStation } from './trainStation';
 
 /**
  * all of the domain objects which we want to create sql-schema-resources for with sql-schema-generator
@@ -22,6 +23,7 @@ export const generateSqlSchemasFor = [
   train,
   locomotive,
   trainLocatedEvent,
+  trainStation,
 ];",
     "relpath": "index.ts",
   },
@@ -154,6 +156,24 @@ export const trainLocatedEvent = new Event({
   unique: ['train_id', 'occurred_at'],
 });",
     "relpath": "trainLocatedEvent.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+import { geocode } from './geocode';
+
+/**
+ * sql-schema for the domain entity 'TrainStation'
+ */
+export const trainStation = new Entity({
+  name: 'train_station',
+  properties: {
+    geocode_id: prop.REFERENCES(geocode),
+    name: { ...prop.VARCHAR(), updatable: true },
+  },
+  unique: ['geocode_id'],
+});",
+    "relpath": "trainStation.ts",
   },
 ]
 `;

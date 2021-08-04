@@ -278,7 +278,7 @@ exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look corre
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
-import { Train } from '$PATH_TO_DOMAIN_OBJECT';
+import { Geocode, Train, TrainBadge } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
 
@@ -563,6 +563,53 @@ export const findByUnique = async ({
     input: {
       latitude,
       longitude,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return castFromDatabaseObject({ dbObject: results[0] });
+};"
+`;
+
+exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look for a domain entity unique on a nested domain object 1`] = `
+"import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { Geocode, Station } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindStationByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_station_by_unique
+  SELECT
+    station.id,
+    station.uuid,
+    (
+      SELECT json_build_object(
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      ) AS json_build_object
+      FROM geocode WHERE geocode.id = station.geocode_id
+    ) AS geocode,
+    station.name
+  FROM view_station_current AS station
+  WHERE 1=1
+    AND station.geocode_id = :geocodeId;
+\`;
+
+export const findByUnique = async ({
+  dbConnection,
+  geocode,
+}: {
+  dbConnection: DatabaseConnection;
+  geocode: HasId<Geocode>;
+}): Promise<HasId<HasUuid<Station>> | null> => {
+  const results = await sqlQueryFindStationByUnique({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      geocodeId: geocode.id,
     },
   });
   if (results.length > 1) throw new Error('should only be one');

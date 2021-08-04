@@ -1469,5 +1469,219 @@ export const upsert = async ({
 };",
     "relpath": "trainLocatedEventDao/upsert.ts",
   },
+  GeneratedCodeFile {
+    "content": "import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+import { upsert } from './upsert';
+
+export const trainStationDao = {
+  findById,
+  findByUnique,
+  findByUuid,
+  upsert,
+};",
+    "relpath": "trainStationDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { Geocode, TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindTrainStationByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = ({
+  dbObject,
+}: {
+  dbObject: SqlQueryFindTrainStationByIdOutput;
+}): HasId<HasUuid<TrainStation>> =>
+  new TrainStation({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    geocode: new Geocode(dbObject.geocode as Geocode),
+    name: dbObject.name,
+  }) as HasId<HasUuid<TrainStation>>;",
+    "relpath": "trainStationDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainStationById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_station_by_id
+  SELECT
+    train_station.id,
+    train_station.uuid,
+    (
+      SELECT json_build_object(
+        'id', geocode.id,
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      ) AS json_build_object
+      FROM geocode WHERE geocode.id = train_station.geocode_id
+    ) AS geocode,
+    train_station.name
+  FROM view_train_station_current AS train_station
+  WHERE train_station.id = :id;
+\`;
+
+export const findById = async ({
+  dbConnection,
+  id,
+}: {
+  dbConnection: DatabaseConnection;
+  id: number;
+}): Promise<HasId<HasUuid<TrainStation>> | null> => {
+  const results = await sqlQueryFindTrainStationById({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      id,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return castFromDatabaseObject({ dbObject: results[0] });
+};",
+    "relpath": "trainStationDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { Geocode, TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainStationByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_station_by_unique
+  SELECT
+    train_station.id,
+    train_station.uuid,
+    (
+      SELECT json_build_object(
+        'id', geocode.id,
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      ) AS json_build_object
+      FROM geocode WHERE geocode.id = train_station.geocode_id
+    ) AS geocode,
+    train_station.name
+  FROM view_train_station_current AS train_station
+  WHERE 1=1
+    AND train_station.geocode_id = :geocodeId;
+\`;
+
+export const findByUnique = async ({
+  dbConnection,
+  geocode,
+}: {
+  dbConnection: DatabaseConnection;
+  geocode: HasId<Geocode>;
+}): Promise<HasId<HasUuid<TrainStation>> | null> => {
+  const results = await sqlQueryFindTrainStationByUnique({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      geocodeId: geocode.id,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return castFromDatabaseObject({ dbObject: results[0] });
+};",
+    "relpath": "trainStationDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainStationByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_station_by_uuid
+  SELECT
+    train_station.id,
+    train_station.uuid,
+    (
+      SELECT json_build_object(
+        'id', geocode.id,
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      ) AS json_build_object
+      FROM geocode WHERE geocode.id = train_station.geocode_id
+    ) AS geocode,
+    train_station.name
+  FROM view_train_station_current AS train_station
+  WHERE train_station.uuid = :uuid;
+\`;
+
+export const findByUuid = async ({
+  dbConnection,
+  uuid,
+}: {
+  dbConnection: DatabaseConnection;
+  uuid: string;
+}): Promise<HasId<HasUuid<TrainStation>> | null> => {
+  const results = await sqlQueryFindTrainStationByUuid({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      uuid,
+    },
+  });
+  if (results.length > 1) throw new Error('should only be one');
+  if (!results.length) return null;
+  return castFromDatabaseObject({ dbObject: results[0] });
+};",
+    "relpath": "trainStationDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryUpsertTrainStation } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { geocodeDao } from '../geocodeDao';
+
+export const sql = \`
+  -- query_name = upsert_train_station
+  SELECT
+    dgv.id, dgv.uuid
+  FROM upsert_train_station(
+    :geocodeId,
+    :name
+  ) as dgv;
+\`;
+
+export const upsert = async ({
+  dbConnection,
+  trainStation,
+}: {
+  dbConnection: DatabaseConnection;
+  trainStation: TrainStation;
+}): Promise<HasId<HasUuid<TrainStation>>> => {
+  const results = await sqlQueryUpsertTrainStation({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      geocodeId: trainStation.geocode.id ? trainStation.geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: trainStation.geocode })).id,
+      name: trainStation.name,
+    },
+  });
+  const { id, uuid } = results[0]; // grab the db generated values
+  return new TrainStation({ ...trainStation, id, uuid }) as HasId<HasUuid<TrainStation>>;
+};",
+    "relpath": "trainStationDao/upsert.ts",
+  },
 ]
 `;
