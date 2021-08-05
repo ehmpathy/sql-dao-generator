@@ -55,8 +55,18 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
       if (domainObjectProperty.type === DomainObjectPropertyType.ENUM)
         return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name} as ${domainObject.name}['${domainObjectProperty.name}']`;
 
+      // array of non-reference uuids case
+      if (
+        isDomainObjectArrayProperty(domainObjectProperty) &&
+        domainObjectProperty.of.type === DomainObjectPropertyType.STRING &&
+        !sqlSchemaProperty.reference // only for cases where its not an fk based implicit-uuid-reference
+      )
+        return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name} as string[]`; // assure typescript that we _know_ its a string array (not null, or number[])
+
       // non-reference case
-      if (!sqlSchemaProperty.reference) return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name}`;
+      if (!sqlSchemaProperty.reference) {
+        return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name}`;
+      }
 
       // referenced by uuid case
       if (sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.IMPLICIT_BY_UUID) {

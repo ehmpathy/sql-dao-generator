@@ -80,7 +80,7 @@
     "shelljs": "0.8.4",
     "sql-code-generator": "0.8.1",
     "sql-schema-control": "0.7.3",
-    "sql-schema-generator": "0.20.2",
+    "sql-schema-generator": "0.21.1",
     "stdout-stderr": "0.1.9",
     "ts-jest": "26.1.1",
     "tslint": "5.11.0",

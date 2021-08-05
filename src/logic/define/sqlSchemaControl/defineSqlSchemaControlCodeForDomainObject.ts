@@ -1,5 +1,6 @@
 import { snakeCase } from 'change-case';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
+import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
 
 export const defineSqlSchemaControlCodeForDomainObject = ({
   sqlSchemaRelationship,
@@ -22,10 +23,24 @@ export const defineSqlSchemaControlCodeForDomainObject = ({
 
   // define any mapping tables referencing the base table
   sqlSchemaRelationship.properties.forEach((propertyRelationship) => {
-    if (!propertyRelationship.sqlSchema.reference) return;
     if (!propertyRelationship.sqlSchema.isArray) return;
     if (propertyRelationship.sqlSchema.isUpdatable) return; // only ones that join to static table
-    resourceRelpaths.push(
+    if (!propertyRelationship.sqlSchema.reference) {
+      const endsWithUuidSuffix = new RegExp(/_uuids$/).test(propertyRelationship.sqlSchema.name);
+      if (!endsWithUuidSuffix)
+        throw new UnexpectedCodePathDetectedError({
+          reason: 'expected sql-schema-generator to only allow _uuid suffixed property names to be arrays',
+          domainObjectPropertyName: propertyRelationship.domainObject?.name,
+          domainObjectName: sqlSchemaRelationship.name.domainObject,
+        });
+      return resourceRelpaths.push(
+        `./tables/${sqlSchemaRelationship.name.sqlSchema}_to_${propertyRelationship.sqlSchema.name.replace(
+          /_uuids$/,
+          '_uuid',
+        )}.sql`,
+      );
+    }
+    return resourceRelpaths.push(
       `./tables/${sqlSchemaRelationship.name.sqlSchema}_to_${snakeCase(
         propertyRelationship.sqlSchema.reference.of.name,
       )}.sql`,
@@ -38,10 +53,24 @@ export const defineSqlSchemaControlCodeForDomainObject = ({
   // define any mapping tables referencing the version table, if there are any updatable properties
   if (hasUpdatableProperties)
     sqlSchemaRelationship.properties.forEach((propertyRelationship) => {
-      if (!propertyRelationship.sqlSchema.reference) return;
       if (!propertyRelationship.sqlSchema.isArray) return;
       if (!propertyRelationship.sqlSchema.isUpdatable) return; // only ones that join to static table
-      resourceRelpaths.push(
+      if (!propertyRelationship.sqlSchema.reference) {
+        const endsWithUuidSuffix = new RegExp(/_uuids$/).test(propertyRelationship.sqlSchema.name);
+        if (!endsWithUuidSuffix)
+          throw new UnexpectedCodePathDetectedError({
+            reason: 'expected sql-schema-generator to only allow _uuid suffixed property names to be arrays',
+            domainObjectPropertyName: propertyRelationship.domainObject?.name,
+            domainObjectName: sqlSchemaRelationship.name.domainObject,
+          });
+        return resourceRelpaths.push(
+          `./tables/${sqlSchemaRelationship.name.sqlSchema}_version_to_${propertyRelationship.sqlSchema.name.replace(
+            /_uuids$/,
+            '_uuid',
+          )}.sql`,
+        );
+      }
+      return resourceRelpaths.push(
         `./tables/${sqlSchemaRelationship.name.sqlSchema}_version_to_${snakeCase(
           propertyRelationship.sqlSchema.reference.of.name,
         )}.sql`,

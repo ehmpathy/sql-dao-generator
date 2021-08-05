@@ -9,9 +9,10 @@ export interface TrainEngineer {
   uuid?: string;
   socialSecurityNumberHash: string; // the hash of their social security number
   certificates: Certificate[]; // an array of what certificates they've earned
+  licenseUuids: string[]; // an array of licenses, tracked in a separate database, that the engineer has earned
   name: string;
 }
 export class TrainEngineer extends DomainEntity<TrainEngineer> implements TrainEngineer {
   public static unique = ['socialSecurityNumberHash'];
-  public static updatable = ['name', 'certificates'];
+  public static updatable = ['name', 'certificates', 'licenseUuids'];
 }

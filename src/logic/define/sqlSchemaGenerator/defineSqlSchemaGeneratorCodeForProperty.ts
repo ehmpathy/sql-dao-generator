@@ -1,7 +1,12 @@
 // tslint:disable: max-classes-per-file
 
 import { camelCase } from 'change-case';
-import { DomainObjectMetadata, DomainObjectPropertyMetadata, DomainObjectPropertyType } from 'domain-objects-metadata';
+import {
+  DomainObjectMetadata,
+  DomainObjectPropertyMetadata,
+  DomainObjectPropertyType,
+  isDomainObjectArrayProperty,
+} from 'domain-objects-metadata';
 import { isPresent } from 'simple-type-guards';
 
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
@@ -22,14 +27,31 @@ export const defineSqlSchemaGeneratorCodeForProperty = ({
     if (sqlSchemaProperty.reference && !sqlSchemaProperty.isArray) {
       return `prop.REFERENCES(${camelCase(sqlSchemaProperty.reference.of!.name)})`;
     }
-    if (domainObjectProperty.type === DomainObjectPropertyType.ARRAY) {
-      if (!sqlSchemaProperty.reference)
-        throw new UserInputError({
-          reason: 'currently, only arrays of referenced domain objects are supported by sql-schema-generator.',
-          domainObjectName: domainObject.name,
-          domainObjectPropertyName: domainObjectProperty.name,
-        });
-      return `prop.ARRAY_OF(prop.REFERENCES(${camelCase(sqlSchemaProperty.reference.of.name)}))`;
+    if (isDomainObjectArrayProperty(domainObjectProperty)) {
+      // handle case where its an array reference to a domain object persisted within the database
+      if (sqlSchemaProperty.reference)
+        return `prop.ARRAY_OF(prop.REFERENCES(${camelCase(sqlSchemaProperty.reference.of.name)}))`;
+
+      // handle case where its potentially an array reference to a domain object persisted in another database (referenced by uuid)
+      const propertyNameLooksLikeUuidReferenceArray = new RegExp(/_uuids$/).test(sqlSchemaProperty.name); // i.e., does it end with _uuids?
+      if (propertyNameLooksLikeUuidReferenceArray && domainObjectProperty.of.type === DomainObjectPropertyType.STRING)
+        return 'prop.ARRAY_OF(prop.UUID())';
+
+      // otherwise, its not a handled case
+      throw new UserInputError({
+        reason:
+          'According to relational database best practices, properties of persisted domain objects should only be arrays of other domain objects. Therefore, only arrays of directly nested references and implicit by uuid references can be properties of domain objects persisted in relational databases.',
+        domainObjectName: domainObject.name,
+        domainObjectPropertyName: domainObjectProperty.name,
+        potentialSolution: `
+If you'd like to store an array of data, try one of the following:
+- make a value object out of the data and store an array of those value objects instead
+  - for example: \`User.favorite_fruits = ['Banana', 'Grapefruit']\` => \`User.favorite_fruits = [new Fruit({ name: 'Banana }), new Fruit({ name: 'Grapefruit' })]\`
+- make an entity out of the data and store an array of uuids to the entity instead
+  - if the entity is stored in the same database and managed by the dao-generator, the database will use foreign keys to store references to that entity
+  - if the entity is stored in a different database or not managed by the dao-generator, the database will simply store an array of uuids
+        `.trim(),
+      });
     }
 
     // handle primitives

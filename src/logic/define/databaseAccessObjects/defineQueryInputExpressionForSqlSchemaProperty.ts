@@ -24,15 +24,7 @@ export const defineQueryInputExpressionForSqlSchemaProperty = ({
     }); // fail fast if our expectation is not met though
 
   // simple case: non references
-  if (!sqlSchemaProperty.isArray && !sqlSchemaProperty.reference) return `:${domainObjectProperty.name}`; // yesql notation
-
-  // since sql-schema-generator does not support arrays of non-references, we can guarantee that its either a reference or an array of references now
-  if (!sqlSchemaProperty.reference)
-    throw new UnexpectedCodePathDetectedError({
-      reason: 'did not find a reference on sqlSchemaProperty but expected one, for query input expression',
-      domainObjectName: camelCase(sqlSchemaName),
-      domainObjectPropertyName: domainObjectProperty.name,
-    }); // fail fast if our expectation is not met though
+  if (!sqlSchemaProperty.reference) return `:${domainObjectProperty.name}`; // yesql notation
 
   // since we know its a reference, lookup the referenced sqlSchemaRelationship
   const referencedSqlSchemaRelationship = allSqlSchemaRelationships.find(

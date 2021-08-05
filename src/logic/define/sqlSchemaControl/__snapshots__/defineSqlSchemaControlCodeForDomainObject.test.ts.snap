@@ -7,6 +7,8 @@ exports[`defineSqlSchemaControlCodeForDomainObject should look right for a domai
 - type: resource
   path: ./tables/train_located_event_to_geocode.sql
 - type: resource
+  path: ./tables/train_located_event_to_sensor_uuid.sql
+- type: resource
   path: ./views/view_train_located_event_current.sql
 - type: resource
   path: ./functions/upsert_train_located_event.sql"
@@ -22,6 +24,8 @@ exports[`defineSqlSchemaControlCodeForDomainObject should look right for a domai
   path: ./tables/train_version.sql
 - type: resource
   path: ./tables/train_version_to_locomotive.sql
+- type: resource
+  path: ./tables/train_version_to_sensor_uuid.sql
 - type: resource
   path: ./tables/train_cvp.sql
 - type: resource

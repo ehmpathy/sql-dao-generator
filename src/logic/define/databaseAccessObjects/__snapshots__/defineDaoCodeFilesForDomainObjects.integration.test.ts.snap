@@ -383,6 +383,7 @@ export const castFromDatabaseObject = ({
     uuid: dbObject.uuid,
     socialSecurityNumberHash: dbObject.social_security_number_hash,
     certificates: (dbObject.certificates as Certificate[]).map((certificate) => new Certificate(certificate)),
+    licenseUuids: dbObject.license_uuids as string[],
     name: dbObject.name,
   }) as HasId<HasUuid<TrainEngineer>>;",
     "relpath": "trainEngineerDao/castFromDatabaseObject.ts",
@@ -419,6 +420,7 @@ export const sql = \`
         AS certificate_ref (id, array_order_index)
         ON certificate.id = certificate_ref.id
     ) AS certificates,
+    train_engineer.license_uuids,
     train_engineer.name
   FROM view_train_engineer_current AS train_engineer
   WHERE train_engineer.id = :id;
@@ -476,6 +478,7 @@ export const sql = \`
         AS certificate_ref (id, array_order_index)
         ON certificate.id = certificate_ref.id
     ) AS certificates,
+    train_engineer.license_uuids,
     train_engineer.name
   FROM view_train_engineer_current AS train_engineer
   WHERE 1=1
@@ -534,6 +537,7 @@ export const sql = \`
         AS certificate_ref (id, array_order_index)
         ON certificate.id = certificate_ref.id
     ) AS certificates,
+    train_engineer.license_uuids,
     train_engineer.name
   FROM view_train_engineer_current AS train_engineer
   WHERE train_engineer.uuid = :uuid;
@@ -575,6 +579,7 @@ export const sql = \`
   FROM upsert_train_engineer(
     :socialSecurityNumberHash,
     :certificateIds,
+    :licenseUuids,
     :name
   ) as dgv;
 \`;
@@ -592,6 +597,7 @@ export const upsert = async ({
     input: {
       socialSecurityNumberHash: trainEngineer.socialSecurityNumberHash,
       certificateIds: await Promise.all(trainEngineer.certificates.map(async (certificate) => certificate.id ? certificate.id : (await certificateDao.upsert({ dbConnection, certificate })).id)),
+      licenseUuids: trainEngineer.licenseUuids,
       name: trainEngineer.name,
     },
   });

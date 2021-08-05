@@ -22,6 +22,8 @@ GeneratedCodeFile {
 - type: resource
   path: ./tables/train_engineer_version_to_certificate.sql
 - type: resource
+  path: ./tables/train_engineer_version_to_license_uuid.sql
+- type: resource
   path: ./tables/train_engineer_cvp.sql
 - type: resource
   path: ./views/view_train_engineer_current.sql

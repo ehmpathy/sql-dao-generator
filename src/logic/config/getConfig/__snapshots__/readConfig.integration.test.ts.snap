@@ -287,6 +287,7 @@ Object {
           "updatable": Array [
             "name",
             "certificates",
+            "licenseUuids",
           ],
         },
         "extends": "DomainEntity",
@@ -312,6 +313,17 @@ Object {
             "nullable": false,
             "required": false,
             "type": "NUMBER",
+          },
+          "licenseUuids": DomainObjectPropertyMetadata {
+            "name": "licenseUuids",
+            "nullable": false,
+            "of": Object {
+              "nullable": false,
+              "required": true,
+              "type": "STRING",
+            },
+            "required": true,
+            "type": "ARRAY",
           },
           "name": DomainObjectPropertyMetadata {
             "name": "name",

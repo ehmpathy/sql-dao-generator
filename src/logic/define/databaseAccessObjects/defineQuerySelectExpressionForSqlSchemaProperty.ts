@@ -18,16 +18,8 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
   domainObjectProperty: DomainObjectPropertyMetadata;
   allSqlSchemaRelationships: SqlSchemaToDomainObjectRelationship[];
 }): string => {
-  // simple case: property is represented in the db simply as a column
-  if (!sqlSchemaProperty.isArray && !sqlSchemaProperty.reference) return `${sqlSchemaName}.${sqlSchemaProperty.name}`;
-
-  // since sql-schema-generator does not support arrays of non-references, we can guarantee that its either a reference or an array of references now
-  if (!sqlSchemaProperty.reference)
-    throw new UnexpectedCodePathDetectedError({
-      reason: 'did not find a reference on sqlSchemaProperty but expected one, for query select expression',
-      domainObjectName: camelCase(sqlSchemaName),
-      domainObjectPropertyName: domainObjectProperty.name,
-    }); // fail fast if our expectation is not met though
+  // simple case: property is represented in the db simply as a standard column
+  if (!sqlSchemaProperty.reference) return `${sqlSchemaName}.${sqlSchemaProperty.name}`;
 
   // since we know its a reference, lookup the referenced sqlSchemaRelationship
   const referencedSqlSchemaRelationship = allSqlSchemaRelationships.find(

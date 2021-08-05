@@ -1,6 +1,6 @@
 import shell from 'shelljs';
 import { HasId, HasUuid } from 'simple-type-guards';
-import { v4 } from 'uuid';
+import uuid, { v4 } from 'uuid';
 
 import { carriageDao } from '../__test_assets__/exampleProject/src/data/dao/carriageDao';
 import { geocodeDao } from '../__test_assets__/exampleProject/src/data/dao/geocodeDao';
@@ -316,6 +316,7 @@ describe('generate', () => {
                 cid: 'super-train-driving-deluxe-experience',
               }),
             ],
+            licenseUuids: [uuid()],
             name: 'Burt',
           }),
         });

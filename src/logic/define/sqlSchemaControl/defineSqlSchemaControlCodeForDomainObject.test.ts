@@ -98,6 +98,11 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
           },
           required: true,
         },
+        sensorUuids: {
+          name: 'sensorUuids',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.STRING },
+        },
       },
       decorations: {
         unique: ['trainUuid', 'occurredAt'],
@@ -118,9 +123,10 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
     // check that it looks right
     expect(code).toContain('path: ./tables/train_located_event.sql');
     expect(code).toContain('path: ./tables/train_located_event_to_geocode.sql');
+    expect(code).toContain('path: ./tables/train_located_event_to_sensor_uuid.sql');
     expect(code).toContain('path: ./views/view_train_located_event_current.sql');
     expect(code).toContain('path: ./functions/upsert_train_located_event.sql');
-    expect(code.split('\n').length).toEqual(9); // comment (1), resources (4x2)
+    expect(code.split('\n').length).toEqual(11); // comment (1), resources (5x2)
     expect(code).toMatchSnapshot();
   });
   it('should look right for a domain object with updatable array properties', () => {
@@ -150,10 +156,15 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
           },
         },
         leadEngineerUuid: { name: 'leadEngineerUuid', type: DomainObjectPropertyType.STRING },
+        sensorUuids: {
+          name: 'sensorUuids',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.STRING },
+        },
       },
       decorations: {
         unique: ['uuid'],
-        updatable: ['locomotiveUuids', 'leadEngineerUuid'],
+        updatable: ['locomotiveUuids', 'leadEngineerUuid', 'sensorUuids'],
       },
     });
     const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
@@ -173,10 +184,11 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
     expect(code).toContain('path: ./tables/train_to_badge.sql');
     expect(code).toContain('path: ./tables/train.sql');
     expect(code).toContain('path: ./tables/train_version_to_locomotive.sql');
+    expect(code).toContain('path: ./tables/train_version_to_sensor_uuid.sql');
     expect(code).toContain('path: ./tables/train_cvp.sql');
     expect(code).toContain('path: ./views/view_train_current.sql');
     expect(code).toContain('path: ./functions/upsert_train.sql');
-    expect(code.split('\n').length).toEqual(15); // comment (1), resources (7x2)
+    expect(code.split('\n').length).toEqual(17); // comment (1), resources (8x2)
     expect(code).toMatchSnapshot();
   });
 });

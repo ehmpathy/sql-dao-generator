@@ -72,6 +72,7 @@ export const trainEngineer = new Entity({
   properties: {
     social_security_number_hash: prop.VARCHAR(),
     certificate_ids: { ...prop.ARRAY_OF(prop.REFERENCES(certificate)), updatable: true },
+    license_uuids: { ...prop.ARRAY_OF(prop.UUID()), updatable: true },
     name: { ...prop.VARCHAR(), updatable: true },
   },
   unique: ['social_security_number_hash'],

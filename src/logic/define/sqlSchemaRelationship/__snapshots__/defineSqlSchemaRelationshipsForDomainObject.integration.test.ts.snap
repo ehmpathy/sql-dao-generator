@@ -337,6 +337,27 @@ Array [
       },
       Object {
         "domainObject": DomainObjectPropertyMetadata {
+          "name": "licenseUuids",
+          "nullable": false,
+          "of": Object {
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "required": true,
+          "type": "ARRAY",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": true,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": true,
+          "name": "license_uuids",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
           "name": "name",
           "nullable": false,
           "required": true,
