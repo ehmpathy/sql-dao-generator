@@ -54,6 +54,10 @@ If you'd like to store an array of data, try one of the following:
       });
     }
 
+    // handle uuid properties, for added performance
+    const endsWithUuidSuffix = new RegExp(/_uuid$/).test(sqlSchemaProperty.name);
+    if (endsWithUuidSuffix && domainObjectProperty.type === DomainObjectPropertyType.STRING) return 'prop.UUID()';
+
     // handle primitives
     if (domainObjectProperty.type === DomainObjectPropertyType.STRING) return 'prop.VARCHAR()'; // note: varchar without precision is what postgres defines as best practice (precision does not affect size)
     if (domainObjectProperty.type === DomainObjectPropertyType.NUMBER) return 'prop.NUMERIC()'; // note: numeric without precision is a good choice for 90%+ of use cases, since precision of numeric does not affect size. if user needs more fine tuning, they can mod the generated entity directly; for long term: https://github.com/uladkasach/sql-dao-generator/issues/1
