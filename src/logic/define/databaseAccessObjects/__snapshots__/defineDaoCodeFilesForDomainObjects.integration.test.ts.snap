@@ -227,7 +227,7 @@ export const castFromDatabaseObject = (
   new Certificate({
     id: dbObject.id,
     type: dbObject.type as Certificate['type'],
-    cid: dbObject.cid,
+    industryId: dbObject.industry_id,
   }) as HasId<Certificate>;",
     "relpath": "certificateDao/castFromDatabaseObject.ts",
   },
@@ -245,7 +245,7 @@ export const sql = \`
   SELECT
     certificate.id,
     certificate.type,
-    certificate.cid
+    certificate.industry_id
   FROM certificate
   WHERE certificate.id = :id;
 \`;
@@ -285,28 +285,28 @@ export const sql = \`
   SELECT
     certificate.id,
     certificate.type,
-    certificate.cid
+    certificate.industry_id
   FROM certificate
   WHERE 1=1
     AND certificate.type = :type
-    AND certificate.cid = :cid;
+    AND certificate.industry_id = :industryId;
 \`;
 
 export const findByUnique = async ({
   dbConnection,
   type,
-  cid,
+  industryId,
 }: {
   dbConnection: DatabaseConnection;
   type: Certificate['type'];
-  cid: string;
+  industryId: string;
 }): Promise<HasId<Certificate> | null> => {
   const results = await sqlQueryFindCertificateByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
     input: {
       type,
-      cid,
+      industryId,
     },
   });
   const [dbObject, ...moreDbObjects] = results;
@@ -330,7 +330,7 @@ export const sql = \`
     dgv.id
   FROM upsert_certificate(
     :type,
-    :cid
+    :industryId
   ) as dgv;
 \`;
 
@@ -346,7 +346,7 @@ export const upsert = async ({
     logDebug: log.debug,
     input: {
       type: certificate.type,
-      cid: certificate.cid,
+      industryId: certificate.industryId,
     },
   });
   const { id } = results[0]; // grab the db generated values
@@ -409,7 +409,7 @@ export const sql = \`
           json_build_object(
             'id', certificate.id,
             'type', certificate.type,
-            'cid', certificate.cid
+            'industry_id', certificate.industry_id
           )
           ORDER BY certificate_ref.array_order_index
         ),
@@ -468,7 +468,7 @@ export const sql = \`
           json_build_object(
             'id', certificate.id,
             'type', certificate.type,
-            'cid', certificate.cid
+            'industry_id', certificate.industry_id
           )
           ORDER BY certificate_ref.array_order_index
         ),
@@ -528,7 +528,7 @@ export const sql = \`
           json_build_object(
             'id', certificate.id,
             'type', certificate.type,
-            'cid', certificate.cid
+            'industry_id', certificate.industry_id
           )
           ORDER BY certificate_ref.array_order_index
         ),

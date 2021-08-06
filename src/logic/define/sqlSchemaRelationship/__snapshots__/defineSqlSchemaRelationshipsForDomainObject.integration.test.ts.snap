@@ -121,7 +121,7 @@ Array [
         "domainObject": null,
         "sqlSchema": Array [
           "type",
-          "cid",
+          "industry_id",
         ],
       },
     },
@@ -191,7 +191,7 @@ Array [
       },
       Object {
         "domainObject": DomainObjectPropertyMetadata {
-          "name": "cid",
+          "name": "industryId",
           "nullable": false,
           "required": true,
           "type": "STRING",
@@ -201,7 +201,7 @@ Array [
           "isDatabaseGenerated": false,
           "isNullable": false,
           "isUpdatable": false,
-          "name": "cid",
+          "name": "industry_id",
           "reference": null,
         },
       },

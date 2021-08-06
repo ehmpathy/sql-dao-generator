@@ -9,6 +9,6 @@ export enum CertificateType {
 export interface Certificate {
   id?: number;
   type: CertificateType;
-  cid: string;
+  industryId: string;
 }
 export class Certificate extends DomainValueObject<Certificate> implements Certificate {}

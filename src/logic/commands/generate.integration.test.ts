@@ -313,7 +313,7 @@ describe('generate', () => {
             certificates: [
               new Certificate({
                 type: CertificateType.LOCOMOTIVE_DRIVING,
-                cid: 'super-train-driving-deluxe-experience',
+                industryId: 'super-train-driving-deluxe-experience',
               }),
             ],
             licenseUuids: [uuid()],

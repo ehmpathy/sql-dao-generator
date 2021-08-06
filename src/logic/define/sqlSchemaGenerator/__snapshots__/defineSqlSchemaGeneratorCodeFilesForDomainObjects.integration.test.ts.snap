@@ -54,7 +54,7 @@ export const certificate = new ValueObject({
   name: 'certificate',
   properties: {
     type: prop.ENUM(['LOCOMOTIVE_DRIVING', 'ENGINE_MAINTENANCE', 'CARRIAGE_MAINTENANCE']),
-    cid: prop.VARCHAR(),
+    industry_id: prop.VARCHAR(),
   },
 });",
     "relpath": "certificate.ts",
