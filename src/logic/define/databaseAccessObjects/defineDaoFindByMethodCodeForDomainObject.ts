@@ -303,9 +303,10 @@ export const findBy${findByQueryType} = async ({
       ${queryFunctionInputExpressions.join(',\n      ')},
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };
 
 `.trim();

@@ -22,11 +22,9 @@ export const geocodeDao = {
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
-export const castFromDatabaseObject = ({
-  dbObject,
-}: {
-  dbObject: SqlQueryFindGeocodeByIdOutput;
-}): HasId<HasUuid<Geocode>> =>
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindGeocodeByIdOutput,
+): HasId<HasUuid<Geocode>> =>
   new Geocode({
     id: dbObject.id,
     uuid: dbObject.uuid,
@@ -69,9 +67,10 @@ export const findById = async ({
       id,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "geocodeDao/findById.ts",
   },
@@ -114,9 +113,10 @@ export const findByUnique = async ({
       longitude,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "geocodeDao/findByUnique.ts",
   },
@@ -154,9 +154,10 @@ export const findByUuid = async ({
       uuid,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "geocodeDao/findByUuid.ts",
   },
@@ -221,11 +222,9 @@ export const geocodeDao = {
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
-export const castFromDatabaseObject = ({
-  dbObject,
-}: {
-  dbObject: SqlQueryFindGeocodeByIdOutput;
-}): HasId<Geocode> =>
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindGeocodeByIdOutput,
+): HasId<Geocode> =>
   new Geocode({
     id: dbObject.id,
     latitude: dbObject.latitude,
@@ -266,9 +265,10 @@ export const findById = async ({
       id,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "geocodeDao/findById.ts",
   },
@@ -310,9 +310,10 @@ export const findByUnique = async ({
       longitude,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "geocodeDao/findByUnique.ts",
   },

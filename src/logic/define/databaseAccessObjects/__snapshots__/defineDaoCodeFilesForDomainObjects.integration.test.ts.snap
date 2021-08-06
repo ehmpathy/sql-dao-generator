@@ -22,11 +22,9 @@ export const carriageDao = {
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindCarriageByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
-export const castFromDatabaseObject = ({
-  dbObject,
-}: {
-  dbObject: SqlQueryFindCarriageByIdOutput;
-}): HasId<HasUuid<Carriage>> =>
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindCarriageByIdOutput,
+): HasId<HasUuid<Carriage>> =>
   new Carriage({
     id: dbObject.id,
     uuid: dbObject.uuid,
@@ -71,9 +69,10 @@ export const findById = async ({
       id,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "carriageDao/findById.ts",
   },
@@ -113,9 +112,10 @@ export const findByUnique = async ({
       uuid,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "carriageDao/findByUnique.ts",
   },
@@ -154,9 +154,10 @@ export const findByUuid = async ({
       uuid,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "carriageDao/findByUuid.ts",
   },
@@ -220,11 +221,9 @@ export const certificateDao = {
 import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindCertificateByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
-export const castFromDatabaseObject = ({
-  dbObject,
-}: {
-  dbObject: SqlQueryFindCertificateByIdOutput;
-}): HasId<Certificate> =>
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindCertificateByIdOutput,
+): HasId<Certificate> =>
   new Certificate({
     id: dbObject.id,
     type: dbObject.type as Certificate['type'],
@@ -265,9 +264,10 @@ export const findById = async ({
       id,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "certificateDao/findById.ts",
   },
@@ -309,9 +309,10 @@ export const findByUnique = async ({
       cid,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "certificateDao/findByUnique.ts",
   },
@@ -370,19 +371,18 @@ export const trainEngineerDao = {
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
 
-import { Certificate, TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindTrainEngineerByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindCertificateByIdOutput, SqlQueryFindTrainEngineerByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castCertificateFromDatabaseObject } from '../certificateDao/castFromDatabaseObject';
 
-export const castFromDatabaseObject = ({
-  dbObject,
-}: {
-  dbObject: SqlQueryFindTrainEngineerByIdOutput;
-}): HasId<HasUuid<TrainEngineer>> =>
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindTrainEngineerByIdOutput,
+): HasId<HasUuid<TrainEngineer>> =>
   new TrainEngineer({
     id: dbObject.id,
     uuid: dbObject.uuid,
     socialSecurityNumberHash: dbObject.social_security_number_hash,
-    certificates: (dbObject.certificates as Certificate[]).map((certificate) => new Certificate(certificate)),
+    certificates: (dbObject.certificates as SqlQueryFindCertificateByIdOutput[]).map(castCertificateFromDatabaseObject),
     licenseUuids: dbObject.license_uuids as string[],
     name: dbObject.name,
   }) as HasId<HasUuid<TrainEngineer>>;",
@@ -440,9 +440,10 @@ export const findById = async ({
       id,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "trainEngineerDao/findById.ts",
   },
@@ -499,9 +500,10 @@ export const findByUnique = async ({
       socialSecurityNumberHash,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "trainEngineerDao/findByUnique.ts",
   },
@@ -557,9 +559,10 @@ export const findByUuid = async ({
       uuid,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "trainEngineerDao/findByUuid.ts",
   },
@@ -624,11 +627,9 @@ export const geocodeDao = {
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
-export const castFromDatabaseObject = ({
-  dbObject,
-}: {
-  dbObject: SqlQueryFindGeocodeByIdOutput;
-}): HasId<Geocode> =>
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindGeocodeByIdOutput,
+): HasId<Geocode> =>
   new Geocode({
     id: dbObject.id,
     latitude: dbObject.latitude,
@@ -669,9 +670,10 @@ export const findById = async ({
       id,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "geocodeDao/findById.ts",
   },
@@ -713,9 +715,10 @@ export const findByUnique = async ({
       longitude,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "geocodeDao/findByUnique.ts",
   },
@@ -774,18 +777,17 @@ export const trainDao = {
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
 
-import { Geocode, Train } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
 
-export const castFromDatabaseObject = ({
-  dbObject,
-}: {
-  dbObject: SqlQueryFindTrainByIdOutput;
-}): HasId<HasUuid<Train>> =>
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindTrainByIdOutput,
+): HasId<HasUuid<Train>> =>
   new Train({
     id: dbObject.id,
     uuid: dbObject.uuid,
-    homeStationGeocode: new Geocode(dbObject.home_station_geocode as Geocode),
+    homeStationGeocode: castGeocodeFromDatabaseObject(dbObject.home_station_geocode as SqlQueryFindGeocodeByIdOutput),
     combinationId: dbObject.combination_id,
     locomotiveUuids: dbObject.locomotive_uuids as string[],
     carriageUuids: dbObject.carriage_uuids as string[],
@@ -862,9 +864,10 @@ export const findById = async ({
       id,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "trainDao/findById.ts",
   },
@@ -936,9 +939,10 @@ export const findByUnique = async ({
       combinationId,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "trainDao/findByUnique.ts",
   },
@@ -1009,9 +1013,10 @@ export const findByUuid = async ({
       uuid,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "trainDao/findByUuid.ts",
   },
@@ -1102,11 +1107,9 @@ export const locomotiveDao = {
 import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindLocomotiveByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
-export const castFromDatabaseObject = ({
-  dbObject,
-}: {
-  dbObject: SqlQueryFindLocomotiveByIdOutput;
-}): HasId<HasUuid<Locomotive>> =>
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindLocomotiveByIdOutput,
+): HasId<HasUuid<Locomotive>> =>
   new Locomotive({
     id: dbObject.id,
     uuid: dbObject.uuid,
@@ -1159,9 +1162,10 @@ export const findById = async ({
       id,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "locomotiveDao/findById.ts",
   },
@@ -1205,9 +1209,10 @@ export const findByUnique = async ({
       ein,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "locomotiveDao/findByUnique.ts",
   },
@@ -1250,9 +1255,10 @@ export const findByUuid = async ({
       uuid,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "locomotiveDao/findByUuid.ts",
   },
@@ -1313,19 +1319,18 @@ export const trainLocatedEventDao = {
   GeneratedCodeFile {
     "content": "import { HasId } from 'simple-type-guards';
 
-import { Geocode, TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
 
-export const castFromDatabaseObject = ({
-  dbObject,
-}: {
-  dbObject: SqlQueryFindTrainLocatedEventByIdOutput;
-}): HasId<TrainLocatedEvent> =>
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindTrainLocatedEventByIdOutput,
+): HasId<TrainLocatedEvent> =>
   new TrainLocatedEvent({
     id: dbObject.id,
     trainUuid: dbObject.train_uuid,
     occurredAt: dbObject.occurred_at,
-    geocode: new Geocode(dbObject.geocode as Geocode),
+    geocode: castGeocodeFromDatabaseObject(dbObject.geocode as SqlQueryFindGeocodeByIdOutput),
   }) as HasId<TrainLocatedEvent>;",
     "relpath": "trainLocatedEventDao/castFromDatabaseObject.ts",
   },
@@ -1373,9 +1378,10 @@ export const findById = async ({
       id,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "trainLocatedEventDao/findById.ts",
   },
@@ -1428,9 +1434,10 @@ export const findByUnique = async ({
       occurredAt,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "trainLocatedEventDao/findByUnique.ts",
   },
@@ -1492,18 +1499,17 @@ export const trainStationDao = {
   GeneratedCodeFile {
     "content": "import { HasId, HasUuid } from 'simple-type-guards';
 
-import { Geocode, TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindTrainStationByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainStationByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
 
-export const castFromDatabaseObject = ({
-  dbObject,
-}: {
-  dbObject: SqlQueryFindTrainStationByIdOutput;
-}): HasId<HasUuid<TrainStation>> =>
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindTrainStationByIdOutput,
+): HasId<HasUuid<TrainStation>> =>
   new TrainStation({
     id: dbObject.id,
     uuid: dbObject.uuid,
-    geocode: new Geocode(dbObject.geocode as Geocode),
+    geocode: castGeocodeFromDatabaseObject(dbObject.geocode as SqlQueryFindGeocodeByIdOutput),
     name: dbObject.name,
   }) as HasId<HasUuid<TrainStation>>;",
     "relpath": "trainStationDao/castFromDatabaseObject.ts",
@@ -1549,9 +1555,10 @@ export const findById = async ({
       id,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "trainStationDao/findById.ts",
   },
@@ -1597,9 +1604,10 @@ export const findByUnique = async ({
       geocodeId: geocode.id,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "trainStationDao/findByUnique.ts",
   },
@@ -1644,9 +1652,10 @@ export const findByUuid = async ({
       uuid,
     },
   });
-  if (results.length > 1) throw new Error('should only be one');
-  if (!results.length) return null;
-  return castFromDatabaseObject({ dbObject: results[0] });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
 };",
     "relpath": "trainStationDao/findByUuid.ts",
   },

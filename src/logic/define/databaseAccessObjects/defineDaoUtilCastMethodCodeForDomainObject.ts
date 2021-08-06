@@ -38,8 +38,19 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
     // always present imports
     `import { HasId${hasUuidProperty ? ', HasUuid' : ''} } from 'simple-type-guards';`,
     '', // split module from relative imports
-    `import { ${[domainObject.name, ...nestedDomainObjectNames].sort().join(', ')} } from '$PATH_TO_DOMAIN_OBJECT';`, // import this domain object; note: higher level function will swap out the import path
-    `import { SqlQueryFind${domainObject.name}ByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';`,
+    `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`, // import this domain object; note: higher level function will swap out the import path
+    `import { ${[domainObject.name, ...nestedDomainObjectNames]
+      .map((domainObjectName) => `SqlQueryFind${domainObjectName}ByIdOutput`)
+      .sort()
+      .join(', ')} } from '$PATH_TO_GENERATED_SQL_TYPES';`,
+    ...nestedDomainObjectNames
+      .map(
+        (domainObjectName) =>
+          `import { castFromDatabaseObject as cast${domainObjectName}FromDatabaseObject } from '../${camelCase(
+            domainObjectName,
+          )}Dao/castFromDatabaseObject';`,
+      )
+      .sort(),
   ];
 
   // define the output type
@@ -82,16 +93,16 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
       if (sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.DIRECT_BY_NESTING) {
         // solo reference case
         if (!sqlSchemaProperty.isArray)
-          return `${domainObjectProperty.name}: new ${sqlSchemaProperty.reference.of.name}(dbObject.${snakeCase(
-            domainObjectProperty.name,
-          )} as ${sqlSchemaProperty.reference.of.name})`;
+          return `${domainObjectProperty.name}: cast${
+            sqlSchemaProperty.reference.of.name
+          }FromDatabaseObject(dbObject.${snakeCase(domainObjectProperty.name)} as SqlQueryFind${
+            sqlSchemaProperty.reference.of.name
+          }ByIdOutput)`;
 
         // array reference case
-        return `${domainObjectProperty.name}: (dbObject.${snakeCase(domainObjectProperty.name)} as ${
+        return `${domainObjectProperty.name}: (dbObject.${snakeCase(domainObjectProperty.name)} as SqlQueryFind${
           sqlSchemaProperty.reference.of.name
-        }[]).map((${camelCase(sqlSchemaProperty.reference.of.name)}) => new ${
-          sqlSchemaProperty.reference.of.name
-        }(${camelCase(sqlSchemaProperty.reference.of.name)}))`;
+        }ByIdOutput[]).map(cast${sqlSchemaProperty.reference.of.name}FromDatabaseObject)`;
       }
 
       // handle unexpected case (each case should have been handled above)
@@ -107,11 +118,9 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
   const code = `
 ${imports.join('\n')}
 
-export const castFromDatabaseObject = ({
-  dbObject,
-}: {
-  dbObject: SqlQueryFind${domainObject.name}ByIdOutput;
-}): ${outputType} =>
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFind${domainObject.name}ByIdOutput,
+): ${outputType} =>
   new ${domainObject.name}({
     ${propertiesToInstantiate.join(',\n    ')},
   }) as ${outputType};

@@ -33,7 +33,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
     // log an example
     expect(code).toContain("import { Geocode } from '$PATH_TO_DOMAIN_OBJECT'");
     expect(code).toContain("import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';");
-    expect(code).toContain('dbObject: SqlQueryFindGeocodeByIdOutput;');
+    expect(code).toContain('dbObject: SqlQueryFindGeocodeByIdOutput');
     expect(code).toContain('new Geocode({');
     expect(code).toMatchSnapshot();
   });
@@ -73,7 +73,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
     // log an example
     expect(code).toContain("import { Carriage } from '$PATH_TO_DOMAIN_OBJECT'");
     expect(code).toContain("import { SqlQueryFindCarriageByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';");
-    expect(code).toContain('dbObject: SqlQueryFindCarriageByIdOutput;');
+    expect(code).toContain('dbObject: SqlQueryFindCarriageByIdOutput');
     expect(code).toContain('new Carriage({');
     expect(code).toMatchSnapshot();
   });
@@ -116,11 +116,18 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
     });
 
     // log an example
-    expect(code).toContain("import { Geocode, TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT'");
-    expect(code).toContain("import { SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';");
-    expect(code).toContain('dbObject: SqlQueryFindTrainLocatedEventByIdOutput;');
+    expect(code).toContain("import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT'");
+    expect(code).toContain(
+      "import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';",
+    );
+    expect(code).toContain(
+      "import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';",
+    );
+    expect(code).toContain('dbObject: SqlQueryFindTrainLocatedEventByIdOutput');
     expect(code).toContain('new TrainLocatedEvent({');
-    expect(code).toContain('geocodes: (dbObject.geocodes as Geocode[]).map((geocode) => new Geocode(geocode))'); // instantiate nested array of geocodes
+    expect(code).toContain(
+      'geocodes: (dbObject.geocodes as SqlQueryFindGeocodeByIdOutput[]).map(castGeocodeFromDatabaseObject)',
+    ); // instantiate nested array of geocodes
     expect(code).toMatchSnapshot();
   });
   it('should look correct for domain entity with references, array and solo, implicit and direct', () => {
@@ -181,13 +188,25 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
     });
 
     // log an example
-    expect(code).toContain("import { Geocode, Train, TrainBadge } from '$PATH_TO_DOMAIN_OBJECT'");
-    expect(code).toContain("import { SqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';");
-    expect(code).toContain('dbObject: SqlQueryFindTrainByIdOutput;');
+    expect(code).toContain("import { Train } from '$PATH_TO_DOMAIN_OBJECT'");
+    expect(code).toContain(
+      "import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainBadgeByIdOutput, SqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';",
+    );
+    expect(code).toContain(
+      "import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';",
+    );
+    expect(code).toContain(
+      "import { castFromDatabaseObject as castTrainBadgeFromDatabaseObject } from '../trainBadgeDao/castFromDatabaseObject';",
+    );
+    expect(code).toContain('dbObject: SqlQueryFindTrainByIdOutput');
     expect(code).toContain('new Train({');
-    expect(code).toContain('homeStationGeocode: new Geocode(dbObject.home_station_geocode as Geocode)'); // instantiate nested array of geocodes
+    expect(code).toContain(
+      'homeStationGeocode: castGeocodeFromDatabaseObject(dbObject.home_station_geocode as SqlQueryFindGeocodeByIdOutput)',
+    ); // instantiate nested array of geocodes
     expect(code).toContain('leadEngineerUuid: dbObject.lead_engineer_uuid');
-    expect(code).toContain('badges: (dbObject.badges as TrainBadge[]).map((trainBadge) => new TrainBadge(trainBadge))'); // instantiate nested array of geocodes
+    expect(code).toContain(
+      'badges: (dbObject.badges as SqlQueryFindTrainBadgeByIdOutput[]).map(castTrainBadgeFromDatabaseObject)',
+    ); // instantiate nested array of geocodes
     expect(code).toContain('locomotiveUuids: dbObject.locomotive_uuids as string[]');
     expect(code).toMatchSnapshot();
   });
