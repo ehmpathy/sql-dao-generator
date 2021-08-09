@@ -81,22 +81,21 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
     domainObject.name, // the domain object itself is always referenced
     ...(findByQueryType === FindByQueryType.UNIQUE
       ? sqlSchemaRelationship.properties
-          .map(({ domainObject: domainObjectProperty }) => {
+          .map(({ domainObject: domainObjectProperty, sqlSchema: sqlSchemaProperty }) => {
             // if its not explicitly defined property, then not needed in imports
             if (!domainObjectProperty) return null;
 
             // if its not part of the unique key, then its not needed in imports
-            if (!sqlSchemaRelationship.decorations.unique.domainObject?.includes(domainObjectProperty.name))
-              return null;
+            if (!sqlSchemaRelationship.decorations.unique.sqlSchema?.includes(sqlSchemaProperty.name)) return null;
 
-            // if its a solo reference to a domain value object, then needed in imports
+            // if its a solo reference to a domain value object, then its needed
             if (
               isDomainObjectReferenceProperty(domainObjectProperty) &&
               domainObjectProperty.of.extends === DomainObjectVariant.DOMAIN_VALUE_OBJECT
             )
               return domainObjectProperty.of.name;
 
-            // if its a array reference to a domain value object, then we care
+            // if its a array reference to a domain value object, then its needed
             if (
               isDomainObjectArrayProperty(domainObjectProperty) &&
               isDomainObjectReferenceProperty(domainObjectProperty.of) &&

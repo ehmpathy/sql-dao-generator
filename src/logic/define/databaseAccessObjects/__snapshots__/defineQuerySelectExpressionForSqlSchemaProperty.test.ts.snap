@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`defineQuerySelectExpressionForSqlSchemaProperty should define the select expression correctly for a solo DIRECT_BY_NESTING reference 1`] = `
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for a solo DIRECT_BY_NESTING reference 1`] = `
 "(
       SELECT json_build_object(
         'latitude', geocode.latitude,
@@ -10,14 +10,76 @@ exports[`defineQuerySelectExpressionForSqlSchemaProperty should define the selec
     ) AS geocode"
 `;
 
-exports[`defineQuerySelectExpressionForSqlSchemaProperty should define the select expression correctly for a solo IMPLICIT_BY_UUID reference 1`] = `
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for a solo DIRECT_BY_NESTING reference with its own array DIRECT_BY_NESTING reference 1`] = `
 "(
-      SELECT train_engineer.uuid
-      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
-    ) AS lead_engineer_uuid"
+      SELECT json_build_object(
+        'id', invoice_line_item.id,
+        'prices', (
+          SELECT COALESCE(
+            json_agg(
+              json_build_object(
+                'amount', price.amount,
+                'currency', price.currency
+              )
+              ORDER BY price_ref.array_order_index
+            ),
+            '[]'::json
+          ) AS json_agg
+          FROM price
+          JOIN unnest(invoice_line_item.price_ids) WITH ORDINALITY
+            AS price_ref (id, array_order_index)
+            ON price.id = price_ref.id
+        ),
+        'title', invoice_line_item.title
+      ) AS json_build_object
+      FROM invoice_line_item WHERE invoice_line_item.id = invoice.line_item_id
+    ) AS line_item"
 `;
 
-exports[`defineQuerySelectExpressionForSqlSchemaProperty should define the select expression correctly for an array of DIRECT_BY_NESTING reference 1`] = `
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for a solo DIRECT_BY_NESTING reference with its own solo DIRECT_BY_NESTING reference 1`] = `
+"(
+      SELECT json_build_object(
+        'id', invoice_line_item.id,
+        'price', (
+          SELECT json_build_object(
+            'amount', price.amount,
+            'currency', price.currency
+          ) AS json_build_object
+          FROM price WHERE price.id = invoice_line_item.price_id
+        ),
+        'title', invoice_line_item.title
+      ) AS json_build_object
+      FROM invoice_line_item WHERE invoice_line_item.id = invoice.line_item_id
+    ) AS line_item"
+`;
+
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for an array DIRECT_BY_NESTING reference with its own solo DIRECT_BY_NESTING reference 1`] = `
+"(
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', invoice_line_item.id,
+            'price', (
+              SELECT json_build_object(
+                'amount', price.amount,
+                'currency', price.currency
+              ) AS json_build_object
+              FROM price WHERE price.id = invoice_line_item.price_id
+            ),
+            'title', invoice_line_item.title
+          )
+          ORDER BY invoice_line_item_ref.array_order_index
+        ),
+        '[]'::json
+      ) AS json_agg
+      FROM invoice_line_item
+      JOIN unnest(invoice.line_item_ids) WITH ORDINALITY
+        AS invoice_line_item_ref (id, array_order_index)
+        ON invoice_line_item.id = invoice_line_item_ref.id
+    ) AS line_items"
+`;
+
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for an array of DIRECT_BY_NESTING reference 1`] = `
 "(
       SELECT COALESCE(
         json_agg(
@@ -36,7 +98,14 @@ exports[`defineQuerySelectExpressionForSqlSchemaProperty should define the selec
     ) AS geocodes"
 `;
 
-exports[`defineQuerySelectExpressionForSqlSchemaProperty should define the select expression correctly for an array of IMPLICIT_BY_UUID references 1`] = `
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: implicit_by_uuid should define the select expression correctly for a solo IMPLICIT_BY_UUID reference 1`] = `
+"(
+      SELECT train_engineer.uuid
+      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
+    ) AS lead_engineer_uuid"
+`;
+
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: implicit_by_uuid should define the select expression correctly for an array of IMPLICIT_BY_UUID references 1`] = `
 "(
       SELECT COALESCE(array_agg(train_engineer.uuid ORDER BY train_engineer_ref.array_order_index), array[]::uuid[]) AS array_agg
       FROM train_engineer

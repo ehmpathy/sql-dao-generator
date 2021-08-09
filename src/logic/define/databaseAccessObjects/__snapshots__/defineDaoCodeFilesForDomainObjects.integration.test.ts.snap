@@ -1698,5 +1698,634 @@ export const upsert = async ({
 };",
     "relpath": "trainStationDao/upsert.ts",
   },
+  GeneratedCodeFile {
+    "content": "import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { upsert } from './upsert';
+
+export const priceDao = {
+  findById,
+  findByUnique,
+  upsert,
+};",
+    "relpath": "priceDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { Price } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindPriceByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindPriceByIdOutput,
+): HasId<Price> =>
+  new Price({
+    id: dbObject.id,
+    amount: dbObject.amount,
+    currency: dbObject.currency as Price['currency'],
+  }) as HasId<Price>;",
+    "relpath": "priceDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { Price } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindPriceById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_price_by_id
+  SELECT
+    price.id,
+    price.amount,
+    price.currency
+  FROM price
+  WHERE price.id = :id;
+\`;
+
+export const findById = async ({
+  dbConnection,
+  id,
+}: {
+  dbConnection: DatabaseConnection;
+  id: number;
+}): Promise<HasId<Price> | null> => {
+  const results = await sqlQueryFindPriceById({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "priceDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { Price } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindPriceByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_price_by_unique
+  SELECT
+    price.id,
+    price.amount,
+    price.currency
+  FROM price
+  WHERE 1=1
+    AND price.amount = :amount
+    AND price.currency = :currency;
+\`;
+
+export const findByUnique = async ({
+  dbConnection,
+  amount,
+  currency,
+}: {
+  dbConnection: DatabaseConnection;
+  amount: number;
+  currency: Price['currency'];
+}): Promise<HasId<Price> | null> => {
+  const results = await sqlQueryFindPriceByUnique({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      amount,
+      currency,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "priceDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Price } from '$PATH_TO_DOMAIN_OBJECT';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryUpsertPrice } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+
+export const sql = \`
+  -- query_name = upsert_price
+  SELECT
+    dgv.id
+  FROM upsert_price(
+    :amount,
+    :currency
+  ) as dgv;
+\`;
+
+export const upsert = async ({
+  dbConnection,
+  price,
+}: {
+  dbConnection: DatabaseConnection;
+  price: Price;
+}): Promise<HasId<Price>> => {
+  const results = await sqlQueryUpsertPrice({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      amount: price.amount,
+      currency: price.currency,
+    },
+  });
+  const { id } = results[0]; // grab the db generated values
+  return new Price({ ...price, id }) as HasId<Price>;
+};",
+    "relpath": "priceDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { upsert } from './upsert';
+
+export const invoiceLineItemDao = {
+  findById,
+  findByUnique,
+  upsert,
+};",
+    "relpath": "invoiceLineItemDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { InvoiceLineItem } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindInvoiceLineItemByIdOutput, SqlQueryFindPriceByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castPriceFromDatabaseObject } from '../priceDao/castFromDatabaseObject';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindInvoiceLineItemByIdOutput,
+): HasId<InvoiceLineItem> =>
+  new InvoiceLineItem({
+    id: dbObject.id,
+    price: castPriceFromDatabaseObject(dbObject.price as SqlQueryFindPriceByIdOutput),
+    title: dbObject.title,
+    explanation: dbObject.explanation,
+  }) as HasId<InvoiceLineItem>;",
+    "relpath": "invoiceLineItemDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { InvoiceLineItem } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindInvoiceLineItemById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_invoice_line_item_by_id
+  SELECT
+    invoice_line_item.id,
+    (
+      SELECT json_build_object(
+        'id', price.id,
+        'amount', price.amount,
+        'currency', price.currency
+      ) AS json_build_object
+      FROM price WHERE price.id = invoice_line_item.price_id
+    ) AS price,
+    invoice_line_item.title,
+    invoice_line_item.explanation
+  FROM invoice_line_item
+  WHERE invoice_line_item.id = :id;
+\`;
+
+export const findById = async ({
+  dbConnection,
+  id,
+}: {
+  dbConnection: DatabaseConnection;
+  id: number;
+}): Promise<HasId<InvoiceLineItem> | null> => {
+  const results = await sqlQueryFindInvoiceLineItemById({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "invoiceLineItemDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { InvoiceLineItem, Price } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindInvoiceLineItemByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_invoice_line_item_by_unique
+  SELECT
+    invoice_line_item.id,
+    (
+      SELECT json_build_object(
+        'id', price.id,
+        'amount', price.amount,
+        'currency', price.currency
+      ) AS json_build_object
+      FROM price WHERE price.id = invoice_line_item.price_id
+    ) AS price,
+    invoice_line_item.title,
+    invoice_line_item.explanation
+  FROM invoice_line_item
+  WHERE 1=1
+    AND invoice_line_item.price_id = :priceId
+    AND invoice_line_item.title = :title
+    AND invoice_line_item.explanation = :explanation;
+\`;
+
+export const findByUnique = async ({
+  dbConnection,
+  price,
+  title,
+  explanation,
+}: {
+  dbConnection: DatabaseConnection;
+  price: HasId<Price>;
+  title: string;
+  explanation: string;
+}): Promise<HasId<InvoiceLineItem> | null> => {
+  const results = await sqlQueryFindInvoiceLineItemByUnique({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      priceId: price.id,
+      title,
+      explanation,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "invoiceLineItemDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { InvoiceLineItem } from '$PATH_TO_DOMAIN_OBJECT';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryUpsertInvoiceLineItem } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { priceDao } from '../priceDao';
+
+export const sql = \`
+  -- query_name = upsert_invoice_line_item
+  SELECT
+    dgv.id
+  FROM upsert_invoice_line_item(
+    :priceId,
+    :title,
+    :explanation
+  ) as dgv;
+\`;
+
+export const upsert = async ({
+  dbConnection,
+  invoiceLineItem,
+}: {
+  dbConnection: DatabaseConnection;
+  invoiceLineItem: InvoiceLineItem;
+}): Promise<HasId<InvoiceLineItem>> => {
+  const results = await sqlQueryUpsertInvoiceLineItem({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      priceId: invoiceLineItem.price.id ? invoiceLineItem.price.id : (await priceDao.upsert({ dbConnection, price: invoiceLineItem.price })).id,
+      title: invoiceLineItem.title,
+      explanation: invoiceLineItem.explanation,
+    },
+  });
+  const { id } = results[0]; // grab the db generated values
+  return new InvoiceLineItem({ ...invoiceLineItem, id }) as HasId<InvoiceLineItem>;
+};",
+    "relpath": "invoiceLineItemDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+import { upsert } from './upsert';
+
+export const invoiceDao = {
+  findById,
+  findByUnique,
+  findByUuid,
+  upsert,
+};",
+    "relpath": "invoiceDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindInvoiceByIdOutput, SqlQueryFindInvoiceLineItemByIdOutput, SqlQueryFindPriceByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castInvoiceLineItemFromDatabaseObject } from '../invoiceLineItemDao/castFromDatabaseObject';
+import { castFromDatabaseObject as castPriceFromDatabaseObject } from '../priceDao/castFromDatabaseObject';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindInvoiceByIdOutput,
+): HasId<HasUuid<Invoice>> =>
+  new Invoice({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    externalId: dbObject.external_id,
+    items: (dbObject.items as SqlQueryFindInvoiceLineItemByIdOutput[]).map(castInvoiceLineItemFromDatabaseObject),
+    totalPrice: castPriceFromDatabaseObject(dbObject.total_price as SqlQueryFindPriceByIdOutput),
+    status: dbObject.status as Invoice['status'],
+  }) as HasId<HasUuid<Invoice>>;",
+    "relpath": "invoiceDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindInvoiceById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_invoice_by_id
+  SELECT
+    invoice.id,
+    invoice.uuid,
+    invoice.external_id,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', invoice_line_item.id,
+            'price', (
+              SELECT json_build_object(
+                'id', price.id,
+                'amount', price.amount,
+                'currency', price.currency
+              ) AS json_build_object
+              FROM price WHERE price.id = invoice_line_item.price_id
+            ),
+            'title', invoice_line_item.title,
+            'explanation', invoice_line_item.explanation
+          )
+          ORDER BY invoice_line_item_ref.array_order_index
+        ),
+        '[]'::json
+      ) AS json_agg
+      FROM invoice_line_item
+      JOIN unnest(invoice.item_ids) WITH ORDINALITY
+        AS invoice_line_item_ref (id, array_order_index)
+        ON invoice_line_item.id = invoice_line_item_ref.id
+    ) AS items,
+    (
+      SELECT json_build_object(
+        'id', price.id,
+        'amount', price.amount,
+        'currency', price.currency
+      ) AS json_build_object
+      FROM price WHERE price.id = invoice.total_price_id
+    ) AS total_price,
+    invoice.status
+  FROM view_invoice_current AS invoice
+  WHERE invoice.id = :id;
+\`;
+
+export const findById = async ({
+  dbConnection,
+  id,
+}: {
+  dbConnection: DatabaseConnection;
+  id: number;
+}): Promise<HasId<HasUuid<Invoice>> | null> => {
+  const results = await sqlQueryFindInvoiceById({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "invoiceDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindInvoiceByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_invoice_by_unique
+  SELECT
+    invoice.id,
+    invoice.uuid,
+    invoice.external_id,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', invoice_line_item.id,
+            'price', (
+              SELECT json_build_object(
+                'id', price.id,
+                'amount', price.amount,
+                'currency', price.currency
+              ) AS json_build_object
+              FROM price WHERE price.id = invoice_line_item.price_id
+            ),
+            'title', invoice_line_item.title,
+            'explanation', invoice_line_item.explanation
+          )
+          ORDER BY invoice_line_item_ref.array_order_index
+        ),
+        '[]'::json
+      ) AS json_agg
+      FROM invoice_line_item
+      JOIN unnest(invoice.item_ids) WITH ORDINALITY
+        AS invoice_line_item_ref (id, array_order_index)
+        ON invoice_line_item.id = invoice_line_item_ref.id
+    ) AS items,
+    (
+      SELECT json_build_object(
+        'id', price.id,
+        'amount', price.amount,
+        'currency', price.currency
+      ) AS json_build_object
+      FROM price WHERE price.id = invoice.total_price_id
+    ) AS total_price,
+    invoice.status
+  FROM view_invoice_current AS invoice
+  WHERE 1=1
+    AND invoice.external_id = :externalId;
+\`;
+
+export const findByUnique = async ({
+  dbConnection,
+  externalId,
+}: {
+  dbConnection: DatabaseConnection;
+  externalId: string;
+}): Promise<HasId<HasUuid<Invoice>> | null> => {
+  const results = await sqlQueryFindInvoiceByUnique({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      externalId,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "invoiceDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindInvoiceByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_invoice_by_uuid
+  SELECT
+    invoice.id,
+    invoice.uuid,
+    invoice.external_id,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', invoice_line_item.id,
+            'price', (
+              SELECT json_build_object(
+                'id', price.id,
+                'amount', price.amount,
+                'currency', price.currency
+              ) AS json_build_object
+              FROM price WHERE price.id = invoice_line_item.price_id
+            ),
+            'title', invoice_line_item.title,
+            'explanation', invoice_line_item.explanation
+          )
+          ORDER BY invoice_line_item_ref.array_order_index
+        ),
+        '[]'::json
+      ) AS json_agg
+      FROM invoice_line_item
+      JOIN unnest(invoice.item_ids) WITH ORDINALITY
+        AS invoice_line_item_ref (id, array_order_index)
+        ON invoice_line_item.id = invoice_line_item_ref.id
+    ) AS items,
+    (
+      SELECT json_build_object(
+        'id', price.id,
+        'amount', price.amount,
+        'currency', price.currency
+      ) AS json_build_object
+      FROM price WHERE price.id = invoice.total_price_id
+    ) AS total_price,
+    invoice.status
+  FROM view_invoice_current AS invoice
+  WHERE invoice.uuid = :uuid;
+\`;
+
+export const findByUuid = async ({
+  dbConnection,
+  uuid,
+}: {
+  dbConnection: DatabaseConnection;
+  uuid: string;
+}): Promise<HasId<HasUuid<Invoice>> | null> => {
+  const results = await sqlQueryFindInvoiceByUuid({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      uuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "invoiceDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryUpsertInvoice } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { invoiceLineItemDao } from '../invoiceLineItemDao';
+import { priceDao } from '../priceDao';
+
+export const sql = \`
+  -- query_name = upsert_invoice
+  SELECT
+    dgv.id, dgv.uuid
+  FROM upsert_invoice(
+    :externalId,
+    :itemIds,
+    :totalPriceId,
+    :status
+  ) as dgv;
+\`;
+
+export const upsert = async ({
+  dbConnection,
+  invoice,
+}: {
+  dbConnection: DatabaseConnection;
+  invoice: Invoice;
+}): Promise<HasId<HasUuid<Invoice>>> => {
+  const results = await sqlQueryUpsertInvoice({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      externalId: invoice.externalId,
+      itemIds: await Promise.all(invoice.items.map(async (invoiceLineItem) => invoiceLineItem.id ? invoiceLineItem.id : (await invoiceLineItemDao.upsert({ dbConnection, invoiceLineItem })).id)),
+      totalPriceId: invoice.totalPrice.id ? invoice.totalPrice.id : (await priceDao.upsert({ dbConnection, price: invoice.totalPrice })).id,
+      status: invoice.status,
+    },
+  });
+  const { id, uuid } = results[0]; // grab the db generated values
+  return new Invoice({ ...invoice, id, uuid }) as HasId<HasUuid<Invoice>>;
+};",
+    "relpath": "invoiceDao/upsert.ts",
+  },
 ]
 `;

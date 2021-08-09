@@ -6,3 +6,6 @@ export * from './Train';
 export * from './Locomotive';
 export * from './TrainLocatedEvent';
 export * from './Station';
+export * from './Invoice';
+export * from './InvoiceLineItem';
+export * from './Price';

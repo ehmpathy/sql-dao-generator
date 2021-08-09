@@ -665,6 +665,60 @@ async ({
       expect(code).toContain('await sqlQueryFindGeocodeByUnique({');
       expect(code).toMatchSnapshot();
     });
+    it('should look correct for simple value object that references another value object', () => {
+      // define what we're testing on
+      const domainObject = new DomainObjectMetadata({
+        name: 'InvoiceLineItem',
+        extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+        properties: {
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+          price: {
+            name: 'price',
+            type: DomainObjectPropertyType.REFERENCE,
+            of: { extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT, name: 'Price' },
+          },
+        },
+        decorations: {
+          unique: null,
+          updatable: null,
+        },
+      });
+      const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+        domainObject,
+        allDomainObjects: [domainObject],
+      });
+
+      // define referenced domain object
+      const priceSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+        domainObject: new DomainObjectMetadata({
+          name: 'Price',
+          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+          properties: {
+            id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
+            amount: { name: 'amount', type: DomainObjectPropertyType.NUMBER },
+            currency: { name: 'currency', type: DomainObjectPropertyType.STRING },
+          },
+          decorations: {
+            unique: null,
+            updatable: null,
+          },
+        }),
+        allDomainObjects: [],
+      });
+
+      // run it
+      const code = defineDaoFindByMethodCodeForDomainObject({
+        domainObject,
+        sqlSchemaRelationship,
+        allSqlSchemaRelationships: [sqlSchemaRelationship, priceSqlSchemaRelationship],
+        findByQueryType: FindByQueryType.UNIQUE,
+      });
+
+      // log an example
+      expect(code).toContain("import { InvoiceLineItem, Price } from '$PATH_TO_DOMAIN_OBJECT';"); // its should import price, since its nested
+      expect(code).toMatchSnapshot();
+    });
     it('should look correct for simple domain entity', () => {
       // define what we're testing on
       const domainObject = new DomainObjectMetadata({

@@ -581,6 +581,54 @@ export const findByUnique = async ({
 };"
 `;
 
+exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple value object that references another value object 1`] = `
+"import { HasId, HasUuid } from 'simple-type-guards';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { InvoiceLineItem, Price } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindInvoiceLineItemByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_invoice_line_item_by_unique
+  SELECT
+    invoice_line_item.id,
+    invoice_line_item.uuid,
+    (
+      SELECT json_build_object(
+        'id', price.id,
+        'amount', price.amount,
+        'currency', price.currency
+      ) AS json_build_object
+      FROM price WHERE price.id = invoice_line_item.price_id
+    ) AS price
+  FROM invoice_line_item
+  WHERE 1=1
+    AND invoice_line_item.price_id = :priceId;
+\`;
+
+export const findByUnique = async ({
+  dbConnection,
+  price,
+}: {
+  dbConnection: DatabaseConnection;
+  price: HasId<Price>;
+}): Promise<HasId<HasUuid<InvoiceLineItem>> | null> => {
+  const results = await sqlQueryFindInvoiceLineItemByUnique({
+    dbExecute: dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      priceId: price.id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};"
+`;
+
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look for a domain entity unique on a nested domain object 1`] = `
 "import { HasId, HasUuid } from 'simple-type-guards';
 

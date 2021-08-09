@@ -13,7 +13,7 @@ describe('getAllPathsMatchingGlobs', () => {
     expect(files).toContain('src/domain/objects/Train.ts');
     expect(files).toContain('src/domain/objects/TrainLocatedEvent.ts');
     expect(files).toContain('src/domain/objects/Station.ts');
-    expect(files.length).toEqual(10);
+    expect(files.length).toEqual(13);
   });
   it('should return paths that match each glob', async () => {
     const files = await getAllPathsMatchingGlobs({

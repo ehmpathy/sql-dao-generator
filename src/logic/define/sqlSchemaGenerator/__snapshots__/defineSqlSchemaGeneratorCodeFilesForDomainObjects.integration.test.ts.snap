@@ -6,7 +6,10 @@ Array [
     "content": "import { carriage } from './carriage';
 import { certificate } from './certificate';
 import { geocode } from './geocode';
+import { invoice } from './invoice';
+import { invoiceLineItem } from './invoiceLineItem';
 import { locomotive } from './locomotive';
+import { price } from './price';
 import { train } from './train';
 import { trainEngineer } from './trainEngineer';
 import { trainLocatedEvent } from './trainLocatedEvent';
@@ -24,6 +27,9 @@ export const generateSqlSchemasFor = [
   locomotive,
   trainLocatedEvent,
   trainStation,
+  price,
+  invoiceLineItem,
+  invoice,
 ];",
     "relpath": "index.ts",
   },
@@ -175,6 +181,60 @@ export const trainStation = new Entity({
   unique: ['geocode_id'],
 });",
     "relpath": "trainStation.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { prop, ValueObject } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain value object 'Price'
+ */
+export const price = new ValueObject({
+  name: 'price',
+  properties: {
+    amount: prop.NUMERIC(),
+    currency: prop.ENUM(['USD']),
+  },
+});",
+    "relpath": "price.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { prop, ValueObject } from 'sql-schema-generator';
+
+import { price } from './price';
+
+/**
+ * sql-schema for the domain value object 'InvoiceLineItem'
+ */
+export const invoiceLineItem = new ValueObject({
+  name: 'invoice_line_item',
+  properties: {
+    price_id: prop.REFERENCES(price),
+    title: prop.VARCHAR(),
+    explanation: prop.VARCHAR(),
+  },
+});",
+    "relpath": "invoiceLineItem.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+import { invoiceLineItem } from './invoiceLineItem';
+import { price } from './price';
+
+/**
+ * sql-schema for the domain entity 'Invoice'
+ */
+export const invoice = new Entity({
+  name: 'invoice',
+  properties: {
+    external_id: prop.VARCHAR(),
+    item_ids: { ...prop.ARRAY_OF(prop.REFERENCES(invoiceLineItem)), updatable: true },
+    total_price_id: { ...prop.REFERENCES(price), updatable: true },
+    status: { ...prop.ENUM(['PROPOSED', 'ISSUED', 'PAID', 'REFUNDED', 'CANCELED', 'FAILED']), updatable: true },
+  },
+  unique: ['external_id'],
+});",
+    "relpath": "invoice.ts",
   },
 ]
 `;

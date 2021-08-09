@@ -66,6 +66,32 @@ GeneratedCodeFile {
 - type: resource
   path: ./functions/upsert_train_station.sql
 
+# price
+- type: resource
+  path: ./tables/price.sql
+- type: resource
+  path: ./functions/upsert_price.sql
+
+# invoice_line_item
+- type: resource
+  path: ./tables/invoice_line_item.sql
+- type: resource
+  path: ./functions/upsert_invoice_line_item.sql
+
+# invoice
+- type: resource
+  path: ./tables/invoice.sql
+- type: resource
+  path: ./tables/invoice_version.sql
+- type: resource
+  path: ./tables/invoice_version_to_invoice_line_item.sql
+- type: resource
+  path: ./tables/invoice_cvp.sql
+- type: resource
+  path: ./views/view_invoice_current.sql
+- type: resource
+  path: ./functions/upsert_invoice.sql
+
 # train
 - type: resource
   path: ./tables/train.sql

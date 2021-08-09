@@ -59,17 +59,17 @@ Object {
         "extends": "DomainValueObject",
         "name": "Certificate",
         "properties": Object {
-          "cid": DomainObjectPropertyMetadata {
-            "name": "cid",
-            "nullable": false,
-            "required": true,
-            "type": "STRING",
-          },
           "id": DomainObjectPropertyMetadata {
             "name": "id",
             "nullable": false,
             "required": false,
             "type": "NUMBER",
+          },
+          "industryId": DomainObjectPropertyMetadata {
+            "name": "industryId",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
           },
           "type": DomainObjectPropertyMetadata {
             "name": "type",
@@ -109,6 +109,117 @@ Object {
             "nullable": false,
             "required": true,
             "type": "NUMBER",
+          },
+        },
+      },
+      DomainObjectMetadata {
+        "decorations": Object {
+          "unique": Array [
+            "externalId",
+          ],
+          "updatable": Array [
+            "items",
+            "totalPrice",
+            "status",
+          ],
+        },
+        "extends": "DomainEntity",
+        "name": "Invoice",
+        "properties": Object {
+          "externalId": DomainObjectPropertyMetadata {
+            "name": "externalId",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "id": DomainObjectPropertyMetadata {
+            "name": "id",
+            "nullable": false,
+            "required": false,
+            "type": "NUMBER",
+          },
+          "items": DomainObjectPropertyMetadata {
+            "name": "items",
+            "nullable": false,
+            "of": Object {
+              "nullable": false,
+              "of": DomainObjectReferenceMetadata {
+                "extends": "DomainValueObject",
+                "name": "InvoiceLineItem",
+              },
+              "required": true,
+              "type": "REFERENCE",
+            },
+            "required": true,
+            "type": "ARRAY",
+          },
+          "status": DomainObjectPropertyMetadata {
+            "name": "status",
+            "nullable": false,
+            "of": Array [
+              "PROPOSED",
+              "ISSUED",
+              "PAID",
+              "REFUNDED",
+              "CANCELED",
+              "FAILED",
+            ],
+            "required": true,
+            "type": "ENUM",
+          },
+          "totalPrice": DomainObjectPropertyMetadata {
+            "name": "totalPrice",
+            "nullable": false,
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainValueObject",
+              "name": "Price",
+            },
+            "required": true,
+            "type": "REFERENCE",
+          },
+          "uuid": DomainObjectPropertyMetadata {
+            "name": "uuid",
+            "nullable": false,
+            "required": false,
+            "type": "STRING",
+          },
+        },
+      },
+      DomainObjectMetadata {
+        "decorations": Object {
+          "unique": null,
+          "updatable": null,
+        },
+        "extends": "DomainValueObject",
+        "name": "InvoiceLineItem",
+        "properties": Object {
+          "explanation": DomainObjectPropertyMetadata {
+            "name": "explanation",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "id": DomainObjectPropertyMetadata {
+            "name": "id",
+            "nullable": false,
+            "required": false,
+            "type": "NUMBER",
+          },
+          "price": DomainObjectPropertyMetadata {
+            "name": "price",
+            "nullable": false,
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainValueObject",
+              "name": "Price",
+            },
+            "required": true,
+            "type": "REFERENCE",
+          },
+          "title": DomainObjectPropertyMetadata {
+            "name": "title",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
           },
         },
       },
@@ -184,6 +295,37 @@ Object {
             "nullable": false,
             "required": false,
             "type": "STRING",
+          },
+        },
+      },
+      DomainObjectMetadata {
+        "decorations": Object {
+          "unique": null,
+          "updatable": null,
+        },
+        "extends": "DomainValueObject",
+        "name": "Price",
+        "properties": Object {
+          "amount": DomainObjectPropertyMetadata {
+            "name": "amount",
+            "nullable": false,
+            "required": true,
+            "type": "NUMBER",
+          },
+          "currency": DomainObjectPropertyMetadata {
+            "name": "currency",
+            "nullable": false,
+            "of": Array [
+              "USD",
+            ],
+            "required": true,
+            "type": "ENUM",
+          },
+          "id": DomainObjectPropertyMetadata {
+            "name": "id",
+            "nullable": false,
+            "required": false,
+            "type": "NUMBER",
           },
         },
       },

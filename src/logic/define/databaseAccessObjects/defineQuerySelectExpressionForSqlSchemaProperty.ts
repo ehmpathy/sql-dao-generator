@@ -1,22 +1,46 @@
 import { camelCase, snakeCase } from 'change-case';
-import { DomainObjectPropertyMetadata } from 'domain-objects-metadata';
+import {
+  DomainObjectPropertyMetadata,
+  isDomainObjectArrayProperty,
+  isDomainObjectReferenceProperty,
+} from 'domain-objects-metadata';
 
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
 import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
-import { UserInputError } from '../../UserInputError';
+import { isADirectlyNestedDomainObjectProperty } from '../sqlSchemaRelationship/isADirectlyNestedDomainObjectProperty';
+import { isAUserDefinedDomainObjectProperty } from '../sqlSchemaRelationship/isAUserDefinedDomainObjectProperty';
+
+const indentByNestingDepth = ({
+  depthOfNesting,
+  selectExpression,
+}: {
+  depthOfNesting: number;
+  selectExpression: string;
+}) => {
+  const prefix = Array(depthOfNesting + 2)
+    .fill('  ')
+    .join('');
+  return selectExpression
+    .split('\n')
+    .map((str) => `${prefix}${str}`)
+    .join('\n')
+    .trim();
+};
 
 export const defineQuerySelectExpressionForSqlSchemaProperty = ({
   sqlSchemaName,
   sqlSchemaProperty,
   domainObjectProperty,
   allSqlSchemaRelationships,
+  depthOfNesting = 0,
 }: {
   sqlSchemaName: string;
   sqlSchemaProperty: SqlSchemaPropertyMetadata;
   domainObjectProperty: DomainObjectPropertyMetadata;
   allSqlSchemaRelationships: SqlSchemaToDomainObjectRelationship[];
+  depthOfNesting?: number;
 }): string => {
   // simple case: property is represented in the db simply as a standard column
   if (!sqlSchemaProperty.reference) return `${sqlSchemaName}.${sqlSchemaProperty.name}`;
@@ -32,79 +56,93 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
       domainObjectPropertyName: domainObjectProperty.name,
     }); // fail fast, this should not occur
   const referencedSqlSchemaName = referencedSqlSchemaRelationship.name.sqlSchema;
+  const selectExpressionAlias = depthOfNesting === 0 ? ` AS ${snakeCase(domainObjectProperty.name)}` : ''; // alias only required on root level property, not nested ones, since those are named through json syntax already
 
-  // check that its not a DIRECT_BY_NESTING reference to a domain object (one we know will be a domain-value-object) which has its own references (references in references) - we dont support that yet
-  if (
-    sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.DIRECT_BY_NESTING &&
-    referencedSqlSchemaRelationship.properties.some(({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.reference)
-  ) {
-    throw new UserInputError({
-      reason:
-        'generating a dao is not supported for domain-value-objects that reference other domain-value-objects yet. if this is a valid use case, please submit a ticket.',
-      domainObjectName: camelCase(sqlSchemaName),
-      domainObjectPropertyName: domainObjectProperty.name,
-    }); //  nesting domain-value-objects within domain-value-objects is probably edge case enough to not worry about for mvp
-  }
-
-  // single reference case: grab the uuid or properties by id
-  if (!sqlSchemaProperty.isArray) {
-    // if it references by implicit uuid, then we just need to grab the uuid and say its "as" the column
-    if (sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.IMPLICIT_BY_UUID) {
+  // reference by implicit uuid case
+  if (sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.IMPLICIT_BY_UUID) {
+    // solo case
+    if (!sqlSchemaProperty.isArray)
       return `
     (
       SELECT ${referencedSqlSchemaName}.uuid
       FROM ${referencedSqlSchemaName} WHERE ${referencedSqlSchemaName}.id = ${sqlSchemaName}.${sqlSchemaProperty.name}
-    ) AS ${snakeCase(domainObjectProperty.name)}
-        `.trim();
-    }
+    )${selectExpressionAlias}
+          `.trim();
 
-    // if it references it by direct nesting, then we need to get all the props of that object so it can by hydrated on instantiation
-    if (sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.DIRECT_BY_NESTING) {
-      return `
-    (
-      SELECT json_build_object(
-        ${referencedSqlSchemaRelationship.properties
-          .filter(({ domainObject: referencedDomainObjectProperty }) => !!referencedDomainObjectProperty)
-          .map(
-            ({ sqlSchema: referencedSqlSchemaProperty }) =>
-              `'${referencedSqlSchemaProperty.name}', ${referencedSqlSchemaName}.${referencedSqlSchemaProperty.name}`,
-          )
-          .join(',\n        ')}
-      ) AS json_build_object
-      FROM ${referencedSqlSchemaName} WHERE ${referencedSqlSchemaName}.id = ${sqlSchemaName}.${sqlSchemaProperty.name}
-    ) AS ${snakeCase(domainObjectProperty.name)}
-        `.trim();
-    }
-  }
-
-  // array reference case: return a json array of uuids or objects
-  if (sqlSchemaProperty.isArray) {
-    // if it references by implicit uuid, then we just need to grab the uuids and say its "as" the column
-    if (sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.IMPLICIT_BY_UUID) {
-      return `
+    // array case
+    return `
     (
       SELECT COALESCE(array_agg(${referencedSqlSchemaName}.uuid ORDER BY ${referencedSqlSchemaName}_ref.array_order_index), array[]::uuid[]) AS array_agg
       FROM ${referencedSqlSchemaName}
       JOIN unnest(${sqlSchemaName}.${sqlSchemaProperty.name}) WITH ORDINALITY
         AS ${referencedSqlSchemaName}_ref (id, array_order_index)
         ON ${referencedSqlSchemaName}.id = ${referencedSqlSchemaName}_ref.id
-    ) AS ${snakeCase(domainObjectProperty.name)}
+    )${selectExpressionAlias}
       `.trim();
+  }
+
+  // directly nested reference case
+  if (sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.DIRECT_BY_NESTING) {
+    // solo case
+    if (!sqlSchemaProperty.isArray) {
+      return `
+    (
+      SELECT json_build_object(
+        ${referencedSqlSchemaRelationship.properties
+          .filter(isAUserDefinedDomainObjectProperty)
+          .map(({ sqlSchema: referencedSqlSchemaProperty, domainObject: referencedDomainObjectProperty }) => {
+            const jsonKey = isADirectlyNestedDomainObjectProperty({
+              sqlSchema: referencedSqlSchemaProperty,
+              domainObject: referencedDomainObjectProperty,
+            })
+              ? snakeCase(referencedDomainObjectProperty.name) // if its a directly nested domain object reference, then refer to it by domain object name
+              : referencedSqlSchemaProperty.name; // otherwise, by the sql property name
+            const jsonValueSelectExpression = indentByNestingDepth({
+              depthOfNesting,
+              selectExpression: defineQuerySelectExpressionForSqlSchemaProperty({
+                sqlSchemaName: referencedSqlSchemaName,
+                sqlSchemaProperty: referencedSqlSchemaProperty,
+                domainObjectProperty: referencedDomainObjectProperty,
+                allSqlSchemaRelationships,
+                depthOfNesting: depthOfNesting + 1,
+              }),
+            });
+            return `'${jsonKey}', ${jsonValueSelectExpression}`;
+          })
+          .join(',\n        ')}
+      ) AS json_build_object
+      FROM ${referencedSqlSchemaName} WHERE ${referencedSqlSchemaName}.id = ${sqlSchemaName}.${sqlSchemaProperty.name}
+    )${selectExpressionAlias}
+        `.trim();
     }
 
-    // if it references by direct nesting, then we need to get an array of the full objects
-    if (sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.DIRECT_BY_NESTING) {
-      return `
+    // array case
+    return `
     (
       SELECT COALESCE(
         json_agg(
           json_build_object(
             ${referencedSqlSchemaRelationship.properties
-              .filter(({ domainObject: referencedDomainObjectProperty }) => !!referencedDomainObjectProperty)
-              .map(
-                ({ sqlSchema: referencedSqlSchemaProperty }) =>
-                  `'${referencedSqlSchemaProperty.name}', ${referencedSqlSchemaName}.${referencedSqlSchemaProperty.name}`,
-              )
+              .filter(isAUserDefinedDomainObjectProperty)
+              .map(({ sqlSchema: referencedSqlSchemaProperty, domainObject: referencedDomainObjectProperty }) => {
+                const jsonKey = isADirectlyNestedDomainObjectProperty({
+                  sqlSchema: referencedSqlSchemaProperty,
+                  domainObject: referencedDomainObjectProperty,
+                })
+                  ? snakeCase(referencedDomainObjectProperty.name) // if its a directly nested domain object reference, then refer to it by domain object name
+                  : referencedSqlSchemaProperty.name; // otherwise, by the sql property name
+                const jsonValueSelectExpression = indentByNestingDepth({
+                  depthOfNesting: depthOfNesting + 2, // 2, because we wrap in COALESCE + json_agg + json_build_object + its own padding
+                  selectExpression: defineQuerySelectExpressionForSqlSchemaProperty({
+                    sqlSchemaName: referencedSqlSchemaName,
+                    sqlSchemaProperty: referencedSqlSchemaProperty,
+                    domainObjectProperty: referencedDomainObjectProperty,
+                    allSqlSchemaRelationships,
+                    depthOfNesting: depthOfNesting + 1 + 2, // 2, because we wrap in COALESCE + json_agg + json_build_object + its own padding
+                  }),
+                });
+                return `'${jsonKey}', ${jsonValueSelectExpression}`;
+              })
               .join(',\n            ')}
           )
           ORDER BY ${referencedSqlSchemaName}_ref.array_order_index
@@ -115,9 +153,8 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
       JOIN unnest(${sqlSchemaName}.${sqlSchemaProperty.name}) WITH ORDINALITY
         AS ${referencedSqlSchemaName}_ref (id, array_order_index)
         ON ${referencedSqlSchemaName}.id = ${referencedSqlSchemaName}_ref.id
-    ) AS ${snakeCase(domainObjectProperty.name)}
+    )${selectExpressionAlias}
       `.trim();
-    }
   }
 
   // fail fast if we reach here, not expected

@@ -1125,5 +1125,389 @@ Array [
       },
     ],
   },
+  SqlSchemaToDomainObjectRelationship {
+    "decorations": Object {
+      "unique": Object {
+        "domainObject": null,
+        "sqlSchema": Array [
+          "amount",
+          "currency",
+        ],
+      },
+    },
+    "name": Object {
+      "domainObject": "Price",
+      "sqlSchema": "price",
+    },
+    "properties": Array [
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "id",
+          "nullable": false,
+          "required": false,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "id",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "uuid",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "created_at",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "amount",
+          "nullable": false,
+          "required": true,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "amount",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "currency",
+          "nullable": false,
+          "of": Array [
+            "USD",
+          ],
+          "required": true,
+          "type": "ENUM",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "currency",
+          "reference": null,
+        },
+      },
+    ],
+  },
+  SqlSchemaToDomainObjectRelationship {
+    "decorations": Object {
+      "unique": Object {
+        "domainObject": null,
+        "sqlSchema": Array [
+          "price_id",
+          "title",
+          "explanation",
+        ],
+      },
+    },
+    "name": Object {
+      "domainObject": "InvoiceLineItem",
+      "sqlSchema": "invoice_line_item",
+    },
+    "properties": Array [
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "id",
+          "nullable": false,
+          "required": false,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "id",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "uuid",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "created_at",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "price",
+          "nullable": false,
+          "of": DomainObjectReferenceMetadata {
+            "extends": "DomainValueObject",
+            "name": "Price",
+          },
+          "required": true,
+          "type": "REFERENCE",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "price_id",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "DIRECT_BY_NESTING",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainValueObject",
+              "name": "Price",
+            },
+          },
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "title",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "title",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "explanation",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "explanation",
+          "reference": null,
+        },
+      },
+    ],
+  },
+  SqlSchemaToDomainObjectRelationship {
+    "decorations": Object {
+      "unique": Object {
+        "domainObject": Array [
+          "externalId",
+        ],
+        "sqlSchema": Array [
+          "external_id",
+        ],
+      },
+    },
+    "name": Object {
+      "domainObject": "Invoice",
+      "sqlSchema": "invoice",
+    },
+    "properties": Array [
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "id",
+          "nullable": false,
+          "required": false,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "id",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "uuid",
+          "nullable": false,
+          "required": false,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "uuid",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "created_at",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "effective_at",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "updated_at",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "externalId",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "external_id",
+          "reference": null,
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "items",
+          "nullable": false,
+          "of": Object {
+            "nullable": false,
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainValueObject",
+              "name": "InvoiceLineItem",
+            },
+            "required": true,
+            "type": "REFERENCE",
+          },
+          "required": true,
+          "type": "ARRAY",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": true,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": true,
+          "name": "item_ids",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "DIRECT_BY_NESTING",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainValueObject",
+              "name": "InvoiceLineItem",
+            },
+          },
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "totalPrice",
+          "nullable": false,
+          "of": DomainObjectReferenceMetadata {
+            "extends": "DomainValueObject",
+            "name": "Price",
+          },
+          "required": true,
+          "type": "REFERENCE",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": true,
+          "name": "total_price_id",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "DIRECT_BY_NESTING",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainValueObject",
+              "name": "Price",
+            },
+          },
+        },
+      },
+      Object {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "status",
+          "nullable": false,
+          "of": Array [
+            "PROPOSED",
+            "ISSUED",
+            "PAID",
+            "REFUNDED",
+            "CANCELED",
+            "FAILED",
+          ],
+          "required": true,
+          "type": "ENUM",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": true,
+          "name": "status",
+          "reference": null,
+        },
+      },
+    ],
+  },
 ]
 `;

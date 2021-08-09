@@ -2,8 +2,10 @@ import shell from 'shelljs';
 import { HasId, HasUuid } from 'simple-type-guards';
 import uuid, { v4 } from 'uuid';
 
+import { SvcPaymentsPaymentTransactionCurrency } from '../__test_assets__/exampleProject/src/data/clients/svcPayments';
 import { carriageDao } from '../__test_assets__/exampleProject/src/data/dao/carriageDao';
 import { geocodeDao } from '../__test_assets__/exampleProject/src/data/dao/geocodeDao';
+import { invoiceDao } from '../__test_assets__/exampleProject/src/data/dao/invoiceDao';
 import { locomotiveDao } from '../__test_assets__/exampleProject/src/data/dao/locomotiveDao';
 import { trainDao } from '../__test_assets__/exampleProject/src/data/dao/trainDao';
 import { trainEngineerDao } from '../__test_assets__/exampleProject/src/data/dao/trainEngineerDao';
@@ -13,8 +15,12 @@ import {
   Certificate,
   CertificateType,
   Geocode,
+  Invoice,
+  InvoiceLineItem,
+  InvoiceStatus,
   Locomotive,
   LocomotiveFuel,
+  Price,
   Train,
   TrainEngineer,
   TrainStatus,
@@ -417,6 +423,115 @@ describe('generate', () => {
         // now find it
         const foundTrain = await trainDao.findByUnique({ dbConnection, combinationId: train.combinationId });
         expect(foundTrain).toMatchObject(train);
+      });
+    });
+    describe('invoiceDao', () => {
+      it('should be able to upsert', async () => {
+        // define the invoice
+        const invoice = new Invoice({
+          externalId: `cnc-machine:${uuid()}`,
+          items: [
+            new InvoiceLineItem({
+              price: new Price({ amount: 72100, currency: SvcPaymentsPaymentTransactionCurrency.USD }),
+              title: 'Open Source CNC Machine',
+              explanation: 'This is an Open Source CNC Machine.',
+            }),
+            new InvoiceLineItem({
+              price: new Price({ amount: 8100, currency: SvcPaymentsPaymentTransactionCurrency.USD }),
+              title: 'Laser Cutter Adapter',
+              explanation: 'This is the Laser Cutting adapter for the Open Source CNC Machine.',
+            }),
+          ],
+          totalPrice: new Price({ amount: 72100 + 8100, currency: SvcPaymentsPaymentTransactionCurrency.USD }),
+          status: InvoiceStatus.PROPOSED,
+        });
+
+        // upsert it
+        const upsertedInvoice = await invoiceDao.upsert({ dbConnection, invoice });
+        expect(upsertedInvoice).toMatchObject(invoice);
+        expect(upsertedInvoice).toHaveProperty('id', expect.any(Number));
+        expect(upsertedInvoice).toHaveProperty('uuid', expect.any(String));
+      });
+      it('should be able to find by id', async () => {
+        // upsert it
+        const invoice = await invoiceDao.upsert({
+          dbConnection,
+          invoice: new Invoice({
+            externalId: `cnc-machine:${uuid()}`,
+            items: [
+              new InvoiceLineItem({
+                price: new Price({ amount: 72100, currency: SvcPaymentsPaymentTransactionCurrency.USD }),
+                title: 'Open Source CNC Machine',
+                explanation: 'This is an Open Source CNC Machine.',
+              }),
+              new InvoiceLineItem({
+                price: new Price({ amount: 8100, currency: SvcPaymentsPaymentTransactionCurrency.USD }),
+                title: 'Laser Cutter Adapter',
+                explanation: 'This is the Laser Cutting adapter for the Open Source CNC Machine.',
+              }),
+            ],
+            totalPrice: new Price({ amount: 72100 + 8100, currency: SvcPaymentsPaymentTransactionCurrency.USD }),
+            status: InvoiceStatus.PROPOSED,
+          }),
+        });
+
+        // now find it
+        const foundInvoice = await invoiceDao.findById({ dbConnection, id: invoice.id });
+        expect(foundInvoice).toMatchObject(invoice);
+      });
+      it('should be able to find by uuid', async () => {
+        // upsert it
+        const invoice = await invoiceDao.upsert({
+          dbConnection,
+          invoice: new Invoice({
+            externalId: `cnc-machine:${uuid()}`,
+            items: [
+              new InvoiceLineItem({
+                price: new Price({ amount: 72100, currency: SvcPaymentsPaymentTransactionCurrency.USD }),
+                title: 'Open Source CNC Machine',
+                explanation: 'This is an Open Source CNC Machine.',
+              }),
+              new InvoiceLineItem({
+                price: new Price({ amount: 8100, currency: SvcPaymentsPaymentTransactionCurrency.USD }),
+                title: 'Laser Cutter Adapter',
+                explanation: 'This is the Laser Cutting adapter for the Open Source CNC Machine.',
+              }),
+            ],
+            totalPrice: new Price({ amount: 72100 + 8100, currency: SvcPaymentsPaymentTransactionCurrency.USD }),
+            status: InvoiceStatus.PROPOSED,
+          }),
+        });
+
+        // now find it
+        const foundInvoice = await invoiceDao.findByUuid({ dbConnection, uuid: invoice.uuid });
+        expect(foundInvoice).toMatchObject(invoice);
+      });
+      it('should be able to find by unique', async () => {
+        // upsert it
+        const invoice = await invoiceDao.upsert({
+          dbConnection,
+          invoice: new Invoice({
+            externalId: `cnc-machine:${uuid()}`,
+            items: [
+              new InvoiceLineItem({
+                price: new Price({ amount: 72100, currency: SvcPaymentsPaymentTransactionCurrency.USD }),
+                title: 'Open Source CNC Machine',
+                explanation: 'This is an Open Source CNC Machine.',
+              }),
+              new InvoiceLineItem({
+                price: new Price({ amount: 8100, currency: SvcPaymentsPaymentTransactionCurrency.USD }),
+                title: 'Laser Cutter Adapter',
+                explanation: 'This is the Laser Cutting adapter for the Open Source CNC Machine.',
+              }),
+            ],
+            totalPrice: new Price({ amount: 72100 + 8100, currency: SvcPaymentsPaymentTransactionCurrency.USD }),
+            status: InvoiceStatus.PROPOSED,
+          }),
+        });
+
+        // now find it
+        const foundInvoice = await invoiceDao.findByUnique({ dbConnection, externalId: invoice.externalId });
+        expect(foundInvoice).toMatchObject(invoice);
       });
     });
   });
