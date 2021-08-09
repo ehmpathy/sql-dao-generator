@@ -1,6 +1,6 @@
 {
   "name": "sql-dao-generator",
-  "version": "0.1.13",
+  "version": "0.2.0",
   "description": "Generate data-access-objects from your domain-objects.",
   "author": "UladKasach @uladkasach",
   "license": "MIT",
