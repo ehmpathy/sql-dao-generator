@@ -70,7 +70,6 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
   findByQueryType: FindByQueryType;
 }) => {
   // define some useful constants
-  const hasUuidProperty = !!domainObject.properties.uuid;
   const sqlSchemaName = sqlSchemaRelationship.name.sqlSchema;
   const hasCurrentView = sqlSchemaRelationship.properties.some(
     ({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.isUpdatable || sqlSchemaProperty.isArray,
@@ -113,7 +112,7 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
   // define the imports
   const imports = [
     // always present imports
-    `import { HasId${hasUuidProperty ? ', HasUuid' : ''} } from 'simple-type-guards';`,
+    `import { ${referencedDomainObjectNames.length > 1 ? 'HasId, ' : ''}HasMetadata } from 'simple-type-guards';`,
     '', // split module from relative imports
     "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
     "import { log } from '$PATH_TO_LOG_OBJECT';",

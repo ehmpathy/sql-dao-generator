@@ -1,9 +1,5 @@
 import { camelCase, snakeCase } from 'change-case';
-import {
-  DomainObjectPropertyMetadata,
-  isDomainObjectArrayProperty,
-  isDomainObjectReferenceProperty,
-} from 'domain-objects-metadata';
+import { DomainObjectPropertyMetadata } from 'domain-objects-metadata';
 
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
