@@ -19,9 +19,6 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
   domainObject: DomainObjectMetadata;
   sqlSchemaRelationship: SqlSchemaToDomainObjectRelationship;
 }) => {
-  // define some useful constants
-  const hasUuidProperty = !!domainObject.properties.uuid;
-
   // define the referenced domain objects to hydrate
   const nestedDomainObjectNames = Object.values(domainObject.properties)
     .map((property) => {
@@ -36,7 +33,7 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
   // define the imports
   const imports = [
     // always present imports
-    `import { HasId${hasUuidProperty ? ', HasUuid' : ''} } from 'simple-type-guards';`,
+    "import { HasMetadata } from 'simple-type-guards';",
     '', // split module from relative imports
     `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`, // import this domain object; note: higher level function will swap out the import path
     `import { ${[domainObject.name, ...nestedDomainObjectNames]

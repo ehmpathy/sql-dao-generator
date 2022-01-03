@@ -54,7 +54,7 @@ export const upsert = async ({
 }: {
   dbConnection: DatabaseConnection;
   geocode: Geocode;
-}): Promise<HasId<Geocode>>
+}): Promise<HasMetadata<Geocode>>
       `.trim(),
     ); // defines fn correctly
     expect(code).toContain('await sqlQueryUpsertGeocode({');
@@ -121,7 +121,7 @@ async ({
 }: {
   dbConnection: DatabaseConnection;
   carriage: Carriage;
-}): Promise<HasId<HasUuid<Carriage>>>
+}): Promise<HasMetadata<Carriage>>
       `.trim(),
     ); // defines fn correctly
     expect(code).toContain('await sqlQueryUpsertCarriage({');
@@ -191,7 +191,7 @@ async ({
 }: {
   dbConnection: DatabaseConnection;
   carriage: Carriage;
-}): Promise<HasId<HasUuid<Carriage>>>
+}): Promise<HasMetadata<Carriage>>
       `.trim(),
     ); // defines fn correctly
     expect(code).toContain('await sqlQueryUpsertCarriage({');
@@ -289,7 +289,7 @@ async ({
 }: {
   dbConnection: DatabaseConnection;
   trainLocatedEvent: TrainLocatedEvent;
-}): Promise<HasId<TrainLocatedEvent>>
+}): Promise<HasMetadata<TrainLocatedEvent>>
       `.trim(),
     ); // defines fn correctly
     expect(code).toContain('await sqlQueryUpsertTrainLocatedEvent({');
@@ -462,7 +462,7 @@ async ({
 }: {
   dbConnection: DatabaseConnection;
   train: Train;
-}): Promise<HasId<HasUuid<Train>>>
+}): Promise<HasMetadata<Train>>
       `.trim(),
     ); // defines fn correctly
     expect(code).toContain('await sqlQueryUpsertTrain({');

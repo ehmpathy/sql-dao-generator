@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for a domain event with a static referenced array 1`] = `
-"import { HasId } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -42,7 +42,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<TrainLocatedEvent> | null> => {
+}): Promise<HasMetadata<TrainLocatedEvent> | null> => {
   const results = await sqlQueryFindTrainLocatedEventById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -58,7 +58,7 @@ export const findById = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
-"import { HasId, HasUuid } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -119,7 +119,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<HasUuid<Train>> | null> => {
+}): Promise<HasMetadata<Train> | null> => {
   const results = await sqlQueryFindTrainById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -135,7 +135,7 @@ export const findById = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for simple domain entity 1`] = `
-"import { HasId, HasUuid } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -161,7 +161,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<HasUuid<Carriage>> | null> => {
+}): Promise<HasMetadata<Carriage> | null> => {
   const results = await sqlQueryFindCarriageById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -177,7 +177,7 @@ export const findById = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for simple value object 1`] = `
-"import { HasId, HasUuid } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -202,7 +202,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<HasUuid<Geocode>> | null> => {
+}): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -218,7 +218,7 @@ export const findById = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for a domain event with a static referenced array 1`] = `
-"import { HasId } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -262,7 +262,7 @@ export const findByUnique = async ({
   dbConnection: DatabaseConnection;
   trainUuid: string;
   occurredAt: Date;
-}): Promise<HasId<TrainLocatedEvent> | null> => {
+}): Promise<HasMetadata<TrainLocatedEvent> | null> => {
   const results = await sqlQueryFindTrainLocatedEventByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -279,7 +279,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for domain entity that is unique on references, solo and array, implicit and nested 1`] = `
-"import { HasId, HasUuid } from 'simple-type-guards';
+"import { HasId, HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -357,7 +357,7 @@ export const findByUnique = async ({
   badges: HasId<TrainBadge>[];
   locomotiveUuids: string[];
   leadEngineerUuid: string;
-}): Promise<HasId<HasUuid<Train>> | null> => {
+}): Promise<HasMetadata<Train> | null> => {
   const results = await sqlQueryFindTrainByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -376,7 +376,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
-"import { HasId, HasUuid } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -436,7 +436,7 @@ export const findByUnique = async ({
 }: {
   dbConnection: DatabaseConnection;
   tin: string;
-}): Promise<HasId<HasUuid<Train>> | null> => {
+}): Promise<HasMetadata<Train> | null> => {
   const results = await sqlQueryFindTrainByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -452,7 +452,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple domain entity 1`] = `
-"import { HasId, HasUuid } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -479,7 +479,7 @@ export const findByUnique = async ({
 }: {
   dbConnection: DatabaseConnection;
   cin: string;
-}): Promise<HasId<HasUuid<Carriage>> | null> => {
+}): Promise<HasMetadata<Carriage> | null> => {
   const results = await sqlQueryFindCarriageByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -495,7 +495,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple domain entity unique only on uuid 1`] = `
-"import { HasId, HasUuid } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -521,7 +521,7 @@ export const findByUnique = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<HasUuid<Carriage>> | null> => {
+}): Promise<HasMetadata<Carriage> | null> => {
   const results = await sqlQueryFindCarriageByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -537,7 +537,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple value object 1`] = `
-"import { HasId } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -565,7 +565,7 @@ export const findByUnique = async ({
   dbConnection: DatabaseConnection;
   latitude: number;
   longitude: number;
-}): Promise<HasId<Geocode> | null> => {
+}): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -582,7 +582,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple value object that references another value object 1`] = `
-"import { HasId, HasUuid } from 'simple-type-guards';
+"import { HasId, HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -614,7 +614,7 @@ export const findByUnique = async ({
 }: {
   dbConnection: DatabaseConnection;
   price: HasId<Price>;
-}): Promise<HasId<HasUuid<InvoiceLineItem>> | null> => {
+}): Promise<HasMetadata<InvoiceLineItem> | null> => {
   const results = await sqlQueryFindInvoiceLineItemByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -630,7 +630,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look for a domain entity unique on a nested domain object 1`] = `
-"import { HasId, HasUuid } from 'simple-type-guards';
+"import { HasId, HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -662,7 +662,7 @@ export const findByUnique = async ({
 }: {
   dbConnection: DatabaseConnection;
   geocode: HasId<Geocode>;
-}): Promise<HasId<HasUuid<Station>> | null> => {
+}): Promise<HasMetadata<Station> | null> => {
   const results = await sqlQueryFindStationByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -678,7 +678,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for a domain event with a static referenced array 1`] = `
-"import { HasId } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -718,7 +718,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<TrainLocatedEvent> | null> => {
+}): Promise<HasMetadata<TrainLocatedEvent> | null> => {
   const results = await sqlQueryFindTrainLocatedEventByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -734,7 +734,7 @@ export const findByUuid = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
-"import { HasId, HasUuid } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -793,7 +793,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<HasUuid<Train>> | null> => {
+}): Promise<HasMetadata<Train> | null> => {
   const results = await sqlQueryFindTrainByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -809,7 +809,7 @@ export const findByUuid = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for simple domain entity 1`] = `
-"import { HasId, HasUuid } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -835,7 +835,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<HasUuid<Carriage>> | null> => {
+}): Promise<HasMetadata<Carriage> | null> => {
   const results = await sqlQueryFindCarriageByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -851,7 +851,7 @@ export const findByUuid = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for simple value object 1`] = `
-"import { HasId } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -875,7 +875,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<Geocode> | null> => {
+}): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,

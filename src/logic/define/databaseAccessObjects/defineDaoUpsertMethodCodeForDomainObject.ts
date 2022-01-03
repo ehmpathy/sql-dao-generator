@@ -23,13 +23,12 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
 }) => {
   // define some useful constants
   const sqlSchemaName = sqlSchemaRelationship.name.sqlSchema;
-  const hasUuidProperty = !!domainObject.properties.uuid;
   const isUniqueOnUuid = !!domainObject.decorations.unique?.includes('uuid');
 
   // define the imports
   const imports = [
     // always present imports
-    `import { HasId${hasUuidProperty ? ', HasUuid' : ''} } from 'simple-type-guards';`,
+    `import { HasMetadata${isUniqueOnUuid ? ', HasUuid' : ''} } from 'simple-type-guards';`,
     '', // split module from relative imports
     "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
     `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`,

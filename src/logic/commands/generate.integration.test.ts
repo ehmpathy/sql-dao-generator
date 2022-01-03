@@ -1,5 +1,5 @@
 import shell from 'shelljs';
-import { HasId, HasUuid } from 'simple-type-guards';
+import { HasMetadata } from 'simple-type-guards';
 import uuid, { v4 } from 'uuid';
 
 import { SvcPaymentsPaymentTransactionCurrency } from '../__test_assets__/exampleProject/src/data/clients/svcPayments';
@@ -207,7 +207,7 @@ describe('generate', () => {
           cin: 'carriage-to-test',
           carries: CarriagePurpose.FREIGHT,
           capacity: 821,
-        }) as HasUuid<Carriage>;
+        }) as HasMetadata<Carriage>;
         const upsertedCarriage = await carriageDao.upsert({
           dbConnection,
           carriage,
@@ -225,14 +225,14 @@ describe('generate', () => {
             cin: 'carriage-to-test',
             carries: CarriagePurpose.FREIGHT,
             capacity: 821,
-          }) as HasUuid<Carriage>,
+          }) as HasMetadata<Carriage>,
         });
         const carriageNow = await carriageDao.upsert({
           dbConnection,
           carriage: new Carriage({
             ...carriage,
             capacity: 721,
-          }) as HasUuid<Carriage>,
+          }) as HasMetadata<Carriage>,
         });
 
         // check that its the same locomotive
@@ -246,7 +246,7 @@ describe('generate', () => {
             cin: 'carriage-to-test',
             carries: CarriagePurpose.FREIGHT,
             capacity: 821,
-          }) as HasUuid<Carriage>,
+          }) as HasMetadata<Carriage>,
         });
         const foundCarriage = await carriageDao.findById({ dbConnection, id: carriage.id });
         expect(foundCarriage).toEqual(carriage);
@@ -259,7 +259,7 @@ describe('generate', () => {
             cin: 'carriage-to-test',
             carries: CarriagePurpose.FREIGHT,
             capacity: 821,
-          }) as HasUuid<Carriage>,
+          }) as HasMetadata<Carriage>,
         });
         const foundCarriage = await carriageDao.findByUuid({ dbConnection, uuid: carriage.uuid });
         expect(foundCarriage).toEqual(carriage);
@@ -272,17 +272,17 @@ describe('generate', () => {
             cin: 'carriage-to-test',
             carries: CarriagePurpose.FREIGHT,
             capacity: 821,
-          }) as HasUuid<Carriage>,
+          }) as HasMetadata<Carriage>,
         });
         const foundCarriage = await carriageDao.findByUnique({ dbConnection, uuid: carriage.uuid });
         expect(foundCarriage).toEqual(carriage);
       });
     });
     describe('trainDao', () => {
-      let locomotive: HasId<HasUuid<Locomotive>>;
-      let boosterCarriage: HasId<HasUuid<Carriage>>;
-      let crewCarriage: HasId<HasUuid<Carriage>>;
-      let leadEngineer: HasId<HasUuid<TrainEngineer>>;
+      let locomotive: HasMetadata<Locomotive>;
+      let boosterCarriage: HasMetadata<Carriage>;
+      let crewCarriage: HasMetadata<Carriage>;
+      let leadEngineer: HasMetadata<TrainEngineer>;
       beforeAll(async () => {
         // upsert the composed entities
         locomotive = await locomotiveDao.upsert({
@@ -301,7 +301,7 @@ describe('generate', () => {
             cin: 'booster-transport-1',
             carries: CarriagePurpose.FREIGHT,
             capacity: 9001,
-          }) as HasUuid<Carriage>,
+          }) as HasMetadata<Carriage>,
         });
         crewCarriage = await carriageDao.upsert({
           dbConnection,
@@ -310,7 +310,7 @@ describe('generate', () => {
             cin: 'crew-transport-1',
             carries: CarriagePurpose.PASSENGER,
             capacity: 19,
-          }) as HasUuid<Carriage>,
+          }) as HasMetadata<Carriage>,
         });
         leadEngineer = await trainEngineerDao.upsert({
           dbConnection,

@@ -17,24 +17,24 @@ export const geocodeDao = {
     "relpath": "geocodeDao/index.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'simple-type-guards';
 
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindGeocodeByIdOutput,
-): HasId<HasUuid<Geocode>> =>
+): HasMetadata<Geocode> =>
   new Geocode({
     id: dbObject.id,
     uuid: dbObject.uuid,
     latitude: dbObject.latitude,
     longitude: dbObject.longitude,
-  }) as HasId<HasUuid<Geocode>>;",
+  }) as HasMetadata<Geocode>;",
     "relpath": "geocodeDao/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -59,7 +59,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<HasUuid<Geocode>> | null> => {
+}): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -75,7 +75,7 @@ export const findById = async ({
     "relpath": "geocodeDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -104,7 +104,7 @@ export const findByUnique = async ({
   dbConnection: DatabaseConnection;
   latitude: number;
   longitude: number;
-}): Promise<HasId<HasUuid<Geocode>> | null> => {
+}): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -121,7 +121,7 @@ export const findByUnique = async ({
     "relpath": "geocodeDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -146,7 +146,7 @@ export const findByUuid = async ({
 }: {
   dbConnection: DatabaseConnection;
   uuid: string;
-}): Promise<HasId<HasUuid<Geocode>> | null> => {
+}): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUuid({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -162,7 +162,7 @@ export const findByUuid = async ({
     "relpath": "geocodeDao/findByUuid.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasId, HasUuid } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
@@ -185,7 +185,7 @@ export const upsert = async ({
 }: {
   dbConnection: DatabaseConnection;
   geocode: Geocode;
-}): Promise<HasId<HasUuid<Geocode>>> => {
+}): Promise<HasMetadata<Geocode>> => {
   const results = await sqlQueryUpsertGeocode({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -195,7 +195,7 @@ export const upsert = async ({
     },
   });
   const { id, uuid } = results[0]; // grab the db generated values
-  return new Geocode({ ...geocode, id, uuid }) as HasId<HasUuid<Geocode>>;
+  return new Geocode({ ...geocode, id, uuid }) as HasMetadata<Geocode>;
 };",
     "relpath": "geocodeDao/upsert.ts",
   },
@@ -217,23 +217,23 @@ export const geocodeDao = {
     "relpath": "geocodeDao/index.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasId } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'simple-type-guards';
 
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindGeocodeByIdOutput,
-): HasId<Geocode> =>
+): HasMetadata<Geocode> =>
   new Geocode({
     id: dbObject.id,
     latitude: dbObject.latitude,
     longitude: dbObject.longitude,
-  }) as HasId<Geocode>;",
+  }) as HasMetadata<Geocode>;",
     "relpath": "geocodeDao/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasId } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -257,7 +257,7 @@ export const findById = async ({
 }: {
   dbConnection: DatabaseConnection;
   id: number;
-}): Promise<HasId<Geocode> | null> => {
+}): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeById({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -273,7 +273,7 @@ export const findById = async ({
     "relpath": "geocodeDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasId } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -301,7 +301,7 @@ export const findByUnique = async ({
   dbConnection: DatabaseConnection;
   latitude: number;
   longitude: number;
-}): Promise<HasId<Geocode> | null> => {
+}): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUnique({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -318,7 +318,7 @@ export const findByUnique = async ({
     "relpath": "geocodeDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasId } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'simple-type-guards';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
@@ -341,7 +341,7 @@ export const upsert = async ({
 }: {
   dbConnection: DatabaseConnection;
   geocode: Geocode;
-}): Promise<HasId<Geocode>> => {
+}): Promise<HasMetadata<Geocode>> => {
   const results = await sqlQueryUpsertGeocode({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
@@ -351,7 +351,7 @@ export const upsert = async ({
     },
   });
   const { id } = results[0]; // grab the db generated values
-  return new Geocode({ ...geocode, id }) as HasId<Geocode>;
+  return new Geocode({ ...geocode, id }) as HasMetadata<Geocode>;
 };",
     "relpath": "geocodeDao/upsert.ts",
   },

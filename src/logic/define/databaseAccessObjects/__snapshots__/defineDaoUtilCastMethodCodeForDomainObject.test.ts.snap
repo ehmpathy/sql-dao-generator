@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for a domain event with a static referenced array 1`] = `
-"import { HasId } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
@@ -9,17 +9,17 @@ import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geoc
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindTrainLocatedEventByIdOutput,
-): HasId<TrainLocatedEvent> =>
+): HasMetadata<TrainLocatedEvent> =>
   new TrainLocatedEvent({
     id: dbObject.id,
     trainUuid: dbObject.train_uuid,
     occurredAt: dbObject.occurred_at,
     geocodes: (dbObject.geocodes as SqlQueryFindGeocodeByIdOutput[]).map(castGeocodeFromDatabaseObject),
-  }) as HasId<TrainLocatedEvent>;"
+  }) as HasMetadata<TrainLocatedEvent>;"
 `;
 
 exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
-"import { HasId, HasUuid } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainBadgeByIdOutput, SqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
@@ -28,7 +28,7 @@ import { castFromDatabaseObject as castTrainBadgeFromDatabaseObject } from '../t
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindTrainByIdOutput,
-): HasId<HasUuid<Train>> =>
+): HasMetadata<Train> =>
   new Train({
     id: dbObject.id,
     uuid: dbObject.uuid,
@@ -37,39 +37,39 @@ export const castFromDatabaseObject = (
     leadEngineerUuid: dbObject.lead_engineer_uuid,
     badges: (dbObject.badges as SqlQueryFindTrainBadgeByIdOutput[]).map(castTrainBadgeFromDatabaseObject),
     locomotiveUuids: dbObject.locomotive_uuids as string[],
-  }) as HasId<HasUuid<Train>>;"
+  }) as HasMetadata<Train>;"
 `;
 
 exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for simple domain entity 1`] = `
-"import { HasId, HasUuid } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindCarriageByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindCarriageByIdOutput,
-): HasId<HasUuid<Carriage>> =>
+): HasMetadata<Carriage> =>
   new Carriage({
     id: dbObject.id,
     uuid: dbObject.uuid,
     cin: dbObject.cin,
     carries: dbObject.carries as Carriage['carries'],
     capacity: dbObject.capacity,
-  }) as HasId<HasUuid<Carriage>>;"
+  }) as HasMetadata<Carriage>;"
 `;
 
 exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for simple value object 1`] = `
-"import { HasId } from 'simple-type-guards';
+"import { HasMetadata } from 'simple-type-guards';
 
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindGeocodeByIdOutput,
-): HasId<Geocode> =>
+): HasMetadata<Geocode> =>
   new Geocode({
     id: dbObject.id,
     latitude: dbObject.latitude,
     longitude: dbObject.longitude,
-  }) as HasId<Geocode>;"
+  }) as HasMetadata<Geocode>;"
 `;
