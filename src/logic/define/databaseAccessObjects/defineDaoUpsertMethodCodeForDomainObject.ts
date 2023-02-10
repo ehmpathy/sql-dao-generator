@@ -30,7 +30,7 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
     // always present imports
     `import { HasMetadata${
       isUniqueOnUuid ? ', HasUuid' : ''
-    } } from 'simple-type-guards';`,
+    } } from 'type-fns';`,
     '', // split module from relative imports
     "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
     `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`,

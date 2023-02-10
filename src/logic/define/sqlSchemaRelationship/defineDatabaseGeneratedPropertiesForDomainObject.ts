@@ -1,5 +1,5 @@
 import { DomainObjectMetadata } from 'domain-objects-metadata';
-import { isPresent } from 'simple-type-guards';
+import { isPresent } from 'type-fns';
 
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
 

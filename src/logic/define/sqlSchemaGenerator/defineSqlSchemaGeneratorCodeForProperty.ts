@@ -1,4 +1,3 @@
-// tslint:disable: max-classes-per-file
 import { camelCase } from 'change-case';
 import {
   DomainObjectMetadata,
@@ -6,9 +5,10 @@ import {
   DomainObjectPropertyType,
   isDomainObjectArrayProperty,
 } from 'domain-objects-metadata';
-import { isPresent } from 'simple-type-guards';
+import { isPresent } from 'type-fns';
 
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
+import { UnexpectedCodePathError } from '../../../utils/errors/UnexpectedCodePathError';
 import { UserInputError } from '../../UserInputError';
 
 export const defineSqlSchemaGeneratorCodeForProperty = ({
@@ -87,6 +87,12 @@ If you'd like to store an array of data, try one of the following:
       return `prop.ENUM([${(domainObjectProperty.of as string[])
         .map((option) => `'${option}'`)
         .join(', ')}])`;
+
+    // handle unsupported primitive
+    throw new UnexpectedCodePathError(
+      'unsupported domain object property type',
+      { domainObjectProperty },
+    );
   })();
 
   // if its not updatable or nullable, then the base schema property = the full property

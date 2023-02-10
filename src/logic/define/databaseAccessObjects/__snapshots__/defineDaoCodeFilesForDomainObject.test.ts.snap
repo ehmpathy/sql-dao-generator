@@ -17,7 +17,7 @@ export const geocodeDao = {
     "relpath": "geocodeDao/index.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'type-fns';
 
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
@@ -34,7 +34,7 @@ export const castFromDatabaseObject = (
     "relpath": "geocodeDao/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -75,7 +75,7 @@ export const findById = async ({
     "relpath": "geocodeDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -121,7 +121,7 @@ export const findByUnique = async ({
     "relpath": "geocodeDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -162,7 +162,7 @@ export const findByUuid = async ({
     "relpath": "geocodeDao/findByUuid.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
@@ -217,7 +217,7 @@ export const geocodeDao = {
     "relpath": "geocodeDao/index.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'type-fns';
 
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
@@ -233,7 +233,7 @@ export const castFromDatabaseObject = (
     "relpath": "geocodeDao/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -273,7 +273,7 @@ export const findById = async ({
     "relpath": "geocodeDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -318,7 +318,7 @@ export const findByUnique = async ({
     "relpath": "geocodeDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'simple-type-guards';
+    "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';

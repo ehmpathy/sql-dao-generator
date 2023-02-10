@@ -12,6 +12,8 @@
     "jest.*",
     "prettier.*",
     "commitlint.*",
-    "src/**/*.test.(ts|js)"
+    "src/**/*.test.(ts|js)",
+    "src/**/__test_assets__/**",
+    "src/logic/commands/generate.integration.test.ts",
   ]
 }

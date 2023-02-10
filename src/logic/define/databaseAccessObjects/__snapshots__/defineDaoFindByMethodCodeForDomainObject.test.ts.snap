@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for a domain event with a static referenced array 1`] = `
-"import { HasMetadata } from 'simple-type-guards';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -58,7 +58,7 @@ export const findById = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
-"import { HasMetadata } from 'simple-type-guards';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -135,7 +135,7 @@ export const findById = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for simple domain entity 1`] = `
-"import { HasMetadata } from 'simple-type-guards';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -177,7 +177,7 @@ export const findById = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for simple value object 1`] = `
-"import { HasMetadata } from 'simple-type-guards';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -218,7 +218,7 @@ export const findById = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for a domain event with a static referenced array 1`] = `
-"import { HasMetadata } from 'simple-type-guards';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -279,7 +279,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for domain entity that is unique on references, solo and array, implicit and nested 1`] = `
-"import { HasId, HasMetadata } from 'simple-type-guards';
+"import { HasId, HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -376,7 +376,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
-"import { HasMetadata } from 'simple-type-guards';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -452,7 +452,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple domain entity 1`] = `
-"import { HasMetadata } from 'simple-type-guards';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -495,7 +495,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple domain entity unique only on uuid 1`] = `
-"import { HasMetadata } from 'simple-type-guards';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -537,7 +537,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple value object 1`] = `
-"import { HasMetadata } from 'simple-type-guards';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -582,7 +582,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple value object that references another value object 1`] = `
-"import { HasId, HasMetadata } from 'simple-type-guards';
+"import { HasId, HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -630,7 +630,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look for a domain entity unique on a nested domain object 1`] = `
-"import { HasId, HasMetadata } from 'simple-type-guards';
+"import { HasId, HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -678,7 +678,7 @@ export const findByUnique = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for a domain event with a static referenced array 1`] = `
-"import { HasMetadata } from 'simple-type-guards';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -734,7 +734,7 @@ export const findByUuid = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
-"import { HasMetadata } from 'simple-type-guards';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -809,7 +809,7 @@ export const findByUuid = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for simple domain entity 1`] = `
-"import { HasMetadata } from 'simple-type-guards';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
@@ -851,7 +851,7 @@ export const findByUuid = async ({
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for simple value object 1`] = `
-"import { HasMetadata } from 'simple-type-guards';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';

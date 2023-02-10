@@ -1,5 +1,5 @@
 import shell from 'shelljs';
-import { HasMetadata } from 'simple-type-guards';
+import { HasMetadata } from 'type-fns';
 import uuid, { v4 } from 'uuid';
 
 import { SvcPaymentsPaymentTransactionCurrency } from '../__test_assets__/exampleProject/src/data/clients/svcPayments';

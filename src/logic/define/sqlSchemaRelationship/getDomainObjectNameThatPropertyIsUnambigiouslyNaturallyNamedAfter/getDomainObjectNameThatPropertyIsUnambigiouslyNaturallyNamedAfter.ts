@@ -89,7 +89,7 @@ export const getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter =
 
       // if there is exactly one, job done - unambiguously specified
       if (namedForAtThisQualifiersToDropLevel.length === 1)
-        return namedForAtThisQualifiersToDropLevel[0].withQualifiers;
+        return namedForAtThisQualifiersToDropLevel[0]!.withQualifiers;
 
       // if more than one, then its ambiguously specified
       if (namedForAtThisQualifiersToDropLevel.length > 1)

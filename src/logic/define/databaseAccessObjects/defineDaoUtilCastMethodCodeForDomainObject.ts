@@ -5,7 +5,7 @@ import {
   isDomainObjectArrayProperty,
   isDomainObjectReferenceProperty,
 } from 'domain-objects-metadata';
-import { isPresent } from 'simple-type-guards';
+import { isPresent } from 'type-fns';
 
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
@@ -36,7 +36,7 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
   // define the imports
   const imports = [
     // always present imports
-    "import { HasMetadata } from 'simple-type-guards';",
+    "import { HasMetadata } from 'type-fns';",
     '', // split module from relative imports
     `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`, // import this domain object; note: higher level function will swap out the import path
     `import { ${[domainObject.name, ...nestedDomainObjectNames]

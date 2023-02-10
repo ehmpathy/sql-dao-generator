@@ -26,7 +26,7 @@ export const runSqlSchemaGenerator = async ({
   const generatedForNames = result.stdout
     .split('\n')
     .filter((line) => line.includes('[completed]'))
-    .map((line) => line.split(']')[1].split('[')[0].trim());
+    .map((line) => line.split(']')[1]!.split('[')[0]!.trim());
   generatedForNames.forEach((name) => {
     const successMessage = `    ${chalk.green('✔')} ${chalk.green(
       chalk.bold('[GENERATED]'),

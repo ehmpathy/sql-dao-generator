@@ -7,7 +7,7 @@ import {
   isDomainObjectArrayProperty,
   isDomainObjectReferenceProperty,
 } from 'domain-objects-metadata';
-import { isPresent } from 'simple-type-guards';
+import { isPresent } from 'type-fns';
 
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
@@ -136,7 +136,7 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
     // always present imports
     `import { ${
       referencedDomainObjectNames.length > 1 ? 'HasId, ' : ''
-    }HasMetadata } from 'simple-type-guards';`,
+    }HasMetadata } from 'type-fns';`,
     '', // split module from relative imports
     "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
     "import { log } from '$PATH_TO_LOG_OBJECT';",

@@ -3,7 +3,7 @@ import {
   DomainObjectMetadata,
   DomainObjectVariant,
 } from 'domain-objects-metadata';
-import { isPresent } from 'simple-type-guards';
+import { isPresent } from 'type-fns';
 
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
 import { UserInputError } from '../../UserInputError';

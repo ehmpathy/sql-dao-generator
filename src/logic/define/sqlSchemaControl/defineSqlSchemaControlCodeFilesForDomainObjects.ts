@@ -1,6 +1,6 @@
 import { snakeCase } from 'change-case';
 import { DomainObjectMetadata } from 'domain-objects-metadata';
-import { isPresent } from 'simple-type-guards';
+import { isPresent } from 'type-fns';
 
 import { GeneratedCodeFile } from '../../../domain/objects/GeneratedCodeFile';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
