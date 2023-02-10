@@ -1,4 +1,8 @@
-import { DomainObjectPropertyType, DomainObjectVariant } from 'domain-objects-metadata';
+import {
+  DomainObjectPropertyType,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
+
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import { createExampleDomainObjectMetadata } from '../../__test_assets__/createExampleDomainObject';
 import { defineSqlSchemaGeneratorCodeForProperty } from './defineSqlSchemaGeneratorCodeForProperty';
@@ -94,7 +98,9 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           reference: null,
         },
       });
-      expect(property).toEqual("status: prop.ENUM(['QUEUED', 'ATTEMPTED', 'FULFILLED', 'FAILED', 'CANCELED']),");
+      expect(property).toEqual(
+        "status: prop.ENUM(['QUEUED', 'ATTEMPTED', 'FULFILLED', 'FAILED', 'CANCELED']),",
+      );
     });
     it('should generate correctly for reference', () => {
       const property = defineSqlSchemaGeneratorCodeForProperty({
@@ -102,7 +108,10 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
         domainObjectProperty: {
           name: 'homeAddress',
           type: DomainObjectPropertyType.REFERENCE,
-          of: { name: 'Address', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+          of: {
+            name: 'Address',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+          },
         },
         sqlSchemaProperty: {
           name: 'home_address_id',
@@ -112,7 +121,10 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isDatabaseGenerated: false,
           reference: {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
-            of: { name: 'Address', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+            of: {
+              name: 'Address',
+              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            },
           },
         },
       });
@@ -124,7 +136,10 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
         domainObjectProperty: {
           name: 'homeAddress',
           type: DomainObjectPropertyType.REFERENCE,
-          of: { name: 'HomeAddress', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+          of: {
+            name: 'HomeAddress',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+          },
         },
         sqlSchemaProperty: {
           name: 'home_address_id',
@@ -134,19 +149,30 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isDatabaseGenerated: false,
           reference: {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
-            of: { name: 'HomeAddress', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+            of: {
+              name: 'HomeAddress',
+              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            },
           },
         },
       });
-      expect(property).toEqual('home_address_id: prop.REFERENCES(homeAddress),');
+      expect(property).toEqual(
+        'home_address_id: prop.REFERENCES(homeAddress),',
+      );
     });
     it('should generate correctly for reference - where there is a self reference', () => {
       const property = defineSqlSchemaGeneratorCodeForProperty({
-        domainObject: { ...createExampleDomainObjectMetadata(), name: 'Service' },
+        domainObject: {
+          ...createExampleDomainObjectMetadata(),
+          name: 'Service',
+        },
         domainObjectProperty: {
           name: 'parentService',
           type: DomainObjectPropertyType.REFERENCE,
-          of: { name: 'Service', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+          of: {
+            name: 'Service',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+          },
         },
         sqlSchemaProperty: {
           name: 'parent_service_id',
@@ -156,11 +182,16 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isDatabaseGenerated: false,
           reference: {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
-            of: { name: 'Service', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+            of: {
+              name: 'Service',
+              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            },
           },
         },
       });
-      expect(property).toEqual('parent_service_id: prop.REFERENCES(() => service),');
+      expect(property).toEqual(
+        'parent_service_id: prop.REFERENCES(() => service),',
+      );
     });
     it('should generate correctly for reference array', () => {
       const property = defineSqlSchemaGeneratorCodeForProperty({
@@ -170,7 +201,10 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           type: DomainObjectPropertyType.ARRAY,
           of: {
             type: DomainObjectPropertyType.REFERENCE,
-            of: { name: 'PlaneExternalId', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+            of: {
+              name: 'PlaneExternalId',
+              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            },
           },
         },
         sqlSchemaProperty: {
@@ -181,16 +215,23 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isDatabaseGenerated: false,
           reference: {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
-            of: { name: 'PlaneExternalId', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+            of: {
+              name: 'PlaneExternalId',
+              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            },
           },
         },
       });
-      expect(property).toEqual('external_id_ids: prop.ARRAY_OF(prop.REFERENCES(planeExternalId)),'); // note the camel case inside prop.REFERENCES
+      expect(property).toEqual(
+        'external_id_ids: prop.ARRAY_OF(prop.REFERENCES(planeExternalId)),',
+      ); // note the camel case inside prop.REFERENCES
     });
     it('should generate correctly for reference array - where there is a self reference', () => {
       const property = defineSqlSchemaGeneratorCodeForProperty({
         domainObject: {
-          ...createExampleDomainObjectMetadata({ extend: DomainObjectVariant.DOMAIN_ENTITY }),
+          ...createExampleDomainObjectMetadata({
+            extend: DomainObjectVariant.DOMAIN_ENTITY,
+          }),
           name: 'Service',
         },
         domainObjectProperty: {
@@ -213,7 +254,9 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           },
         },
       });
-      expect(property).toEqual('parent_service_ids: prop.ARRAY_OF(prop.REFERENCES(() => service)),'); // note the camel case inside prop.REFERENCES
+      expect(property).toEqual(
+        'parent_service_ids: prop.ARRAY_OF(prop.REFERENCES(() => service)),',
+      ); // note the camel case inside prop.REFERENCES
     });
   });
   describe('modifiers', () => {
@@ -243,7 +286,10 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           type: DomainObjectPropertyType.ARRAY,
           of: {
             type: DomainObjectPropertyType.REFERENCE,
-            of: { name: 'PlaneExternalId', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+            of: {
+              name: 'PlaneExternalId',
+              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            },
           },
         },
         sqlSchemaProperty: {
@@ -254,7 +300,10 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           isDatabaseGenerated: false,
           reference: {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
-            of: { name: 'PlaneExternalId', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+            of: {
+              name: 'PlaneExternalId',
+              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            },
           },
         },
       });

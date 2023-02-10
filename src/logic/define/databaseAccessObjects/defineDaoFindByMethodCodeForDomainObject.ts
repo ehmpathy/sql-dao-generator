@@ -36,10 +36,14 @@ const getTypescriptTypeForDomainObjectProperty = ({
   domainObjectProperty: DomainObjectPropertyMetadata;
   sqlSchemaProperty: SqlSchemaPropertyMetadata;
 }) => {
-  if (domainObjectProperty.type === DomainObjectPropertyType.STRING) return 'string';
-  if (domainObjectProperty.type === DomainObjectPropertyType.NUMBER) return 'number';
-  if (domainObjectProperty.type === DomainObjectPropertyType.BOOLEAN) return 'boolean';
-  if (domainObjectProperty.type === DomainObjectPropertyType.DATE) return 'Date';
+  if (domainObjectProperty.type === DomainObjectPropertyType.STRING)
+    return 'string';
+  if (domainObjectProperty.type === DomainObjectPropertyType.NUMBER)
+    return 'number';
+  if (domainObjectProperty.type === DomainObjectPropertyType.BOOLEAN)
+    return 'boolean';
+  if (domainObjectProperty.type === DomainObjectPropertyType.DATE)
+    return 'Date';
   if (domainObjectProperty.type === DomainObjectPropertyType.ENUM)
     return `${domainObjectName}['${domainObjectProperty.name}']`;
   if (domainObjectProperty.type === DomainObjectPropertyType.REFERENCE) {
@@ -47,12 +51,17 @@ const getTypescriptTypeForDomainObjectProperty = ({
     return `HasId<${referencedDomainObjectName}>`;
   }
   if (domainObjectProperty.type === DomainObjectPropertyType.ARRAY) {
-    if (sqlSchemaProperty.reference!.method === SqlSchemaReferenceMethod.IMPLICIT_BY_UUID) return 'string[]';
+    if (
+      sqlSchemaProperty.reference!.method ===
+      SqlSchemaReferenceMethod.IMPLICIT_BY_UUID
+    )
+      return 'string[]';
     const referencedDomainObjectName = sqlSchemaProperty.reference!.of.name;
     return `HasId<${referencedDomainObjectName}>[]`;
   }
   throw new UnexpectedCodePathDetectedError({
-    reason: 'unsupported property type. could not get typescript type for domain object property',
+    reason:
+      'unsupported property type. could not get typescript type for domain object property',
     domainObjectName,
     domainObjectPropertyName: domainObjectProperty.name,
   }); // fail fast
@@ -72,7 +81,8 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
   // define some useful constants
   const sqlSchemaName = sqlSchemaRelationship.name.sqlSchema;
   const hasCurrentView = sqlSchemaRelationship.properties.some(
-    ({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.isUpdatable || sqlSchemaProperty.isArray,
+    ({ sqlSchema: sqlSchemaProperty }) =>
+      sqlSchemaProperty.isUpdatable || sqlSchemaProperty.isArray,
   );
 
   // define which domain objects are referenced in this method
@@ -80,31 +90,43 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
     domainObject.name, // the domain object itself is always referenced
     ...(findByQueryType === FindByQueryType.UNIQUE
       ? sqlSchemaRelationship.properties
-          .map(({ domainObject: domainObjectProperty, sqlSchema: sqlSchemaProperty }) => {
-            // if its not explicitly defined property, then not needed in imports
-            if (!domainObjectProperty) return null;
+          .map(
+            ({
+              domainObject: domainObjectProperty,
+              sqlSchema: sqlSchemaProperty,
+            }) => {
+              // if its not explicitly defined property, then not needed in imports
+              if (!domainObjectProperty) return null;
 
-            // if its not part of the unique key, then its not needed in imports
-            if (!sqlSchemaRelationship.decorations.unique.sqlSchema?.includes(sqlSchemaProperty.name)) return null;
+              // if its not part of the unique key, then its not needed in imports
+              if (
+                !sqlSchemaRelationship.decorations.unique.sqlSchema?.includes(
+                  sqlSchemaProperty.name,
+                )
+              )
+                return null;
 
-            // if its a solo reference to a domain value object, then its needed
-            if (
-              isDomainObjectReferenceProperty(domainObjectProperty) &&
-              domainObjectProperty.of.extends === DomainObjectVariant.DOMAIN_VALUE_OBJECT
-            )
-              return domainObjectProperty.of.name;
+              // if its a solo reference to a domain value object, then its needed
+              if (
+                isDomainObjectReferenceProperty(domainObjectProperty) &&
+                domainObjectProperty.of.extends ===
+                  DomainObjectVariant.DOMAIN_VALUE_OBJECT
+              )
+                return domainObjectProperty.of.name;
 
-            // if its a array reference to a domain value object, then its needed
-            if (
-              isDomainObjectArrayProperty(domainObjectProperty) &&
-              isDomainObjectReferenceProperty(domainObjectProperty.of) &&
-              domainObjectProperty.of.of.extends === DomainObjectVariant.DOMAIN_VALUE_OBJECT
-            )
-              return domainObjectProperty.of.of.name;
+              // if its a array reference to a domain value object, then its needed
+              if (
+                isDomainObjectArrayProperty(domainObjectProperty) &&
+                isDomainObjectReferenceProperty(domainObjectProperty.of) &&
+                domainObjectProperty.of.of.extends ===
+                  DomainObjectVariant.DOMAIN_VALUE_OBJECT
+              )
+                return domainObjectProperty.of.of.name;
 
-            // otherwise, we dont care about it
-            return null;
-          })
+              // otherwise, we dont care about it
+              return null;
+            },
+          )
           .filter(isPresent)
       : []),
   ];
@@ -112,46 +134,61 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
   // define the imports
   const imports = [
     // always present imports
-    `import { ${referencedDomainObjectNames.length > 1 ? 'HasId, ' : ''}HasMetadata } from 'simple-type-guards';`,
+    `import { ${
+      referencedDomainObjectNames.length > 1 ? 'HasId, ' : ''
+    }HasMetadata } from 'simple-type-guards';`,
     '', // split module from relative imports
     "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
     "import { log } from '$PATH_TO_LOG_OBJECT';",
-    `import { ${referencedDomainObjectNames.sort().join(', ')} } from '$PATH_TO_DOMAIN_OBJECT';`,
+    `import { ${referencedDomainObjectNames
+      .sort()
+      .join(', ')} } from '$PATH_TO_DOMAIN_OBJECT';`,
     `import { sqlQueryFind${domainObject.name}By${findByQueryType} } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';`,
     "import { castFromDatabaseObject } from './castFromDatabaseObject';",
   ];
 
   // define the where conditions
   const whereConditions = (() => {
-    if (findByQueryType === FindByQueryType.ID) return `${sqlSchemaName}.id = :id`;
-    if (findByQueryType === FindByQueryType.UUID) return `${sqlSchemaName}.uuid = :uuid`;
+    if (findByQueryType === FindByQueryType.ID)
+      return `${sqlSchemaName}.id = :id`;
+    if (findByQueryType === FindByQueryType.UUID)
+      return `${sqlSchemaName}.uuid = :uuid`;
     if (findByQueryType === FindByQueryType.UNIQUE) {
-      const conditions = sqlSchemaRelationship.decorations.unique.sqlSchema?.map((sqlSchemaPropertyName) => {
-        const propertyRelationship = sqlSchemaRelationship.properties.find(
-          ({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.name === sqlSchemaPropertyName,
+      const conditions =
+        sqlSchemaRelationship.decorations.unique.sqlSchema?.map(
+          (sqlSchemaPropertyName) => {
+            const propertyRelationship = sqlSchemaRelationship.properties.find(
+              ({ sqlSchema: sqlSchemaProperty }) =>
+                sqlSchemaProperty.name === sqlSchemaPropertyName,
+            );
+            if (!propertyRelationship)
+              throw new UnexpectedCodePathDetectedError({
+                reason:
+                  'could not find sqlSchemaRelationship for property, for where conditions in generating find by method',
+                domainObjectName: domainObject.name,
+                domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
+              }); // fail fast, this should never occur
+            if (!propertyRelationship.domainObject)
+              throw new UnexpectedCodePathDetectedError({
+                reason:
+                  'propertyRelationship.domainObject for property was not defined, for where conditions in generating find by method',
+                domainObjectName: domainObject.name,
+                domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
+              }); // fail fast, this should never occur
+            const {
+              domainObject: domainObjectProperty,
+              sqlSchema: sqlSchemaProperty,
+            } = propertyRelationship;
+            return `${sqlSchemaName}.${sqlSchemaPropertyName} = ${defineQueryInputExpressionForSqlSchemaProperty(
+              {
+                sqlSchemaName,
+                sqlSchemaProperty,
+                domainObjectProperty,
+                allSqlSchemaRelationships,
+              },
+            )}`;
+          },
         );
-        if (!propertyRelationship)
-          throw new UnexpectedCodePathDetectedError({
-            reason:
-              'could not find sqlSchemaRelationship for property, for where conditions in generating find by method',
-            domainObjectName: domainObject.name,
-            domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
-          }); // fail fast, this should never occur
-        if (!propertyRelationship.domainObject)
-          throw new UnexpectedCodePathDetectedError({
-            reason:
-              'propertyRelationship.domainObject for property was not defined, for where conditions in generating find by method',
-            domainObjectName: domainObject.name,
-            domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
-          }); // fail fast, this should never occur
-        const { domainObject: domainObjectProperty, sqlSchema: sqlSchemaProperty } = propertyRelationship;
-        return `${sqlSchemaName}.${sqlSchemaPropertyName} = ${defineQueryInputExpressionForSqlSchemaProperty({
-          sqlSchemaName,
-          sqlSchemaProperty,
-          domainObjectProperty,
-          allSqlSchemaRelationships,
-        })}`;
-      });
       if (!conditions)
         throw new UnexpectedCodePathDetectedError({
           reason: 'no conditions found for a findByUnique query',
@@ -173,39 +210,50 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
     if (findByQueryType === FindByQueryType.ID) return { id: 'number' };
     if (findByQueryType === FindByQueryType.UUID) return { uuid: 'string' };
     if (findByQueryType === FindByQueryType.UNIQUE) {
-      const conditions = sqlSchemaRelationship.decorations.unique.sqlSchema?.map((sqlSchemaPropertyName) => {
-        const propertyRelationship = sqlSchemaRelationship.properties.find(
-          ({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.name === sqlSchemaPropertyName,
+      const conditions =
+        sqlSchemaRelationship.decorations.unique.sqlSchema?.map(
+          (sqlSchemaPropertyName) => {
+            const propertyRelationship = sqlSchemaRelationship.properties.find(
+              ({ sqlSchema: sqlSchemaProperty }) =>
+                sqlSchemaProperty.name === sqlSchemaPropertyName,
+            );
+            if (!propertyRelationship)
+              throw new UnexpectedCodePathDetectedError({
+                reason:
+                  'could not find sqlSchemaRelationship for property, for parameters in generating find by method',
+                domainObjectName: domainObject.name,
+                domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
+              }); // fail fast, this should never occur
+            if (!propertyRelationship.domainObject)
+              throw new UnexpectedCodePathDetectedError({
+                reason:
+                  'propertyRelationship.domainObject for property was not defined, for parameters in generating find by method',
+                domainObjectName: domainObject.name,
+                domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
+              }); // fail fast, this should never occur
+            const {
+              domainObject: domainObjectProperty,
+              sqlSchema: sqlSchemaProperty,
+            } = propertyRelationship;
+            const typeOfProperty = getTypescriptTypeForDomainObjectProperty({
+              domainObjectProperty,
+              sqlSchemaProperty,
+              domainObjectName: domainObject.name,
+            });
+            return {
+              [domainObjectProperty.name]: typeOfProperty,
+            };
+          },
         );
-        if (!propertyRelationship)
-          throw new UnexpectedCodePathDetectedError({
-            reason: 'could not find sqlSchemaRelationship for property, for parameters in generating find by method',
-            domainObjectName: domainObject.name,
-            domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
-          }); // fail fast, this should never occur
-        if (!propertyRelationship.domainObject)
-          throw new UnexpectedCodePathDetectedError({
-            reason:
-              'propertyRelationship.domainObject for property was not defined, for parameters in generating find by method',
-            domainObjectName: domainObject.name,
-            domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
-          }); // fail fast, this should never occur
-        const { domainObject: domainObjectProperty, sqlSchema: sqlSchemaProperty } = propertyRelationship;
-        const typeOfProperty = getTypescriptTypeForDomainObjectProperty({
-          domainObjectProperty,
-          sqlSchemaProperty,
-          domainObjectName: domainObject.name,
-        });
-        return {
-          [domainObjectProperty.name]: typeOfProperty,
-        };
-      });
       if (!conditions)
         throw new UnexpectedCodePathDetectedError({
           reason: 'no conditions found for a findByUnique query',
           domainObjectName: domainObject.name,
         }); // should not reach here, fail fast
-      return conditions.reduce((mergedConditions, thisCondition) => ({ ...mergedConditions, ...thisCondition }));
+      return conditions.reduce((mergedConditions, thisCondition) => ({
+        ...mergedConditions,
+        ...thisCondition,
+      }));
     }
     throw new UnexpectedCodePathDetectedError({
       reason: 'unexpected FindByQueryType',
@@ -218,33 +266,40 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
     if (findByQueryType === FindByQueryType.ID) return ['id'];
     if (findByQueryType === FindByQueryType.UUID) return ['uuid'];
     if (findByQueryType === FindByQueryType.UNIQUE) {
-      const conditions = sqlSchemaRelationship.decorations.unique.sqlSchema?.map((sqlSchemaPropertyName) => {
-        const propertyRelationship = sqlSchemaRelationship.properties.find(
-          ({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.name === sqlSchemaPropertyName,
+      const conditions =
+        sqlSchemaRelationship.decorations.unique.sqlSchema?.map(
+          (sqlSchemaPropertyName) => {
+            const propertyRelationship = sqlSchemaRelationship.properties.find(
+              ({ sqlSchema: sqlSchemaProperty }) =>
+                sqlSchemaProperty.name === sqlSchemaPropertyName,
+            );
+            if (!propertyRelationship)
+              throw new UnexpectedCodePathDetectedError({
+                reason:
+                  'could not find sqlSchemaRelationship for property, for  query fn input expressions  in generating find by method',
+                domainObjectName: domainObject.name,
+                domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
+              }); // fail fast, this should never occur
+            if (!propertyRelationship.domainObject)
+              throw new UnexpectedCodePathDetectedError({
+                reason:
+                  'propertyRelationship.domainObject for property was not defined, for query fn input expressions in generating find by method',
+                domainObjectName: domainObject.name,
+                domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
+              }); // fail fast, this should never occur
+            const {
+              domainObject: domainObjectProperty,
+              sqlSchema: sqlSchemaProperty,
+            } = propertyRelationship;
+            return defineQueryFunctionInputExpressionForDomainObjectProperty({
+              domainObjectName: domainObject.name,
+              sqlSchemaProperty,
+              domainObjectProperty,
+              allSqlSchemaRelationships,
+              context: GetTypescriptCodeForPropertyContext.FOR_FIND_BY_QUERY,
+            });
+          },
         );
-        if (!propertyRelationship)
-          throw new UnexpectedCodePathDetectedError({
-            reason:
-              'could not find sqlSchemaRelationship for property, for  query fn input expressions  in generating find by method',
-            domainObjectName: domainObject.name,
-            domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
-          }); // fail fast, this should never occur
-        if (!propertyRelationship.domainObject)
-          throw new UnexpectedCodePathDetectedError({
-            reason:
-              'propertyRelationship.domainObject for property was not defined, for query fn input expressions in generating find by method',
-            domainObjectName: domainObject.name,
-            domainObjectPropertyName: camelCase(sqlSchemaPropertyName),
-          }); // fail fast, this should never occur
-        const { domainObject: domainObjectProperty, sqlSchema: sqlSchemaProperty } = propertyRelationship;
-        return defineQueryFunctionInputExpressionForDomainObjectProperty({
-          domainObjectName: domainObject.name,
-          sqlSchemaProperty,
-          domainObjectProperty,
-          allSqlSchemaRelationships,
-          context: GetTypescriptCodeForPropertyContext.FOR_FIND_BY_QUERY,
-        });
-      });
       if (!conditions)
         throw new UnexpectedCodePathDetectedError({
           reason: 'no conditions found for a findByUnique query',
@@ -269,19 +324,28 @@ export const sql = \`
   -- query_name = find_${sqlSchemaName}_by_${snakeCase(findByQueryType)}
   SELECT
     ${sqlSchemaRelationship.properties
-      .map(({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) => {
-        if (!domainObjectProperty) return null;
-        return defineQuerySelectExpressionForSqlSchemaProperty({
-          sqlSchemaName,
-          sqlSchemaProperty,
-          domainObjectProperty,
-          allSqlSchemaRelationships,
-        });
-      })
+      .map(
+        ({
+          sqlSchema: sqlSchemaProperty,
+          domainObject: domainObjectProperty,
+        }) => {
+          if (!domainObjectProperty) return null;
+          return defineQuerySelectExpressionForSqlSchemaProperty({
+            sqlSchemaName,
+            sqlSchemaProperty,
+            domainObjectProperty,
+            allSqlSchemaRelationships,
+          });
+        },
+      )
       .filter(isPresent)
       .flat()
       .join(',\n    ')}
-  FROM ${hasCurrentView ? `view_${sqlSchemaName}_current AS ${sqlSchemaName}` : sqlSchemaName}
+  FROM ${
+    hasCurrentView
+      ? `view_${sqlSchemaName}_current AS ${sqlSchemaName}`
+      : sqlSchemaName
+  }
   WHERE ${whereConditions};
 \`;
 

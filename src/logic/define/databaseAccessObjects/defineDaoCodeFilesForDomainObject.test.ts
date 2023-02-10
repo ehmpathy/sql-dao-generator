@@ -1,4 +1,9 @@
-import { DomainObjectMetadata, DomainObjectPropertyType, DomainObjectVariant } from 'domain-objects-metadata';
+import {
+  DomainObjectMetadata,
+  DomainObjectPropertyType,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
+
 import { defineSqlSchemaRelationshipForDomainObject } from '../sqlSchemaRelationship/defineSqlSchemaRelationshipForDomainObject';
 import { defineDaoCodeFilesForDomainObject } from './defineDaoCodeFilesForDomainObject';
 
@@ -27,7 +32,9 @@ describe('defineDaoCodeFilesForDomainObject', () => {
       sqlSchemaRelationship,
       allSqlSchemaRelationships: [sqlSchemaRelationship],
     });
-    expect(files.filter((file) => file.relpath.includes('findByUuid')).length).toEqual(1);
+    expect(
+      files.filter((file) => file.relpath.includes('findByUuid')).length,
+    ).toEqual(1);
     expect(files).toMatchSnapshot();
   });
   it('should not have the findByUuid file if property has uuid', () => {
@@ -53,7 +60,9 @@ describe('defineDaoCodeFilesForDomainObject', () => {
       sqlSchemaRelationship,
       allSqlSchemaRelationships: [sqlSchemaRelationship],
     });
-    expect(files.filter((file) => file.relpath.includes('findByUuid')).length).toEqual(0);
+    expect(
+      files.filter((file) => file.relpath.includes('findByUuid')).length,
+    ).toEqual(0);
     expect(files).toMatchSnapshot();
   });
 });

@@ -1,4 +1,8 @@
-import { DomainObjectMetadata, DomainObjectPropertyType, DomainObjectVariant } from 'domain-objects-metadata';
+import {
+  DomainObjectMetadata,
+  DomainObjectPropertyType,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
 
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import {
@@ -73,7 +77,9 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
           allDomainObjects: [],
         });
       } catch (error) {
-        expect(error).toBeInstanceOf(PropertyReferencingDomainObjectNotNamedCorrectlyError);
+        expect(error).toBeInstanceOf(
+          PropertyReferencingDomainObjectNotNamedCorrectlyError,
+        );
       }
     });
     it('should throw an error if the property is ambiguously referenced domain object', () => {
@@ -103,7 +109,9 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
           ] as DomainObjectMetadata[],
         });
       } catch (error) {
-        expect(error).toBeInstanceOf(AmbiguouslyNamedDomainObjectReferencePropertyError);
+        expect(error).toBeInstanceOf(
+          AmbiguouslyNamedDomainObjectReferencePropertyError,
+        );
       }
     });
     it('should throw an error if a domain-entity was directly referenced', () => {
@@ -124,7 +132,9 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
           allDomainObjects: [] as DomainObjectMetadata[],
         });
       } catch (error) {
-        expect(error).toBeInstanceOf(DirectlyNestedNonDomainObjectReferenceForbiddenError);
+        expect(error).toBeInstanceOf(
+          DirectlyNestedNonDomainObjectReferenceForbiddenError,
+        );
       }
     });
     it('should throw an error if a domain-event was directly referenced', () => {
@@ -145,7 +155,9 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
           allDomainObjects: [] as DomainObjectMetadata[],
         });
       } catch (error) {
-        expect(error).toBeInstanceOf(DirectlyNestedNonDomainObjectReferenceForbiddenError);
+        expect(error).toBeInstanceOf(
+          DirectlyNestedNonDomainObjectReferenceForbiddenError,
+        );
       }
     });
   });

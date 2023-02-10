@@ -1,5 +1,8 @@
 import { camelCase, noCase } from 'change-case';
-import { DomainObjectMetadata, DomainObjectVariant } from 'domain-objects-metadata';
+import {
+  DomainObjectMetadata,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
 import { isPresent } from 'simple-type-guards';
 
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
@@ -16,9 +19,12 @@ export const defineSqlSchemaGeneratorCodeForDomainObject = ({
 }) => {
   // define which sql-schema-generator class we'll be using for defining the schema for this domain object
   const schemaGeneratorClass = (() => {
-    if (domainObject.extends === DomainObjectVariant.DOMAIN_ENTITY) return 'Entity';
-    if (domainObject.extends === DomainObjectVariant.DOMAIN_VALUE_OBJECT) return 'ValueObject';
-    if (domainObject.extends === DomainObjectVariant.DOMAIN_EVENT) return 'Event';
+    if (domainObject.extends === DomainObjectVariant.DOMAIN_ENTITY)
+      return 'Entity';
+    if (domainObject.extends === DomainObjectVariant.DOMAIN_VALUE_OBJECT)
+      return 'ValueObject';
+    if (domainObject.extends === DomainObjectVariant.DOMAIN_EVENT)
+      return 'Event';
     throw new UserInputError({
       reason: `sql schema can only be created for a domain object which extends DomainEntity, DomainValueObject, or DomainEvent. Found extends '${domainObject.extends}'`,
       domainObjectName: domainObject.name,
@@ -28,7 +34,10 @@ export const defineSqlSchemaGeneratorCodeForDomainObject = ({
   // define the code for each property
   const schemaGeneratorProperties = sqlSchemaRelationship.properties
     .filter(isNotADatabaseGeneratedProperty) // filter out all db generated properties, since sql-schema-generator will complain if they're included
-    .filter((propertyRelationship) => propertyRelationship.domainObject.name !== 'uuid') // we also can't use the "uuid" property, even if its not db generated, since sql-schema-generator will still complain even if entity is unique on it
+    .filter(
+      (propertyRelationship) =>
+        propertyRelationship.domainObject.name !== 'uuid',
+    ) // we also can't use the "uuid" property, even if its not db generated, since sql-schema-generator will still complain even if entity is unique on it
     .map((propertyRelationship) =>
       defineSqlSchemaGeneratorCodeForProperty({
         domainObject,
@@ -41,7 +50,9 @@ export const defineSqlSchemaGeneratorCodeForDomainObject = ({
   const schemaGeneratorUnique =
     sqlSchemaRelationship.decorations.unique.sqlSchema &&
     domainObject.extends !== DomainObjectVariant.DOMAIN_VALUE_OBJECT
-      ? `unique: [${sqlSchemaRelationship.decorations.unique.sqlSchema.map((s) => `'${s}'`).join(', ')}],`
+      ? `unique: [${sqlSchemaRelationship.decorations.unique.sqlSchema
+          .map((s) => `'${s}'`)
+          .join(', ')}],`
       : null;
 
   // define the imported props from sql-schema-generator based on this
@@ -53,17 +64,28 @@ export const defineSqlSchemaGeneratorCodeForDomainObject = ({
   const referenceImports = sqlSchemaRelationship.properties
     .map((propertyRelationship) => propertyRelationship.sqlSchema.reference)
     .filter(isPresent)
-    .map((reference) => `import { ${camelCase(reference.of.name)} } from './${camelCase(reference.of.name)}';`);
+    .map(
+      (reference) =>
+        `import { ${camelCase(reference.of.name)} } from './${camelCase(
+          reference.of.name,
+        )}';`,
+    );
   const distinctSortedReferenceImports = [...new Set(referenceImports.sort())];
 
   // define the code
   const content = `
 import { ${schemaGeneratorImports} } from 'sql-schema-generator';
-${distinctSortedReferenceImports.length ? ['', ...distinctSortedReferenceImports, ''].join('\n') : ''}
+${
+  distinctSortedReferenceImports.length
+    ? ['', ...distinctSortedReferenceImports, ''].join('\n')
+    : ''
+}
 /**
  * sql-schema for the ${noCase(domainObject.extends)} '${domainObject.name}'
  */
-export const ${camelCase(domainObject.name)}: ${schemaGeneratorClass} = new ${schemaGeneratorClass}({
+export const ${camelCase(
+    domainObject.name,
+  )}: ${schemaGeneratorClass} = new ${schemaGeneratorClass}({
   name: '${sqlSchemaRelationship.name.sqlSchema}',
   properties: {
     ${schemaGeneratorProperties.join('\n    ')}

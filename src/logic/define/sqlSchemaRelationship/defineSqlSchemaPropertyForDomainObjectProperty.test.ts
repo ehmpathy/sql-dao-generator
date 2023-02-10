@@ -1,4 +1,8 @@
-import { DomainObjectPropertyType, DomainObjectVariant } from 'domain-objects-metadata';
+import {
+  DomainObjectPropertyType,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
+
 import { createExampleDomainObjectMetadata } from '../../__test_assets__/createExampleDomainObject';
 import { defineSqlSchemaPropertyForDomainObjectProperty } from './defineSqlSchemaPropertyForDomainObjectProperty';
 
@@ -75,7 +79,11 @@ describe('defineSqlSchemaPropertyForDomainObjectProperty', () => {
         },
         domainObject: createExampleDomainObjectMetadata(),
         allDomainObjects: [
-          { ...createExampleDomainObjectMetadata(), name: 'Certificate', extends: DomainObjectVariant.DOMAIN_ENTITY },
+          {
+            ...createExampleDomainObjectMetadata(),
+            name: 'Certificate',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+          },
         ],
       });
       expect(sqlSchemaProperty.name).toEqual('steam_engine_certificate_id');
@@ -91,7 +99,11 @@ describe('defineSqlSchemaPropertyForDomainObjectProperty', () => {
         },
         domainObject: createExampleDomainObjectMetadata(),
         allDomainObjects: [
-          { ...createExampleDomainObjectMetadata(), name: 'Certificate', extends: DomainObjectVariant.DOMAIN_ENTITY },
+          {
+            ...createExampleDomainObjectMetadata(),
+            name: 'Certificate',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+          },
         ],
       });
       expect(sqlSchemaProperty.name).toEqual('engine_certificate_ids');
@@ -162,7 +174,10 @@ describe('defineSqlSchemaPropertyForDomainObjectProperty', () => {
         },
         domainObject: {
           ...createExampleDomainObjectMetadata(),
-          decorations: { updatable: ['socialSecurityNumberHash'], unique: null },
+          decorations: {
+            updatable: ['socialSecurityNumberHash'],
+            unique: null,
+          },
         },
         allDomainObjects: [],
       });

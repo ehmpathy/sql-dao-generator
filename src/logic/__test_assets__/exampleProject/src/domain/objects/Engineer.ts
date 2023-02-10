@@ -1,4 +1,5 @@
 import { DomainEntity } from 'domain-objects';
+
 import { Certificate } from './Certificate';
 
 /**
@@ -12,7 +13,10 @@ export interface TrainEngineer {
   licenseUuids: string[]; // an array of licenses, tracked in a separate database, that the engineer has earned
   name: string;
 }
-export class TrainEngineer extends DomainEntity<TrainEngineer> implements TrainEngineer {
+export class TrainEngineer
+  extends DomainEntity<TrainEngineer>
+  implements TrainEngineer
+{
   public static unique = ['socialSecurityNumberHash'];
   public static updatable = ['name', 'certificates', 'licenseUuids'];
 }

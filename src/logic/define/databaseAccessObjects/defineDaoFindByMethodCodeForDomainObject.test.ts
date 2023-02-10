@@ -1,7 +1,14 @@
-import { DomainObjectMetadata, DomainObjectPropertyType, DomainObjectVariant } from 'domain-objects-metadata';
+import {
+  DomainObjectMetadata,
+  DomainObjectPropertyType,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
 
 import { defineSqlSchemaRelationshipForDomainObject } from '../sqlSchemaRelationship/defineSqlSchemaRelationshipForDomainObject';
-import { defineDaoFindByMethodCodeForDomainObject, FindByQueryType } from './defineDaoFindByMethodCodeForDomainObject';
+import {
+  defineDaoFindByMethodCodeForDomainObject,
+  FindByQueryType,
+} from './defineDaoFindByMethodCodeForDomainObject';
 
 describe('defineDaoFindByMethodCodeForDomainObject', () => {
   describe('findById', () => {
@@ -14,7 +21,10 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
           uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
           latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
-          longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
+          longitude: {
+            name: 'longitude',
+            type: DomainObjectPropertyType.NUMBER,
+          },
         },
         decorations: {
           unique: null,
@@ -51,16 +61,32 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         name: 'Carriage',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
-          cin: { name: 'cin', type: DomainObjectPropertyType.STRING, required: true },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
+          cin: {
+            name: 'cin',
+            type: DomainObjectPropertyType.STRING,
+            required: true,
+          },
           carries: {
             name: 'carries',
             type: DomainObjectPropertyType.ENUM,
             of: ['PASSENGER', 'FREIGHT'],
             required: true,
           },
-          capacity: { name: 'capacity', type: DomainObjectPropertyType.NUMBER, nullable: true },
+          capacity: {
+            name: 'capacity',
+            type: DomainObjectPropertyType.NUMBER,
+            nullable: true,
+          },
         },
         decorations: {
           unique: ['cin'],
@@ -98,9 +124,21 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         name: 'TrainLocatedEvent',
         extends: DomainObjectVariant.DOMAIN_EVENT,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          trainUuid: { name: 'trainUuid', type: DomainObjectPropertyType.STRING, required: true },
-          occurredAt: { name: 'occurredAt', type: DomainObjectPropertyType.DATE, required: true },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          trainUuid: {
+            name: 'trainUuid',
+            type: DomainObjectPropertyType.STRING,
+            required: true,
+          },
+          occurredAt: {
+            name: 'occurredAt',
+            type: DomainObjectPropertyType.DATE,
+            required: true,
+          },
           geocodes: {
             name: 'geocodes',
             type: DomainObjectPropertyType.ARRAY,
@@ -125,28 +163,42 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       });
 
       // define property that gets referenced
-      const geocodeSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'Geocode',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
-          properties: {
-            id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-            latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
-            longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
-          },
-          decorations: {
-            unique: null,
-            updatable: null,
-          },
-        }),
-        allDomainObjects: [domainObject],
-      });
+      const geocodeSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Geocode',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            properties: {
+              id: {
+                name: 'id',
+                type: DomainObjectPropertyType.NUMBER,
+                required: false,
+              },
+              latitude: {
+                name: 'latitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
+              longitude: {
+                name: 'longitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
+            },
+            decorations: {
+              unique: null,
+              updatable: null,
+            },
+          }),
+          allDomainObjects: [domainObject],
+        });
 
       // run it
       const code = defineDaoFindByMethodCodeForDomainObject({
         domainObject,
         sqlSchemaRelationship,
-        allSqlSchemaRelationships: [sqlSchemaRelationship, geocodeSqlSchemaRelationship],
+        allSqlSchemaRelationships: [
+          sqlSchemaRelationship,
+          geocodeSqlSchemaRelationship,
+        ],
         findByQueryType: FindByQueryType.ID,
       });
 
@@ -156,7 +208,9 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       expect(code).toContain('train_located_event.train_uuid,');
       expect(code).toContain('train_located_event.occurred_at,');
       expect(code).toContain(') AS geocodes'); // its a complicated select expression (already has test coverage elsewhere)
-      expect(code).toContain('FROM view_train_located_event_current AS train_located_event'); // table to query (view, in this case)
+      expect(code).toContain(
+        'FROM view_train_located_event_current AS train_located_event',
+      ); // table to query (view, in this case)
       expect(code).toContain('WHERE train_located_event.id = :id'); // condition
       expect(code).toContain('await sqlQueryFindTrainLocatedEventById(');
       expect(code).toMatchSnapshot();
@@ -167,9 +221,21 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         name: 'Train',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
-          tin: { name: 'tin', type: DomainObjectPropertyType.STRING, required: true },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
+          tin: {
+            name: 'tin',
+            type: DomainObjectPropertyType.STRING,
+            required: true,
+          },
           homeStationGeocode: {
             name: 'homeStationGeocode',
             type: DomainObjectPropertyType.REFERENCE,
@@ -178,7 +244,10 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
             },
           },
-          leadEngineerUuid: { name: 'leadEngineerUuid', type: DomainObjectPropertyType.STRING },
+          leadEngineerUuid: {
+            name: 'leadEngineerUuid',
+            type: DomainObjectPropertyType.STRING,
+          },
           badges: {
             name: 'badges',
             type: DomainObjectPropertyType.ARRAY,
@@ -200,7 +269,12 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         },
         decorations: {
           unique: ['tin'],
-          updatable: ['homeStation', 'badges', 'locomotiveUuids', 'leadEngineerUuid'],
+          updatable: [
+            'homeStation',
+            'badges',
+            'locomotiveUuids',
+            'leadEngineerUuid',
+          ],
         },
       });
       const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
@@ -213,67 +287,81 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       });
 
       // define property that gets referenced
-      const geocodeSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'Geocode',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
-          properties: {
-            id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
-            uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
-            latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
-            longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
-          },
-          decorations: {
-            unique: null,
-            updatable: null,
-          },
-        }),
-        allDomainObjects: [domainObject],
-      });
-      const badgeSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'TrainBadge',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
-          properties: {
-            name: {
-              name: 'name',
-              type: DomainObjectPropertyType.STRING,
+      const geocodeSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Geocode',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            properties: {
+              id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+              uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+              latitude: {
+                name: 'latitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
+              longitude: {
+                name: 'longitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
             },
-            description: {
-              name: 'description',
-              type: DomainObjectPropertyType.STRING,
+            decorations: {
+              unique: null,
+              updatable: null,
             },
-            rank: {
-              name: 'rank',
-              type: DomainObjectPropertyType.ENUM,
-              of: ['GOLD', 'SILVER', 'BRONZE'],
+          }),
+          allDomainObjects: [domainObject],
+        });
+      const badgeSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'TrainBadge',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            properties: {
+              name: {
+                name: 'name',
+                type: DomainObjectPropertyType.STRING,
+              },
+              description: {
+                name: 'description',
+                type: DomainObjectPropertyType.STRING,
+              },
+              rank: {
+                name: 'rank',
+                type: DomainObjectPropertyType.ENUM,
+                of: ['GOLD', 'SILVER', 'BRONZE'],
+              },
             },
-          },
-          decorations: {
-            unique: null,
-            updatable: null,
-          },
-        }),
-        allDomainObjects: [domainObject],
-      });
-      const locomotiveSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'Locomotive',
-          extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
-          decorations: { unique: ['uuid'], updatable: [] },
-        }),
-        allDomainObjects: [domainObject],
-      });
-      const engineerSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'TrainEngineer',
-          extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
-          decorations: { unique: ['uuid'], updatable: [] },
-        }),
-        allDomainObjects: [domainObject],
-      });
+            decorations: {
+              unique: null,
+              updatable: null,
+            },
+          }),
+          allDomainObjects: [domainObject],
+        });
+      const locomotiveSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Locomotive',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+            properties: {
+              uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+            }, // domain entity reference, so we dont need to look at properties
+            decorations: { unique: ['uuid'], updatable: [] },
+          }),
+          allDomainObjects: [domainObject],
+        });
+      const engineerSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'TrainEngineer',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+            properties: {
+              uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+            }, // domain entity reference, so we dont need to look at properties
+            decorations: { unique: ['uuid'], updatable: [] },
+          }),
+          allDomainObjects: [domainObject],
+        });
 
       // run it
       const code = defineDaoFindByMethodCodeForDomainObject({
@@ -313,7 +401,10 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         properties: {
           id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
           latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
-          longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
+          longitude: {
+            name: 'longitude',
+            type: DomainObjectPropertyType.NUMBER,
+          },
         },
         decorations: {
           unique: null,
@@ -349,16 +440,32 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         name: 'Carriage',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
-          cin: { name: 'cin', type: DomainObjectPropertyType.STRING, required: true },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
+          cin: {
+            name: 'cin',
+            type: DomainObjectPropertyType.STRING,
+            required: true,
+          },
           carries: {
             name: 'carries',
             type: DomainObjectPropertyType.ENUM,
             of: ['PASSENGER', 'FREIGHT'],
             required: true,
           },
-          capacity: { name: 'capacity', type: DomainObjectPropertyType.NUMBER, nullable: true },
+          capacity: {
+            name: 'capacity',
+            type: DomainObjectPropertyType.NUMBER,
+            nullable: true,
+          },
         },
         decorations: {
           unique: ['cin'],
@@ -396,9 +503,21 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         name: 'TrainLocatedEvent',
         extends: DomainObjectVariant.DOMAIN_EVENT,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          trainUuid: { name: 'trainUuid', type: DomainObjectPropertyType.STRING, required: true },
-          occurredAt: { name: 'occurredAt', type: DomainObjectPropertyType.DATE, required: true },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          trainUuid: {
+            name: 'trainUuid',
+            type: DomainObjectPropertyType.STRING,
+            required: true,
+          },
+          occurredAt: {
+            name: 'occurredAt',
+            type: DomainObjectPropertyType.DATE,
+            required: true,
+          },
           geocodes: {
             name: 'geocodes',
             type: DomainObjectPropertyType.ARRAY,
@@ -423,43 +542,51 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       });
 
       // define property that gets referenced
-      const geocodeSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'Geocode',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
-          properties: {
-            latitude: {
-              name: 'latitude',
-              type: DomainObjectPropertyType.NUMBER,
+      const geocodeSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Geocode',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            properties: {
+              latitude: {
+                name: 'latitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
+              longitude: {
+                name: 'longitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
             },
-            longitude: {
-              name: 'longitude',
-              type: DomainObjectPropertyType.NUMBER,
+            decorations: {
+              unique: null,
+              updatable: null,
             },
-          },
-          decorations: {
-            unique: null,
-            updatable: null,
-          },
-        }),
-        allDomainObjects: [domainObject],
-      });
+          }),
+          allDomainObjects: [domainObject],
+        });
 
       // run it
       const code = defineDaoFindByMethodCodeForDomainObject({
         domainObject,
         sqlSchemaRelationship,
-        allSqlSchemaRelationships: [sqlSchemaRelationship, geocodeSqlSchemaRelationship],
+        allSqlSchemaRelationships: [
+          sqlSchemaRelationship,
+          geocodeSqlSchemaRelationship,
+        ],
         findByQueryType: FindByQueryType.UUID,
       });
 
       // log an example
-      expect(code).toContain('-- query_name = find_train_located_event_by_uuid'); // name of query
+      expect(code).toContain(
+        '-- query_name = find_train_located_event_by_uuid',
+      ); // name of query
       expect(code).toContain('train_located_event.id,'); // select expressions
       expect(code).toContain('train_located_event.train_uuid,');
       expect(code).toContain('train_located_event.occurred_at,');
       expect(code).toContain(') AS geocodes'); // its a complicated select expression (already has test coverage elsewhere)
-      expect(code).toContain('FROM view_train_located_event_current AS train_located_event'); // table to query (view, in this case)
+      expect(code).toContain(
+        'FROM view_train_located_event_current AS train_located_event',
+      ); // table to query (view, in this case)
       expect(code).toContain('WHERE train_located_event.uuid = :uuid'); // condition
       expect(code).toContain('await sqlQueryFindTrainLocatedEventByUuid(');
       expect(code).toMatchSnapshot();
@@ -470,9 +597,21 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         name: 'Train',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
-          tin: { name: 'tin', type: DomainObjectPropertyType.STRING, required: true },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
+          tin: {
+            name: 'tin',
+            type: DomainObjectPropertyType.STRING,
+            required: true,
+          },
           homeStationGeocode: {
             name: 'homeStationGeocode',
             type: DomainObjectPropertyType.REFERENCE,
@@ -481,7 +620,10 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
             },
           },
-          leadEngineerUuid: { name: 'leadEngineerUuid', type: DomainObjectPropertyType.STRING },
+          leadEngineerUuid: {
+            name: 'leadEngineerUuid',
+            type: DomainObjectPropertyType.STRING,
+          },
           badges: {
             name: 'badges',
             type: DomainObjectPropertyType.ARRAY,
@@ -503,7 +645,12 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         },
         decorations: {
           unique: ['tin'],
-          updatable: ['homeStation', 'badges', 'locomotiveUuids', 'leadEngineerUuid'],
+          updatable: [
+            'homeStation',
+            'badges',
+            'locomotiveUuids',
+            'leadEngineerUuid',
+          ],
         },
       });
       const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
@@ -516,71 +663,79 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       });
 
       // define property that gets referenced
-      const geocodeSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'Geocode',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
-          properties: {
-            latitude: {
-              name: 'latitude',
-              type: DomainObjectPropertyType.NUMBER,
+      const geocodeSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Geocode',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            properties: {
+              latitude: {
+                name: 'latitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
+              longitude: {
+                name: 'longitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
             },
-            longitude: {
-              name: 'longitude',
-              type: DomainObjectPropertyType.NUMBER,
+            decorations: {
+              unique: null,
+              updatable: null,
             },
-          },
-          decorations: {
-            unique: null,
-            updatable: null,
-          },
-        }),
-        allDomainObjects: [domainObject],
-      });
-      const badgeSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'TrainBadge',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
-          properties: {
-            name: {
-              name: 'name',
-              type: DomainObjectPropertyType.STRING,
+          }),
+          allDomainObjects: [domainObject],
+        });
+      const badgeSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'TrainBadge',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            properties: {
+              name: {
+                name: 'name',
+                type: DomainObjectPropertyType.STRING,
+              },
+              description: {
+                name: 'description',
+                type: DomainObjectPropertyType.STRING,
+              },
+              rank: {
+                name: 'rank',
+                type: DomainObjectPropertyType.ENUM,
+                of: ['GOLD', 'SILVER', 'BRONZE'],
+              },
             },
-            description: {
-              name: 'description',
-              type: DomainObjectPropertyType.STRING,
+            decorations: {
+              unique: null,
+              updatable: null,
             },
-            rank: {
-              name: 'rank',
-              type: DomainObjectPropertyType.ENUM,
-              of: ['GOLD', 'SILVER', 'BRONZE'],
-            },
-          },
-          decorations: {
-            unique: null,
-            updatable: null,
-          },
-        }),
-        allDomainObjects: [domainObject],
-      });
-      const locomotiveSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'Locomotive',
-          extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
-          decorations: { unique: ['uuid'], updatable: [] },
-        }),
-        allDomainObjects: [domainObject],
-      });
-      const engineerSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'TrainEngineer',
-          extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
-          decorations: { unique: ['uuid'], updatable: [] },
-        }),
-        allDomainObjects: [domainObject],
-      });
+          }),
+          allDomainObjects: [domainObject],
+        });
+      const locomotiveSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Locomotive',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+            properties: {
+              uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+            }, // domain entity reference, so we dont need to look at properties
+            decorations: { unique: ['uuid'], updatable: [] },
+          }),
+          allDomainObjects: [domainObject],
+        });
+      const engineerSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'TrainEngineer',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+            properties: {
+              uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+            }, // domain entity reference, so we dont need to look at properties
+            decorations: { unique: ['uuid'], updatable: [] },
+          }),
+          allDomainObjects: [domainObject],
+        });
 
       // run it
       const code = defineDaoFindByMethodCodeForDomainObject({
@@ -620,7 +775,10 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         properties: {
           id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
           latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
-          longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
+          longitude: {
+            name: 'longitude',
+            type: DomainObjectPropertyType.NUMBER,
+          },
         },
         decorations: {
           unique: null,
@@ -676,7 +834,10 @@ async ({
           price: {
             name: 'price',
             type: DomainObjectPropertyType.REFERENCE,
-            of: { extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT, name: 'Price' },
+            of: {
+              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              name: 'Price',
+            },
           },
         },
         decorations: {
@@ -690,33 +851,46 @@ async ({
       });
 
       // define referenced domain object
-      const priceSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'Price',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
-          properties: {
-            id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-            amount: { name: 'amount', type: DomainObjectPropertyType.NUMBER },
-            currency: { name: 'currency', type: DomainObjectPropertyType.STRING },
-          },
-          decorations: {
-            unique: null,
-            updatable: null,
-          },
-        }),
-        allDomainObjects: [],
-      });
+      const priceSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Price',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            properties: {
+              id: {
+                name: 'id',
+                type: DomainObjectPropertyType.NUMBER,
+                required: false,
+              },
+              amount: { name: 'amount', type: DomainObjectPropertyType.NUMBER },
+              currency: {
+                name: 'currency',
+                type: DomainObjectPropertyType.STRING,
+              },
+            },
+            decorations: {
+              unique: null,
+              updatable: null,
+            },
+          }),
+          allDomainObjects: [],
+        });
 
       // run it
       const code = defineDaoFindByMethodCodeForDomainObject({
         domainObject,
         sqlSchemaRelationship,
-        allSqlSchemaRelationships: [sqlSchemaRelationship, priceSqlSchemaRelationship],
+        allSqlSchemaRelationships: [
+          sqlSchemaRelationship,
+          priceSqlSchemaRelationship,
+        ],
         findByQueryType: FindByQueryType.UNIQUE,
       });
 
       // log an example
-      expect(code).toContain("import { InvoiceLineItem, Price } from '$PATH_TO_DOMAIN_OBJECT';"); // its should import price, since its nested
+      expect(code).toContain(
+        "import { InvoiceLineItem, Price } from '$PATH_TO_DOMAIN_OBJECT';",
+      ); // its should import price, since its nested
       expect(code).toMatchSnapshot();
     });
     it('should look correct for simple domain entity', () => {
@@ -725,16 +899,32 @@ async ({
         name: 'Carriage',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
-          cin: { name: 'cin', type: DomainObjectPropertyType.STRING, required: true },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
+          cin: {
+            name: 'cin',
+            type: DomainObjectPropertyType.STRING,
+            required: true,
+          },
           carries: {
             name: 'carries',
             type: DomainObjectPropertyType.ENUM,
             of: ['PASSENGER', 'FREIGHT'],
             required: true,
           },
-          capacity: { name: 'capacity', type: DomainObjectPropertyType.NUMBER, nullable: true },
+          capacity: {
+            name: 'capacity',
+            type: DomainObjectPropertyType.NUMBER,
+            nullable: true,
+          },
         },
         decorations: {
           unique: ['cin'],
@@ -784,15 +974,27 @@ async ({
         name: 'Carriage',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
           carries: {
             name: 'carries',
             type: DomainObjectPropertyType.ENUM,
             of: ['PASSENGER', 'FREIGHT'],
             required: true,
           },
-          capacity: { name: 'capacity', type: DomainObjectPropertyType.NUMBER, nullable: true },
+          capacity: {
+            name: 'capacity',
+            type: DomainObjectPropertyType.NUMBER,
+            nullable: true,
+          },
         },
         decorations: {
           unique: ['uuid'],
@@ -841,8 +1043,16 @@ async ({
         name: 'Station',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
           station: {
             name: 'geocode',
             type: DomainObjectPropertyType.REFERENCE,
@@ -851,7 +1061,11 @@ async ({
               name: 'Geocode',
             },
           },
-          name: { name: 'name', type: DomainObjectPropertyType.STRING, nullable: true },
+          name: {
+            name: 'name',
+            type: DomainObjectPropertyType.STRING,
+            nullable: true,
+          },
         },
         decorations: {
           unique: ['geocode'],
@@ -864,33 +1078,37 @@ async ({
       });
 
       // define property that gets referenced
-      const geocodeSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'Geocode',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
-          properties: {
-            latitude: {
-              name: 'latitude',
-              type: DomainObjectPropertyType.NUMBER,
+      const geocodeSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Geocode',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            properties: {
+              latitude: {
+                name: 'latitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
+              longitude: {
+                name: 'longitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
             },
-            longitude: {
-              name: 'longitude',
-              type: DomainObjectPropertyType.NUMBER,
+            decorations: {
+              unique: null,
+              updatable: null,
             },
-          },
-          decorations: {
-            unique: null,
-            updatable: null,
-          },
-        }),
-        allDomainObjects: [domainObject],
-      });
+          }),
+          allDomainObjects: [domainObject],
+        });
 
       // run it
       const code = defineDaoFindByMethodCodeForDomainObject({
         domainObject,
         sqlSchemaRelationship,
-        allSqlSchemaRelationships: [sqlSchemaRelationship, geocodeSqlSchemaRelationship],
+        allSqlSchemaRelationships: [
+          sqlSchemaRelationship,
+          geocodeSqlSchemaRelationship,
+        ],
         findByQueryType: FindByQueryType.UNIQUE,
       });
 
@@ -923,9 +1141,21 @@ async ({
         name: 'TrainLocatedEvent',
         extends: DomainObjectVariant.DOMAIN_EVENT,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          trainUuid: { name: 'trainUuid', type: DomainObjectPropertyType.STRING, required: true },
-          occurredAt: { name: 'occurredAt', type: DomainObjectPropertyType.DATE, required: true },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          trainUuid: {
+            name: 'trainUuid',
+            type: DomainObjectPropertyType.STRING,
+            required: true,
+          },
+          occurredAt: {
+            name: 'occurredAt',
+            type: DomainObjectPropertyType.DATE,
+            required: true,
+          },
           geocodes: {
             name: 'geocodes',
             type: DomainObjectPropertyType.ARRAY,
@@ -950,46 +1180,58 @@ async ({
       });
 
       // define property that gets referenced
-      const geocodeSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'Geocode',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
-          properties: {
-            latitude: {
-              name: 'latitude',
-              type: DomainObjectPropertyType.NUMBER,
+      const geocodeSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Geocode',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            properties: {
+              latitude: {
+                name: 'latitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
+              longitude: {
+                name: 'longitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
             },
-            longitude: {
-              name: 'longitude',
-              type: DomainObjectPropertyType.NUMBER,
+            decorations: {
+              unique: null,
+              updatable: null,
             },
-          },
-          decorations: {
-            unique: null,
-            updatable: null,
-          },
-        }),
-        allDomainObjects: [domainObject],
-      });
+          }),
+          allDomainObjects: [domainObject],
+        });
 
       // run it
       const code = defineDaoFindByMethodCodeForDomainObject({
         domainObject,
         sqlSchemaRelationship,
-        allSqlSchemaRelationships: [sqlSchemaRelationship, geocodeSqlSchemaRelationship],
+        allSqlSchemaRelationships: [
+          sqlSchemaRelationship,
+          geocodeSqlSchemaRelationship,
+        ],
         findByQueryType: FindByQueryType.UNIQUE,
       });
 
       // log an example
-      expect(code).toContain('-- query_name = find_train_located_event_by_unique'); // name of query
+      expect(code).toContain(
+        '-- query_name = find_train_located_event_by_unique',
+      ); // name of query
       expect(code).toContain('train_located_event.id,'); // select expressions
       expect(code).toContain('train_located_event.train_uuid,');
       expect(code).toContain('train_located_event.occurred_at,');
       expect(code).toContain(') AS geocodes'); // its a complicated select expression (already has test coverage elsewhere)
-      expect(code).toContain('FROM view_train_located_event_current AS train_located_event'); // table to query (view, in this case)
+      expect(code).toContain(
+        'FROM view_train_located_event_current AS train_located_event',
+      ); // table to query (view, in this case)
       expect(code).toContain('WHERE 1=1'); // condition
-      expect(code).toContain('  AND train_located_event.train_uuid = :trainUuid'); // condition
-      expect(code).toContain('  AND train_located_event.occurred_at = :occurredAt'); // condition
+      expect(code).toContain(
+        '  AND train_located_event.train_uuid = :trainUuid',
+      ); // condition
+      expect(code).toContain(
+        '  AND train_located_event.occurred_at = :occurredAt',
+      ); // condition
       expect(code).toContain(
         `
 async ({
@@ -1012,9 +1254,21 @@ async ({
         name: 'Train',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
-          tin: { name: 'tin', type: DomainObjectPropertyType.STRING, required: true },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
+          tin: {
+            name: 'tin',
+            type: DomainObjectPropertyType.STRING,
+            required: true,
+          },
           homeStationGeocode: {
             name: 'homeStationGeocode',
             type: DomainObjectPropertyType.REFERENCE,
@@ -1023,7 +1277,10 @@ async ({
               extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
             },
           },
-          leadEngineerUuid: { name: 'leadEngineerUuid', type: DomainObjectPropertyType.STRING },
+          leadEngineerUuid: {
+            name: 'leadEngineerUuid',
+            type: DomainObjectPropertyType.STRING,
+          },
           badges: {
             name: 'badges',
             type: DomainObjectPropertyType.ARRAY,
@@ -1045,7 +1302,12 @@ async ({
         },
         decorations: {
           unique: ['tin'],
-          updatable: ['homeStation', 'badges', 'locomotiveUuids', 'leadEngineerUuid'],
+          updatable: [
+            'homeStation',
+            'badges',
+            'locomotiveUuids',
+            'leadEngineerUuid',
+          ],
         },
       });
       const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
@@ -1058,71 +1320,79 @@ async ({
       });
 
       // define property that gets referenced
-      const geocodeSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'Geocode',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
-          properties: {
-            latitude: {
-              name: 'latitude',
-              type: DomainObjectPropertyType.NUMBER,
+      const geocodeSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Geocode',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            properties: {
+              latitude: {
+                name: 'latitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
+              longitude: {
+                name: 'longitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
             },
-            longitude: {
-              name: 'longitude',
-              type: DomainObjectPropertyType.NUMBER,
+            decorations: {
+              unique: null,
+              updatable: null,
             },
-          },
-          decorations: {
-            unique: null,
-            updatable: null,
-          },
-        }),
-        allDomainObjects: [domainObject],
-      });
-      const badgeSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'TrainBadge',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
-          properties: {
-            name: {
-              name: 'name',
-              type: DomainObjectPropertyType.STRING,
+          }),
+          allDomainObjects: [domainObject],
+        });
+      const badgeSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'TrainBadge',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            properties: {
+              name: {
+                name: 'name',
+                type: DomainObjectPropertyType.STRING,
+              },
+              description: {
+                name: 'description',
+                type: DomainObjectPropertyType.STRING,
+              },
+              rank: {
+                name: 'rank',
+                type: DomainObjectPropertyType.ENUM,
+                of: ['GOLD', 'SILVER', 'BRONZE'],
+              },
             },
-            description: {
-              name: 'description',
-              type: DomainObjectPropertyType.STRING,
+            decorations: {
+              unique: null,
+              updatable: null,
             },
-            rank: {
-              name: 'rank',
-              type: DomainObjectPropertyType.ENUM,
-              of: ['GOLD', 'SILVER', 'BRONZE'],
-            },
-          },
-          decorations: {
-            unique: null,
-            updatable: null,
-          },
-        }),
-        allDomainObjects: [domainObject],
-      });
-      const locomotiveSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'Locomotive',
-          extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
-          decorations: { unique: ['uuid'], updatable: [] },
-        }),
-        allDomainObjects: [domainObject],
-      });
-      const engineerSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'TrainEngineer',
-          extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
-          decorations: { unique: ['uuid'], updatable: [] },
-        }),
-        allDomainObjects: [domainObject],
-      });
+          }),
+          allDomainObjects: [domainObject],
+        });
+      const locomotiveSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Locomotive',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+            properties: {
+              uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+            }, // domain entity reference, so we dont need to look at properties
+            decorations: { unique: ['uuid'], updatable: [] },
+          }),
+          allDomainObjects: [domainObject],
+        });
+      const engineerSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'TrainEngineer',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+            properties: {
+              uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+            }, // domain entity reference, so we dont need to look at properties
+            decorations: { unique: ['uuid'], updatable: [] },
+          }),
+          allDomainObjects: [domainObject],
+        });
 
       // run it
       const code = defineDaoFindByMethodCodeForDomainObject({
@@ -1163,9 +1433,21 @@ async ({
         name: 'Train',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
-          tin: { name: 'tin', type: DomainObjectPropertyType.STRING, required: true },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
+          tin: {
+            name: 'tin',
+            type: DomainObjectPropertyType.STRING,
+            required: true,
+          },
           homeStationGeocode: {
             name: 'homeStationGeocode',
             type: DomainObjectPropertyType.REFERENCE,
@@ -1174,7 +1456,10 @@ async ({
               extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
             },
           },
-          leadEngineerUuid: { name: 'leadEngineerUuid', type: DomainObjectPropertyType.STRING },
+          leadEngineerUuid: {
+            name: 'leadEngineerUuid',
+            type: DomainObjectPropertyType.STRING,
+          },
           badges: {
             name: 'badges',
             type: DomainObjectPropertyType.ARRAY,
@@ -1195,7 +1480,12 @@ async ({
           },
         },
         decorations: {
-          unique: ['homeStationGeocode', 'badges', 'locomotiveUuids', 'leadEngineerUuid'],
+          unique: [
+            'homeStationGeocode',
+            'badges',
+            'locomotiveUuids',
+            'leadEngineerUuid',
+          ],
           updatable: [],
         },
       });
@@ -1209,62 +1499,79 @@ async ({
       });
 
       // define property that gets referenced
-      const geocodeSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'Geocode',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
-          properties: {
-            id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
-            latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
-            longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
-          },
-          decorations: {
-            unique: null,
-            updatable: null,
-          },
-        }),
-        allDomainObjects: [domainObject],
-      });
-      const badgeSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'TrainBadge',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
-          properties: {
-            id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
-            uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
-            name: { name: 'name', type: DomainObjectPropertyType.STRING },
-            description: { name: 'description', type: DomainObjectPropertyType.STRING },
-            rank: {
-              name: 'rank',
-              type: DomainObjectPropertyType.ENUM,
-              of: ['GOLD', 'SILVER', 'BRONZE'],
+      const geocodeSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Geocode',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            properties: {
+              id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+              latitude: {
+                name: 'latitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
+              longitude: {
+                name: 'longitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
             },
-          },
-          decorations: {
-            unique: null,
-            updatable: null,
-          },
-        }),
-        allDomainObjects: [domainObject],
-      });
-      const locomotiveSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'Locomotive',
-          extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
-          decorations: { unique: ['uuid'], updatable: [] },
-        }),
-        allDomainObjects: [domainObject],
-      });
-      const engineerSqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
-        domainObject: new DomainObjectMetadata({
-          name: 'TrainEngineer',
-          extends: DomainObjectVariant.DOMAIN_ENTITY,
-          properties: { uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING } }, // domain entity reference, so we dont need to look at properties
-          decorations: { unique: ['uuid'], updatable: [] },
-        }),
-        allDomainObjects: [domainObject],
-      });
+            decorations: {
+              unique: null,
+              updatable: null,
+            },
+          }),
+          allDomainObjects: [domainObject],
+        });
+      const badgeSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'TrainBadge',
+            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            properties: {
+              id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+              uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+              name: { name: 'name', type: DomainObjectPropertyType.STRING },
+              description: {
+                name: 'description',
+                type: DomainObjectPropertyType.STRING,
+              },
+              rank: {
+                name: 'rank',
+                type: DomainObjectPropertyType.ENUM,
+                of: ['GOLD', 'SILVER', 'BRONZE'],
+              },
+            },
+            decorations: {
+              unique: null,
+              updatable: null,
+            },
+          }),
+          allDomainObjects: [domainObject],
+        });
+      const locomotiveSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Locomotive',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+            properties: {
+              uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+            }, // domain entity reference, so we dont need to look at properties
+            decorations: { unique: ['uuid'], updatable: [] },
+          }),
+          allDomainObjects: [domainObject],
+        });
+      const engineerSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'TrainEngineer',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+            properties: {
+              uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+            }, // domain entity reference, so we dont need to look at properties
+            decorations: { unique: ['uuid'], updatable: [] },
+          }),
+          allDomainObjects: [domainObject],
+        });
 
       // run it
       const code = defineDaoFindByMethodCodeForDomainObject({

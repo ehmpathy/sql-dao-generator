@@ -14,7 +14,9 @@ export const saveGeneratedSqlSchemaGeneratorCodeFiles = async ({
 
   // define the root that the files are relative to
   const relativeRootDirOfGeneratorInputFiles = getDirOfPath(
-    `${getDirOfPath(config.generates.schema.config.path)}/${config.generates.schema.config.content.declarations}`,
+    `${getDirOfPath(config.generates.schema.config.path)}/${
+      config.generates.schema.config.content.declarations
+    }`,
   );
 
   // save the generated files (using a for loop to preserve order of when each file is saved -> output message display order)

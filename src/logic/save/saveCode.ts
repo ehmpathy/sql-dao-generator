@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+
 import { makeDirectoryAsync } from '../../utils/fileio/makeDirAsync';
 import { writeFileAsync } from '../../utils/fileio/writeFileAsync';
 import { getDirOfPath } from '../../utils/filepaths/getDirOfPath';
@@ -23,13 +24,19 @@ export const saveCode = async ({
   });
 
   // ensure content of file has terminal newline
-  const contentWithTerminalNewline = code.slice(-1)[0] === '\n' ? code : `${code}\n`;
+  const contentWithTerminalNewline =
+    code.slice(-1)[0] === '\n' ? code : `${code}\n`;
 
   // write the resource sql to that dir
-  await writeFileAsync({ path: absoluteFilePath, content: contentWithTerminalNewline });
+  await writeFileAsync({
+    path: absoluteFilePath,
+    content: contentWithTerminalNewline,
+  });
 
   // log that we have successfully written
-  const successMessage = `  ${chalk.green('✔')} ${chalk.green(chalk.bold('[GENERATED]'))} ${chalk.bold(
+  const successMessage = `  ${chalk.green('✔')} ${chalk.green(
+    chalk.bold('[GENERATED]'),
+  )} ${chalk.bold(
     relativeFilePath.replace(/^\//, ''), // strip leading `/`'s, since these are all relative paths
   )}`;
   console.log(successMessage); // tslint:disable-line no-console

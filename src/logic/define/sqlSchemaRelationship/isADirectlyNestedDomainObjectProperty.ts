@@ -3,6 +3,7 @@ import {
   isDomainObjectArrayProperty,
   isDomainObjectReferenceProperty,
 } from 'domain-objects-metadata';
+
 import { SqlSchemaPropertyMetadata } from '../../../domain';
 import { isAUserDefinedDomainObjectProperty } from './isAUserDefinedDomainObjectProperty';
 
@@ -12,9 +13,13 @@ import { isAUserDefinedDomainObjectProperty } from './isAUserDefinedDomainObject
 export const isADirectlyNestedDomainObjectProperty = (propertyRelationship: {
   domainObject: DomainObjectPropertyMetadata | null;
   sqlSchema: SqlSchemaPropertyMetadata;
-}): propertyRelationship is { domainObject: DomainObjectPropertyMetadata; sqlSchema: SqlSchemaPropertyMetadata } => {
+}): propertyRelationship is {
+  domainObject: DomainObjectPropertyMetadata;
+  sqlSchema: SqlSchemaPropertyMetadata;
+} => {
   if (!isAUserDefinedDomainObjectProperty(propertyRelationship)) return false; // if not user defined, then its def not a reference
-  if (isDomainObjectReferenceProperty(propertyRelationship.domainObject)) return true; // if its directly nested, its directly nested
+  if (isDomainObjectReferenceProperty(propertyRelationship.domainObject))
+    return true; // if its directly nested, its directly nested
   if (
     isDomainObjectArrayProperty(propertyRelationship.domainObject) &&
     isDomainObjectReferenceProperty(propertyRelationship.domainObject.of)

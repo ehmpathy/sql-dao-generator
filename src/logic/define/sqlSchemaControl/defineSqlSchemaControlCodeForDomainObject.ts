@@ -1,4 +1,5 @@
 import { snakeCase } from 'change-case';
+
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
 import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
 
@@ -26,15 +27,20 @@ export const defineSqlSchemaControlCodeForDomainObject = ({
     if (!propertyRelationship.sqlSchema.isArray) return;
     if (propertyRelationship.sqlSchema.isUpdatable) return; // only ones that join to static table
     if (!propertyRelationship.sqlSchema.reference) {
-      const endsWithUuidSuffix = new RegExp(/_uuids$/).test(propertyRelationship.sqlSchema.name);
+      const endsWithUuidSuffix = new RegExp(/_uuids$/).test(
+        propertyRelationship.sqlSchema.name,
+      );
       if (!endsWithUuidSuffix)
         throw new UnexpectedCodePathDetectedError({
-          reason: 'expected sql-schema-generator to only allow _uuid suffixed property names to be arrays',
+          reason:
+            'expected sql-schema-generator to only allow _uuid suffixed property names to be arrays',
           domainObjectPropertyName: propertyRelationship.domainObject?.name,
           domainObjectName: sqlSchemaRelationship.name.domainObject,
         });
       return resourceRelpaths.push(
-        `./tables/${sqlSchemaRelationship.name.sqlSchema}_to_${propertyRelationship.sqlSchema.name.replace(
+        `./tables/${
+          sqlSchemaRelationship.name.sqlSchema
+        }_to_${propertyRelationship.sqlSchema.name.replace(
           /_uuids$/,
           '_uuid',
         )}.sql`,
@@ -48,7 +54,10 @@ export const defineSqlSchemaControlCodeForDomainObject = ({
   });
 
   // define the version table, if there are any updatable properties
-  if (hasUpdatableProperties) resourceRelpaths.push(`./tables/${sqlSchemaRelationship.name.sqlSchema}_version.sql`);
+  if (hasUpdatableProperties)
+    resourceRelpaths.push(
+      `./tables/${sqlSchemaRelationship.name.sqlSchema}_version.sql`,
+    );
 
   // define any mapping tables referencing the version table, if there are any updatable properties
   if (hasUpdatableProperties)
@@ -56,41 +65,57 @@ export const defineSqlSchemaControlCodeForDomainObject = ({
       if (!propertyRelationship.sqlSchema.isArray) return;
       if (!propertyRelationship.sqlSchema.isUpdatable) return; // only ones that join to static table
       if (!propertyRelationship.sqlSchema.reference) {
-        const endsWithUuidSuffix = new RegExp(/_uuids$/).test(propertyRelationship.sqlSchema.name);
+        const endsWithUuidSuffix = new RegExp(/_uuids$/).test(
+          propertyRelationship.sqlSchema.name,
+        );
         if (!endsWithUuidSuffix)
           throw new UnexpectedCodePathDetectedError({
-            reason: 'expected sql-schema-generator to only allow _uuid suffixed property names to be arrays',
+            reason:
+              'expected sql-schema-generator to only allow _uuid suffixed property names to be arrays',
             domainObjectPropertyName: propertyRelationship.domainObject?.name,
             domainObjectName: sqlSchemaRelationship.name.domainObject,
           });
         return resourceRelpaths.push(
-          `./tables/${sqlSchemaRelationship.name.sqlSchema}_version_to_${propertyRelationship.sqlSchema.name.replace(
+          `./tables/${
+            sqlSchemaRelationship.name.sqlSchema
+          }_version_to_${propertyRelationship.sqlSchema.name.replace(
             /_uuids$/,
             '_uuid',
           )}.sql`,
         );
       }
       return resourceRelpaths.push(
-        `./tables/${sqlSchemaRelationship.name.sqlSchema}_version_to_${snakeCase(
+        `./tables/${
+          sqlSchemaRelationship.name.sqlSchema
+        }_version_to_${snakeCase(
           propertyRelationship.sqlSchema.reference.of.name,
         )}.sql`,
       );
     });
 
   // define the current version pointer table, if there are any updatable properties
-  if (hasUpdatableProperties) resourceRelpaths.push(`./tables/${sqlSchemaRelationship.name.sqlSchema}_cvp.sql`);
+  if (hasUpdatableProperties)
+    resourceRelpaths.push(
+      `./tables/${sqlSchemaRelationship.name.sqlSchema}_cvp.sql`,
+    );
 
   // define the "current" view, if there are any updatable properties or array properties
   if (hasUpdatableProperties || hasArrayProperties)
-    resourceRelpaths.push(`./views/view_${sqlSchemaRelationship.name.sqlSchema}_current.sql`);
+    resourceRelpaths.push(
+      `./views/view_${sqlSchemaRelationship.name.sqlSchema}_current.sql`,
+    );
 
   // define the upsert function
-  resourceRelpaths.push(`./functions/upsert_${sqlSchemaRelationship.name.sqlSchema}.sql`);
+  resourceRelpaths.push(
+    `./functions/upsert_${sqlSchemaRelationship.name.sqlSchema}.sql`,
+  );
 
   // define the full code for this domain entity, now that we have all of the paths to the resources defined, in order
   const code = [
     `# ${sqlSchemaRelationship.name.sqlSchema}`,
-    ...resourceRelpaths.map((relpath) => ['- type: resource', `  path: ${relpath}`].join('\n')),
+    ...resourceRelpaths.map((relpath) =>
+      ['- type: resource', `  path: ${relpath}`].join('\n'),
+    ),
   ].join('\n');
 
   // return the code

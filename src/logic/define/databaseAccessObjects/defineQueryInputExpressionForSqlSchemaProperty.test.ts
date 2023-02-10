@@ -1,4 +1,8 @@
-import { DomainObjectPropertyType, DomainObjectVariant } from 'domain-objects-metadata';
+import {
+  DomainObjectPropertyType,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
+
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
 import { defineQueryInputExpressionForSqlSchemaProperty } from './defineQueryInputExpressionForSqlSchemaProperty';
@@ -52,7 +56,9 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
         }),
       ], // not needed for this one
     });
-    expect(expression).toEqual('(SELECT id FROM train_engineer WHERE train_engineer.uuid = :leadEngineerUuid)');
+    expect(expression).toEqual(
+      '(SELECT id FROM train_engineer WHERE train_engineer.uuid = :leadEngineerUuid)',
+    );
   });
   it('should define the input expression correctly for a solo DIRECT_BY_NESTING reference', () => {
     const expression = defineQueryInputExpressionForSqlSchemaProperty({
@@ -84,7 +90,10 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
           name: { domainObject: 'Geocode', sqlSchema: 'geocode' },
           properties: [
             {
-              domainObject: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
+              domainObject: {
+                name: 'latitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
               sqlSchema: {
                 name: 'latitude',
                 isArray: false,
@@ -95,7 +104,10 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
               },
             },
             {
-              domainObject: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
+              domainObject: {
+                name: 'longitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
               sqlSchema: {
                 name: 'longitude',
                 isArray: false,
@@ -145,11 +157,19 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
       ], // not needed for this one
     });
     expect(expression).toContain('COALESCE(array_agg(train_engineer.id'); // should select an array of ids, with coalesce to treat empty array
-    expect(expression).toContain('array_agg(train_engineer.id ORDER BY train_engineer_ref.array_order_index)'); // should select them by persisted array order
+    expect(expression).toContain(
+      'array_agg(train_engineer.id ORDER BY train_engineer_ref.array_order_index)',
+    ); // should select them by persisted array order
     expect(expression).toContain('FROM train_engineer'); // from the right table
-    expect(expression).toContain('JOIN unnest(:assignedEngineerUuids::uuid[]) WITH ORDINALITY'); // using 'unnest' for performance gains,  using "ordinality" so that we can preserve persisted array_order_index
-    expect(expression).toContain('train_engineer_ref (uuid, array_order_index)'); // name the unnested w/ ordinality table well
-    expect(expression).toContain('ON train_engineer.uuid = train_engineer_ref.uuid'); // filtered on the right id
+    expect(expression).toContain(
+      'JOIN unnest(:assignedEngineerUuids::uuid[]) WITH ORDINALITY',
+    ); // using 'unnest' for performance gains,  using "ordinality" so that we can preserve persisted array_order_index
+    expect(expression).toContain(
+      'train_engineer_ref (uuid, array_order_index)',
+    ); // name the unnested w/ ordinality table well
+    expect(expression).toContain(
+      'ON train_engineer.uuid = train_engineer_ref.uuid',
+    ); // filtered on the right id
     expect(expression).toMatchSnapshot();
   });
   it('should define the input expression correctly for an array of DIRECT_BY_NESTING reference', () => {
@@ -185,7 +205,10 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
           name: { domainObject: 'Geocode', sqlSchema: 'geocode' },
           properties: [
             {
-              domainObject: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
+              domainObject: {
+                name: 'latitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
               sqlSchema: {
                 name: 'latitude',
                 isArray: false,
@@ -196,7 +219,10 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
               },
             },
             {
-              domainObject: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
+              domainObject: {
+                name: 'longitude',
+                type: DomainObjectPropertyType.NUMBER,
+              },
               sqlSchema: {
                 name: 'longitude',
                 isArray: false,

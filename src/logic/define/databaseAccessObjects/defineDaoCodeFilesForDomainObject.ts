@@ -1,9 +1,13 @@
 import { DomainObjectMetadata } from 'domain-objects-metadata';
 import { isPresent } from 'simple-type-guards';
+
 import { GeneratedCodeFile } from '../../../domain/objects/GeneratedCodeFile';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
 import { castDomainObjectNameToDaoName } from './castDomainObjectNameToDaoName';
-import { defineDaoFindByMethodCodeForDomainObject, FindByQueryType } from './defineDaoFindByMethodCodeForDomainObject';
+import {
+  defineDaoFindByMethodCodeForDomainObject,
+  FindByQueryType,
+} from './defineDaoFindByMethodCodeForDomainObject';
 import { defineDaoUpsertMethodCodeForDomainObject } from './defineDaoUpsertMethodCodeForDomainObject';
 import { defineDaoUtilCastMethodCodeForDomainObject } from './defineDaoUtilCastMethodCodeForDomainObject';
 
@@ -44,7 +48,9 @@ export const defineDaoCodeFilesForDomainObject = ({
     hasUuidProperty ? 'findByUuid' : null,
     'upsert',
   ].filter(isPresent);
-  const indexImports = daoMethodNames.map((daoMethodName) => `import { ${daoMethodName} } from './${daoMethodName}';`);
+  const indexImports = daoMethodNames.map(
+    (daoMethodName) => `import { ${daoMethodName} } from './${daoMethodName}';`,
+  );
   const indexFile = new GeneratedCodeFile({
     relpath: `${castDomainObjectNameToDaoName(domainObject.name)}/index.ts`,
     content: `
@@ -58,8 +64,13 @@ export const ${castDomainObjectNameToDaoName(domainObject.name)} = {
 
   // define the casting method
   const castFromDatabaseObjectMethodFile = new GeneratedCodeFile({
-    relpath: `${castDomainObjectNameToDaoName(domainObject.name)}/castFromDatabaseObject.ts`,
-    content: defineDaoUtilCastMethodCodeForDomainObject({ domainObject, sqlSchemaRelationship }),
+    relpath: `${castDomainObjectNameToDaoName(
+      domainObject.name,
+    )}/castFromDatabaseObject.ts`,
+    content: defineDaoUtilCastMethodCodeForDomainObject({
+      domainObject,
+      sqlSchemaRelationship,
+    }),
   });
 
   // define the find by methods
@@ -73,7 +84,9 @@ export const ${castDomainObjectNameToDaoName(domainObject.name)} = {
     }),
   });
   const findByUniqueMethodFile = new GeneratedCodeFile({
-    relpath: `${castDomainObjectNameToDaoName(domainObject.name)}/findByUnique.ts`,
+    relpath: `${castDomainObjectNameToDaoName(
+      domainObject.name,
+    )}/findByUnique.ts`,
     content: defineDaoFindByMethodCodeForDomainObject({
       domainObject,
       sqlSchemaRelationship,
@@ -83,7 +96,9 @@ export const ${castDomainObjectNameToDaoName(domainObject.name)} = {
   });
   const findByUuidMethodFile = hasUuidProperty
     ? new GeneratedCodeFile({
-        relpath: `${castDomainObjectNameToDaoName(domainObject.name)}/findByUuid.ts`,
+        relpath: `${castDomainObjectNameToDaoName(
+          domainObject.name,
+        )}/findByUuid.ts`,
         content: defineDaoFindByMethodCodeForDomainObject({
           domainObject,
           sqlSchemaRelationship,

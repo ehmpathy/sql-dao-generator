@@ -1,4 +1,8 @@
-import { DomainObjectMetadata, DomainObjectPropertyType, DomainObjectVariant } from 'domain-objects-metadata';
+import {
+  DomainObjectMetadata,
+  DomainObjectPropertyType,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
 
 import { defineSqlSchemaRelationshipForDomainObject } from '../sqlSchemaRelationship/defineSqlSchemaRelationshipForDomainObject';
 import { defineDaoUtilCastMethodCodeForDomainObject } from './defineDaoUtilCastMethodCodeForDomainObject';
@@ -32,7 +36,9 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
 
     // log an example
     expect(code).toContain("import { Geocode } from '$PATH_TO_DOMAIN_OBJECT'");
-    expect(code).toContain("import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';");
+    expect(code).toContain(
+      "import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';",
+    );
     expect(code).toContain('dbObject: SqlQueryFindGeocodeByIdOutput');
     expect(code).toContain('new Geocode({');
     expect(code).toMatchSnapshot();
@@ -43,16 +49,32 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
       name: 'Carriage',
       extends: DomainObjectVariant.DOMAIN_ENTITY,
       properties: {
-        id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-        uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
-        cin: { name: 'cin', type: DomainObjectPropertyType.STRING, required: true },
+        id: {
+          name: 'id',
+          type: DomainObjectPropertyType.NUMBER,
+          required: false,
+        },
+        uuid: {
+          name: 'uuid',
+          type: DomainObjectPropertyType.STRING,
+          required: false,
+        },
+        cin: {
+          name: 'cin',
+          type: DomainObjectPropertyType.STRING,
+          required: true,
+        },
         carries: {
           name: 'carries',
           type: DomainObjectPropertyType.ENUM,
           of: ['PASSENGER', 'FREIGHT'],
           required: true,
         },
-        capacity: { name: 'capacity', type: DomainObjectPropertyType.NUMBER, nullable: true },
+        capacity: {
+          name: 'capacity',
+          type: DomainObjectPropertyType.NUMBER,
+          nullable: true,
+        },
       },
       decorations: {
         unique: ['cin'],
@@ -72,7 +94,9 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
 
     // log an example
     expect(code).toContain("import { Carriage } from '$PATH_TO_DOMAIN_OBJECT'");
-    expect(code).toContain("import { SqlQueryFindCarriageByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';");
+    expect(code).toContain(
+      "import { SqlQueryFindCarriageByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';",
+    );
     expect(code).toContain('dbObject: SqlQueryFindCarriageByIdOutput');
     expect(code).toContain('new Carriage({');
     expect(code).toMatchSnapshot();
@@ -83,9 +107,21 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
       name: 'TrainLocatedEvent',
       extends: DomainObjectVariant.DOMAIN_EVENT,
       properties: {
-        id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-        trainUuid: { name: 'trainUuid', type: DomainObjectPropertyType.STRING, required: true },
-        occurredAt: { name: 'occurredAt', type: DomainObjectPropertyType.DATE, required: true },
+        id: {
+          name: 'id',
+          type: DomainObjectPropertyType.NUMBER,
+          required: false,
+        },
+        trainUuid: {
+          name: 'trainUuid',
+          type: DomainObjectPropertyType.STRING,
+          required: true,
+        },
+        occurredAt: {
+          name: 'occurredAt',
+          type: DomainObjectPropertyType.DATE,
+          required: true,
+        },
         geocodes: {
           name: 'geocodes',
           type: DomainObjectPropertyType.ARRAY,
@@ -116,7 +152,9 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
     });
 
     // log an example
-    expect(code).toContain("import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT'");
+    expect(code).toContain(
+      "import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT'",
+    );
     expect(code).toContain(
       "import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';",
     );
@@ -136,9 +174,21 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
       name: 'Train',
       extends: DomainObjectVariant.DOMAIN_ENTITY,
       properties: {
-        id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-        uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
-        tin: { name: 'tin', type: DomainObjectPropertyType.STRING, required: true },
+        id: {
+          name: 'id',
+          type: DomainObjectPropertyType.NUMBER,
+          required: false,
+        },
+        uuid: {
+          name: 'uuid',
+          type: DomainObjectPropertyType.STRING,
+          required: false,
+        },
+        tin: {
+          name: 'tin',
+          type: DomainObjectPropertyType.STRING,
+          required: true,
+        },
         homeStationGeocode: {
           name: 'homeStationGeocode',
           type: DomainObjectPropertyType.REFERENCE,
@@ -147,7 +197,10 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
             extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
           },
         },
-        leadEngineerUuid: { name: 'leadEngineerUuid', type: DomainObjectPropertyType.STRING },
+        leadEngineerUuid: {
+          name: 'leadEngineerUuid',
+          type: DomainObjectPropertyType.STRING,
+        },
         badges: {
           name: 'badges',
           type: DomainObjectPropertyType.ARRAY,
@@ -169,7 +222,12 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
       },
       decorations: {
         unique: ['tin'],
-        updatable: ['homeStationGeocode', 'badges', 'locomotiveUuids', 'leadEngineerUuid'],
+        updatable: [
+          'homeStationGeocode',
+          'badges',
+          'locomotiveUuids',
+          'leadEngineerUuid',
+        ],
       },
     });
     const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
@@ -207,7 +265,9 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
     expect(code).toContain(
       'badges: (dbObject.badges as SqlQueryFindTrainBadgeByIdOutput[]).map(castTrainBadgeFromDatabaseObject)',
     ); // instantiate nested array of geocodes
-    expect(code).toContain('locomotiveUuids: dbObject.locomotive_uuids as string[]');
+    expect(code).toContain(
+      'locomotiveUuids: dbObject.locomotive_uuids as string[]',
+    );
     expect(code).toMatchSnapshot();
   });
 });

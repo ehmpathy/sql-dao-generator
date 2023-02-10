@@ -18,7 +18,9 @@ export interface SqlSchemaReferenceMetadata {
   method: SqlSchemaReferenceMethod;
   of: DomainObjectReferenceMetadata;
 }
-export class SqlSchemaReferenceMetadata extends DomainObject<SqlSchemaReferenceMetadata>
-  implements SqlSchemaReferenceMetadata {
+export class SqlSchemaReferenceMetadata
+  extends DomainObject<SqlSchemaReferenceMetadata>
+  implements SqlSchemaReferenceMetadata
+{
   public static schema = schema;
 }

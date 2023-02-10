@@ -23,10 +23,14 @@ export const defineSqlSchemaGeneratorCodeFilesForDomainObjects = ({
     );
     if (!sqlSchemaRelationship)
       throw new UnexpectedCodePathDetectedError({
-        reason: 'could not find sql-schema-relationship, for defining sql-schema-generator code files',
+        reason:
+          'could not find sql-schema-relationship, for defining sql-schema-generator code files',
         domainObjectName: domainObject.name,
       });
-    const content = defineSqlSchemaGeneratorCodeForDomainObject({ domainObject, sqlSchemaRelationship });
+    const content = defineSqlSchemaGeneratorCodeForDomainObject({
+      domainObject,
+      sqlSchemaRelationship,
+    });
     return new GeneratedCodeFile({
       content,
       relpath: `${camelCase(domainObject.name)}.ts`,
@@ -35,7 +39,12 @@ export const defineSqlSchemaGeneratorCodeFilesForDomainObjects = ({
 
   // and define a root "index" file for the entities, to be used as an entry point
   const imports = domainObjects
-    .map((domainObject) => `import { ${camelCase(domainObject.name)} } from './${camelCase(domainObject.name)}';`)
+    .map(
+      (domainObject) =>
+        `import { ${camelCase(domainObject.name)} } from './${camelCase(
+          domainObject.name,
+        )}';`,
+    )
     .sort();
   const indexContent = `
 ${imports.join('\n')}

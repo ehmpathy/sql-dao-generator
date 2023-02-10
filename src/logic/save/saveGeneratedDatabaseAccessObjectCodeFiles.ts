@@ -18,7 +18,9 @@ export const saveGeneratedDatabaseAccessObjectCodeFiles = async ({
 
   // define how to get absolute path of this file
   const getAbsolutePathOfDaoFile = (file: GeneratedCodeFile) =>
-    getNormalizedPath(`${projectRootDir}/${relativeRootDirOfDaoFiles}/${file.relpath}`);
+    getNormalizedPath(
+      `${projectRootDir}/${relativeRootDirOfDaoFiles}/${file.relpath}`,
+    );
 
   // replace the placeholder import paths in each of the files
   const filesWithHydratedImportPaths = files.map(
@@ -31,7 +33,9 @@ export const saveGeneratedDatabaseAccessObjectCodeFiles = async ({
             getRelativePath({
               from: getAbsolutePathOfDaoFile(file),
               to: getNormalizedPath(
-                `${projectRootDir}/${config.generates.daos.using.DatabaseConnection.split('#')[0]}`,
+                `${projectRootDir}/${
+                  config.generates.daos.using.DatabaseConnection.split('#')[0]
+                }`,
               ).replace(/\.ts$/, ''),
             }),
           )
@@ -39,7 +43,11 @@ export const saveGeneratedDatabaseAccessObjectCodeFiles = async ({
             '$PATH_TO_LOG_OBJECT',
             getRelativePath({
               from: getAbsolutePathOfDaoFile(file),
-              to: getNormalizedPath(`${projectRootDir}/${config.generates.daos.using.log.split('#')[0]}`),
+              to: getNormalizedPath(
+                `${projectRootDir}/${
+                  config.generates.daos.using.log.split('#')[0]
+                }`,
+              ),
             }).replace(/\.ts$/, ''),
           )
           .replace(
@@ -74,7 +82,9 @@ export const saveGeneratedDatabaseAccessObjectCodeFiles = async ({
   for (const file of filesWithHydratedImportPaths) {
     await saveCode({
       rootDir: projectRootDir,
-      relativeFilePath: getNormalizedPath(`${relativeRootDirOfDaoFiles}/${file.relpath}`),
+      relativeFilePath: getNormalizedPath(
+        `${relativeRootDirOfDaoFiles}/${file.relpath}`,
+      ),
       code: file.content,
     });
   }

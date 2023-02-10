@@ -1,7 +1,15 @@
-import { DomainObjectMetadata, DomainObjectVariant } from 'domain-objects-metadata';
+import {
+  DomainObjectMetadata,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
+
 import { UserInputError } from '../../UserInputError';
 
-export const assertDomainObjectIsSafeToHaveSqlSchema = ({ domainObject }: { domainObject: DomainObjectMetadata }) => {
+export const assertDomainObjectIsSafeToHaveSqlSchema = ({
+  domainObject,
+}: {
+  domainObject: DomainObjectMetadata;
+}) => {
   // make sure that entities have "unique" and "updatable" defined
   if (domainObject.extends === DomainObjectVariant.DOMAIN_ENTITY) {
     if (!domainObject.decorations.unique?.length)
@@ -42,7 +50,8 @@ export const assertDomainObjectIsSafeToHaveSqlSchema = ({ domainObject }: { doma
   if (domainObject.extends === DomainObjectVariant.DOMAIN_EVENT) {
     if (!domainObject.decorations.unique?.length)
       throw new UserInputError({
-        reason: "domain events must have at least one 'unique' property defined in order for a schema to be generated",
+        reason:
+          "domain events must have at least one 'unique' property defined in order for a schema to be generated",
         domainObjectName: domainObject.name,
       });
   }

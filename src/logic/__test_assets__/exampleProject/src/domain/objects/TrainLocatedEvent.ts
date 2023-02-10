@@ -1,4 +1,5 @@
 import { DomainEvent } from 'domain-objects';
+
 import { Geocode } from './Geocode';
 
 /**
@@ -10,6 +11,9 @@ export interface TrainLocatedEvent {
   occurredAt: string;
   geocode: Geocode;
 }
-export class TrainLocatedEvent extends DomainEvent<TrainLocatedEvent> implements TrainLocatedEvent {
+export class TrainLocatedEvent
+  extends DomainEvent<TrainLocatedEvent>
+  implements TrainLocatedEvent
+{
   public static unique = ['trainUuid', 'occurredAt'];
 }

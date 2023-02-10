@@ -1,4 +1,8 @@
-import { DomainObjectMetadata, DomainObjectPropertyType, DomainObjectVariant } from 'domain-objects-metadata';
+import {
+  DomainObjectMetadata,
+  DomainObjectPropertyType,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
 
 import { defineSqlSchemaRelationshipForDomainObject } from '../sqlSchemaRelationship/defineSqlSchemaRelationshipForDomainObject';
 import { defineSqlSchemaControlCodeForDomainObject } from './defineSqlSchemaControlCodeForDomainObject';
@@ -30,7 +34,9 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
     });
 
     // run it
-    const code = defineSqlSchemaControlCodeForDomainObject({ sqlSchemaRelationship });
+    const code = defineSqlSchemaControlCodeForDomainObject({
+      sqlSchemaRelationship,
+    });
 
     // check that it looks right
     expect(code).toContain('path: ./tables/geocode.sql');
@@ -44,16 +50,32 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
       name: 'Carriage',
       extends: DomainObjectVariant.DOMAIN_ENTITY,
       properties: {
-        id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-        uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
-        cin: { name: 'cin', type: DomainObjectPropertyType.STRING, required: true },
+        id: {
+          name: 'id',
+          type: DomainObjectPropertyType.NUMBER,
+          required: false,
+        },
+        uuid: {
+          name: 'uuid',
+          type: DomainObjectPropertyType.STRING,
+          required: false,
+        },
+        cin: {
+          name: 'cin',
+          type: DomainObjectPropertyType.STRING,
+          required: true,
+        },
         carries: {
           name: 'carries',
           type: DomainObjectPropertyType.ENUM,
           of: ['PASSENGER', 'FREIGHT'],
           required: true,
         },
-        capacity: { name: 'capacity', type: DomainObjectPropertyType.NUMBER, nullable: true },
+        capacity: {
+          name: 'capacity',
+          type: DomainObjectPropertyType.NUMBER,
+          nullable: true,
+        },
       },
       decorations: {
         unique: ['cin'],
@@ -66,7 +88,9 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
     });
 
     // run it
-    const code = defineSqlSchemaControlCodeForDomainObject({ sqlSchemaRelationship });
+    const code = defineSqlSchemaControlCodeForDomainObject({
+      sqlSchemaRelationship,
+    });
 
     // check that it looks right
     expect(code).toContain('path: ./tables/carriage.sql');
@@ -83,9 +107,21 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
       name: 'TrainLocatedEvent',
       extends: DomainObjectVariant.DOMAIN_EVENT,
       properties: {
-        id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-        trainUuid: { name: 'trainUuid', type: DomainObjectPropertyType.STRING, required: true },
-        occurredAt: { name: 'occurredAt', type: DomainObjectPropertyType.DATE, required: true },
+        id: {
+          name: 'id',
+          type: DomainObjectPropertyType.NUMBER,
+          required: false,
+        },
+        trainUuid: {
+          name: 'trainUuid',
+          type: DomainObjectPropertyType.STRING,
+          required: true,
+        },
+        occurredAt: {
+          name: 'occurredAt',
+          type: DomainObjectPropertyType.DATE,
+          required: true,
+        },
         geocodes: {
           name: 'geocodes',
           type: DomainObjectPropertyType.ARRAY,
@@ -118,13 +154,19 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
     });
 
     // run it
-    const code = defineSqlSchemaControlCodeForDomainObject({ sqlSchemaRelationship });
+    const code = defineSqlSchemaControlCodeForDomainObject({
+      sqlSchemaRelationship,
+    });
 
     // check that it looks right
     expect(code).toContain('path: ./tables/train_located_event.sql');
     expect(code).toContain('path: ./tables/train_located_event_to_geocode.sql');
-    expect(code).toContain('path: ./tables/train_located_event_to_sensor_uuid.sql');
-    expect(code).toContain('path: ./views/view_train_located_event_current.sql');
+    expect(code).toContain(
+      'path: ./tables/train_located_event_to_sensor_uuid.sql',
+    );
+    expect(code).toContain(
+      'path: ./views/view_train_located_event_current.sql',
+    );
     expect(code).toContain('path: ./functions/upsert_train_located_event.sql');
     expect(code.split('\n').length).toEqual(11); // comment (1), resources (5x2)
     expect(code).toMatchSnapshot();
@@ -135,8 +177,16 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
       name: 'Train',
       extends: DomainObjectVariant.DOMAIN_ENTITY,
       properties: {
-        id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-        uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
+        id: {
+          name: 'id',
+          type: DomainObjectPropertyType.NUMBER,
+          required: false,
+        },
+        uuid: {
+          name: 'uuid',
+          type: DomainObjectPropertyType.STRING,
+          required: false,
+        },
         badges: {
           name: 'badges',
           type: DomainObjectPropertyType.ARRAY,
@@ -155,7 +205,10 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
             type: DomainObjectPropertyType.STRING,
           },
         },
-        leadEngineerUuid: { name: 'leadEngineerUuid', type: DomainObjectPropertyType.STRING },
+        leadEngineerUuid: {
+          name: 'leadEngineerUuid',
+          type: DomainObjectPropertyType.STRING,
+        },
         sensorUuids: {
           name: 'sensorUuids',
           type: DomainObjectPropertyType.ARRAY,
@@ -177,7 +230,9 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
     });
 
     // run it
-    const code = defineSqlSchemaControlCodeForDomainObject({ sqlSchemaRelationship });
+    const code = defineSqlSchemaControlCodeForDomainObject({
+      sqlSchemaRelationship,
+    });
 
     // check that it looks right
     expect(code).toContain('path: ./tables/train.sql');

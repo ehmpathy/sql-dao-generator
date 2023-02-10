@@ -1,4 +1,5 @@
 import { DomainEntity } from 'domain-objects';
+
 import { Geocode } from './Geocode';
 
 export enum TrainStatus {

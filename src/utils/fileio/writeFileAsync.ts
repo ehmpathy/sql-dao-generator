@@ -5,4 +5,10 @@ import util from 'util';
 export const mkdir = util.promisify(fs.mkdir);
 const writeFile = util.promisify(fs.writeFile);
 
-export const writeFileAsync = async ({ path, content }: { path: string; content: string }) => writeFile(path, content);
+export const writeFileAsync = async ({
+  path,
+  content,
+}: {
+  path: string;
+  content: string;
+}) => writeFile(path, content);

@@ -1,4 +1,8 @@
-import { DomainObjectMetadata, DomainObjectVariant } from 'domain-objects-metadata';
+import {
+  DomainObjectMetadata,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
+
 import { assertDomainObjectIsSafeToHaveSqlSchema } from './assertDomainObjectIsSafeToHaveSqlSchema';
 
 describe('assertDomainObjectIsSafeToHaveSqlSchema', () => {
@@ -18,7 +22,9 @@ describe('assertDomainObjectIsSafeToHaveSqlSchema', () => {
         });
         throw new Error('should not reach here');
       } catch (error) {
-        expect(error.message).toContain("domain value objects must _not_ have their 'unique' properties specified");
+        expect(error.message).toContain(
+          "domain value objects must _not_ have their 'unique' properties specified",
+        );
       }
     });
     it('should throw an error if updatable properties are attempted to be defined for domain-value-object', () => {
@@ -36,7 +42,9 @@ describe('assertDomainObjectIsSafeToHaveSqlSchema', () => {
         });
         throw new Error('should not reach here');
       } catch (error) {
-        expect(error.message).toContain("domain value objects must _not_ have any 'updatable' properties specified");
+        expect(error.message).toContain(
+          "domain value objects must _not_ have any 'updatable' properties specified",
+        );
       }
     });
   });

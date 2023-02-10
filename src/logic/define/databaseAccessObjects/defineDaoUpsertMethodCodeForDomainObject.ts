@@ -28,7 +28,9 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
   // define the imports
   const imports = [
     // always present imports
-    `import { HasMetadata${isUniqueOnUuid ? ', HasUuid' : ''} } from 'simple-type-guards';`,
+    `import { HasMetadata${
+      isUniqueOnUuid ? ', HasUuid' : ''
+    } } from 'simple-type-guards';`,
     '', // split module from relative imports
     "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
     `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`,
@@ -37,45 +39,56 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
     ...sqlSchemaRelationship.properties
       .filter(
         (propertyRelationship) =>
-          propertyRelationship.sqlSchema.reference?.method === SqlSchemaReferenceMethod.DIRECT_BY_NESTING, // this property is nested directly
+          propertyRelationship.sqlSchema.reference?.method ===
+          SqlSchemaReferenceMethod.DIRECT_BY_NESTING, // this property is nested directly
       )
       .map((propertyRelationship) => {
-        const nameOfDaoToImport = castDomainObjectNameToDaoName(propertyRelationship.sqlSchema.reference!.of.name);
+        const nameOfDaoToImport = castDomainObjectNameToDaoName(
+          propertyRelationship.sqlSchema.reference!.of.name,
+        );
         return `import { ${nameOfDaoToImport} } from '../${nameOfDaoToImport}';`;
       })
       .sort(),
   ];
 
   // define the query input expressions
-  const queryInputExpressions: string[] = Object.values(sqlSchemaRelationship.properties)
+  const queryInputExpressions: string[] = Object.values(
+    sqlSchemaRelationship.properties,
+  )
     .filter(isNotADatabaseGeneratedProperty)
-    .map(({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
-      defineQueryInputExpressionForSqlSchemaProperty({
-        sqlSchemaName,
-        sqlSchemaProperty,
-        domainObjectProperty,
-        allSqlSchemaRelationships,
-      }),
+    .map(
+      ({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
+        defineQueryInputExpressionForSqlSchemaProperty({
+          sqlSchemaName,
+          sqlSchemaProperty,
+          domainObjectProperty,
+          allSqlSchemaRelationships,
+        }),
     );
 
   // define the queryFunctionInputExpressions
-  const queryFunctionInputExpressions: string[] = Object.values(sqlSchemaRelationship.properties)
+  const queryFunctionInputExpressions: string[] = Object.values(
+    sqlSchemaRelationship.properties,
+  )
     .filter(isNotADatabaseGeneratedProperty)
-    .map(({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
-      defineQueryFunctionInputExpressionForDomainObjectProperty({
-        domainObjectName: domainObject.name,
-        sqlSchemaProperty,
-        domainObjectProperty,
-        allSqlSchemaRelationships,
-        context: GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY,
-      }),
+    .map(
+      ({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
+        defineQueryFunctionInputExpressionForDomainObjectProperty({
+          domainObjectName: domainObject.name,
+          sqlSchemaProperty,
+          domainObjectProperty,
+          allSqlSchemaRelationships,
+          context: GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY,
+        }),
     );
 
   // define the output type
   const outputType = defineOutputTypeOfFoundDomainObject(domainObject);
 
   // define the db generated properties that the user has defined on their domain object
-  const dbGeneratedPropertiesOnDomainObject = Object.values(sqlSchemaRelationship.properties)
+  const dbGeneratedPropertiesOnDomainObject = Object.values(
+    sqlSchemaRelationship.properties,
+  )
     .filter(
       ({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
         sqlSchemaProperty.isDatabaseGenerated && !!domainObjectProperty, // pick the properties that are db generated and defined on the domain object
@@ -89,7 +102,9 @@ ${imports.join('\n')}
 export const sql = \`
   -- query_name = upsert_${sqlSchemaName}
   SELECT
-    ${dbGeneratedPropertiesOnDomainObject.map((name) => `dgv.${name}`).join(', ')}
+    ${dbGeneratedPropertiesOnDomainObject
+      .map((name) => `dgv.${name}`)
+      .join(', ')}
   FROM upsert_${sqlSchemaName}(
     ${queryInputExpressions.join(',\n    ')}
   ) as dgv;
@@ -100,7 +115,9 @@ export const upsert = async ({
   ${camelCase(domainObject.name)},
 }: {
   dbConnection: DatabaseConnection;
-  ${camelCase(domainObject.name)}: ${isUniqueOnUuid ? `HasUuid<${domainObject.name}>` : domainObject.name};
+  ${camelCase(domainObject.name)}: ${
+    isUniqueOnUuid ? `HasUuid<${domainObject.name}>` : domainObject.name
+  };
 }): Promise<${outputType}> => {
   const results = await sqlQueryUpsert${domainObject.name}({
     dbExecute: dbConnection.query,
@@ -112,7 +129,8 @@ export const upsert = async ({
   const { ${dbGeneratedPropertiesOnDomainObject
     .map((sqlSchemaPropertyName) => {
       const domainObjectPropertyName = camelCase(sqlSchemaPropertyName);
-      if (domainObjectPropertyName === sqlSchemaPropertyName) return `${domainObjectPropertyName}`;
+      if (domainObjectPropertyName === sqlSchemaPropertyName)
+        return `${domainObjectPropertyName}`;
       return `${sqlSchemaPropertyName}: ${domainObjectPropertyName}`;
     })
     .join(', ')} } = results[0]; // grab the db generated values

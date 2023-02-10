@@ -1,5 +1,4 @@
 // tslint:disable: align
-
 import {
   AmbiguouslyNamedDomainObjectReferencePropertyError,
   getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter,
@@ -45,9 +44,13 @@ describe('getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter', ()
   ];
 
   cases.forEach((testCase) => {
-    it(`should ${testCase.expectedResult ? `return ${testCase.expectedResult}` : 'throw error'} for ${
-      testCase.propertyName
-    }, ${JSON.stringify(testCase.allDomainObjectNames)}`, () => {
+    it(`should ${
+      testCase.expectedResult
+        ? `return ${testCase.expectedResult}`
+        : 'throw error'
+    } for ${testCase.propertyName}, ${JSON.stringify(
+      testCase.allDomainObjectNames,
+    )}`, () => {
       if (testCase.expectedResult) {
         expect(
           getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter({
@@ -65,8 +68,12 @@ describe('getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter', ()
           });
           throw new Error('should not reach here');
         } catch (error) {
-          expect(error).toBeInstanceOf(AmbiguouslyNamedDomainObjectReferencePropertyError);
-          expect(error.message).toContain(testCase.expectedErrorMessageContains);
+          expect(error).toBeInstanceOf(
+            AmbiguouslyNamedDomainObjectReferencePropertyError,
+          );
+          expect(error.message).toContain(
+            testCase.expectedErrorMessageContains,
+          );
         }
       }
     });

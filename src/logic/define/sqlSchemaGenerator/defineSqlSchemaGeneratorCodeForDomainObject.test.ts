@@ -1,4 +1,9 @@
-import { DomainObjectMetadata, DomainObjectPropertyType, DomainObjectVariant } from 'domain-objects-metadata';
+import {
+  DomainObjectMetadata,
+  DomainObjectPropertyType,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
+
 import { defineSqlSchemaRelationshipForDomainObject } from '../sqlSchemaRelationship/defineSqlSchemaRelationshipForDomainObject';
 import { defineSqlSchemaGeneratorCodeForDomainObject } from './defineSqlSchemaGeneratorCodeForDomainObject';
 
@@ -36,7 +41,9 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
       });
 
       // check import lines
-      const importLines = code.split('\n').filter((line) => line.includes('import {'));
+      const importLines = code
+        .split('\n')
+        .filter((line) => line.includes('import {'));
       expect(importLines.length).toEqual(1); // should only have one import
       expect(importLines[0]).toContain("from 'sql-schema-generator';"); // and it should be the one from the sql-schema-generator
 
@@ -55,8 +62,16 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
         name: 'Train',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
           homeStationGeocode: {
             name: 'homeStation',
             type: DomainObjectPropertyType.REFERENCE,
@@ -83,11 +98,19 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
               type: DomainObjectPropertyType.STRING,
             },
           },
-          leadEngineerUuid: { name: 'leadEngineerUuid', type: DomainObjectPropertyType.STRING },
+          leadEngineerUuid: {
+            name: 'leadEngineerUuid',
+            type: DomainObjectPropertyType.STRING,
+          },
         },
         decorations: {
           unique: ['uuid'],
-          updatable: ['homeStation', 'badges', 'locomotiveUuids', 'leadEngineerUuid'],
+          updatable: [
+            'homeStation',
+            'badges',
+            'locomotiveUuids',
+            'leadEngineerUuid',
+          ],
         },
       });
       const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
@@ -106,7 +129,9 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
       });
 
       // check import lines
-      const importLines = code.split('\n').filter((line) => line.includes('import {'));
+      const importLines = code
+        .split('\n')
+        .filter((line) => line.includes('import {'));
       expect(importLines.length).toEqual(5); // should have 5 import lines; one for schema generator, 4 for domain entity references
       expect(importLines[0]).toContain("from 'sql-schema-generator';"); // first should be schema generator
       expect(importLines[1]).toContain("from './badge'"); // b, is first in alphabetical order of subsequent imports
@@ -136,10 +161,21 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
         name: 'Geocode',
         extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
           latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
-          longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
+          longitude: {
+            name: 'longitude',
+            type: DomainObjectPropertyType.NUMBER,
+          },
         },
         decorations: { unique: null, updatable: null },
       });
@@ -153,7 +189,9 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
         domainObject,
         sqlSchemaRelationship,
       });
-      expect(code).toContain("import { prop, ValueObject } from 'sql-schema-generator'");
+      expect(code).toContain(
+        "import { prop, ValueObject } from 'sql-schema-generator'",
+      );
       expect(code).toContain('export const geocode = new ValueObject({');
       expect(code).toContain("name: 'geocode'");
       expect(code).not.toContain('id:');
@@ -170,16 +208,32 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
         name: 'Carriage',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING, required: false },
-          cin: { name: 'cin', type: DomainObjectPropertyType.STRING, required: true },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
+          cin: {
+            name: 'cin',
+            type: DomainObjectPropertyType.STRING,
+            required: true,
+          },
           carries: {
             name: 'carries',
             type: DomainObjectPropertyType.ENUM,
             of: ['PASSENGER', 'FREIGHT'],
             required: true,
           },
-          capacity: { name: 'capacity', type: DomainObjectPropertyType.NUMBER, nullable: true },
+          capacity: {
+            name: 'capacity',
+            type: DomainObjectPropertyType.NUMBER,
+            nullable: true,
+          },
         },
         decorations: {
           unique: ['cin'],
@@ -196,14 +250,18 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
         domainObject,
         sqlSchemaRelationship,
       });
-      expect(code).toContain("import { Entity, prop } from 'sql-schema-generator'");
+      expect(code).toContain(
+        "import { Entity, prop } from 'sql-schema-generator'",
+      );
       expect(code).toContain('export const carriage = new Entity({');
       expect(code).toContain("name: 'carriage'");
       expect(code).not.toContain('id:'); // should be filtered out
       expect(code).not.toContain('uuid:'); // should be filtered out
       expect(code).toContain('cin: prop.VARCHAR(),');
       expect(code).toContain("carries: prop.ENUM(['PASSENGER', 'FREIGHT']),");
-      expect(code).toContain('capacity: { ...prop.NUMERIC(), nullable: true },');
+      expect(code).toContain(
+        'capacity: { ...prop.NUMERIC(), nullable: true },',
+      );
       expect(code).toContain("unique: ['cin'],");
       expect(code).toMatchSnapshot();
     });
@@ -213,9 +271,21 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
         name: 'TrainLocatedEvent',
         extends: DomainObjectVariant.DOMAIN_EVENT,
         properties: {
-          id: { name: 'id', type: DomainObjectPropertyType.NUMBER, required: false },
-          trainUuid: { name: 'trainUuid', type: DomainObjectPropertyType.STRING, required: true },
-          occurredAt: { name: 'occurredAt', type: DomainObjectPropertyType.DATE, required: true },
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          trainUuid: {
+            name: 'trainUuid',
+            type: DomainObjectPropertyType.STRING,
+            required: true,
+          },
+          occurredAt: {
+            name: 'occurredAt',
+            type: DomainObjectPropertyType.DATE,
+            required: true,
+          },
           geocode: {
             name: 'geocode',
             type: DomainObjectPropertyType.REFERENCE,
@@ -244,7 +314,9 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
         domainObject,
         sqlSchemaRelationship,
       });
-      expect(code).toContain("import { Event, prop } from 'sql-schema-generator'");
+      expect(code).toContain(
+        "import { Event, prop } from 'sql-schema-generator'",
+      );
       expect(code).toContain('export const trainLocatedEvent = new Event({');
       expect(code).toContain("name: 'train_located_event'");
       expect(code).not.toContain(' id:'); // should be filtered out

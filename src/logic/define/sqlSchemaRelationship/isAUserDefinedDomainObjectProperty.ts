@@ -1,4 +1,5 @@
 import { DomainObjectPropertyMetadata } from 'domain-objects-metadata';
+
 import { SqlSchemaPropertyMetadata } from '../../../domain';
 
 /**
@@ -9,5 +10,7 @@ import { SqlSchemaPropertyMetadata } from '../../../domain';
 export const isAUserDefinedDomainObjectProperty = (propertyRelationship: {
   domainObject: DomainObjectPropertyMetadata | null;
   sqlSchema: SqlSchemaPropertyMetadata;
-}): propertyRelationship is { domainObject: DomainObjectPropertyMetadata; sqlSchema: SqlSchemaPropertyMetadata } =>
-  !!propertyRelationship.domainObject;
+}): propertyRelationship is {
+  domainObject: DomainObjectPropertyMetadata;
+  sqlSchema: SqlSchemaPropertyMetadata;
+} => !!propertyRelationship.domainObject;

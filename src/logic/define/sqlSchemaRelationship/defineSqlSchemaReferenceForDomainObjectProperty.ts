@@ -1,5 +1,4 @@
 // tslint:disable: max-classes-per-file
-
 import {
   DomainObjectMetadata,
   DomainObjectPropertyMetadata,
@@ -100,36 +99,51 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
   allDomainObjects: DomainObjectMetadata[];
 }): SqlSchemaReferenceMetadata | null => {
   // determine what kind of reference it can be
-  const isDirectNestedReferenceCandidate = isDomainObjectReferenceProperty(property);
+  const isDirectNestedReferenceCandidate =
+    isDomainObjectReferenceProperty(property);
   const isDirectNestedReferenceArrayCandidate =
-    isDomainObjectArrayProperty(property) && isDomainObjectReferenceProperty(property.of);
+    isDomainObjectArrayProperty(property) &&
+    isDomainObjectReferenceProperty(property.of);
   const isImplicitUuidReferenceCandidate =
-    property.type === DomainObjectPropertyType.STRING && new RegExp(/Uuid/).test(property.name);
+    property.type === DomainObjectPropertyType.STRING &&
+    new RegExp(/Uuid/).test(property.name);
   const isImplicitUuidReferenceArrayCandidate =
     isDomainObjectArrayProperty(property) &&
     property.of.type === DomainObjectPropertyType.STRING &&
     new RegExp(/Uuids/).test(property.name);
 
   // handle direct nested references
-  if (isDirectNestedReferenceCandidate || isDirectNestedReferenceArrayCandidate) {
+  if (
+    isDirectNestedReferenceCandidate ||
+    isDirectNestedReferenceArrayCandidate
+  ) {
     // grab the referenced object
     const referencedDomainObject = (() => {
-      if (isDirectNestedReferenceCandidate) return property.of as DomainObjectReferenceMetadata;
+      if (isDirectNestedReferenceCandidate)
+        return property.of as DomainObjectReferenceMetadata;
       if (isDirectNestedReferenceArrayCandidate)
-        return (property.of as DomainObjectPropertyMetadata).of as DomainObjectReferenceMetadata;
+        return (property.of as DomainObjectPropertyMetadata)
+          .of as DomainObjectReferenceMetadata;
       throw new UnexpectedCodePathDetectedError({
-        reason: 'should have met one of the above criteria for sql schema reference definition',
+        reason:
+          'should have met one of the above criteria for sql schema reference definition',
         domainObjectName: domainObject.name,
         domainObjectPropertyName: property.name,
       }); // fail fast
     })();
 
     // check that the property-name is unambiguously and naturally named after this domain object
-    const domainObjectNamePropertyIsNamedAfter = getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter({
-      parentDomainObjectName: domainObject.name,
-      propertyName: property.name,
-      allDomainObjectNames: [...new Set([...allDomainObjects.map(({ name }) => name), referencedDomainObject.name])], // note: We add the referenced domain object name her because we _have_ the reference, even if its not in the "metadatas" of available domain objects; this avoids a class of errors from technically being possible (ones that _shouldn't occur in real life)
-    });
+    const domainObjectNamePropertyIsNamedAfter =
+      getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter({
+        parentDomainObjectName: domainObject.name,
+        propertyName: property.name,
+        allDomainObjectNames: [
+          ...new Set([
+            ...allDomainObjects.map(({ name }) => name),
+            referencedDomainObject.name,
+          ]),
+        ], // note: We add the referenced domain object name her because we _have_ the reference, even if its not in the "metadatas" of available domain objects; this avoids a class of errors from technically being possible (ones that _shouldn't occur in real life)
+      });
     if (domainObjectNamePropertyIsNamedAfter !== referencedDomainObject.name)
       throw new PropertyReferencingDomainObjectNotNamedCorrectlyError({
         property,
@@ -138,7 +152,9 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
       });
 
     // check that the domain object referenced by direct nesting is not a domain entity or a domain event
-    if (referencedDomainObject.extends !== DomainObjectVariant.DOMAIN_VALUE_OBJECT)
+    if (
+      referencedDomainObject.extends !== DomainObjectVariant.DOMAIN_VALUE_OBJECT
+    )
       throw new DirectlyNestedNonDomainObjectReferenceForbiddenError({
         domainObject,
         property,
@@ -154,17 +170,25 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
 
   // handle inferred uuid references
   const referenceOfUuid = (() => {
-    if (!isImplicitUuidReferenceCandidate && !isImplicitUuidReferenceArrayCandidate) return null; // no reference if not a candidate of either
-    const foundReferencedDomainObjectName = getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter({
-      parentDomainObjectName: domainObject.name,
-      propertyName: property.name,
-      allDomainObjectNames: allDomainObjects.map(({ name }) => name),
-    });
+    if (
+      !isImplicitUuidReferenceCandidate &&
+      !isImplicitUuidReferenceArrayCandidate
+    )
+      return null; // no reference if not a candidate of either
+    const foundReferencedDomainObjectName =
+      getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter({
+        parentDomainObjectName: domainObject.name,
+        propertyName: property.name,
+        allDomainObjectNames: allDomainObjects.map(({ name }) => name),
+      });
     const foundReferencedDomainObjectMetadata = allDomainObjects.find(
       (domainObject) => domainObject.name === foundReferencedDomainObjectName,
     );
     if (!foundReferencedDomainObjectMetadata) return null;
-    if (foundReferencedDomainObjectMetadata.extends === DomainObjectVariant.DOMAIN_VALUE_OBJECT)
+    if (
+      foundReferencedDomainObjectMetadata.extends ===
+      DomainObjectVariant.DOMAIN_VALUE_OBJECT
+    )
       // safety check
       throw new UserInputError({
         reason:
@@ -177,7 +201,9 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
   if (referenceOfUuid)
     return new SqlSchemaReferenceMetadata({
       method: SqlSchemaReferenceMethod.IMPLICIT_BY_UUID,
-      of: new DomainObjectReferenceMetadata(omit(referenceOfUuid, ['properties', 'decorations'])),
+      of: new DomainObjectReferenceMetadata(
+        omit(referenceOfUuid, ['properties', 'decorations']),
+      ),
     });
 
   // otherwise, no reference

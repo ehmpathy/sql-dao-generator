@@ -19,14 +19,8 @@ const schema = Joi.object().keys({
     .required(),
   decorations: Joi.object().keys({
     unique: Joi.object().keys({
-      domainObject: Joi.array()
-        .items(Joi.string())
-        .required()
-        .allow(null),
-      sqlSchema: Joi.array()
-        .items(Joi.string())
-        .required()
-        .allow(null),
+      domainObject: Joi.array().items(Joi.string()).required().allow(null),
+      sqlSchema: Joi.array().items(Joi.string()).required().allow(null),
     }),
   }),
 });
@@ -48,7 +42,9 @@ export interface SqlSchemaToDomainObjectRelationship {
   };
 }
 
-export class SqlSchemaToDomainObjectRelationship extends DomainObject<SqlSchemaToDomainObjectRelationship>
-  implements SqlSchemaToDomainObjectRelationship {
+export class SqlSchemaToDomainObjectRelationship
+  extends DomainObject<SqlSchemaToDomainObjectRelationship>
+  implements SqlSchemaToDomainObjectRelationship
+{
   public static schema = schema;
 }

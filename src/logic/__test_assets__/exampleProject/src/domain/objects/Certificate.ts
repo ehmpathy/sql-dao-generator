@@ -11,4 +11,6 @@ export interface Certificate {
   type: CertificateType;
   industryId: string;
 }
-export class Certificate extends DomainValueObject<Certificate> implements Certificate {}
+export class Certificate
+  extends DomainValueObject<Certificate>
+  implements Certificate {}

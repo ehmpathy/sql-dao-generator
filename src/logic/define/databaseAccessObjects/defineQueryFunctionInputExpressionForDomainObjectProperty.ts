@@ -1,5 +1,6 @@
 import { camelCase } from 'change-case';
 import { DomainObjectPropertyMetadata } from 'domain-objects-metadata';
+
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
@@ -40,60 +41,84 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
   );
   if (!referencedSqlSchemaRelationship)
     throw new UnexpectedCodePathDetectedError({
-      reason: 'could not find referenced sql schema relationship for defining query fn input expression',
+      reason:
+        'could not find referenced sql schema relationship for defining query fn input expression',
       domainObjectName,
       domainObjectPropertyName: domainObjectProperty.name,
     });
-  const referencedSqlSchemaName = referencedSqlSchemaRelationship.name.sqlSchema;
-  const referencedDomainObjectName = referencedSqlSchemaRelationship.name.domainObject;
+  const referencedSqlSchemaName =
+    referencedSqlSchemaRelationship.name.sqlSchema;
+  const referencedDomainObjectName =
+    referencedSqlSchemaRelationship.name.domainObject;
 
   // if its an implicit uuid reference, then all the legwork is done in the sql. simple case here
-  if (sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.IMPLICIT_BY_UUID) {
+  if (
+    sqlSchemaProperty.reference.method ===
+    SqlSchemaReferenceMethod.IMPLICIT_BY_UUID
+  ) {
     if (context === GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY)
       return `${domainObjectProperty.name}: ${domainObjectUpsertVarName}.${domainObjectProperty.name}`;
     return `${domainObjectProperty.name}`;
   }
 
   // for direct references, we need to map to the "id"
-  if (sqlSchemaProperty.reference.method === SqlSchemaReferenceMethod.DIRECT_BY_NESTING) {
+  if (
+    sqlSchemaProperty.reference.method ===
+    SqlSchemaReferenceMethod.DIRECT_BY_NESTING
+  ) {
     // handle solo reference
     if (!sqlSchemaProperty.isArray) {
       if (context === GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY)
         // e.g.,: `geocodeId: location.geocode.id ? location.geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: location.geocode })).id`
-        return `${camelCase(sqlSchemaProperty.name)}: ${domainObjectUpsertVarName}.${
+        return `${camelCase(
+          sqlSchemaProperty.name,
+        )}: ${domainObjectUpsertVarName}.${
           domainObjectProperty.name
-        }.id ? ${domainObjectUpsertVarName}.${domainObjectProperty.name}.id : (await ${castDomainObjectNameToDaoName(
+        }.id ? ${domainObjectUpsertVarName}.${
+          domainObjectProperty.name
+        }.id : (await ${castDomainObjectNameToDaoName(
           referencedDomainObjectName,
-        )}.upsert({ dbConnection, ${camelCase(referencedSqlSchemaName)}: ${domainObjectUpsertVarName}.${
-          domainObjectProperty.name
-        } })).id`;
+        )}.upsert({ dbConnection, ${camelCase(
+          referencedSqlSchemaName,
+        )}: ${domainObjectUpsertVarName}.${domainObjectProperty.name} })).id`;
 
       // e.g., `geocodeId: geocode.id`
-      return `${camelCase(sqlSchemaProperty.name)}: ${domainObjectProperty.name}.id`;
+      return `${camelCase(sqlSchemaProperty.name)}: ${
+        domainObjectProperty.name
+      }.id`;
     }
 
     // handle array of references
     if (sqlSchemaProperty.isArray) {
       if (context === GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY)
         // e.g.,: `geocodeIds: await Promise.all(location.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: location.geocode })).id)`
-        return `${camelCase(sqlSchemaProperty.name)}: await Promise.all(${domainObjectUpsertVarName}.${
+        return `${camelCase(
+          sqlSchemaProperty.name,
+        )}: await Promise.all(${domainObjectUpsertVarName}.${
           domainObjectProperty.name
-        }.map(async (${camelCase(referencedSqlSchemaName)}) => ${camelCase(referencedSqlSchemaName)}.id ? ${camelCase(
+        }.map(async (${camelCase(referencedSqlSchemaName)}) => ${camelCase(
           referencedSqlSchemaName,
-        )}.id : (await ${castDomainObjectNameToDaoName(referencedDomainObjectName)}.upsert({ dbConnection, ${camelCase(
+        )}.id ? ${camelCase(
+          referencedSqlSchemaName,
+        )}.id : (await ${castDomainObjectNameToDaoName(
+          referencedDomainObjectName,
+        )}.upsert({ dbConnection, ${camelCase(
           referencedSqlSchemaName,
         )} })).id))`;
 
       // e.g., `geocodeIds: geocodes.map(geocode => geocode.id)`
-      return `${camelCase(sqlSchemaProperty.name)}: ${domainObjectProperty.name}.map((${camelCase(
+      return `${camelCase(sqlSchemaProperty.name)}: ${
+        domainObjectProperty.name
+      }.map((${camelCase(referencedSqlSchemaName)}) => ${camelCase(
         referencedSqlSchemaName,
-      )}) => ${camelCase(referencedSqlSchemaName)}.id)`;
+      )}.id)`;
     }
   }
 
   // fail fast if we reach here, not expected
   throw new UnexpectedCodePathDetectedError({
-    reason: 'did not handle the request with any defined conditions, for query function input expression',
+    reason:
+      'did not handle the request with any defined conditions, for query function input expression',
     domainObjectName,
     domainObjectPropertyName: domainObjectProperty.name,
   }); // fail fast if our expectation is not met though

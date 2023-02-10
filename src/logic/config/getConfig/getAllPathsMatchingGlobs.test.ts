@@ -4,7 +4,10 @@ const root = `${__dirname}/../../__test_assets__/exampleProject`; // i.e., using
 
 describe('getAllPathsMatchingGlobs', () => {
   it('should return paths that match a glob', async () => {
-    const files = await getAllPathsMatchingGlobs({ globs: ['src/domain/objects/*.ts'], root });
+    const files = await getAllPathsMatchingGlobs({
+      globs: ['src/domain/objects/*.ts'],
+      root,
+    });
     expect(files).toContain('src/domain/objects/Carriage.ts');
     expect(files).toContain('src/domain/objects/Engineer.ts');
     expect(files).toContain('src/domain/objects/Geocode.ts');

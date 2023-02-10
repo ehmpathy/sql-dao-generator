@@ -14,7 +14,8 @@ describe('readConfig', () => {
         to: 'src/data/dao',
         using: {
           log: 'src/util/log#log',
-          DatabaseConnection: 'src/util/database/getDbConnection#DatabaseConnection',
+          DatabaseConnection:
+            'src/util/database/getDbConnection#DatabaseConnection',
         },
       },
       schema: {

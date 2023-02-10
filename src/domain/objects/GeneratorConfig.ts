@@ -96,6 +96,9 @@ export interface GeneratorConfig {
     };
   };
 }
-export class GeneratorConfig extends DomainObject<GeneratorConfig> implements GeneratorConfig {
+export class GeneratorConfig
+  extends DomainObject<GeneratorConfig>
+  implements GeneratorConfig
+{
   public static schema = schema;
 }

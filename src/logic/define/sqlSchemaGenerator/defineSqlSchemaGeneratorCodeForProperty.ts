@@ -1,5 +1,4 @@
 // tslint:disable: max-classes-per-file
-
 import { camelCase } from 'change-case';
 import {
   DomainObjectMetadata,
@@ -24,20 +23,28 @@ export const defineSqlSchemaGeneratorCodeForProperty = ({
   // define the base schema property
   const baseSchemaProperty = (() => {
     // handle references (do them first, since some "uuid" based references have type string)
-    const isSelfReference = sqlSchemaProperty.reference?.of.name === domainObject.name;
+    const isSelfReference =
+      sqlSchemaProperty.reference?.of.name === domainObject.name;
     if (sqlSchemaProperty.reference && !sqlSchemaProperty.isArray) {
-      return `prop.REFERENCES(${isSelfReference ? '() => ' : ''}${camelCase(sqlSchemaProperty.reference.of.name)})`;
+      return `prop.REFERENCES(${isSelfReference ? '() => ' : ''}${camelCase(
+        sqlSchemaProperty.reference.of.name,
+      )})`;
     }
     if (isDomainObjectArrayProperty(domainObjectProperty)) {
       // handle case where its an array reference to a domain object persisted within the database
       if (sqlSchemaProperty.reference)
-        return `prop.ARRAY_OF(prop.REFERENCES(${isSelfReference ? '() => ' : ''}${camelCase(
-          sqlSchemaProperty.reference.of.name,
-        )}))`;
+        return `prop.ARRAY_OF(prop.REFERENCES(${
+          isSelfReference ? '() => ' : ''
+        }${camelCase(sqlSchemaProperty.reference.of.name)}))`;
 
       // handle case where its potentially an array reference to a domain object persisted in another database (referenced by uuid)
-      const propertyNameLooksLikeUuidReferenceArray = new RegExp(/_uuids$/).test(sqlSchemaProperty.name); // i.e., does it end with _uuids?
-      if (propertyNameLooksLikeUuidReferenceArray && domainObjectProperty.of.type === DomainObjectPropertyType.STRING)
+      const propertyNameLooksLikeUuidReferenceArray = new RegExp(
+        /_uuids$/,
+      ).test(sqlSchemaProperty.name); // i.e., does it end with _uuids?
+      if (
+        propertyNameLooksLikeUuidReferenceArray &&
+        domainObjectProperty.of.type === DomainObjectPropertyType.STRING
+      )
         return 'prop.ARRAY_OF(prop.UUID())';
 
       // otherwise, its not a handled case
@@ -58,16 +65,28 @@ If you'd like to store an array of data, try one of the following:
     }
 
     // handle uuid properties, for added performance
-    const endsWithUuidSuffix = new RegExp(/_uuid$/).test(sqlSchemaProperty.name);
-    if (endsWithUuidSuffix && domainObjectProperty.type === DomainObjectPropertyType.STRING) return 'prop.UUID()';
+    const endsWithUuidSuffix = new RegExp(/_uuid$/).test(
+      sqlSchemaProperty.name,
+    );
+    if (
+      endsWithUuidSuffix &&
+      domainObjectProperty.type === DomainObjectPropertyType.STRING
+    )
+      return 'prop.UUID()';
 
     // handle primitives
-    if (domainObjectProperty.type === DomainObjectPropertyType.STRING) return 'prop.VARCHAR()'; // note: varchar without precision is what postgres defines as best practice (precision does not affect size)
-    if (domainObjectProperty.type === DomainObjectPropertyType.NUMBER) return 'prop.NUMERIC()'; // note: numeric without precision is a good choice for 90%+ of use cases, since precision of numeric does not affect size. if user needs more fine tuning, they can mod the generated entity directly; for long term: https://github.com/uladkasach/sql-dao-generator/issues/1
-    if (domainObjectProperty.type === DomainObjectPropertyType.BOOLEAN) return 'prop.BOOLEAN()';
-    if (domainObjectProperty.type === DomainObjectPropertyType.DATE) return 'prop.TIMESTAMPTZ()'; // note: timestamptz is what postgres recommends
+    if (domainObjectProperty.type === DomainObjectPropertyType.STRING)
+      return 'prop.VARCHAR()'; // note: varchar without precision is what postgres defines as best practice (precision does not affect size)
+    if (domainObjectProperty.type === DomainObjectPropertyType.NUMBER)
+      return 'prop.NUMERIC()'; // note: numeric without precision is a good choice for 90%+ of use cases, since precision of numeric does not affect size. if user needs more fine tuning, they can mod the generated entity directly; for long term: https://github.com/uladkasach/sql-dao-generator/issues/1
+    if (domainObjectProperty.type === DomainObjectPropertyType.BOOLEAN)
+      return 'prop.BOOLEAN()';
+    if (domainObjectProperty.type === DomainObjectPropertyType.DATE)
+      return 'prop.TIMESTAMPTZ()'; // note: timestamptz is what postgres recommends
     if (domainObjectProperty.type === DomainObjectPropertyType.ENUM)
-      return `prop.ENUM([${(domainObjectProperty.of as string[]).map((option) => `'${option}'`).join(', ')}])`;
+      return `prop.ENUM([${(domainObjectProperty.of as string[])
+        .map((option) => `'${option}'`)
+        .join(', ')}])`;
   })();
 
   // if its not updatable or nullable, then the base schema property = the full property

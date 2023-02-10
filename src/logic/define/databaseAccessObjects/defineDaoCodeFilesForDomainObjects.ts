@@ -1,4 +1,5 @@
 import { DomainObjectMetadata } from 'domain-objects-metadata';
+
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
 import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
 import { defineDaoCodeFilesForDomainObject } from './defineDaoCodeFilesForDomainObject';

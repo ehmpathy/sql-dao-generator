@@ -13,9 +13,9 @@ export const saveGeneratedSqlSchemaControlCodeFiles = async ({
   const projectRootDir = config.rootDir;
 
   // domain.yml object destination = right at the root of where sql schema generator generates its files
-  const domainControlPath = `${getDirOfPath(config.generates.schema.config.path)}/${
-    config.generates.schema.config.content.generates.sql.to
-  }/domain.yml`;
+  const domainControlPath = `${getDirOfPath(
+    config.generates.schema.config.path,
+  )}/${config.generates.schema.config.content.generates.sql.to}/domain.yml`;
 
   // save the file
   await saveCode({

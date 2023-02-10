@@ -1,4 +1,7 @@
-import { DomainObjectMetadata, DomainObjectVariant } from 'domain-objects-metadata';
+import {
+  DomainObjectMetadata,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
 
 export const createExampleDomainObjectMetadata = ({
   extend = DomainObjectVariant.DOMAIN_VALUE_OBJECT,
@@ -27,5 +30,7 @@ export const createExampleDomainObjectMetadata = ({
       properties: {},
       decorations: { unique: ['uuid'], updatable: null },
     });
-  throw new Error('unsupported domain object variant to create example object for');
+  throw new Error(
+    'unsupported domain object variant to create example object for',
+  );
 };
