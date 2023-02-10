@@ -1,5 +1,4 @@
-sql-dao-generator
-==============
+# sql-dao-generator
 
 Generate data-access-objects from your domain-objects.
 
