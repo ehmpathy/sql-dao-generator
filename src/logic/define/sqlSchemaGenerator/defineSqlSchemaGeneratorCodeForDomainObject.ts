@@ -63,7 +63,7 @@ ${distinctSortedReferenceImports.length ? ['', ...distinctSortedReferenceImports
 /**
  * sql-schema for the ${noCase(domainObject.extends)} '${domainObject.name}'
  */
-export const ${camelCase(domainObject.name)} = new ${schemaGeneratorClass}({
+export const ${camelCase(domainObject.name)}: ${schemaGeneratorClass} = new ${schemaGeneratorClass}({
   name: '${sqlSchemaRelationship.name.sqlSchema}',
   properties: {
     ${schemaGeneratorProperties.join('\n    ')}

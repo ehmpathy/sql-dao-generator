@@ -140,6 +140,28 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
       });
       expect(property).toEqual('home_address_id: prop.REFERENCES(homeAddress),');
     });
+    it('should generate correctly for reference - where there is a self reference', () => {
+      const property = defineSqlSchemaGeneratorCodeForProperty({
+        domainObject: { ...createExampleDomainObjectMetadata(), name: 'Service' },
+        domainObjectProperty: {
+          name: 'parentService',
+          type: DomainObjectPropertyType.REFERENCE,
+          of: { name: 'Service', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+        },
+        sqlSchemaProperty: {
+          name: 'parent_service_id',
+          isArray: false,
+          isNullable: false,
+          isUpdatable: false,
+          isDatabaseGenerated: false,
+          reference: {
+            method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
+            of: { name: 'Service', extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT },
+          },
+        },
+      });
+      expect(property).toEqual('parent_service_id: prop.REFERENCES(() => service),');
+    });
     it('should generate correctly for reference array', () => {
       const property = defineSqlSchemaGeneratorCodeForProperty({
         domainObject: createExampleDomainObjectMetadata(),
@@ -164,6 +186,34 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
         },
       });
       expect(property).toEqual('external_id_ids: prop.ARRAY_OF(prop.REFERENCES(planeExternalId)),'); // note the camel case inside prop.REFERENCES
+    });
+    it('should generate correctly for reference array - where there is a self reference', () => {
+      const property = defineSqlSchemaGeneratorCodeForProperty({
+        domainObject: {
+          ...createExampleDomainObjectMetadata({ extend: DomainObjectVariant.DOMAIN_ENTITY }),
+          name: 'Service',
+        },
+        domainObjectProperty: {
+          name: 'parentServiceUuids',
+          type: DomainObjectPropertyType.ARRAY,
+          of: {
+            type: DomainObjectPropertyType.REFERENCE,
+            of: { name: 'Service', extends: DomainObjectVariant.DOMAIN_ENTITY },
+          },
+        },
+        sqlSchemaProperty: {
+          name: 'parent_service_ids',
+          isArray: true,
+          isNullable: false,
+          isUpdatable: false,
+          isDatabaseGenerated: false,
+          reference: {
+            method: SqlSchemaReferenceMethod.IMPLICIT_BY_UUID,
+            of: { name: 'Service', extends: DomainObjectVariant.DOMAIN_ENTITY },
+          },
+        },
+      });
+      expect(property).toEqual('parent_service_ids: prop.ARRAY_OF(prop.REFERENCES(() => service)),'); // note the camel case inside prop.REFERENCES
     });
   });
   describe('modifiers', () => {

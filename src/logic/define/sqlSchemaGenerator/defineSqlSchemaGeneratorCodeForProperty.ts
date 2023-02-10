@@ -24,13 +24,16 @@ export const defineSqlSchemaGeneratorCodeForProperty = ({
   // define the base schema property
   const baseSchemaProperty = (() => {
     // handle references (do them first, since some "uuid" based references have type string)
+    const isSelfReference = sqlSchemaProperty.reference?.of.name === domainObject.name;
     if (sqlSchemaProperty.reference && !sqlSchemaProperty.isArray) {
-      return `prop.REFERENCES(${camelCase(sqlSchemaProperty.reference.of!.name)})`;
+      return `prop.REFERENCES(${isSelfReference ? '() => ' : ''}${camelCase(sqlSchemaProperty.reference.of.name)})`;
     }
     if (isDomainObjectArrayProperty(domainObjectProperty)) {
       // handle case where its an array reference to a domain object persisted within the database
       if (sqlSchemaProperty.reference)
-        return `prop.ARRAY_OF(prop.REFERENCES(${camelCase(sqlSchemaProperty.reference.of.name)}))`;
+        return `prop.ARRAY_OF(prop.REFERENCES(${isSelfReference ? '() => ' : ''}${camelCase(
+          sqlSchemaProperty.reference.of.name,
+        )}))`;
 
       // handle case where its potentially an array reference to a domain object persisted in another database (referenced by uuid)
       const propertyNameLooksLikeUuidReferenceArray = new RegExp(/_uuids$/).test(sqlSchemaProperty.name); // i.e., does it end with _uuids?
