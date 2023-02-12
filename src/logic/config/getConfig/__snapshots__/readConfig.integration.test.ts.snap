@@ -1,20 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`readConfig should be able to read the example config provisioned in __test_assets__ 1`] = `
-Object {
+{
   "dialect": "10.7",
-  "for": Object {
-    "objects": Array [
+  "for": {
+    "objects": [
       DomainObjectMetadata {
-        "decorations": Object {
-          "unique": Array [
+        "decorations": {
+          "unique": [
             "uuid",
           ],
-          "updatable": Array [],
+          "updatable": [],
         },
         "extends": "DomainEntity",
         "name": "Carriage",
-        "properties": Object {
+        "properties": {
           "capacity": DomainObjectPropertyMetadata {
             "name": "capacity",
             "nullable": false,
@@ -24,7 +24,7 @@ Object {
           "carries": DomainObjectPropertyMetadata {
             "name": "carries",
             "nullable": false,
-            "of": Array [
+            "of": [
               "PASSENGER",
               "FREIGHT",
             ],
@@ -52,13 +52,13 @@ Object {
         },
       },
       DomainObjectMetadata {
-        "decorations": Object {
+        "decorations": {
           "unique": null,
           "updatable": null,
         },
         "extends": "DomainValueObject",
         "name": "Certificate",
-        "properties": Object {
+        "properties": {
           "id": DomainObjectPropertyMetadata {
             "name": "id",
             "nullable": false,
@@ -74,7 +74,7 @@ Object {
           "type": DomainObjectPropertyMetadata {
             "name": "type",
             "nullable": false,
-            "of": Array [
+            "of": [
               "LOCOMOTIVE_DRIVING",
               "ENGINE_MAINTENANCE",
               "CARRIAGE_MAINTENANCE",
@@ -85,13 +85,13 @@ Object {
         },
       },
       DomainObjectMetadata {
-        "decorations": Object {
+        "decorations": {
           "unique": null,
           "updatable": null,
         },
         "extends": "DomainValueObject",
         "name": "Geocode",
-        "properties": Object {
+        "properties": {
           "id": DomainObjectPropertyMetadata {
             "name": "id",
             "nullable": false,
@@ -113,11 +113,11 @@ Object {
         },
       },
       DomainObjectMetadata {
-        "decorations": Object {
-          "unique": Array [
+        "decorations": {
+          "unique": [
             "externalId",
           ],
-          "updatable": Array [
+          "updatable": [
             "items",
             "totalPrice",
             "status",
@@ -125,7 +125,7 @@ Object {
         },
         "extends": "DomainEntity",
         "name": "Invoice",
-        "properties": Object {
+        "properties": {
           "externalId": DomainObjectPropertyMetadata {
             "name": "externalId",
             "nullable": false,
@@ -141,7 +141,7 @@ Object {
           "items": DomainObjectPropertyMetadata {
             "name": "items",
             "nullable": false,
-            "of": Object {
+            "of": {
               "nullable": false,
               "of": DomainObjectReferenceMetadata {
                 "extends": "DomainValueObject",
@@ -156,7 +156,7 @@ Object {
           "status": DomainObjectPropertyMetadata {
             "name": "status",
             "nullable": false,
-            "of": Array [
+            "of": [
               "PROPOSED",
               "ISSUED",
               "PAID",
@@ -186,13 +186,13 @@ Object {
         },
       },
       DomainObjectMetadata {
-        "decorations": Object {
+        "decorations": {
           "unique": null,
           "updatable": null,
         },
         "extends": "DomainValueObject",
         "name": "InvoiceLineItem",
-        "properties": Object {
+        "properties": {
           "explanation": DomainObjectPropertyMetadata {
             "name": "explanation",
             "nullable": false,
@@ -224,17 +224,17 @@ Object {
         },
       },
       DomainObjectMetadata {
-        "decorations": Object {
-          "unique": Array [
+        "decorations": {
+          "unique": [
             "ein",
           ],
-          "updatable": Array [
+          "updatable": [
             "milage",
           ],
         },
         "extends": "DomainEntity",
         "name": "Locomotive",
-        "properties": Object {
+        "properties": {
           "capacity": DomainObjectPropertyMetadata {
             "name": "capacity",
             "nullable": false,
@@ -262,7 +262,7 @@ Object {
           "fuel": DomainObjectPropertyMetadata {
             "name": "fuel",
             "nullable": false,
-            "of": Array [
+            "of": [
               "STEAM",
               "COAL",
               "DIESEL",
@@ -299,13 +299,13 @@ Object {
         },
       },
       DomainObjectMetadata {
-        "decorations": Object {
+        "decorations": {
           "unique": null,
           "updatable": null,
         },
         "extends": "DomainValueObject",
         "name": "Price",
-        "properties": Object {
+        "properties": {
           "amount": DomainObjectPropertyMetadata {
             "name": "amount",
             "nullable": false,
@@ -315,7 +315,7 @@ Object {
           "currency": DomainObjectPropertyMetadata {
             "name": "currency",
             "nullable": false,
-            "of": Array [
+            "of": [
               "USD",
             ],
             "required": true,
@@ -330,22 +330,22 @@ Object {
         },
       },
       DomainObjectMetadata {
-        "decorations": Object {
-          "unique": Array [
+        "decorations": {
+          "unique": [
             "combinationId",
           ],
-          "updatable": Array [
+          "updatable": [
             "engineers",
             "status",
           ],
         },
         "extends": "DomainEntity",
         "name": "Train",
-        "properties": Object {
+        "properties": {
           "carriageUuids": DomainObjectPropertyMetadata {
             "name": "carriageUuids",
             "nullable": false,
-            "of": Object {
+            "of": {
               "nullable": false,
               "required": true,
               "type": "STRING",
@@ -362,7 +362,7 @@ Object {
           "engineerUuids": DomainObjectPropertyMetadata {
             "name": "engineerUuids",
             "nullable": false,
-            "of": Object {
+            "of": {
               "nullable": false,
               "required": true,
               "type": "STRING",
@@ -395,7 +395,7 @@ Object {
           "locomotiveUuids": DomainObjectPropertyMetadata {
             "name": "locomotiveUuids",
             "nullable": false,
-            "of": Object {
+            "of": {
               "nullable": false,
               "required": true,
               "type": "STRING",
@@ -406,7 +406,7 @@ Object {
           "status": DomainObjectPropertyMetadata {
             "name": "status",
             "nullable": false,
-            "of": Array [
+            "of": [
               "ASSEMBLED",
               "DISASSEMBLED",
             ],
@@ -422,11 +422,11 @@ Object {
         },
       },
       DomainObjectMetadata {
-        "decorations": Object {
-          "unique": Array [
+        "decorations": {
+          "unique": [
             "socialSecurityNumberHash",
           ],
-          "updatable": Array [
+          "updatable": [
             "name",
             "certificates",
             "licenseUuids",
@@ -434,11 +434,11 @@ Object {
         },
         "extends": "DomainEntity",
         "name": "TrainEngineer",
-        "properties": Object {
+        "properties": {
           "certificates": DomainObjectPropertyMetadata {
             "name": "certificates",
             "nullable": false,
-            "of": Object {
+            "of": {
               "nullable": false,
               "of": DomainObjectReferenceMetadata {
                 "extends": "DomainValueObject",
@@ -459,7 +459,7 @@ Object {
           "licenseUuids": DomainObjectPropertyMetadata {
             "name": "licenseUuids",
             "nullable": false,
-            "of": Object {
+            "of": {
               "nullable": false,
               "required": true,
               "type": "STRING",
@@ -488,17 +488,17 @@ Object {
         },
       },
       DomainObjectMetadata {
-        "decorations": Object {
-          "unique": Array [
+        "decorations": {
+          "unique": [
             "geocode",
           ],
-          "updatable": Array [
+          "updatable": [
             "name",
           ],
         },
         "extends": "DomainEntity",
         "name": "TrainStation",
-        "properties": Object {
+        "properties": {
           "geocode": DomainObjectPropertyMetadata {
             "name": "geocode",
             "nullable": false,
@@ -531,21 +531,21 @@ Object {
       },
     ],
   },
-  "generates": Object {
-    "code": Object {
-      "config": Object {
-        "content": Object {
-          "generates": Object {
+  "generates": {
+    "code": {
+      "config": {
+        "content": {
+          "generates": {
             "queryFunctions": "src/data/dao/.generated/queryFunctions.ts",
             "types": "src/data/dao/.generated/types.ts",
           },
-          "queries": Array [
+          "queries": [
             "src/data/dao/**/*.ts",
             "!src/data/dao/**/index.ts",
             "!src/data/dao/**/castFromDatabaseObject.ts",
             "!src/**/*.test.ts",
           ],
-          "resources": Array [
+          "resources": [
             "provision/schema/sql/tables/**/*.sql",
             "provision/schema/sql/views/**/*.sql",
             "provision/schema/sql/functions/**/*.sql",
@@ -554,29 +554,29 @@ Object {
         "path": "codegen.sql.types.yml",
       },
     },
-    "control": Object {
-      "config": Object {
-        "content": Object {
-          "definitions": Array [
+    "control": {
+      "config": {
+        "content": {
+          "definitions": [
             "./sql/domain.yml",
           ],
         },
         "path": "provision/schema/control.yml",
       },
     },
-    "daos": Object {
+    "daos": {
       "to": "src/data/dao",
-      "using": Object {
+      "using": {
         "DatabaseConnection": "src/util/database/getDbConnection#DatabaseConnection",
         "log": "src/util/log#log",
       },
     },
-    "schema": Object {
-      "config": Object {
-        "content": Object {
+    "schema": {
+      "config": {
+        "content": {
           "declarations": "provision/schema/declarations/index.ts",
-          "generates": Object {
-            "sql": Object {
+          "generates": {
+            "sql": {
               "to": "provision/schema/sql",
             },
           },

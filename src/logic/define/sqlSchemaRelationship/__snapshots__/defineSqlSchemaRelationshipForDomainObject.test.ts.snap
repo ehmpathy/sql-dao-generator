@@ -2,23 +2,23 @@
 
 exports[`defineSqlSchemarelationshipForDomainObject should look right for a domain-entity 1`] = `
 SqlSchemaToDomainObjectRelationship {
-  "decorations": Object {
-    "unique": Object {
-      "domainObject": Array [
+  "decorations": {
+    "unique": {
+      "domainObject": [
         "cin",
       ],
-      "sqlSchema": Array [
+      "sqlSchema": [
         "cin",
       ],
     },
   },
-  "name": Object {
+  "name": {
     "domainObject": "TrainCarriage",
     "sqlSchema": "train_carriage",
   },
-  "properties": Array [
-    Object {
-      "domainObject": Object {
+  "properties": [
+    {
+      "domainObject": {
         "name": "id",
         "required": false,
         "type": "NUMBER",
@@ -32,8 +32,8 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "uuid",
         "required": false,
         "type": "STRING",
@@ -47,7 +47,7 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
+    {
       "domainObject": null,
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
@@ -58,7 +58,7 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
+    {
       "domainObject": null,
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
@@ -69,7 +69,7 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
+    {
       "domainObject": null,
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
@@ -80,8 +80,8 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "cin",
         "required": true,
         "type": "STRING",
@@ -95,10 +95,10 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "carries",
-        "of": Array [
+        "of": [
           "PASSENGER",
           "FREIGHT",
         ],
@@ -114,8 +114,8 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "capacity",
         "nullable": true,
         "type": "NUMBER",
@@ -129,10 +129,10 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "manufacturer",
-        "of": Object {
+        "of": {
           "extends": "DomainValueObject",
           "name": "TrainManufacturer",
         },
@@ -159,25 +159,25 @@ SqlSchemaToDomainObjectRelationship {
 
 exports[`defineSqlSchemarelationshipForDomainObject should look right for a domain-event 1`] = `
 SqlSchemaToDomainObjectRelationship {
-  "decorations": Object {
-    "unique": Object {
-      "domainObject": Array [
+  "decorations": {
+    "unique": {
+      "domainObject": [
         "trainUuid",
         "occurredAt",
       ],
-      "sqlSchema": Array [
+      "sqlSchema": [
         "train_id",
         "occurred_at",
       ],
     },
   },
-  "name": Object {
+  "name": {
     "domainObject": "TrainLocatedEvent",
     "sqlSchema": "train_located_event",
   },
-  "properties": Array [
-    Object {
-      "domainObject": Object {
+  "properties": [
+    {
+      "domainObject": {
         "name": "id",
         "required": false,
         "type": "NUMBER",
@@ -191,7 +191,7 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
+    {
       "domainObject": null,
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
@@ -202,7 +202,7 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
+    {
       "domainObject": null,
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
@@ -213,8 +213,8 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "trainUuid",
         "required": true,
         "type": "STRING",
@@ -234,8 +234,8 @@ SqlSchemaToDomainObjectRelationship {
         },
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "occurredAt",
         "required": true,
         "type": "DATE",
@@ -249,10 +249,10 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "geocode",
-        "of": Object {
+        "of": {
           "extends": "DomainValueObject",
           "name": "Geocode",
         },
@@ -280,22 +280,22 @@ SqlSchemaToDomainObjectRelationship {
 
 exports[`defineSqlSchemarelationshipForDomainObject should look right for a domain-value-object 1`] = `
 SqlSchemaToDomainObjectRelationship {
-  "decorations": Object {
-    "unique": Object {
+  "decorations": {
+    "unique": {
       "domainObject": null,
-      "sqlSchema": Array [
+      "sqlSchema": [
         "latitude",
         "longitude",
       ],
     },
   },
-  "name": Object {
+  "name": {
     "domainObject": "PreciseGeocode",
     "sqlSchema": "precise_geocode",
   },
-  "properties": Array [
-    Object {
-      "domainObject": Object {
+  "properties": [
+    {
+      "domainObject": {
         "name": "id",
         "type": "NUMBER",
       },
@@ -308,8 +308,8 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "uuid",
         "type": "STRING",
       },
@@ -322,7 +322,7 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
+    {
       "domainObject": null,
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
@@ -333,8 +333,8 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "latitude",
         "type": "NUMBER",
       },
@@ -347,8 +347,8 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "longitude",
         "type": "NUMBER",
       },
@@ -367,22 +367,22 @@ SqlSchemaToDomainObjectRelationship {
 
 exports[`defineSqlSchemarelationshipForDomainObject should look right for another domain-value-object, one with multi word property names 1`] = `
 SqlSchemaToDomainObjectRelationship {
-  "decorations": Object {
-    "unique": Object {
+  "decorations": {
+    "unique": {
       "domainObject": null,
-      "sqlSchema": Array [
+      "sqlSchema": [
         "role",
         "external_id",
       ],
     },
   },
-  "name": Object {
+  "name": {
     "domainObject": "ChatParticipant",
     "sqlSchema": "chat_participant",
   },
-  "properties": Array [
-    Object {
-      "domainObject": Object {
+  "properties": [
+    {
+      "domainObject": {
         "name": "id",
         "type": "NUMBER",
       },
@@ -395,8 +395,8 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "uuid",
         "type": "STRING",
       },
@@ -409,7 +409,7 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
+    {
       "domainObject": null,
       "sqlSchema": SqlSchemaPropertyMetadata {
         "isArray": false,
@@ -420,8 +420,8 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "role",
         "type": "STRING",
       },
@@ -434,8 +434,8 @@ SqlSchemaToDomainObjectRelationship {
         "reference": null,
       },
     },
-    Object {
-      "domainObject": Object {
+    {
+      "domainObject": {
         "name": "externalId",
         "type": "STRING",
       },

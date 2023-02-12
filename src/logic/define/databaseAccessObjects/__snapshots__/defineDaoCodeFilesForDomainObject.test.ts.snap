@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`defineDaoCodeFilesForDomainObject should have the findByUuid file if property has uuid 1`] = `
-Array [
+[
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
@@ -203,7 +203,7 @@ export const upsert = async ({
 `;
 
 exports[`defineDaoCodeFilesForDomainObject should not have the findByUuid file if property has uuid 1`] = `
-Array [
+[
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';

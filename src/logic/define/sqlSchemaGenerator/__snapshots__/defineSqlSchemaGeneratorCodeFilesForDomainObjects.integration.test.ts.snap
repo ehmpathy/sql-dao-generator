@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`defineSqlSchemaGeneratorCodeFilesForDomainObjects should work on the example project 1`] = `
-Array [
+[
   GeneratedCodeFile {
     "content": "import { carriage } from './carriage';
 import { certificate } from './certificate';
@@ -39,7 +39,7 @@ export const generateSqlSchemasFor = [
 /**
  * sql-schema for the domain entity 'Carriage'
  */
-export const carriage = new Entity({
+export const carriage: Entity = new Entity({
   name: 'carriage',
   properties: {
     cin: prop.VARCHAR(),
@@ -56,7 +56,7 @@ export const carriage = new Entity({
 /**
  * sql-schema for the domain value object 'Certificate'
  */
-export const certificate = new ValueObject({
+export const certificate: ValueObject = new ValueObject({
   name: 'certificate',
   properties: {
     type: prop.ENUM(['LOCOMOTIVE_DRIVING', 'ENGINE_MAINTENANCE', 'CARRIAGE_MAINTENANCE']),
@@ -73,7 +73,7 @@ import { certificate } from './certificate';
 /**
  * sql-schema for the domain entity 'TrainEngineer'
  */
-export const trainEngineer = new Entity({
+export const trainEngineer: Entity = new Entity({
   name: 'train_engineer',
   properties: {
     social_security_number_hash: prop.VARCHAR(),
@@ -91,7 +91,7 @@ export const trainEngineer = new Entity({
 /**
  * sql-schema for the domain value object 'Geocode'
  */
-export const geocode = new ValueObject({
+export const geocode: ValueObject = new ValueObject({
   name: 'geocode',
   properties: {
     latitude: prop.NUMERIC(),
@@ -111,7 +111,7 @@ import { trainEngineer } from './trainEngineer';
 /**
  * sql-schema for the domain entity 'Train'
  */
-export const train = new Entity({
+export const train: Entity = new Entity({
   name: 'train',
   properties: {
     home_station_geocode_id: prop.REFERENCES(geocode),
@@ -132,7 +132,7 @@ export const train = new Entity({
 /**
  * sql-schema for the domain entity 'Locomotive'
  */
-export const locomotive = new Entity({
+export const locomotive: Entity = new Entity({
   name: 'locomotive',
   properties: {
     ein: prop.VARCHAR(),
@@ -153,7 +153,7 @@ import { train } from './train';
 /**
  * sql-schema for the domain event 'TrainLocatedEvent'
  */
-export const trainLocatedEvent = new Event({
+export const trainLocatedEvent: Event = new Event({
   name: 'train_located_event',
   properties: {
     train_id: prop.REFERENCES(train),
@@ -172,7 +172,7 @@ import { geocode } from './geocode';
 /**
  * sql-schema for the domain entity 'TrainStation'
  */
-export const trainStation = new Entity({
+export const trainStation: Entity = new Entity({
   name: 'train_station',
   properties: {
     geocode_id: prop.REFERENCES(geocode),
@@ -188,7 +188,7 @@ export const trainStation = new Entity({
 /**
  * sql-schema for the domain value object 'Price'
  */
-export const price = new ValueObject({
+export const price: ValueObject = new ValueObject({
   name: 'price',
   properties: {
     amount: prop.NUMERIC(),
@@ -205,7 +205,7 @@ import { price } from './price';
 /**
  * sql-schema for the domain value object 'InvoiceLineItem'
  */
-export const invoiceLineItem = new ValueObject({
+export const invoiceLineItem: ValueObject = new ValueObject({
   name: 'invoice_line_item',
   properties: {
     price_id: prop.REFERENCES(price),
@@ -224,7 +224,7 @@ import { price } from './price';
 /**
  * sql-schema for the domain entity 'Invoice'
  */
-export const invoice = new Entity({
+export const invoice: Entity = new Entity({
   name: 'invoice',
   properties: {
     external_id: prop.VARCHAR(),

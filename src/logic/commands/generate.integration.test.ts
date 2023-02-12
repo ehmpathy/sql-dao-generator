@@ -1,13 +1,19 @@
 import shell from 'shelljs';
 import { HasMetadata } from 'type-fns';
-import uuid, { v4 } from 'uuid';
 
+import { uuid } from '../../deps';
 import { SvcPaymentsPaymentTransactionCurrency } from '../__test_assets__/exampleProject/src/data/clients/svcPayments';
+// @ts-ignore
 import { carriageDao } from '../__test_assets__/exampleProject/src/data/dao/carriageDao';
+// @ts-ignore
 import { geocodeDao } from '../__test_assets__/exampleProject/src/data/dao/geocodeDao';
+// @ts-ignore
 import { invoiceDao } from '../__test_assets__/exampleProject/src/data/dao/invoiceDao';
+// @ts-ignore
 import { locomotiveDao } from '../__test_assets__/exampleProject/src/data/dao/locomotiveDao';
+// @ts-ignore
 import { trainDao } from '../__test_assets__/exampleProject/src/data/dao/trainDao';
+// @ts-ignore
 import { trainEngineerDao } from '../__test_assets__/exampleProject/src/data/dao/trainEngineerDao';
 import {
   Carriage,
@@ -226,7 +232,7 @@ describe('generate', () => {
     describe('carriageDao', () => {
       it('it should be able to upsert', async () => {
         const carriage = new Carriage({
-          uuid: v4(),
+          uuid: uuid(),
           cin: 'carriage-to-test',
           carries: CarriagePurpose.FREIGHT,
           capacity: 821,
@@ -244,7 +250,7 @@ describe('generate', () => {
         const carriage = await carriageDao.upsert({
           dbConnection,
           carriage: new Carriage({
-            uuid: v4(),
+            uuid: uuid(),
             cin: 'carriage-to-test',
             carries: CarriagePurpose.FREIGHT,
             capacity: 821,
@@ -265,7 +271,7 @@ describe('generate', () => {
         const carriage = await carriageDao.upsert({
           dbConnection,
           carriage: new Carriage({
-            uuid: v4(),
+            uuid: uuid(),
             cin: 'carriage-to-test',
             carries: CarriagePurpose.FREIGHT,
             capacity: 821,
@@ -281,7 +287,7 @@ describe('generate', () => {
         const carriage = await carriageDao.upsert({
           dbConnection,
           carriage: new Carriage({
-            uuid: v4(),
+            uuid: uuid(),
             cin: 'carriage-to-test',
             carries: CarriagePurpose.FREIGHT,
             capacity: 821,
@@ -297,7 +303,7 @@ describe('generate', () => {
         const carriage = await carriageDao.upsert({
           dbConnection,
           carriage: new Carriage({
-            uuid: v4(),
+            uuid: uuid(),
             cin: 'carriage-to-test',
             carries: CarriagePurpose.FREIGHT,
             capacity: 821,
@@ -329,7 +335,7 @@ describe('generate', () => {
         boosterCarriage = await carriageDao.upsert({
           dbConnection,
           carriage: new Carriage({
-            uuid: v4(),
+            uuid: uuid(),
             cin: 'booster-transport-1',
             carries: CarriagePurpose.FREIGHT,
             capacity: 9001,
@@ -338,7 +344,7 @@ describe('generate', () => {
         crewCarriage = await carriageDao.upsert({
           dbConnection,
           carriage: new Carriage({
-            uuid: v4(),
+            uuid: uuid(),
             cin: 'crew-transport-1',
             carries: CarriagePurpose.PASSENGER,
             capacity: 19,
@@ -363,7 +369,7 @@ describe('generate', () => {
         // define the train
         const train = new Train({
           homeStationGeocode: new Geocode({ latitude: 7, longitude: 21 }),
-          combinationId: `ice-launch-express-${v4()}`,
+          combinationId: `ice-launch-express-${uuid()}`,
           locomotiveUuids: [locomotive.uuid],
           carriageUuids: [boosterCarriage.uuid, crewCarriage.uuid],
           engineerUuids: [leadEngineer.uuid],
@@ -399,7 +405,7 @@ describe('generate', () => {
               latitude: 7,
               longitude: 21,
             }),
-            combinationId: `ice-launch-express-${v4()}`,
+            combinationId: `ice-launch-express-${uuid()}`,
             locomotiveUuids: [locomotive.uuid],
             carriageUuids: [boosterCarriage.uuid, crewCarriage.uuid],
             engineerUuids: [leadEngineer.uuid],
@@ -424,7 +430,7 @@ describe('generate', () => {
               latitude: 7,
               longitude: 21,
             }),
-            combinationId: `ice-launch-express-${v4()}`,
+            combinationId: `ice-launch-express-${uuid()}`,
             locomotiveUuids: [locomotive.uuid],
             carriageUuids: [boosterCarriage.uuid, crewCarriage.uuid],
             engineerUuids: [leadEngineer.uuid],
@@ -449,7 +455,7 @@ describe('generate', () => {
               latitude: 7,
               longitude: 21,
             }),
-            combinationId: `ice-launch-express-${v4()}`,
+            combinationId: `ice-launch-express-${uuid()}`,
             locomotiveUuids: [locomotive.uuid],
             carriageUuids: [boosterCarriage.uuid, crewCarriage.uuid],
             engineerUuids: [leadEngineer.uuid],

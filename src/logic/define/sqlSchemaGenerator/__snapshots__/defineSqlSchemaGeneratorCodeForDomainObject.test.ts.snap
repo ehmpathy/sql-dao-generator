@@ -6,7 +6,7 @@ exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants shou
 /**
  * sql-schema for the domain entity 'Carriage'
  */
-export const carriage = new Entity({
+export const carriage: Entity = new Entity({
   name: 'carriage',
   properties: {
     cin: prop.VARCHAR(),
@@ -26,7 +26,7 @@ import { train } from './train';
 /**
  * sql-schema for the domain event 'TrainLocatedEvent'
  */
-export const trainLocatedEvent = new Event({
+export const trainLocatedEvent: Event = new Event({
   name: 'train_located_event',
   properties: {
     train_id: prop.REFERENCES(train),
@@ -43,7 +43,7 @@ exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants shou
 /**
  * sql-schema for the domain value object 'Geocode'
  */
-export const geocode = new ValueObject({
+export const geocode: ValueObject = new ValueObject({
   name: 'geocode',
   properties: {
     latitude: prop.NUMERIC(),
@@ -63,7 +63,7 @@ import { station } from './station';
 /**
  * sql-schema for the domain entity 'Train'
  */
-export const train = new Entity({
+export const train: Entity = new Entity({
   name: 'train',
   properties: {
     home_station_id: { ...prop.REFERENCES(station), updatable: true },
@@ -81,7 +81,7 @@ exports[`defineSqlSchemaGeneratorCodeForDomainObject imports should not have ext
 /**
  * sql-schema for the domain value object 'Geocode'
  */
-export const geocode = new ValueObject({
+export const geocode: ValueObject = new ValueObject({
   name: 'geocode',
   properties: {
     latitude: prop.NUMERIC(),

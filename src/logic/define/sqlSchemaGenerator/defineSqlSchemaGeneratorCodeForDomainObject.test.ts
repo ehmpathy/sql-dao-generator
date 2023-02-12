@@ -192,7 +192,9 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
       expect(code).toContain(
         "import { prop, ValueObject } from 'sql-schema-generator'",
       );
-      expect(code).toContain('export const geocode = new ValueObject({');
+      expect(code).toContain(
+        'export const geocode: ValueObject = new ValueObject({',
+      );
       expect(code).toContain("name: 'geocode'");
       expect(code).not.toContain('id:');
       expect(code).not.toContain('uuid:');
@@ -253,7 +255,7 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
       expect(code).toContain(
         "import { Entity, prop } from 'sql-schema-generator'",
       );
-      expect(code).toContain('export const carriage = new Entity({');
+      expect(code).toContain('export const carriage: Entity = new Entity({');
       expect(code).toContain("name: 'carriage'");
       expect(code).not.toContain('id:'); // should be filtered out
       expect(code).not.toContain('uuid:'); // should be filtered out
@@ -317,7 +319,9 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
       expect(code).toContain(
         "import { Event, prop } from 'sql-schema-generator'",
       );
-      expect(code).toContain('export const trainLocatedEvent = new Event({');
+      expect(code).toContain(
+        'export const trainLocatedEvent: Event = new Event({',
+      );
       expect(code).toContain("name: 'train_located_event'");
       expect(code).not.toContain(' id:'); // should be filtered out
       expect(code).not.toContain(' uuid:'); // should be filtered out

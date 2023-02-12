@@ -1,24 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example project 1`] = `
-Array [
+[
   SqlSchemaToDomainObjectRelationship {
-    "decorations": Object {
-      "unique": Object {
-        "domainObject": Array [
+    "decorations": {
+      "unique": {
+        "domainObject": [
           "uuid",
         ],
-        "sqlSchema": Array [
+        "sqlSchema": [
           "uuid",
         ],
       },
     },
-    "name": Object {
+    "name": {
       "domainObject": "Carriage",
       "sqlSchema": "carriage",
     },
-    "properties": Array [
-      Object {
+    "properties": [
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "id",
           "nullable": false,
@@ -34,7 +34,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -45,7 +45,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "uuid",
           "nullable": false,
@@ -61,7 +61,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "cin",
           "nullable": false,
@@ -77,11 +77,11 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "carries",
           "nullable": false,
-          "of": Array [
+          "of": [
             "PASSENGER",
             "FREIGHT",
           ],
@@ -97,7 +97,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "capacity",
           "nullable": false,
@@ -116,21 +116,21 @@ Array [
     ],
   },
   SqlSchemaToDomainObjectRelationship {
-    "decorations": Object {
-      "unique": Object {
+    "decorations": {
+      "unique": {
         "domainObject": null,
-        "sqlSchema": Array [
+        "sqlSchema": [
           "type",
           "industry_id",
         ],
       },
     },
-    "name": Object {
+    "name": {
       "domainObject": "Certificate",
       "sqlSchema": "certificate",
     },
-    "properties": Array [
-      Object {
+    "properties": [
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "id",
           "nullable": false,
@@ -146,7 +146,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -157,7 +157,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -168,11 +168,11 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "type",
           "nullable": false,
-          "of": Array [
+          "of": [
             "LOCOMOTIVE_DRIVING",
             "ENGINE_MAINTENANCE",
             "CARRIAGE_MAINTENANCE",
@@ -189,7 +189,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "industryId",
           "nullable": false,
@@ -208,22 +208,22 @@ Array [
     ],
   },
   SqlSchemaToDomainObjectRelationship {
-    "decorations": Object {
-      "unique": Object {
-        "domainObject": Array [
+    "decorations": {
+      "unique": {
+        "domainObject": [
           "socialSecurityNumberHash",
         ],
-        "sqlSchema": Array [
+        "sqlSchema": [
           "social_security_number_hash",
         ],
       },
     },
-    "name": Object {
+    "name": {
       "domainObject": "TrainEngineer",
       "sqlSchema": "train_engineer",
     },
-    "properties": Array [
-      Object {
+    "properties": [
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "id",
           "nullable": false,
@@ -239,7 +239,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "uuid",
           "nullable": false,
@@ -255,7 +255,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -266,7 +266,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -277,7 +277,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -288,7 +288,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "socialSecurityNumberHash",
           "nullable": false,
@@ -304,11 +304,11 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "certificates",
           "nullable": false,
-          "of": Object {
+          "of": {
             "nullable": false,
             "of": DomainObjectReferenceMetadata {
               "extends": "DomainValueObject",
@@ -335,11 +335,11 @@ Array [
           },
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "licenseUuids",
           "nullable": false,
-          "of": Object {
+          "of": {
             "nullable": false,
             "required": true,
             "type": "STRING",
@@ -356,7 +356,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "name",
           "nullable": false,
@@ -375,21 +375,21 @@ Array [
     ],
   },
   SqlSchemaToDomainObjectRelationship {
-    "decorations": Object {
-      "unique": Object {
+    "decorations": {
+      "unique": {
         "domainObject": null,
-        "sqlSchema": Array [
+        "sqlSchema": [
           "latitude",
           "longitude",
         ],
       },
     },
-    "name": Object {
+    "name": {
       "domainObject": "Geocode",
       "sqlSchema": "geocode",
     },
-    "properties": Array [
-      Object {
+    "properties": [
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "id",
           "nullable": false,
@@ -405,7 +405,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -416,7 +416,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -427,7 +427,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "latitude",
           "nullable": false,
@@ -443,7 +443,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "longitude",
           "nullable": false,
@@ -462,22 +462,22 @@ Array [
     ],
   },
   SqlSchemaToDomainObjectRelationship {
-    "decorations": Object {
-      "unique": Object {
-        "domainObject": Array [
+    "decorations": {
+      "unique": {
+        "domainObject": [
           "combinationId",
         ],
-        "sqlSchema": Array [
+        "sqlSchema": [
           "combination_id",
         ],
       },
     },
-    "name": Object {
+    "name": {
       "domainObject": "Train",
       "sqlSchema": "train",
     },
-    "properties": Array [
-      Object {
+    "properties": [
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "id",
           "nullable": false,
@@ -493,7 +493,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "uuid",
           "nullable": false,
@@ -509,7 +509,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -520,7 +520,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -531,7 +531,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -542,7 +542,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "homeStationGeocode",
           "nullable": false,
@@ -568,7 +568,7 @@ Array [
           },
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "combinationId",
           "nullable": false,
@@ -584,11 +584,11 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "locomotiveUuids",
           "nullable": false,
-          "of": Object {
+          "of": {
             "nullable": false,
             "required": true,
             "type": "STRING",
@@ -611,11 +611,11 @@ Array [
           },
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "carriageUuids",
           "nullable": false,
-          "of": Object {
+          "of": {
             "nullable": false,
             "required": true,
             "type": "STRING",
@@ -638,11 +638,11 @@ Array [
           },
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "engineerUuids",
           "nullable": false,
-          "of": Object {
+          "of": {
             "nullable": false,
             "required": true,
             "type": "STRING",
@@ -665,7 +665,7 @@ Array [
           },
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "leadEngineerUuid",
           "nullable": false,
@@ -687,11 +687,11 @@ Array [
           },
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "status",
           "nullable": false,
-          "of": Array [
+          "of": [
             "ASSEMBLED",
             "DISASSEMBLED",
           ],
@@ -710,22 +710,22 @@ Array [
     ],
   },
   SqlSchemaToDomainObjectRelationship {
-    "decorations": Object {
-      "unique": Object {
-        "domainObject": Array [
+    "decorations": {
+      "unique": {
+        "domainObject": [
           "ein",
         ],
-        "sqlSchema": Array [
+        "sqlSchema": [
           "ein",
         ],
       },
     },
-    "name": Object {
+    "name": {
       "domainObject": "Locomotive",
       "sqlSchema": "locomotive",
     },
-    "properties": Array [
-      Object {
+    "properties": [
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "id",
           "nullable": false,
@@ -741,7 +741,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "uuid",
           "nullable": false,
@@ -757,7 +757,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "createdAt",
           "nullable": false,
@@ -773,7 +773,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "effectiveAt",
           "nullable": false,
@@ -789,7 +789,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "updatedAt",
           "nullable": false,
@@ -805,7 +805,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "ein",
           "nullable": false,
@@ -821,11 +821,11 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "fuel",
           "nullable": false,
-          "of": Array [
+          "of": [
             "STEAM",
             "COAL",
             "DIESEL",
@@ -844,7 +844,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "capacity",
           "nullable": false,
@@ -860,7 +860,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "milage",
           "nullable": false,
@@ -879,24 +879,24 @@ Array [
     ],
   },
   SqlSchemaToDomainObjectRelationship {
-    "decorations": Object {
-      "unique": Object {
-        "domainObject": Array [
+    "decorations": {
+      "unique": {
+        "domainObject": [
           "trainUuid",
           "occurredAt",
         ],
-        "sqlSchema": Array [
+        "sqlSchema": [
           "train_id",
           "occurred_at",
         ],
       },
     },
-    "name": Object {
+    "name": {
       "domainObject": "TrainLocatedEvent",
       "sqlSchema": "train_located_event",
     },
-    "properties": Array [
-      Object {
+    "properties": [
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "id",
           "nullable": false,
@@ -912,7 +912,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -923,7 +923,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -934,7 +934,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "trainUuid",
           "nullable": false,
@@ -956,7 +956,7 @@ Array [
           },
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "occurredAt",
           "nullable": false,
@@ -972,7 +972,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "geocode",
           "nullable": false,
@@ -1001,22 +1001,22 @@ Array [
     ],
   },
   SqlSchemaToDomainObjectRelationship {
-    "decorations": Object {
-      "unique": Object {
-        "domainObject": Array [
+    "decorations": {
+      "unique": {
+        "domainObject": [
           "geocode",
         ],
-        "sqlSchema": Array [
+        "sqlSchema": [
           "geocode_id",
         ],
       },
     },
-    "name": Object {
+    "name": {
       "domainObject": "TrainStation",
       "sqlSchema": "train_station",
     },
-    "properties": Array [
-      Object {
+    "properties": [
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "id",
           "nullable": false,
@@ -1032,7 +1032,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "uuid",
           "nullable": false,
@@ -1048,7 +1048,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -1059,7 +1059,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -1070,7 +1070,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -1081,7 +1081,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "geocode",
           "nullable": false,
@@ -1107,7 +1107,7 @@ Array [
           },
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "name",
           "nullable": false,
@@ -1126,21 +1126,21 @@ Array [
     ],
   },
   SqlSchemaToDomainObjectRelationship {
-    "decorations": Object {
-      "unique": Object {
+    "decorations": {
+      "unique": {
         "domainObject": null,
-        "sqlSchema": Array [
+        "sqlSchema": [
           "amount",
           "currency",
         ],
       },
     },
-    "name": Object {
+    "name": {
       "domainObject": "Price",
       "sqlSchema": "price",
     },
-    "properties": Array [
-      Object {
+    "properties": [
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "id",
           "nullable": false,
@@ -1156,7 +1156,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -1167,7 +1167,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -1178,7 +1178,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "amount",
           "nullable": false,
@@ -1194,11 +1194,11 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "currency",
           "nullable": false,
-          "of": Array [
+          "of": [
             "USD",
           ],
           "required": true,
@@ -1216,22 +1216,22 @@ Array [
     ],
   },
   SqlSchemaToDomainObjectRelationship {
-    "decorations": Object {
-      "unique": Object {
+    "decorations": {
+      "unique": {
         "domainObject": null,
-        "sqlSchema": Array [
+        "sqlSchema": [
           "price_id",
           "title",
           "explanation",
         ],
       },
     },
-    "name": Object {
+    "name": {
       "domainObject": "InvoiceLineItem",
       "sqlSchema": "invoice_line_item",
     },
-    "properties": Array [
-      Object {
+    "properties": [
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "id",
           "nullable": false,
@@ -1247,7 +1247,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -1258,7 +1258,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -1269,7 +1269,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "price",
           "nullable": false,
@@ -1295,7 +1295,7 @@ Array [
           },
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "title",
           "nullable": false,
@@ -1311,7 +1311,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "explanation",
           "nullable": false,
@@ -1330,22 +1330,22 @@ Array [
     ],
   },
   SqlSchemaToDomainObjectRelationship {
-    "decorations": Object {
-      "unique": Object {
-        "domainObject": Array [
+    "decorations": {
+      "unique": {
+        "domainObject": [
           "externalId",
         ],
-        "sqlSchema": Array [
+        "sqlSchema": [
           "external_id",
         ],
       },
     },
-    "name": Object {
+    "name": {
       "domainObject": "Invoice",
       "sqlSchema": "invoice",
     },
-    "properties": Array [
-      Object {
+    "properties": [
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "id",
           "nullable": false,
@@ -1361,7 +1361,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "uuid",
           "nullable": false,
@@ -1377,7 +1377,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -1388,7 +1388,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -1399,7 +1399,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": null,
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
@@ -1410,7 +1410,7 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "externalId",
           "nullable": false,
@@ -1426,11 +1426,11 @@ Array [
           "reference": null,
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "items",
           "nullable": false,
-          "of": Object {
+          "of": {
             "nullable": false,
             "of": DomainObjectReferenceMetadata {
               "extends": "DomainValueObject",
@@ -1457,7 +1457,7 @@ Array [
           },
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "totalPrice",
           "nullable": false,
@@ -1483,11 +1483,11 @@ Array [
           },
         },
       },
-      Object {
+      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "status",
           "nullable": false,
-          "of": Array [
+          "of": [
             "PROPOSED",
             "ISSUED",
             "PAID",
