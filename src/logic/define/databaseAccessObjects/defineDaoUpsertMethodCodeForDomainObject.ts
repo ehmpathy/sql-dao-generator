@@ -133,7 +133,7 @@ export const upsert = async ({
         return `${domainObjectPropertyName}`;
       return `${sqlSchemaPropertyName}: ${domainObjectPropertyName}`;
     })
-    .join(', ')} } = results[0]; // grab the db generated values
+    .join(', ')} } = results[0]!; // grab the db generated values
   return new ${domainObject.name}({ ...${camelCase(
     domainObject.name,
   )}, ${dbGeneratedPropertiesOnDomainObject

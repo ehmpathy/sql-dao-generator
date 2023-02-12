@@ -36,7 +36,7 @@ export const upsert = async ({
       geocodeIds: await Promise.all(trainLocatedEvent.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await geocodeDao.upsert({ dbConnection, geocode })).id)),
     },
   });
-  const { id } = results[0]; // grab the db generated values
+  const { id } = results[0]!; // grab the db generated values
   return new TrainLocatedEvent({ ...trainLocatedEvent, id }) as HasMetadata<TrainLocatedEvent>;
 };"
 `;
@@ -88,7 +88,7 @@ export const upsert = async ({
       locomotiveUuids: train.locomotiveUuids,
     },
   });
-  const { id, uuid } = results[0]; // grab the db generated values
+  const { id, uuid } = results[0]!; // grab the db generated values
   return new Train({ ...train, id, uuid }) as HasMetadata<Train>;
 };"
 `;
@@ -128,7 +128,7 @@ export const upsert = async ({
       capacity: carriage.capacity,
     },
   });
-  const { id, uuid } = results[0]; // grab the db generated values
+  const { id, uuid } = results[0]!; // grab the db generated values
   return new Carriage({ ...carriage, id, uuid }) as HasMetadata<Carriage>;
 };"
 `;
@@ -166,7 +166,7 @@ export const upsert = async ({
       longitude: geocode.longitude,
     },
   });
-  const {  } = results[0]; // grab the db generated values
+  const {  } = results[0]!; // grab the db generated values
   return new Geocode({ ...geocode,  }) as HasMetadata<Geocode>;
 };"
 `;
@@ -206,7 +206,7 @@ export const upsert = async ({
       capacity: carriage.capacity,
     },
   });
-  const { id, uuid, effective_at: effectiveAt } = results[0]; // grab the db generated values
+  const { id, uuid, effective_at: effectiveAt } = results[0]!; // grab the db generated values
   return new Carriage({ ...carriage, id, uuid, effectiveAt }) as HasMetadata<Carriage>;
 };"
 `;

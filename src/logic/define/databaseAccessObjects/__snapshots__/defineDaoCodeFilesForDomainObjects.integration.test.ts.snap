@@ -198,7 +198,7 @@ export const upsert = async ({
       capacity: carriage.capacity,
     },
   });
-  const { id } = results[0]; // grab the db generated values
+  const { id } = results[0]!; // grab the db generated values
   return new Carriage({ ...carriage, id }) as HasMetadata<Carriage>;
 };",
     "relpath": "carriageDao/upsert.ts",
@@ -349,7 +349,7 @@ export const upsert = async ({
       industryId: certificate.industryId,
     },
   });
-  const { id } = results[0]; // grab the db generated values
+  const { id } = results[0]!; // grab the db generated values
   return new Certificate({ ...certificate, id }) as HasMetadata<Certificate>;
 };",
     "relpath": "certificateDao/upsert.ts",
@@ -604,7 +604,7 @@ export const upsert = async ({
       name: trainEngineer.name,
     },
   });
-  const { id, uuid } = results[0]; // grab the db generated values
+  const { id, uuid } = results[0]!; // grab the db generated values
   return new TrainEngineer({ ...trainEngineer, id, uuid }) as HasMetadata<TrainEngineer>;
 };",
     "relpath": "trainEngineerDao/upsert.ts",
@@ -755,7 +755,7 @@ export const upsert = async ({
       longitude: geocode.longitude,
     },
   });
-  const { id } = results[0]; // grab the db generated values
+  const { id } = results[0]!; // grab the db generated values
   return new Geocode({ ...geocode, id }) as HasMetadata<Geocode>;
 };",
     "relpath": "geocodeDao/upsert.ts",
@@ -1082,7 +1082,7 @@ export const upsert = async ({
       status: train.status,
     },
   });
-  const { id, uuid } = results[0]; // grab the db generated values
+  const { id, uuid } = results[0]!; // grab the db generated values
   return new Train({ ...train, id, uuid }) as HasMetadata<Train>;
 };",
     "relpath": "trainDao/upsert.ts",
@@ -1299,7 +1299,7 @@ export const upsert = async ({
       milage: locomotive.milage,
     },
   });
-  const { id, uuid, created_at: createdAt, effective_at: effectiveAt, updated_at: updatedAt } = results[0]; // grab the db generated values
+  const { id, uuid, created_at: createdAt, effective_at: effectiveAt, updated_at: updatedAt } = results[0]!; // grab the db generated values
   return new Locomotive({ ...locomotive, id, uuid, createdAt, effectiveAt, updatedAt }) as HasMetadata<Locomotive>;
 };",
     "relpath": "locomotiveDao/upsert.ts",
@@ -1477,7 +1477,7 @@ export const upsert = async ({
       geocodeId: trainLocatedEvent.geocode.id ? trainLocatedEvent.geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: trainLocatedEvent.geocode })).id,
     },
   });
-  const { id } = results[0]; // grab the db generated values
+  const { id } = results[0]!; // grab the db generated values
   return new TrainLocatedEvent({ ...trainLocatedEvent, id }) as HasMetadata<TrainLocatedEvent>;
 };",
     "relpath": "trainLocatedEventDao/upsert.ts",
@@ -1693,7 +1693,7 @@ export const upsert = async ({
       name: trainStation.name,
     },
   });
-  const { id, uuid } = results[0]; // grab the db generated values
+  const { id, uuid } = results[0]!; // grab the db generated values
   return new TrainStation({ ...trainStation, id, uuid }) as HasMetadata<TrainStation>;
 };",
     "relpath": "trainStationDao/upsert.ts",
@@ -1844,7 +1844,7 @@ export const upsert = async ({
       currency: price.currency,
     },
   });
-  const { id } = results[0]; // grab the db generated values
+  const { id } = results[0]!; // grab the db generated values
   return new Price({ ...price, id }) as HasMetadata<Price>;
 };",
     "relpath": "priceDao/upsert.ts",
@@ -2020,7 +2020,7 @@ export const upsert = async ({
       explanation: invoiceLineItem.explanation,
     },
   });
-  const { id } = results[0]; // grab the db generated values
+  const { id } = results[0]!; // grab the db generated values
   return new InvoiceLineItem({ ...invoiceLineItem, id }) as HasMetadata<InvoiceLineItem>;
 };",
     "relpath": "invoiceLineItemDao/upsert.ts",
@@ -2322,7 +2322,7 @@ export const upsert = async ({
       status: invoice.status,
     },
   });
-  const { id, uuid } = results[0]; // grab the db generated values
+  const { id, uuid } = results[0]!; // grab the db generated values
   return new Invoice({ ...invoice, id, uuid }) as HasMetadata<Invoice>;
 };",
     "relpath": "invoiceDao/upsert.ts",

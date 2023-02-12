@@ -194,7 +194,7 @@ export const upsert = async ({
       longitude: geocode.longitude,
     },
   });
-  const { id, uuid } = results[0]; // grab the db generated values
+  const { id, uuid } = results[0]!; // grab the db generated values
   return new Geocode({ ...geocode, id, uuid }) as HasMetadata<Geocode>;
 };",
     "relpath": "geocodeDao/upsert.ts",
@@ -350,7 +350,7 @@ export const upsert = async ({
       longitude: geocode.longitude,
     },
   });
-  const { id } = results[0]; // grab the db generated values
+  const { id } = results[0]!; // grab the db generated values
   return new Geocode({ ...geocode, id }) as HasMetadata<Geocode>;
 };",
     "relpath": "geocodeDao/upsert.ts",
