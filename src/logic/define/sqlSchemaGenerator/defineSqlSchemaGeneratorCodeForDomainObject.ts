@@ -64,6 +64,7 @@ export const defineSqlSchemaGeneratorCodeForDomainObject = ({
   const referenceImports = sqlSchemaRelationship.properties
     .map((propertyRelationship) => propertyRelationship.sqlSchema.reference)
     .filter(isPresent)
+    .filter((reference) => reference.of.name !== domainObject.name) // dont import references to self
     .map(
       (reference) =>
         `import { ${camelCase(reference.of.name)} } from './${camelCase(
