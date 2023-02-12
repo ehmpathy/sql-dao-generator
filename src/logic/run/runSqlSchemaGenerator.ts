@@ -28,10 +28,10 @@ export const runSqlSchemaGenerator = async ({
     .filter((line) => line.includes('[completed]'))
     .map((line) => line.split(']')[1]!.split('[')[0]!.trim());
   generatedForNames.forEach((name) => {
-    const successMessage = `    ${chalk.green('✔')} ${chalk.green(
+    const successMessageForName = `    ${chalk.green('✔')} ${chalk.green(
       chalk.bold('[GENERATED]'),
     )} ${chalk.bold(`tables, views, and functions for '${name}'`)}`;
     // tslint:disable-next-line: no-console
-    console.log(successMessage);
+    console.log(successMessageForName);
   });
 };
