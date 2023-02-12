@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/ehmpathy/sql-dao-generator/compare/v0.3.1...v0.3.2) (2023-02-12)
+
+
+### Bug Fixes
+
+* **refs:** dont import schema-generator reference to self ([d1f0f78](https://github.com/ehmpathy/sql-dao-generator/commit/d1f0f78273ff9e99eec418883d798e1cbd7a6ce3))
+
 ## [0.3.1](https://github.com/ehmpathy/sql-dao-generator/compare/v0.3.0...v0.3.1) (2023-02-12)
 
 
