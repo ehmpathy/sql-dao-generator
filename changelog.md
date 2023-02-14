@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://github.com/ehmpathy/sql-dao-generator/compare/v0.3.2...v0.3.3) (2023-02-14)
+
+
+### Bug Fixes
+
+* **deps:** bump to sql-schema-generator version w/ config input ([5841b96](https://github.com/ehmpathy/sql-dao-generator/commit/5841b96c23441eb6f1900531d026018358c3cee8))
+
 ## [0.3.2](https://github.com/ehmpathy/sql-dao-generator/compare/v0.3.1...v0.3.2) (2023-02-12)
 
 
