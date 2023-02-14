@@ -11,7 +11,7 @@ export const runSqlSchemaGenerator = async ({
   // run the generator to actually generate the files
   shell.cd(config.rootDir);
   const result = await shell.exec(
-    `npx sql-schema-generator generate --declarations=${config.generates.schema.config.content.declarations} --target=${config.generates.schema.config.content.generates.sql.to}`,
+    `npx sql-schema-generator generate --config=${config.generates.schema.config.path}`,
     { silent: true },
   );
   if (result.stderr) throw new Error(result.stderr);
