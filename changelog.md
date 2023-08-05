@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.4](https://github.com/ehmpathy/sql-dao-generator/compare/v0.3.3...v0.3.4) (2023-08-05)
+
+
+### Bug Fixes
+
+* **deps:** lift out isPropertyNameAReferenceIntuitively method ([e183150](https://github.com/ehmpathy/sql-dao-generator/commit/e18315063693af0d5da53a691e75c3aa80d7e9d0))
+
 ## [0.3.3](https://github.com/ehmpathy/sql-dao-generator/compare/v0.3.2...v0.3.3) (2023-02-14)
 
 
