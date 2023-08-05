@@ -1,5 +1,4 @@
-import { getDomainObjectNameAfterDroppingSomeQualifiers } from './getDomainObjectNameAfterDroppingSomeQualifiers';
-import { isPropertyNamedAfterDomainObject } from './isPropertyNamedAfterDomainObject';
+import { isPropertyNameAReferenceIntuitively } from 'domain-objects';
 
 export class AmbiguouslyNamedDomainObjectReferencePropertyError extends Error {
   constructor({
@@ -51,66 +50,20 @@ export const getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter =
     propertyName: string;
     allDomainObjectNames: string[];
   }): string | null => {
-    let qualifiersToDrop = 0;
-    let iterationLimitExceeded = false;
-    while (!iterationLimitExceeded) {
-      // for this qualifiersToDrop count, define the names for domain objects after dropping those qualifiers
-      const allDomainObjectNamesWithoutQualifiers = allDomainObjectNames
-        .map((domainObjectName) => {
-          return {
-            withoutQualifiers: getDomainObjectNameAfterDroppingSomeQualifiers({
-              domainObjectName,
-              qualifiersToDrop,
-            }),
-            withQualifiers: domainObjectName,
-          };
-        })
-        .filter(
-          (
-            name,
-          ): name is { withoutQualifiers: string; withQualifiers: string } =>
-            !!name.withoutQualifiers,
-        );
-      if (allDomainObjectNamesWithoutQualifiers.length === 0) return null; // if we reached here, then that means we can't find a domain object name that this property name references in any way
+    // determine all of the domain objects that are intuitively referenced by this property name
+    const intuitivelyReferencedDomainObjectNames = allDomainObjectNames.filter(
+      (domainObjectName) =>
+        isPropertyNameAReferenceIntuitively({ propertyName, domainObjectName }),
+    );
 
-      // check if there are any domain objects which it is named for unambiguously, at this level of dropping qualifiers
-      const namedForAtThisQualifiersToDropLevel =
-        allDomainObjectNamesWithoutQualifiers.filter(
-          (name) =>
-            isPropertyNamedAfterDomainObject({
-              propertyName,
-              domainObjectName: name.withoutQualifiers,
-            }) ||
-            isPropertyNamedAfterDomainObject({
-              propertyName: propertyName.replace(/s$/, ''), // without trailing s
-              domainObjectName: name.withoutQualifiers,
-            }),
-        );
+    // if more than one, then its ambiguously specified
+    if (intuitivelyReferencedDomainObjectNames.length > 1)
+      throw new AmbiguouslyNamedDomainObjectReferencePropertyError({
+        parentDomainObjectName,
+        propertyName,
+        ambiguousOptions: intuitivelyReferencedDomainObjectNames,
+      });
 
-      // if there is exactly one, job done - unambiguously specified
-      if (namedForAtThisQualifiersToDropLevel.length === 1)
-        return namedForAtThisQualifiersToDropLevel[0]!.withQualifiers;
-
-      // if more than one, then its ambiguously specified
-      if (namedForAtThisQualifiersToDropLevel.length > 1)
-        throw new AmbiguouslyNamedDomainObjectReferencePropertyError({
-          parentDomainObjectName,
-          propertyName,
-          ambiguousOptions: namedForAtThisQualifiersToDropLevel.map(
-            (name) => name.withQualifiers,
-          ),
-        });
-
-      // otherwise, go another layer deeper and try again
-      qualifiersToDrop += 1;
-
-      // safety check: if we passed more than 20 qualifiers, there's been some sort of error
-      if (qualifiersToDrop > 20) {
-        iterationLimitExceeded = true; // this is redundant, but feels better than having a `while(true)` defined
-        throw new Error(
-          'attempted to drop more than 20 qualifiers. does someone really have 20 qualifiers on a name? this is probably a bug',
-        );
-      }
-    }
-    throw new Error('something unexpected went wrong'); // we shouldn't reach here
+    // otherwise, there's either exactly one or none
+    return intuitivelyReferencedDomainObjectNames[0] ?? null;
   };
