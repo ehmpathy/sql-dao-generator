@@ -1,3 +1,4 @@
+import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
 import { camelCase } from 'change-case';
 import {
   DomainObjectMetadata,
@@ -8,7 +9,6 @@ import {
 import { isPresent } from 'type-fns';
 
 import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaPropertyMetadata';
-import { UnexpectedCodePathError } from '../../../utils/errors/UnexpectedCodePathError';
 import { UserInputError } from '../../UserInputError';
 
 export const defineSqlSchemaGeneratorCodeForProperty = ({

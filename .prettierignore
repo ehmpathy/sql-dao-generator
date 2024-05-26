@@ -1,1 +1,2 @@
 *.md
+src/logic/__test_assets__/exampleProject/**/*
