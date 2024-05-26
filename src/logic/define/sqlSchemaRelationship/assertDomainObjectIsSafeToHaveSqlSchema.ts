@@ -30,18 +30,18 @@ export const assertDomainObjectIsSafeToHaveSqlSchema = ({
       });
   }
 
-  // make sure that value objects do not have unique or updatable defined
-  if (domainObject.extends === DomainObjectVariant.DOMAIN_VALUE_OBJECT) {
+  // make sure that literals do not have unique or updatable defined
+  if (domainObject.extends === DomainObjectVariant.DOMAIN_LITERAL) {
     if (domainObject.decorations.unique)
       throw new UserInputError({
         reason:
-          "domain value objects must _not_ have their 'unique' properties specified. value objects are unique on all of their properties by definition.",
+          "domain literals must _not_ have their 'unique' properties specified. literals are unique on all of their properties by definition.",
         domainObjectName: domainObject.name,
       });
     if (domainObject.decorations.updatable)
       throw new UserInputError({
         reason:
-          "domain value objects must _not_ have any 'updatable' properties specified. value objects do not have any updatable properties by definition.",
+          "domain literals must _not_ have any 'updatable' properties specified. literals do not have any updatable properties by definition.",
         domainObjectName: domainObject.name,
       });
   }

@@ -11,7 +11,7 @@ describe('defineDaoCodeFilesForDomainObject', () => {
   it('should have the findByUuid file if property has uuid', () => {
     const domainObject = new DomainObjectMetadata({
       name: 'Geocode',
-      extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+      extends: DomainObjectVariant.DOMAIN_LITERAL,
       properties: {
         id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
         uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
@@ -40,7 +40,7 @@ describe('defineDaoCodeFilesForDomainObject', () => {
   it('should not have the findByUuid file if property has uuid', () => {
     const domainObject = new DomainObjectMetadata({
       name: 'Geocode',
-      extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+      extends: DomainObjectVariant.DOMAIN_LITERAL,
       properties: {
         id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
         latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },

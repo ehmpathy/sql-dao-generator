@@ -1,4 +1,4 @@
-import { DomainValueObject } from 'domain-objects';
+import { DomainLiteral } from 'domain-objects';
 
 export enum CertificateType {
   LOCOMOTIVE_DRIVING = 'LOCOMOTIVE_DRIVING',
@@ -12,5 +12,5 @@ export interface Certificate {
   industryId: string;
 }
 export class Certificate
-  extends DomainValueObject<Certificate>
+  extends DomainLiteral<Certificate>
   implements Certificate {}

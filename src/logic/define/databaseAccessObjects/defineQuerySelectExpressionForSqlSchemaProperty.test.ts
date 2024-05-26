@@ -137,7 +137,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: {
               name: 'Geocode',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -146,7 +146,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
           type: DomainObjectPropertyType.REFERENCE,
           of: {
             name: 'Geocode',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
           },
         },
         allSqlSchemaRelationships: [
@@ -207,7 +207,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: {
               name: 'Geocode',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -218,7 +218,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Geocode',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -283,7 +283,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: {
               name: 'InvoiceLineItem',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -292,7 +292,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
           type: DomainObjectPropertyType.REFERENCE,
           of: {
             name: 'InvoiceLineItem',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
           },
         },
         allSqlSchemaRelationships: [
@@ -322,7 +322,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                   type: DomainObjectPropertyType.REFERENCE,
                   of: {
                     name: 'Price',
-                    extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                    extends: DomainObjectVariant.DOMAIN_LITERAL,
                   },
                 },
                 sqlSchema: {
@@ -335,7 +335,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                     method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
                     of: {
                       name: 'Price',
-                      extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                      extends: DomainObjectVariant.DOMAIN_LITERAL,
                     },
                   },
                 },
@@ -417,7 +417,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: {
               name: 'InvoiceLineItem',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -426,7 +426,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
           type: DomainObjectPropertyType.REFERENCE,
           of: {
             name: 'InvoiceLineItem',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
           },
         },
         allSqlSchemaRelationships: [
@@ -458,7 +458,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                     type: DomainObjectPropertyType.REFERENCE,
                     of: {
                       name: 'Price',
-                      extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                      extends: DomainObjectVariant.DOMAIN_LITERAL,
                     },
                   },
                 },
@@ -472,7 +472,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                     method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
                     of: {
                       name: 'Price',
-                      extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                      extends: DomainObjectVariant.DOMAIN_LITERAL,
                     },
                   },
                 },
@@ -553,7 +553,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: {
               name: 'InvoiceLineItem',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -564,7 +564,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'InvoiceLineItem',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -595,7 +595,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                   type: DomainObjectPropertyType.REFERENCE,
                   of: {
                     name: 'Price',
-                    extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                    extends: DomainObjectVariant.DOMAIN_LITERAL,
                   },
                 },
                 sqlSchema: {
@@ -608,7 +608,7 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                     method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
                     of: {
                       name: 'Price',
-                      extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                      extends: DomainObjectVariant.DOMAIN_LITERAL,
                     },
                   },
                 },

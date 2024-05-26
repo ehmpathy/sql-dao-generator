@@ -133,7 +133,7 @@ export const upsert = async ({
 };"
 `;
 
-exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for simple value object 1`] = `
+exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for simple literal 1`] = `
 "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';

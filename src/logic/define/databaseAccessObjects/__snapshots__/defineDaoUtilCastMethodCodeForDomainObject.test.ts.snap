@@ -58,7 +58,7 @@ export const castFromDatabaseObject = (
   }) as HasMetadata<Carriage>;"
 `;
 
-exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for simple value object 1`] = `
+exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for simple literal 1`] = `
 "import { HasMetadata } from 'type-fns';
 
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';

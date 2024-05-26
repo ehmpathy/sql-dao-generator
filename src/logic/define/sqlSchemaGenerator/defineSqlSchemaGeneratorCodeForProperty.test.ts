@@ -110,7 +110,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           type: DomainObjectPropertyType.REFERENCE,
           of: {
             name: 'Address',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
           },
         },
         sqlSchemaProperty: {
@@ -123,7 +123,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: {
               name: 'Address',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -138,7 +138,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           type: DomainObjectPropertyType.REFERENCE,
           of: {
             name: 'HomeAddress',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
           },
         },
         sqlSchemaProperty: {
@@ -151,7 +151,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: {
               name: 'HomeAddress',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -171,7 +171,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
           type: DomainObjectPropertyType.REFERENCE,
           of: {
             name: 'Service',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
           },
         },
         sqlSchemaProperty: {
@@ -184,7 +184,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: {
               name: 'Service',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -203,7 +203,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'PlaneExternalId',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -217,7 +217,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: {
               name: 'PlaneExternalId',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -288,7 +288,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'PlaneExternalId',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -302,7 +302,7 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
             method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
             of: {
               name: 'PlaneExternalId',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },

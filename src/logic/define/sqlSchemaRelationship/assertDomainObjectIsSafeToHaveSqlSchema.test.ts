@@ -6,13 +6,13 @@ import {
 import { assertDomainObjectIsSafeToHaveSqlSchema } from './assertDomainObjectIsSafeToHaveSqlSchema';
 
 describe('assertDomainObjectIsSafeToHaveSqlSchema', () => {
-  describe('domain value object', () => {
-    it('should throw an error if unique properties are attempted to be defined for domain-value-object', () => {
+  describe('domain literal', () => {
+    it('should throw an error if unique properties are attempted to be defined for domain-literal', () => {
       try {
         assertDomainObjectIsSafeToHaveSqlSchema({
           domainObject: new DomainObjectMetadata({
             name: 'Geocode',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {},
             decorations: {
               unique: ['latitude'],
@@ -23,16 +23,16 @@ describe('assertDomainObjectIsSafeToHaveSqlSchema', () => {
         throw new Error('should not reach here');
       } catch (error) {
         expect(error.message).toContain(
-          "domain value objects must _not_ have their 'unique' properties specified",
+          "domain literals must _not_ have their 'unique' properties specified",
         );
       }
     });
-    it('should throw an error if updatable properties are attempted to be defined for domain-value-object', () => {
+    it('should throw an error if updatable properties are attempted to be defined for domain-literal', () => {
       try {
         assertDomainObjectIsSafeToHaveSqlSchema({
           domainObject: new DomainObjectMetadata({
             name: 'Geocode',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {},
             decorations: {
               unique: null,
@@ -43,7 +43,7 @@ describe('assertDomainObjectIsSafeToHaveSqlSchema', () => {
         throw new Error('should not reach here');
       } catch (error) {
         expect(error.message).toContain(
-          "domain value objects must _not_ have any 'updatable' properties specified",
+          "domain literals must _not_ have any 'updatable' properties specified",
         );
       }
     });

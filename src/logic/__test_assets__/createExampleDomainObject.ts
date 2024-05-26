@@ -4,14 +4,14 @@ import {
 } from 'domain-objects-metadata';
 
 export const createExampleDomainObjectMetadata = ({
-  extend = DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+  extend = DomainObjectVariant.DOMAIN_LITERAL,
 }: {
   extend?: DomainObjectVariant;
 } = {}) => {
-  if (extend === DomainObjectVariant.DOMAIN_VALUE_OBJECT)
+  if (extend === DomainObjectVariant.DOMAIN_LITERAL)
     return new DomainObjectMetadata({
-      name: 'ExampleDomainValueObject',
-      extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+      name: 'ExampleDomainLiteral',
+      extends: DomainObjectVariant.DOMAIN_LITERAL,
       properties: {},
       decorations: { unique: null, updatable: null },
     });
@@ -19,7 +19,7 @@ export const createExampleDomainObjectMetadata = ({
   if (extend === DomainObjectVariant.DOMAIN_ENTITY)
     return new DomainObjectMetadata({
       name: 'ExampleDomainEntity',
-      extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+      extends: DomainObjectVariant.DOMAIN_LITERAL,
       properties: {},
       decorations: { unique: ['uuid'], updatable: [] },
     });

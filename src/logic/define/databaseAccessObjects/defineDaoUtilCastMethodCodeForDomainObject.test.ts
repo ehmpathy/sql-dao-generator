@@ -8,11 +8,11 @@ import { defineSqlSchemaRelationshipForDomainObject } from '../sqlSchemaRelation
 import { defineDaoUtilCastMethodCodeForDomainObject } from './defineDaoUtilCastMethodCodeForDomainObject';
 
 describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
-  it('should look correct for simple value object', () => {
+  it('should look correct for simple literal', () => {
     // define what we're testing on
     const domainObject = new DomainObjectMetadata({
       name: 'Geocode',
-      extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+      extends: DomainObjectVariant.DOMAIN_LITERAL,
       properties: {
         id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
         latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
@@ -129,7 +129,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Geocode',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
           required: true,
@@ -194,7 +194,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
           type: DomainObjectPropertyType.REFERENCE,
           of: {
             name: 'Geocode',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
           },
         },
         leadEngineerUuid: {
@@ -208,7 +208,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'TrainBadge',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },

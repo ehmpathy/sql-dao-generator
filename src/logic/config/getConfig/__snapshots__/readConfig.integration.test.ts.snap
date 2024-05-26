@@ -56,7 +56,7 @@ exports[`readConfig should be able to read the example config provisioned in __t
           "unique": null,
           "updatable": null,
         },
-        "extends": "DomainValueObject",
+        "extends": "DomainLiteral",
         "name": "Certificate",
         "properties": {
           "id": DomainObjectPropertyMetadata {
@@ -89,7 +89,7 @@ exports[`readConfig should be able to read the example config provisioned in __t
           "unique": null,
           "updatable": null,
         },
-        "extends": "DomainValueObject",
+        "extends": "DomainLiteral",
         "name": "Geocode",
         "properties": {
           "id": DomainObjectPropertyMetadata {
@@ -144,7 +144,7 @@ exports[`readConfig should be able to read the example config provisioned in __t
             "of": {
               "nullable": false,
               "of": DomainObjectReferenceMetadata {
-                "extends": "DomainValueObject",
+                "extends": "DomainLiteral",
                 "name": "InvoiceLineItem",
               },
               "required": true,
@@ -171,7 +171,7 @@ exports[`readConfig should be able to read the example config provisioned in __t
             "name": "totalPrice",
             "nullable": false,
             "of": DomainObjectReferenceMetadata {
-              "extends": "DomainValueObject",
+              "extends": "DomainLiteral",
               "name": "Price",
             },
             "required": true,
@@ -190,7 +190,7 @@ exports[`readConfig should be able to read the example config provisioned in __t
           "unique": null,
           "updatable": null,
         },
-        "extends": "DomainValueObject",
+        "extends": "DomainLiteral",
         "name": "InvoiceLineItem",
         "properties": {
           "explanation": DomainObjectPropertyMetadata {
@@ -209,7 +209,7 @@ exports[`readConfig should be able to read the example config provisioned in __t
             "name": "price",
             "nullable": false,
             "of": DomainObjectReferenceMetadata {
-              "extends": "DomainValueObject",
+              "extends": "DomainLiteral",
               "name": "Price",
             },
             "required": true,
@@ -303,7 +303,7 @@ exports[`readConfig should be able to read the example config provisioned in __t
           "unique": null,
           "updatable": null,
         },
-        "extends": "DomainValueObject",
+        "extends": "DomainLiteral",
         "name": "Price",
         "properties": {
           "amount": DomainObjectPropertyMetadata {
@@ -374,7 +374,7 @@ exports[`readConfig should be able to read the example config provisioned in __t
             "name": "homeStationGeocode",
             "nullable": false,
             "of": DomainObjectReferenceMetadata {
-              "extends": "DomainValueObject",
+              "extends": "DomainLiteral",
               "name": "Geocode",
             },
             "required": true,
@@ -441,7 +441,7 @@ exports[`readConfig should be able to read the example config provisioned in __t
             "of": {
               "nullable": false,
               "of": DomainObjectReferenceMetadata {
-                "extends": "DomainValueObject",
+                "extends": "DomainLiteral",
                 "name": "Certificate",
               },
               "required": true,
@@ -503,7 +503,7 @@ exports[`readConfig should be able to read the example config provisioned in __t
             "name": "geocode",
             "nullable": false,
             "of": DomainObjectReferenceMetadata {
-              "extends": "DomainValueObject",
+              "extends": "DomainLiteral",
               "name": "Geocode",
             },
             "required": true,

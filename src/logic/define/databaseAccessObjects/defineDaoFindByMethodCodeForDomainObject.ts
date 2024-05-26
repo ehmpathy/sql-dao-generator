@@ -106,20 +106,20 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
               )
                 return null;
 
-              // if its a solo reference to a domain value object, then its needed
+              // if its a solo reference to a domain literal, then its needed
               if (
                 isDomainObjectReferenceProperty(domainObjectProperty) &&
                 domainObjectProperty.of.extends ===
-                  DomainObjectVariant.DOMAIN_VALUE_OBJECT
+                  DomainObjectVariant.DOMAIN_LITERAL
               )
                 return domainObjectProperty.of.name;
 
-              // if its a array reference to a domain value object, then its needed
+              // if its a array reference to a domain literal, then its needed
               if (
                 isDomainObjectArrayProperty(domainObjectProperty) &&
                 isDomainObjectReferenceProperty(domainObjectProperty.of) &&
                 domainObjectProperty.of.of.extends ===
-                  DomainObjectVariant.DOMAIN_VALUE_OBJECT
+                  DomainObjectVariant.DOMAIN_LITERAL
               )
                 return domainObjectProperty.of.of.name;
 

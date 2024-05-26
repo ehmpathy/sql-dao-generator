@@ -37,13 +37,13 @@ export const trainLocatedEvent: Event = new Event({
 });"
 `;
 
-exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants should create a correct looking sql-schema-generator object for a domain-value-object 1`] = `
-"import { prop, ValueObject } from 'sql-schema-generator';
+exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants should create a correct looking sql-schema-generator object for a domain-literal 1`] = `
+"import { Literal, prop } from 'sql-schema-generator';
 
 /**
- * sql-schema for the domain value object 'Geocode'
+ * sql-schema for the domain literal 'Geocode'
  */
-export const geocode: ValueObject = new ValueObject({
+export const geocode: Literal = new Literal({
   name: 'geocode',
   properties: {
     latitude: prop.NUMERIC(),
@@ -76,12 +76,12 @@ export const train: Entity = new Entity({
 `;
 
 exports[`defineSqlSchemaGeneratorCodeForDomainObject imports should not have extra new lines if there are no imports 1`] = `
-"import { prop, ValueObject } from 'sql-schema-generator';
+"import { Literal, prop } from 'sql-schema-generator';
 
 /**
- * sql-schema for the domain value object 'Geocode'
+ * sql-schema for the domain literal 'Geocode'
  */
-export const geocode: ValueObject = new ValueObject({
+export const geocode: Literal = new Literal({
   name: 'geocode',
   properties: {
     latitude: prop.NUMERIC(),

@@ -21,7 +21,7 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
           type: DomainObjectPropertyType.REFERENCE,
           of: {
             name: 'Address',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
           },
         },
         domainObject: { name: 'ExampleThing' } as DomainObjectMetadata,
@@ -31,7 +31,7 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
         method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
         of: {
           name: 'Address',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+          extends: DomainObjectVariant.DOMAIN_LITERAL,
         },
       });
     });
@@ -44,7 +44,7 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'PlaneExternalId',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -55,7 +55,7 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
         method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
         of: {
           name: 'PlaneExternalId',
-          extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+          extends: DomainObjectVariant.DOMAIN_LITERAL,
         },
       });
     });
@@ -69,7 +69,7 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
               type: DomainObjectPropertyType.REFERENCE,
               of: {
                 name: 'PlaneExternalId',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
           },
@@ -92,7 +92,7 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
               type: DomainObjectPropertyType.REFERENCE,
               of: {
                 name: 'PlaneExternalId',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
           },
@@ -100,11 +100,11 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
           allDomainObjects: [
             {
               name: 'PlaneExternalId',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
             {
               name: 'CarExternalId',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           ] as DomainObjectMetadata[],
         });

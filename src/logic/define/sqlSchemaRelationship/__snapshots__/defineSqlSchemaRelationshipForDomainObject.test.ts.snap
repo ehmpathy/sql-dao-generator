@@ -133,7 +133,7 @@ SqlSchemaToDomainObjectRelationship {
       "domainObject": {
         "name": "manufacturer",
         "of": {
-          "extends": "DomainValueObject",
+          "extends": "DomainLiteral",
           "name": "TrainManufacturer",
         },
         "type": "REFERENCE",
@@ -147,7 +147,7 @@ SqlSchemaToDomainObjectRelationship {
         "reference": SqlSchemaReferenceMetadata {
           "method": "DIRECT_BY_NESTING",
           "of": DomainObjectReferenceMetadata {
-            "extends": "DomainValueObject",
+            "extends": "DomainLiteral",
             "name": "TrainManufacturer",
           },
         },
@@ -253,7 +253,7 @@ SqlSchemaToDomainObjectRelationship {
       "domainObject": {
         "name": "geocode",
         "of": {
-          "extends": "DomainValueObject",
+          "extends": "DomainLiteral",
           "name": "Geocode",
         },
         "required": true,
@@ -268,7 +268,7 @@ SqlSchemaToDomainObjectRelationship {
         "reference": SqlSchemaReferenceMetadata {
           "method": "DIRECT_BY_NESTING",
           "of": DomainObjectReferenceMetadata {
-            "extends": "DomainValueObject",
+            "extends": "DomainLiteral",
             "name": "Geocode",
           },
         },
@@ -278,7 +278,7 @@ SqlSchemaToDomainObjectRelationship {
 }
 `;
 
-exports[`defineSqlSchemarelationshipForDomainObject should look right for a domain-value-object 1`] = `
+exports[`defineSqlSchemarelationshipForDomainObject should look right for a domain-literal 1`] = `
 SqlSchemaToDomainObjectRelationship {
   "decorations": {
     "unique": {
@@ -365,7 +365,7 @@ SqlSchemaToDomainObjectRelationship {
 }
 `;
 
-exports[`defineSqlSchemarelationshipForDomainObject should look right for another domain-value-object, one with multi word property names 1`] = `
+exports[`defineSqlSchemarelationshipForDomainObject should look right for another domain-literal, one with multi word property names 1`] = `
 SqlSchemaToDomainObjectRelationship {
   "decorations": {
     "unique": {
