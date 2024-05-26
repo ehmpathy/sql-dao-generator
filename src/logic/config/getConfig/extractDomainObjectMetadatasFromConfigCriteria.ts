@@ -10,7 +10,14 @@ export const extractDomainObjectMetadatasFromConfigCriteria = async ({
   exclude: string[] | null;
 }) => {
   // grab the metadata of the domain objects specified in those search paths
-  const metadatas = introspect(searchPaths);
+  const metadatas = (() => {
+    try {
+      return introspect(searchPaths);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  })();
 
   // if "include" is specified, include only the ones that are explicitly defined in the list; DEFAULT = all of them
   const metadatasAfterInclusion = include
