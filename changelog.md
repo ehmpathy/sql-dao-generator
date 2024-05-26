@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/ehmpathy/sql-dao-generator/compare/v0.4.0...v0.4.1) (2024-05-26)
+
+
+### Bug Fixes
+
+* **debug:** explicitly log introspection errors ([b468f95](https://github.com/ehmpathy/sql-dao-generator/commit/b468f955e118a39226d4371e4560e6e77b2f68e7))
+
 ## [0.4.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.3.4...v0.4.0) (2024-05-26)
 
 
