@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.3.4...v0.4.0) (2024-05-26)
+
+
+### Features
+
+* **terms:** domain-value-object to domain-literal, for intuition++ ([#21](https://github.com/ehmpathy/sql-dao-generator/issues/21)) ([4b31074](https://github.com/ehmpathy/sql-dao-generator/commit/4b31074879eb8ba71e4fbad33a73539d40624348))
+
+
+### Bug Fixes
+
+* **practs:** upgrade to latest best ([#23](https://github.com/ehmpathy/sql-dao-generator/issues/23)) ([6e0875c](https://github.com/ehmpathy/sql-dao-generator/commit/6e0875c429a96a882854a1c55c877d471fc25f4e))
+
 ## [0.3.4](https://github.com/ehmpathy/sql-dao-generator/compare/v0.3.3...v0.3.4) (2023-08-05)
 
 
