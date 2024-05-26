@@ -12,7 +12,9 @@
     "jest.*",
     "prettier.*",
     "commitlint.*",
+    "codegen.*",
     "src/**/*.test.(ts|js)",
+    "src/**/__test_utils__/**/*.(ts|js)",
     "src/**/__test_assets__/**",
     "src/logic/commands/generate.integration.test.ts",
   ]

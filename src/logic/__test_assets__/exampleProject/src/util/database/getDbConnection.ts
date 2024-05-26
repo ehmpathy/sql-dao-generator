@@ -2,7 +2,7 @@ import pg, { Client, QueryResult } from 'pg';
 
 // https://github.com/brianc/node-postgres/pull/353#issuecomment-283709264
 pg.types.setTypeParser(20, (value) => parseInt(value, 10)); // cast bigint to number; by default, pg returns bigints as strings, since max val of bigint is bigger than max safe value in js
-pg.types.setTypeParser(1016, (values) =>
+pg.types.setTypeParser(1016 as any, (values) =>
   values
     .slice(1, -1)
     .split(',')
