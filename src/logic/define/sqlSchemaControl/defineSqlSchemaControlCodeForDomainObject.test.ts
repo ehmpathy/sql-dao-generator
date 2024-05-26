@@ -8,11 +8,11 @@ import { defineSqlSchemaRelationshipForDomainObject } from '../sqlSchemaRelation
 import { defineSqlSchemaControlCodeForDomainObject } from './defineSqlSchemaControlCodeForDomainObject';
 
 describe('defineSqlSchemaControlCodeForDomainObject', () => {
-  it('should look right for a simple domain value object', () => {
+  it('should look right for a simple domain literal', () => {
     // define what we're testing on
     const domainObject = new DomainObjectMetadata({
       name: 'Geocode',
-      extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+      extends: DomainObjectVariant.DOMAIN_LITERAL,
       properties: {
         latitude: {
           name: 'latitude',
@@ -129,7 +129,7 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Geocode',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
           required: true,
@@ -194,7 +194,7 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Badge',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },

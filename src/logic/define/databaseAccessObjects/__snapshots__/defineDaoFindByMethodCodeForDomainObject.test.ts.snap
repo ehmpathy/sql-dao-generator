@@ -176,7 +176,7 @@ export const findById = async ({
 };"
 `;
 
-exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for simple value object 1`] = `
+exports[`defineDaoFindByMethodCodeForDomainObject findById should look correct for simple literal 1`] = `
 "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
@@ -536,7 +536,7 @@ export const findByUnique = async ({
 };"
 `;
 
-exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple value object 1`] = `
+exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple literal 1`] = `
 "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
@@ -581,7 +581,7 @@ export const findByUnique = async ({
 };"
 `;
 
-exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple value object that references another value object 1`] = `
+exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple literal that references another literal 1`] = `
 "import { HasId, HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
@@ -850,7 +850,7 @@ export const findByUuid = async ({
 };"
 `;
 
-exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for simple value object 1`] = `
+exports[`defineDaoFindByMethodCodeForDomainObject findByUuid should look correct for simple literal 1`] = `
 "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';

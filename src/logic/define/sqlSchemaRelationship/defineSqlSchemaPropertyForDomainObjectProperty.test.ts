@@ -45,7 +45,7 @@ describe('defineSqlSchemaPropertyForDomainObjectProperty', () => {
           type: DomainObjectPropertyType.REFERENCE,
           of: {
             name: 'Certificate',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
           },
         },
         domainObject: createExampleDomainObjectMetadata(),
@@ -62,7 +62,7 @@ describe('defineSqlSchemaPropertyForDomainObjectProperty', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Certificate',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -129,7 +129,7 @@ describe('defineSqlSchemaPropertyForDomainObjectProperty', () => {
           type: DomainObjectPropertyType.REFERENCE,
           of: {
             name: 'Certificate',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
           },
         },
         domainObject: createExampleDomainObjectMetadata(),

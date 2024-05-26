@@ -152,9 +152,7 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
       });
 
     // check that the domain object referenced by direct nesting is not a domain entity or a domain event
-    if (
-      referencedDomainObject.extends !== DomainObjectVariant.DOMAIN_VALUE_OBJECT
-    )
+    if (referencedDomainObject.extends !== DomainObjectVariant.DOMAIN_LITERAL)
       throw new DirectlyNestedNonDomainObjectReferenceForbiddenError({
         domainObject,
         property,
@@ -187,12 +185,12 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
     if (!foundReferencedDomainObjectMetadata) return null;
     if (
       foundReferencedDomainObjectMetadata.extends ===
-      DomainObjectVariant.DOMAIN_VALUE_OBJECT
+      DomainObjectVariant.DOMAIN_LITERAL
     )
       // safety check
       throw new UserInputError({
         reason:
-          'domain-value-objects persisted in the same database as this domain-object should not be referenced by implicit uuid reference. reference them by direct nesting instead.',
+          'domain-literals persisted in the same database as this domain-object should not be referenced by implicit uuid reference. reference them by direct nesting instead.',
         domainObjectName: domainObject.name,
         domainObjectPropertyName: property.name,
       });

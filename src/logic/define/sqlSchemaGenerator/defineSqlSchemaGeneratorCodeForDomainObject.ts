@@ -21,12 +21,12 @@ export const defineSqlSchemaGeneratorCodeForDomainObject = ({
   const schemaGeneratorClass = (() => {
     if (domainObject.extends === DomainObjectVariant.DOMAIN_ENTITY)
       return 'Entity';
-    if (domainObject.extends === DomainObjectVariant.DOMAIN_VALUE_OBJECT)
-      return 'ValueObject';
+    if (domainObject.extends === DomainObjectVariant.DOMAIN_LITERAL)
+      return 'Literal';
     if (domainObject.extends === DomainObjectVariant.DOMAIN_EVENT)
       return 'Event';
     throw new UserInputError({
-      reason: `sql schema can only be created for a domain object which extends DomainEntity, DomainValueObject, or DomainEvent. Found extends '${domainObject.extends}'`,
+      reason: `sql schema can only be created for a domain object which extends DomainEntity, DomainLiteral, or DomainEvent. Found extends '${domainObject.extends}'`,
       domainObjectName: domainObject.name,
     });
   })();
@@ -49,7 +49,7 @@ export const defineSqlSchemaGeneratorCodeForDomainObject = ({
   // define the code for the unique properties
   const schemaGeneratorUnique =
     sqlSchemaRelationship.decorations.unique.sqlSchema &&
-    domainObject.extends !== DomainObjectVariant.DOMAIN_VALUE_OBJECT
+    domainObject.extends !== DomainObjectVariant.DOMAIN_LITERAL
       ? `unique: [${sqlSchemaRelationship.decorations.unique.sqlSchema
           .map((s) => `'${s}'`)
           .join(', ')}],`

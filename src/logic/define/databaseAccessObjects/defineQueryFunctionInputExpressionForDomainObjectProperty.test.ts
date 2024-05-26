@@ -85,7 +85,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
               method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
               of: {
                 name: 'Geocode',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
           },
@@ -94,7 +94,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Geocode',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
           allSqlSchemaRelationships: [
@@ -192,7 +192,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
               method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
               of: {
                 name: 'Geocode',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
           },
@@ -203,7 +203,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
               type: DomainObjectPropertyType.REFERENCE,
               of: {
                 name: 'Geocode',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
           },
@@ -322,7 +322,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
               method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
               of: {
                 name: 'Geocode',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
           },
@@ -331,7 +331,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Geocode',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
           allSqlSchemaRelationships: [
@@ -427,7 +427,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
               method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
               of: {
                 name: 'Geocode',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
           },
@@ -438,7 +438,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
               type: DomainObjectPropertyType.REFERENCE,
               of: {
                 name: 'Geocode',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
           },

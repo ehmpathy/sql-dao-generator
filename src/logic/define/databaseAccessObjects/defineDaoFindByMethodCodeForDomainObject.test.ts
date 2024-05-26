@@ -12,11 +12,11 @@ import {
 
 describe('defineDaoFindByMethodCodeForDomainObject', () => {
   describe('findById', () => {
-    it('should look correct for simple value object', () => {
+    it('should look correct for simple literal', () => {
       // define what we're testing on
       const domainObject = new DomainObjectMetadata({
         name: 'Geocode',
-        extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+        extends: DomainObjectVariant.DOMAIN_LITERAL,
         properties: {
           id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
           uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
@@ -146,7 +146,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               type: DomainObjectPropertyType.REFERENCE,
               of: {
                 name: 'Geocode',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
             required: true,
@@ -167,7 +167,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         defineSqlSchemaRelationshipForDomainObject({
           domainObject: new DomainObjectMetadata({
             name: 'Geocode',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {
               id: {
                 name: 'id',
@@ -241,7 +241,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Geocode',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
           leadEngineerUuid: {
@@ -255,7 +255,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               type: DomainObjectPropertyType.REFERENCE,
               of: {
                 name: 'TrainBadge',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
           },
@@ -291,7 +291,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         defineSqlSchemaRelationshipForDomainObject({
           domainObject: new DomainObjectMetadata({
             name: 'Geocode',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {
               id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
@@ -315,7 +315,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         defineSqlSchemaRelationshipForDomainObject({
           domainObject: new DomainObjectMetadata({
             name: 'TrainBadge',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {
               name: {
                 name: 'name',
@@ -393,11 +393,11 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
     });
   });
   describe('findByUuid', () => {
-    it('should look correct for simple value object', () => {
+    it('should look correct for simple literal', () => {
       // define what we're testing on
       const domainObject = new DomainObjectMetadata({
         name: 'Geocode',
-        extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+        extends: DomainObjectVariant.DOMAIN_LITERAL,
         properties: {
           id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
           latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
@@ -525,7 +525,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               type: DomainObjectPropertyType.REFERENCE,
               of: {
                 name: 'Geocode',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
             required: true,
@@ -546,7 +546,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         defineSqlSchemaRelationshipForDomainObject({
           domainObject: new DomainObjectMetadata({
             name: 'Geocode',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {
               latitude: {
                 name: 'latitude',
@@ -617,7 +617,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Geocode',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
           leadEngineerUuid: {
@@ -631,7 +631,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               type: DomainObjectPropertyType.REFERENCE,
               of: {
                 name: 'TrainBadge',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
           },
@@ -667,7 +667,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         defineSqlSchemaRelationshipForDomainObject({
           domainObject: new DomainObjectMetadata({
             name: 'Geocode',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {
               latitude: {
                 name: 'latitude',
@@ -689,7 +689,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
         defineSqlSchemaRelationshipForDomainObject({
           domainObject: new DomainObjectMetadata({
             name: 'TrainBadge',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {
               name: {
                 name: 'name',
@@ -767,11 +767,11 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
     });
   });
   describe('findByUnique', () => {
-    it('should look correct for simple value object', () => {
+    it('should look correct for simple literal', () => {
       // define what we're testing on
       const domainObject = new DomainObjectMetadata({
         name: 'Geocode',
-        extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+        extends: DomainObjectVariant.DOMAIN_LITERAL,
         properties: {
           id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
           latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
@@ -823,11 +823,11 @@ async ({
       expect(code).toContain('await sqlQueryFindGeocodeByUnique({');
       expect(code).toMatchSnapshot();
     });
-    it('should look correct for simple value object that references another value object', () => {
+    it('should look correct for simple literal that references another literal', () => {
       // define what we're testing on
       const domainObject = new DomainObjectMetadata({
         name: 'InvoiceLineItem',
-        extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+        extends: DomainObjectVariant.DOMAIN_LITERAL,
         properties: {
           id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
           uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
@@ -835,7 +835,7 @@ async ({
             name: 'price',
             type: DomainObjectPropertyType.REFERENCE,
             of: {
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
               name: 'Price',
             },
           },
@@ -855,7 +855,7 @@ async ({
         defineSqlSchemaRelationshipForDomainObject({
           domainObject: new DomainObjectMetadata({
             name: 'Price',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {
               id: {
                 name: 'id',
@@ -1057,7 +1057,7 @@ async ({
             name: 'geocode',
             type: DomainObjectPropertyType.REFERENCE,
             of: {
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
               name: 'Geocode',
             },
           },
@@ -1082,7 +1082,7 @@ async ({
         defineSqlSchemaRelationshipForDomainObject({
           domainObject: new DomainObjectMetadata({
             name: 'Geocode',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {
               latitude: {
                 name: 'latitude',
@@ -1116,7 +1116,7 @@ async ({
       expect(code).toContain('-- query_name = find_station_by_unique'); // name of query
       expect(code).toContain('station.id,'); // select expressions
       expect(code).toContain('station.uuid,');
-      expect(code).toContain(') AS geocode,'); // should select the hydratable value object
+      expect(code).toContain(') AS geocode,'); // should select the hydratable literal
       expect(code).toContain('station.name');
       expect(code).toContain('FROM view_station_current AS station'); // table to query (view, in this case)
       expect(code).toContain('WHERE 1=1'); // condition
@@ -1163,7 +1163,7 @@ async ({
               type: DomainObjectPropertyType.REFERENCE,
               of: {
                 name: 'Geocode',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
             required: true,
@@ -1184,7 +1184,7 @@ async ({
         defineSqlSchemaRelationshipForDomainObject({
           domainObject: new DomainObjectMetadata({
             name: 'Geocode',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {
               latitude: {
                 name: 'latitude',
@@ -1274,7 +1274,7 @@ async ({
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Geocode',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
           leadEngineerUuid: {
@@ -1288,7 +1288,7 @@ async ({
               type: DomainObjectPropertyType.REFERENCE,
               of: {
                 name: 'TrainBadge',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
           },
@@ -1324,7 +1324,7 @@ async ({
         defineSqlSchemaRelationshipForDomainObject({
           domainObject: new DomainObjectMetadata({
             name: 'Geocode',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {
               latitude: {
                 name: 'latitude',
@@ -1346,7 +1346,7 @@ async ({
         defineSqlSchemaRelationshipForDomainObject({
           domainObject: new DomainObjectMetadata({
             name: 'TrainBadge',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {
               name: {
                 name: 'name',
@@ -1453,7 +1453,7 @@ async ({
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Geocode',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
           leadEngineerUuid: {
@@ -1467,7 +1467,7 @@ async ({
               type: DomainObjectPropertyType.REFERENCE,
               of: {
                 name: 'TrainBadge',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
           },
@@ -1503,7 +1503,7 @@ async ({
         defineSqlSchemaRelationshipForDomainObject({
           domainObject: new DomainObjectMetadata({
             name: 'Geocode',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {
               id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
               latitude: {
@@ -1526,7 +1526,7 @@ async ({
         defineSqlSchemaRelationshipForDomainObject({
           domainObject: new DomainObjectMetadata({
             name: 'TrainBadge',
-            extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {
               id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },

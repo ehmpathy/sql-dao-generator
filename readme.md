@@ -87,7 +87,7 @@ generates:
 
 # Examples
 
-### a simple value object dao
+### a simple literal's dao
 
 **Input:** Say you have the following domain object
 
@@ -97,16 +97,16 @@ export interface Geocode {
   latitude: number;
   longitude: number;
 }
-export class Geocode extends DomainValueObject<Geocode> implements Geocode {}
+export class Geocode extends DomainLiteral<Geocode> implements Geocode {}
 ```
 
 **Output:** Running this sql-dao-generator on this domain object will:
 
 1. generate the `sql-schema-generator` sql-schema-definition-object
     ```ts
-    import { prop, ValueObject } from 'sql-schema-generator';
+    import { prop, Literal } from 'sql-schema-generator';
 
-    export const geocode = new ValueObject({
+    export const geocode = new Literal({
       name: 'geocode',
       properties: {
         latitude: prop.NUMERIC(),
@@ -250,7 +250,7 @@ The sql-dao-generator has many guardrails in place to make sure that you're foll
 
 Specifically:
 - unique + updatable properties need to be specified or not depending on the domain-object variant
-  - `domain-value-objects` may not explicitly specify unique or updatable properties, since these are defined implicitly by the definition of a value object
+  - `domain-literals` may not explicitly specify unique or updatable properties, since these are defined implicitly by the definition of a literal
     - i.e., nothing is updatable
     - i.e., unique on all natural properties
   - `domain-entities` must specify at least one key on which they are unique and must explicitly specify the list of updatable properties (even if the list is empty)

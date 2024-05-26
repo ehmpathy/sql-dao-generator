@@ -8,11 +8,11 @@ import { createExampleDomainObjectMetadata } from '../../__test_assets__/createE
 import { defineSqlSchemaRelationshipForDomainObject } from './defineSqlSchemaRelationshipForDomainObject';
 
 describe('defineSqlSchemarelationshipForDomainObject', () => {
-  it('should look right for a domain-value-object', () => {
+  it('should look right for a domain-literal', () => {
     const relationship = defineSqlSchemaRelationshipForDomainObject({
       domainObject: new DomainObjectMetadata({
         name: 'PreciseGeocode',
-        extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+        extends: DomainObjectVariant.DOMAIN_LITERAL,
         properties: {
           id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
           uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
@@ -31,18 +31,18 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
     });
     expect(relationship.name.sqlSchema).toEqual('precise_geocode'); // should be snake case
     expect(relationship.properties.length).toEqual(5); // sanity check
-    expect(relationship.decorations.unique.domainObject).toEqual(null); // it wasn't defined, since domain value object
+    expect(relationship.decorations.unique.domainObject).toEqual(null); // it wasn't defined, since domain literal
     expect(relationship.decorations.unique.sqlSchema).toEqual([
       'latitude',
       'longitude',
-    ]); // should be all of the properties, since domain value object
+    ]); // should be all of the properties, since domain literal
     expect(relationship).toMatchSnapshot();
   });
-  it('should look right for another domain-value-object, one with multi word property names', () => {
+  it('should look right for another domain-literal, one with multi word property names', () => {
     const relationship = defineSqlSchemaRelationshipForDomainObject({
       domainObject: new DomainObjectMetadata({
         name: 'ChatParticipant',
-        extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+        extends: DomainObjectVariant.DOMAIN_LITERAL,
         properties: {
           id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
           uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
@@ -61,11 +61,11 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
     });
     expect(relationship.name.sqlSchema).toEqual('chat_participant'); // should be snake case
     expect(relationship.properties.length).toEqual(5); // sanity check
-    expect(relationship.decorations.unique.domainObject).toEqual(null); // it wasn't defined, since domain value object
+    expect(relationship.decorations.unique.domainObject).toEqual(null); // it wasn't defined, since domain literal
     expect(relationship.decorations.unique.sqlSchema).toEqual([
       'role',
       'external_id',
-    ]); // should be all of the properties, since domain value object
+    ]); // should be all of the properties, since domain literal
     expect(relationship).toMatchSnapshot();
   });
   it('should look right for a domain-entity', () => {
@@ -105,7 +105,7 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'TrainManufacturer',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
         },
@@ -147,7 +147,7 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Geocode',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
             required: true,
           },

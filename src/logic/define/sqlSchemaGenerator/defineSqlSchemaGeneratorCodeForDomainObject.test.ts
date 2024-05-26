@@ -13,7 +13,7 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
       // define what we're testing on
       const domainObject = new DomainObjectMetadata({
         name: 'Geocode',
-        extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+        extends: DomainObjectVariant.DOMAIN_LITERAL,
         properties: {
           latitude: {
             name: 'latitude',
@@ -77,7 +77,7 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Station',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           },
           badges: {
@@ -87,7 +87,7 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
               type: DomainObjectPropertyType.REFERENCE,
               of: {
                 name: 'Badge',
-                extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
               },
             },
           },
@@ -155,11 +155,11 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
     });
   });
   describe('domain object variants', () => {
-    it('should create a correct looking sql-schema-generator object for a domain-value-object', () => {
+    it('should create a correct looking sql-schema-generator object for a domain-literal', () => {
       // define what we're testing on
       const domainObject = new DomainObjectMetadata({
         name: 'Geocode',
-        extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+        extends: DomainObjectVariant.DOMAIN_LITERAL,
         properties: {
           id: {
             name: 'id',
@@ -190,11 +190,9 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
         sqlSchemaRelationship,
       });
       expect(code).toContain(
-        "import { prop, ValueObject } from 'sql-schema-generator'",
+        "import { Literal, prop } from 'sql-schema-generator'",
       );
-      expect(code).toContain(
-        'export const geocode: ValueObject = new ValueObject({',
-      );
+      expect(code).toContain('export const geocode: Literal = new Literal({');
       expect(code).toContain("name: 'geocode'");
       expect(code).not.toContain('id:');
       expect(code).not.toContain('uuid:');
@@ -293,7 +291,7 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
             type: DomainObjectPropertyType.REFERENCE,
             of: {
               name: 'Geocode',
-              extends: DomainObjectVariant.DOMAIN_VALUE_OBJECT,
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
             required: true,
           },

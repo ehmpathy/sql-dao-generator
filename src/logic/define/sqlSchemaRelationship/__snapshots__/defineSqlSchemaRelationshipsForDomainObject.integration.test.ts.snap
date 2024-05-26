@@ -311,7 +311,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "of": {
             "nullable": false,
             "of": DomainObjectReferenceMetadata {
-              "extends": "DomainValueObject",
+              "extends": "DomainLiteral",
               "name": "Certificate",
             },
             "required": true,
@@ -329,7 +329,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "reference": SqlSchemaReferenceMetadata {
             "method": "DIRECT_BY_NESTING",
             "of": DomainObjectReferenceMetadata {
-              "extends": "DomainValueObject",
+              "extends": "DomainLiteral",
               "name": "Certificate",
             },
           },
@@ -547,7 +547,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "name": "homeStationGeocode",
           "nullable": false,
           "of": DomainObjectReferenceMetadata {
-            "extends": "DomainValueObject",
+            "extends": "DomainLiteral",
             "name": "Geocode",
           },
           "required": true,
@@ -562,7 +562,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "reference": SqlSchemaReferenceMetadata {
             "method": "DIRECT_BY_NESTING",
             "of": DomainObjectReferenceMetadata {
-              "extends": "DomainValueObject",
+              "extends": "DomainLiteral",
               "name": "Geocode",
             },
           },
@@ -977,7 +977,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "name": "geocode",
           "nullable": false,
           "of": DomainObjectReferenceMetadata {
-            "extends": "DomainValueObject",
+            "extends": "DomainLiteral",
             "name": "Geocode",
           },
           "required": true,
@@ -992,7 +992,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "reference": SqlSchemaReferenceMetadata {
             "method": "DIRECT_BY_NESTING",
             "of": DomainObjectReferenceMetadata {
-              "extends": "DomainValueObject",
+              "extends": "DomainLiteral",
               "name": "Geocode",
             },
           },
@@ -1086,7 +1086,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "name": "geocode",
           "nullable": false,
           "of": DomainObjectReferenceMetadata {
-            "extends": "DomainValueObject",
+            "extends": "DomainLiteral",
             "name": "Geocode",
           },
           "required": true,
@@ -1101,7 +1101,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "reference": SqlSchemaReferenceMetadata {
             "method": "DIRECT_BY_NESTING",
             "of": DomainObjectReferenceMetadata {
-              "extends": "DomainValueObject",
+              "extends": "DomainLiteral",
               "name": "Geocode",
             },
           },
@@ -1274,7 +1274,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "name": "price",
           "nullable": false,
           "of": DomainObjectReferenceMetadata {
-            "extends": "DomainValueObject",
+            "extends": "DomainLiteral",
             "name": "Price",
           },
           "required": true,
@@ -1289,7 +1289,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "reference": SqlSchemaReferenceMetadata {
             "method": "DIRECT_BY_NESTING",
             "of": DomainObjectReferenceMetadata {
-              "extends": "DomainValueObject",
+              "extends": "DomainLiteral",
               "name": "Price",
             },
           },
@@ -1433,7 +1433,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "of": {
             "nullable": false,
             "of": DomainObjectReferenceMetadata {
-              "extends": "DomainValueObject",
+              "extends": "DomainLiteral",
               "name": "InvoiceLineItem",
             },
             "required": true,
@@ -1451,7 +1451,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "reference": SqlSchemaReferenceMetadata {
             "method": "DIRECT_BY_NESTING",
             "of": DomainObjectReferenceMetadata {
-              "extends": "DomainValueObject",
+              "extends": "DomainLiteral",
               "name": "InvoiceLineItem",
             },
           },
@@ -1462,7 +1462,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "name": "totalPrice",
           "nullable": false,
           "of": DomainObjectReferenceMetadata {
-            "extends": "DomainValueObject",
+            "extends": "DomainLiteral",
             "name": "Price",
           },
           "required": true,
@@ -1477,7 +1477,7 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "reference": SqlSchemaReferenceMetadata {
             "method": "DIRECT_BY_NESTING",
             "of": DomainObjectReferenceMetadata {
-              "extends": "DomainValueObject",
+              "extends": "DomainLiteral",
               "name": "Price",
             },
           },

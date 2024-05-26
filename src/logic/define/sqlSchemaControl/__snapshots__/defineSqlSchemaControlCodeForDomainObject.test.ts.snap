@@ -48,7 +48,7 @@ exports[`defineSqlSchemaControlCodeForDomainObject should look right for a domai
   path: ./functions/upsert_carriage.sql"
 `;
 
-exports[`defineSqlSchemaControlCodeForDomainObject should look right for a simple domain value object 1`] = `
+exports[`defineSqlSchemaControlCodeForDomainObject should look right for a simple domain literal 1`] = `
 "# geocode
 - type: resource
   path: ./tables/geocode.sql

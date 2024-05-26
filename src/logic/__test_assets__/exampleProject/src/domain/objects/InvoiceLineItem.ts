@@ -1,4 +1,4 @@
-import { DomainValueObject } from 'domain-objects';
+import { DomainLiteral } from 'domain-objects';
 
 import { Price } from './Price';
 
@@ -9,5 +9,5 @@ export interface InvoiceLineItem {
   explanation: string; // "this is what the service provider quoted you" or "this is what allows ahbode to protect..." or "you chose to add on..."
 }
 export class InvoiceLineItem
-  extends DomainValueObject<InvoiceLineItem>
+  extends DomainLiteral<InvoiceLineItem>
   implements InvoiceLineItem {}

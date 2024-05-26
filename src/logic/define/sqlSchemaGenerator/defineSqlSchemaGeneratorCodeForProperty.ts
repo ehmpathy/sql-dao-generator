@@ -55,7 +55,7 @@ export const defineSqlSchemaGeneratorCodeForProperty = ({
         domainObjectPropertyName: domainObjectProperty.name,
         potentialSolution: `
 If you'd like to store an array of data, try one of the following:
-- make a value object out of the data and store an array of those value objects instead
+- make a literal out of the data and store an array of those literals instead
   - for example: \`User.favorite_fruits = ['Banana', 'Grapefruit']\` => \`User.favorite_fruits = [new Fruit({ name: 'Banana }), new Fruit({ name: 'Grapefruit' })]\`
 - make an entity out of the data and store an array of uuids to the entity instead
   - if the entity is stored in the same database and managed by the dao-generator, the database will use foreign keys to store references to that entity

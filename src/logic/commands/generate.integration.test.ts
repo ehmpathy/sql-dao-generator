@@ -83,7 +83,7 @@ describe('generate', () => {
         expect(upsertedGeocode).toMatchObject(geocode);
         expect(upsertedGeocode).toHaveProperty('id', expect.any(Number));
       });
-      it('should return the same new value object if the properties are equivalent', async () => {
+      it('should return the same new literal if the properties are equivalent', async () => {
         const geocodeA = await geocodeDao.upsert({
           dbConnection,
           geocode: new Geocode({
