@@ -32,6 +32,11 @@ describe('getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter', ()
       expectedErrorMessageContains: '["HomeAddress","WorkAddress"]',
     },
     {
+      propertyName: 'homeAddress',
+      allDomainObjectNames: ['HomeAddress', 'WorkAddress', 'Geocode', 'User'],
+      expectedResult: 'HomeAddress',
+    },
+    {
       propertyName: 'externalId',
       allDomainObjectNames: ['PlaneExternalId', 'Airport', 'PlaneManufacturer'],
       expectedResult: 'PlaneExternalId',
@@ -40,6 +45,17 @@ describe('getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter', ()
       propertyName: 'externalIds',
       allDomainObjectNames: ['PlaneExternalId', 'Airport', 'PlaneManufacturer'],
       expectedResult: 'PlaneExternalId',
+    },
+    {
+      propertyName: 'eventUuid',
+      allDomainObjectNames: ['OutreachCaptureEvent', 'RelationshipEvent'],
+      expectedErrorMessageContains:
+        '["OutreachCaptureEvent","RelationshipEvent"]',
+    },
+    {
+      propertyName: 'outreachCaptureEventUuid',
+      allDomainObjectNames: ['OutreachCaptureEvent', 'RelationshipEvent'],
+      expectedResult: 'OutreachCaptureEvent',
     },
   ];
 

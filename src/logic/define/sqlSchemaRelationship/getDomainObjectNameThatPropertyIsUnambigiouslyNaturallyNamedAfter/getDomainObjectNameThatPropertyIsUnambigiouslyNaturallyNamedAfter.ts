@@ -1,3 +1,4 @@
+import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
 import { isPropertyNameAReferenceIntuitively } from 'domain-objects';
 
 export class AmbiguouslyNamedDomainObjectReferencePropertyError extends Error {
@@ -39,6 +40,9 @@ Please update the name of this property or the names of your domain objects in o
  * - address, ['HomeAddress', 'Geocode', 'User'] => 'HomeAddress'
  * - address, ['HomeAddress', 'WorkAddress', 'Geocode', 'User'] => throws AmbiguouslyImplicitUuidReferencePropertyNameError('could reference either WorkAddress or HomeAddress. please remove this ambiguity');
  * - externalId, ['PlaneExternalId', 'Airport', 'PlaneManufacturer'] => 'PlaneExternalId'
+ *
+ * todo:
+ * - eliminate this entirely, in favor of using explicit references, via `Ref<Dobj>` or `public static refs = { }`
  */
 export const getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter =
   ({
@@ -50,6 +54,24 @@ export const getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter =
     propertyName: string;
     allDomainObjectNames: string[];
   }): string | null => {
+    // determine whether there is a domain object with that exact same name
+    const domainObjectWithExactSameName = allDomainObjectNames.filter(
+      (dobjName) =>
+        propertyName.toLowerCase() === dobjName.toLowerCase() ||
+        propertyName.toLowerCase() ===
+          [dobjName, 'uuid'].join('').toLowerCase() || // todo: getPrimaryKey of dobj class, dont just assume its uuid
+        propertyName.toLowerCase() ===
+          [dobjName, 'uuids'].join('').toLowerCase(), // todo: getPrimaryKey of dobj class, dont just assume its uuid
+    );
+    if (domainObjectWithExactSameName.length > 1)
+      throw new AmbiguouslyNamedDomainObjectReferencePropertyError({
+        parentDomainObjectName,
+        propertyName,
+        ambiguousOptions: domainObjectWithExactSameName,
+      });
+    if (domainObjectWithExactSameName.length === 1)
+      return domainObjectWithExactSameName[0]!;
+
     // determine all of the domain objects that are intuitively referenced by this property name
     const intuitivelyReferencedDomainObjectNames = allDomainObjectNames.filter(
       (domainObjectName) =>
