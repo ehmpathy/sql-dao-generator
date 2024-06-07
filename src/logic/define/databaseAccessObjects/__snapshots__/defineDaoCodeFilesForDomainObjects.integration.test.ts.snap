@@ -13,7 +13,10 @@ export const carriageDao = {
   findByUnique,
   findByUuid,
   upsert,
-};",
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoCarriage = carriageDao;",
     "relpath": "carriageDao/index.ts",
   },
   GeneratedCodeFile {
@@ -212,7 +215,10 @@ export const certificateDao = {
   findById,
   findByUnique,
   upsert,
-};",
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoCertificate = certificateDao;",
     "relpath": "certificateDao/index.ts",
   },
   GeneratedCodeFile {
@@ -365,7 +371,10 @@ export const trainEngineerDao = {
   findByUnique,
   findByUuid,
   upsert,
-};",
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoTrainEngineer = trainEngineerDao;",
     "relpath": "trainEngineerDao/index.ts",
   },
   GeneratedCodeFile {
@@ -618,7 +627,10 @@ export const geocodeDao = {
   findById,
   findByUnique,
   upsert,
-};",
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoGeocode = geocodeDao;",
     "relpath": "geocodeDao/index.ts",
   },
   GeneratedCodeFile {
@@ -771,7 +783,10 @@ export const trainDao = {
   findByUnique,
   findByUuid,
   upsert,
-};",
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoTrain = trainDao;",
     "relpath": "trainDao/index.ts",
   },
   GeneratedCodeFile {
@@ -1098,7 +1113,10 @@ export const locomotiveDao = {
   findByUnique,
   findByUuid,
   upsert,
-};",
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoLocomotive = locomotiveDao;",
     "relpath": "locomotiveDao/index.ts",
   },
   GeneratedCodeFile {
@@ -1313,7 +1331,10 @@ export const trainLocatedEventDao = {
   findById,
   findByUnique,
   upsert,
-};",
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoTrainLocatedEvent = trainLocatedEventDao;",
     "relpath": "trainLocatedEventDao/index.ts",
   },
   GeneratedCodeFile {
@@ -1493,7 +1514,10 @@ export const trainStationDao = {
   findByUnique,
   findByUuid,
   upsert,
-};",
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoTrainStation = trainStationDao;",
     "relpath": "trainStationDao/index.ts",
   },
   GeneratedCodeFile {
@@ -1707,7 +1731,10 @@ export const priceDao = {
   findById,
   findByUnique,
   upsert,
-};",
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoPrice = priceDao;",
     "relpath": "priceDao/index.ts",
   },
   GeneratedCodeFile {
@@ -1858,7 +1885,10 @@ export const invoiceLineItemDao = {
   findById,
   findByUnique,
   upsert,
-};",
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoInvoiceLineItem = invoiceLineItemDao;",
     "relpath": "invoiceLineItemDao/index.ts",
   },
   GeneratedCodeFile {
@@ -2036,7 +2066,10 @@ export const invoiceDao = {
   findByUnique,
   findByUuid,
   upsert,
-};",
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoInvoice = invoiceDao;",
     "relpath": "invoiceDao/index.ts",
   },
   GeneratedCodeFile {

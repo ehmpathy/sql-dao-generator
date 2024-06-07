@@ -1,3 +1,4 @@
+import { pascalCase } from 'change-case';
 import { DomainObjectMetadata } from 'domain-objects-metadata';
 import { isPresent } from 'type-fns';
 
@@ -59,6 +60,11 @@ ${indexImports.join('\n')}
 export const ${castDomainObjectNameToDaoName(domainObject.name)} = {
   ${daoMethodNames.join(',\n  ')},
 };
+
+// include an alias, for improved ease of access via autocomplete
+export const dao${pascalCase(
+      domainObject.name,
+    )} = ${castDomainObjectNameToDaoName(domainObject.name)};
     `.trim(),
   });
 

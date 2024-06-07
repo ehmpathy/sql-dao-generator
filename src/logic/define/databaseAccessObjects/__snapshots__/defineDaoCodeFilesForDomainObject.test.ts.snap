@@ -13,7 +13,10 @@ export const geocodeDao = {
   findByUnique,
   findByUuid,
   upsert,
-};",
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoGeocode = geocodeDao;",
     "relpath": "geocodeDao/index.ts",
   },
   GeneratedCodeFile {
@@ -213,7 +216,10 @@ export const geocodeDao = {
   findById,
   findByUnique,
   upsert,
-};",
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoGeocode = geocodeDao;",
     "relpath": "geocodeDao/index.ts",
   },
   GeneratedCodeFile {
