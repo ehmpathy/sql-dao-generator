@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.4.2...v0.5.0) (2024-06-07)
+
+
+### Features
+
+* **alias:** alias dao suffix daoname with dao prefix for autocomplete++ ([48bef13](https://github.com/ehmpathy/sql-dao-generator/commit/48bef139d59765ba8e615cea427a8cf8ed9da4ad))
+
 ## [0.4.2](https://github.com/ehmpathy/sql-dao-generator/compare/v0.4.1...v0.4.2) (2024-06-07)
 
 
