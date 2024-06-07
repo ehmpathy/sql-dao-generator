@@ -5,7 +5,7 @@ exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for a do
 
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../daoGeocode/castFromDatabaseObject';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindTrainLocatedEventByIdOutput,
@@ -23,8 +23,8 @@ exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for doma
 
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainBadgeByIdOutput, SqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
-import { castFromDatabaseObject as castTrainBadgeFromDatabaseObject } from '../trainBadgeDao/castFromDatabaseObject';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../daoGeocode/castFromDatabaseObject';
+import { castFromDatabaseObject as castTrainBadgeFromDatabaseObject } from '../daoTrainBadge/castFromDatabaseObject';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindTrainByIdOutput,

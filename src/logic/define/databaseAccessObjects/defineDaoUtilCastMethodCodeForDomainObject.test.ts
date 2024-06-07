@@ -159,7 +159,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
       "import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';",
     );
     expect(code).toContain(
-      "import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';",
+      "import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../daoGeocode/castFromDatabaseObject';",
     );
     expect(code).toContain('dbObject: SqlQueryFindTrainLocatedEventByIdOutput');
     expect(code).toContain('new TrainLocatedEvent({');
@@ -251,10 +251,10 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
       "import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainBadgeByIdOutput, SqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';",
     );
     expect(code).toContain(
-      "import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';",
+      "import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../daoGeocode/castFromDatabaseObject';",
     );
     expect(code).toContain(
-      "import { castFromDatabaseObject as castTrainBadgeFromDatabaseObject } from '../trainBadgeDao/castFromDatabaseObject';",
+      "import { castFromDatabaseObject as castTrainBadgeFromDatabaseObject } from '../daoTrainBadge/castFromDatabaseObject';",
     );
     expect(code).toContain('dbObject: SqlQueryFindTrainByIdOutput');
     expect(code).toContain('new Train({');

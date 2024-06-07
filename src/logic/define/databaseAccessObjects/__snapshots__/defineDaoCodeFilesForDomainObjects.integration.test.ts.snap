@@ -8,13 +8,13 @@ import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { upsert } from './upsert';
 
-export const carriageDao = {
+export const daoCarriage = {
   findById,
   findByUnique,
   findByUuid,
   upsert,
 };",
-    "relpath": "carriageDao/index.ts",
+    "relpath": "daoCarriage/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -32,7 +32,7 @@ export const castFromDatabaseObject = (
     carries: dbObject.carries as Carriage['carries'],
     capacity: dbObject.capacity,
   }) as HasMetadata<Carriage>;",
-    "relpath": "carriageDao/castFromDatabaseObject.ts",
+    "relpath": "daoCarriage/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -74,7 +74,7 @@ export const findById = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "carriageDao/findById.ts",
+    "relpath": "daoCarriage/findById.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -117,7 +117,7 @@ export const findByUnique = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "carriageDao/findByUnique.ts",
+    "relpath": "daoCarriage/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -159,7 +159,7 @@ export const findByUuid = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "carriageDao/findByUuid.ts",
+    "relpath": "daoCarriage/findByUuid.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata, HasUuid } from 'type-fns';
@@ -201,19 +201,19 @@ export const upsert = async ({
   const { id } = results[0]!; // grab the db generated values
   return new Carriage({ ...carriage, id }) as HasMetadata<Carriage>;
 };",
-    "relpath": "carriageDao/upsert.ts",
+    "relpath": "daoCarriage/upsert.ts",
   },
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { upsert } from './upsert';
 
-export const certificateDao = {
+export const daoCertificate = {
   findById,
   findByUnique,
   upsert,
 };",
-    "relpath": "certificateDao/index.ts",
+    "relpath": "daoCertificate/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -229,7 +229,7 @@ export const castFromDatabaseObject = (
     type: dbObject.type as Certificate['type'],
     industryId: dbObject.industry_id,
   }) as HasMetadata<Certificate>;",
-    "relpath": "certificateDao/castFromDatabaseObject.ts",
+    "relpath": "daoCertificate/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -269,7 +269,7 @@ export const findById = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "certificateDao/findById.ts",
+    "relpath": "daoCertificate/findById.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -314,7 +314,7 @@ export const findByUnique = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "certificateDao/findByUnique.ts",
+    "relpath": "daoCertificate/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -352,7 +352,7 @@ export const upsert = async ({
   const { id } = results[0]!; // grab the db generated values
   return new Certificate({ ...certificate, id }) as HasMetadata<Certificate>;
 };",
-    "relpath": "certificateDao/upsert.ts",
+    "relpath": "daoCertificate/upsert.ts",
   },
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
@@ -360,20 +360,20 @@ import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { upsert } from './upsert';
 
-export const trainEngineerDao = {
+export const daoTrainEngineer = {
   findById,
   findByUnique,
   findByUuid,
   upsert,
 };",
-    "relpath": "trainEngineerDao/index.ts",
+    "relpath": "daoTrainEngineer/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
 
 import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindCertificateByIdOutput, SqlQueryFindTrainEngineerByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castCertificateFromDatabaseObject } from '../certificateDao/castFromDatabaseObject';
+import { castFromDatabaseObject as castCertificateFromDatabaseObject } from '../daoCertificate/castFromDatabaseObject';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindTrainEngineerByIdOutput,
@@ -386,7 +386,7 @@ export const castFromDatabaseObject = (
     licenseUuids: dbObject.license_uuids as string[],
     name: dbObject.name,
   }) as HasMetadata<TrainEngineer>;",
-    "relpath": "trainEngineerDao/castFromDatabaseObject.ts",
+    "relpath": "daoTrainEngineer/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -445,7 +445,7 @@ export const findById = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "trainEngineerDao/findById.ts",
+    "relpath": "daoTrainEngineer/findById.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -505,7 +505,7 @@ export const findByUnique = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "trainEngineerDao/findByUnique.ts",
+    "relpath": "daoTrainEngineer/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -564,7 +564,7 @@ export const findByUuid = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "trainEngineerDao/findByUuid.ts",
+    "relpath": "daoTrainEngineer/findByUuid.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -573,7 +573,7 @@ import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrainEngineer } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { certificateDao } from '../certificateDao';
+import { daoCertificate } from '../daoCertificate';
 
 export const sql = \`
   -- query_name = upsert_train_engineer
@@ -599,7 +599,7 @@ export const upsert = async ({
     logDebug: log.debug,
     input: {
       socialSecurityNumberHash: trainEngineer.socialSecurityNumberHash,
-      certificateIds: await Promise.all(trainEngineer.certificates.map(async (certificate) => certificate.id ? certificate.id : (await certificateDao.upsert({ dbConnection, certificate })).id)),
+      certificateIds: await Promise.all(trainEngineer.certificates.map(async (certificate) => certificate.id ? certificate.id : (await daoCertificate.upsert({ dbConnection, certificate })).id)),
       licenseUuids: trainEngineer.licenseUuids,
       name: trainEngineer.name,
     },
@@ -607,19 +607,19 @@ export const upsert = async ({
   const { id, uuid } = results[0]!; // grab the db generated values
   return new TrainEngineer({ ...trainEngineer, id, uuid }) as HasMetadata<TrainEngineer>;
 };",
-    "relpath": "trainEngineerDao/upsert.ts",
+    "relpath": "daoTrainEngineer/upsert.ts",
   },
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { upsert } from './upsert';
 
-export const geocodeDao = {
+export const daoGeocode = {
   findById,
   findByUnique,
   upsert,
 };",
-    "relpath": "geocodeDao/index.ts",
+    "relpath": "daoGeocode/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -635,7 +635,7 @@ export const castFromDatabaseObject = (
     latitude: dbObject.latitude,
     longitude: dbObject.longitude,
   }) as HasMetadata<Geocode>;",
-    "relpath": "geocodeDao/castFromDatabaseObject.ts",
+    "relpath": "daoGeocode/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -675,7 +675,7 @@ export const findById = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "geocodeDao/findById.ts",
+    "relpath": "daoGeocode/findById.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -720,7 +720,7 @@ export const findByUnique = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "geocodeDao/findByUnique.ts",
+    "relpath": "daoGeocode/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -758,7 +758,7 @@ export const upsert = async ({
   const { id } = results[0]!; // grab the db generated values
   return new Geocode({ ...geocode, id }) as HasMetadata<Geocode>;
 };",
-    "relpath": "geocodeDao/upsert.ts",
+    "relpath": "daoGeocode/upsert.ts",
   },
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
@@ -766,20 +766,20 @@ import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { upsert } from './upsert';
 
-export const trainDao = {
+export const daoTrain = {
   findById,
   findByUnique,
   findByUuid,
   upsert,
 };",
-    "relpath": "trainDao/index.ts",
+    "relpath": "daoTrain/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
 
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../daoGeocode/castFromDatabaseObject';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindTrainByIdOutput,
@@ -795,7 +795,7 @@ export const castFromDatabaseObject = (
     leadEngineerUuid: dbObject.lead_engineer_uuid,
     status: dbObject.status as Train['status'],
   }) as HasMetadata<Train>;",
-    "relpath": "trainDao/castFromDatabaseObject.ts",
+    "relpath": "daoTrain/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -869,7 +869,7 @@ export const findById = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "trainDao/findById.ts",
+    "relpath": "daoTrain/findById.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -944,7 +944,7 @@ export const findByUnique = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "trainDao/findByUnique.ts",
+    "relpath": "daoTrain/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1018,7 +1018,7 @@ export const findByUuid = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "trainDao/findByUuid.ts",
+    "relpath": "daoTrain/findByUuid.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1027,7 +1027,7 @@ import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrain } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { geocodeDao } from '../geocodeDao';
+import { daoGeocode } from '../daoGeocode';
 
 export const sql = \`
   -- query_name = upsert_train
@@ -1073,7 +1073,7 @@ export const upsert = async ({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
     input: {
-      homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await geocodeDao.upsert({ dbConnection, geocode: train.homeStationGeocode })).id,
+      homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await daoGeocode.upsert({ dbConnection, geocode: train.homeStationGeocode })).id,
       combinationId: train.combinationId,
       locomotiveUuids: train.locomotiveUuids,
       carriageUuids: train.carriageUuids,
@@ -1085,7 +1085,7 @@ export const upsert = async ({
   const { id, uuid } = results[0]!; // grab the db generated values
   return new Train({ ...train, id, uuid }) as HasMetadata<Train>;
 };",
-    "relpath": "trainDao/upsert.ts",
+    "relpath": "daoTrain/upsert.ts",
   },
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
@@ -1093,13 +1093,13 @@ import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { upsert } from './upsert';
 
-export const locomotiveDao = {
+export const daoLocomotive = {
   findById,
   findByUnique,
   findByUuid,
   upsert,
 };",
-    "relpath": "locomotiveDao/index.ts",
+    "relpath": "daoLocomotive/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1121,7 +1121,7 @@ export const castFromDatabaseObject = (
     capacity: dbObject.capacity,
     milage: dbObject.milage,
   }) as HasMetadata<Locomotive>;",
-    "relpath": "locomotiveDao/castFromDatabaseObject.ts",
+    "relpath": "daoLocomotive/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1167,7 +1167,7 @@ export const findById = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "locomotiveDao/findById.ts",
+    "relpath": "daoLocomotive/findById.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1214,7 +1214,7 @@ export const findByUnique = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "locomotiveDao/findByUnique.ts",
+    "relpath": "daoLocomotive/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1260,7 +1260,7 @@ export const findByUuid = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "locomotiveDao/findByUuid.ts",
+    "relpath": "daoLocomotive/findByUuid.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1302,26 +1302,26 @@ export const upsert = async ({
   const { id, uuid, created_at: createdAt, effective_at: effectiveAt, updated_at: updatedAt } = results[0]!; // grab the db generated values
   return new Locomotive({ ...locomotive, id, uuid, createdAt, effectiveAt, updatedAt }) as HasMetadata<Locomotive>;
 };",
-    "relpath": "locomotiveDao/upsert.ts",
+    "relpath": "daoLocomotive/upsert.ts",
   },
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { upsert } from './upsert';
 
-export const trainLocatedEventDao = {
+export const daoTrainLocatedEvent = {
   findById,
   findByUnique,
   upsert,
 };",
-    "relpath": "trainLocatedEventDao/index.ts",
+    "relpath": "daoTrainLocatedEvent/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
 
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../daoGeocode/castFromDatabaseObject';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindTrainLocatedEventByIdOutput,
@@ -1332,7 +1332,7 @@ export const castFromDatabaseObject = (
     occurredAt: dbObject.occurred_at,
     geocode: castGeocodeFromDatabaseObject(dbObject.geocode as SqlQueryFindGeocodeByIdOutput),
   }) as HasMetadata<TrainLocatedEvent>;",
-    "relpath": "trainLocatedEventDao/castFromDatabaseObject.ts",
+    "relpath": "daoTrainLocatedEvent/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1383,7 +1383,7 @@ export const findById = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "trainLocatedEventDao/findById.ts",
+    "relpath": "daoTrainLocatedEvent/findById.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1439,7 +1439,7 @@ export const findByUnique = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "trainLocatedEventDao/findByUnique.ts",
+    "relpath": "daoTrainLocatedEvent/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1448,7 +1448,7 @@ import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrainLocatedEvent } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { geocodeDao } from '../geocodeDao';
+import { daoGeocode } from '../daoGeocode';
 
 export const sql = \`
   -- query_name = upsert_train_located_event
@@ -1474,13 +1474,13 @@ export const upsert = async ({
     input: {
       trainUuid: trainLocatedEvent.trainUuid,
       occurredAt: trainLocatedEvent.occurredAt,
-      geocodeId: trainLocatedEvent.geocode.id ? trainLocatedEvent.geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: trainLocatedEvent.geocode })).id,
+      geocodeId: trainLocatedEvent.geocode.id ? trainLocatedEvent.geocode.id : (await daoGeocode.upsert({ dbConnection, geocode: trainLocatedEvent.geocode })).id,
     },
   });
   const { id } = results[0]!; // grab the db generated values
   return new TrainLocatedEvent({ ...trainLocatedEvent, id }) as HasMetadata<TrainLocatedEvent>;
 };",
-    "relpath": "trainLocatedEventDao/upsert.ts",
+    "relpath": "daoTrainLocatedEvent/upsert.ts",
   },
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
@@ -1488,20 +1488,20 @@ import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { upsert } from './upsert';
 
-export const trainStationDao = {
+export const daoTrainStation = {
   findById,
   findByUnique,
   findByUuid,
   upsert,
 };",
-    "relpath": "trainStationDao/index.ts",
+    "relpath": "daoTrainStation/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
 
 import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainStationByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../daoGeocode/castFromDatabaseObject';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindTrainStationByIdOutput,
@@ -1512,7 +1512,7 @@ export const castFromDatabaseObject = (
     geocode: castGeocodeFromDatabaseObject(dbObject.geocode as SqlQueryFindGeocodeByIdOutput),
     name: dbObject.name,
   }) as HasMetadata<TrainStation>;",
-    "relpath": "trainStationDao/castFromDatabaseObject.ts",
+    "relpath": "daoTrainStation/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1560,7 +1560,7 @@ export const findById = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "trainStationDao/findById.ts",
+    "relpath": "daoTrainStation/findById.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId, HasMetadata } from 'type-fns';
@@ -1609,7 +1609,7 @@ export const findByUnique = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "trainStationDao/findByUnique.ts",
+    "relpath": "daoTrainStation/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1657,7 +1657,7 @@ export const findByUuid = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "trainStationDao/findByUuid.ts",
+    "relpath": "daoTrainStation/findByUuid.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1666,7 +1666,7 @@ import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrainStation } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { geocodeDao } from '../geocodeDao';
+import { daoGeocode } from '../daoGeocode';
 
 export const sql = \`
   -- query_name = upsert_train_station
@@ -1689,26 +1689,26 @@ export const upsert = async ({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
     input: {
-      geocodeId: trainStation.geocode.id ? trainStation.geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: trainStation.geocode })).id,
+      geocodeId: trainStation.geocode.id ? trainStation.geocode.id : (await daoGeocode.upsert({ dbConnection, geocode: trainStation.geocode })).id,
       name: trainStation.name,
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
   return new TrainStation({ ...trainStation, id, uuid }) as HasMetadata<TrainStation>;
 };",
-    "relpath": "trainStationDao/upsert.ts",
+    "relpath": "daoTrainStation/upsert.ts",
   },
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { upsert } from './upsert';
 
-export const priceDao = {
+export const daoPrice = {
   findById,
   findByUnique,
   upsert,
 };",
-    "relpath": "priceDao/index.ts",
+    "relpath": "daoPrice/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1724,7 +1724,7 @@ export const castFromDatabaseObject = (
     amount: dbObject.amount,
     currency: dbObject.currency as Price['currency'],
   }) as HasMetadata<Price>;",
-    "relpath": "priceDao/castFromDatabaseObject.ts",
+    "relpath": "daoPrice/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1764,7 +1764,7 @@ export const findById = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "priceDao/findById.ts",
+    "relpath": "daoPrice/findById.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1809,7 +1809,7 @@ export const findByUnique = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "priceDao/findByUnique.ts",
+    "relpath": "daoPrice/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1847,26 +1847,26 @@ export const upsert = async ({
   const { id } = results[0]!; // grab the db generated values
   return new Price({ ...price, id }) as HasMetadata<Price>;
 };",
-    "relpath": "priceDao/upsert.ts",
+    "relpath": "daoPrice/upsert.ts",
   },
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { upsert } from './upsert';
 
-export const invoiceLineItemDao = {
+export const daoInvoiceLineItem = {
   findById,
   findByUnique,
   upsert,
 };",
-    "relpath": "invoiceLineItemDao/index.ts",
+    "relpath": "daoInvoiceLineItem/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
 
 import { InvoiceLineItem } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindInvoiceLineItemByIdOutput, SqlQueryFindPriceByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castPriceFromDatabaseObject } from '../priceDao/castFromDatabaseObject';
+import { castFromDatabaseObject as castPriceFromDatabaseObject } from '../daoPrice/castFromDatabaseObject';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindInvoiceLineItemByIdOutput,
@@ -1877,7 +1877,7 @@ export const castFromDatabaseObject = (
     title: dbObject.title,
     explanation: dbObject.explanation,
   }) as HasMetadata<InvoiceLineItem>;",
-    "relpath": "invoiceLineItemDao/castFromDatabaseObject.ts",
+    "relpath": "daoInvoiceLineItem/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1925,7 +1925,7 @@ export const findById = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "invoiceLineItemDao/findById.ts",
+    "relpath": "daoInvoiceLineItem/findById.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasId, HasMetadata } from 'type-fns';
@@ -1982,7 +1982,7 @@ export const findByUnique = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "invoiceLineItemDao/findByUnique.ts",
+    "relpath": "daoInvoiceLineItem/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -1991,7 +1991,7 @@ import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { InvoiceLineItem } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertInvoiceLineItem } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { priceDao } from '../priceDao';
+import { daoPrice } from '../daoPrice';
 
 export const sql = \`
   -- query_name = upsert_invoice_line_item
@@ -2015,7 +2015,7 @@ export const upsert = async ({
     dbExecute: dbConnection.query,
     logDebug: log.debug,
     input: {
-      priceId: invoiceLineItem.price.id ? invoiceLineItem.price.id : (await priceDao.upsert({ dbConnection, price: invoiceLineItem.price })).id,
+      priceId: invoiceLineItem.price.id ? invoiceLineItem.price.id : (await daoPrice.upsert({ dbConnection, price: invoiceLineItem.price })).id,
       title: invoiceLineItem.title,
       explanation: invoiceLineItem.explanation,
     },
@@ -2023,7 +2023,7 @@ export const upsert = async ({
   const { id } = results[0]!; // grab the db generated values
   return new InvoiceLineItem({ ...invoiceLineItem, id }) as HasMetadata<InvoiceLineItem>;
 };",
-    "relpath": "invoiceLineItemDao/upsert.ts",
+    "relpath": "daoInvoiceLineItem/upsert.ts",
   },
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
@@ -2031,21 +2031,21 @@ import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { upsert } from './upsert';
 
-export const invoiceDao = {
+export const daoInvoice = {
   findById,
   findByUnique,
   findByUuid,
   upsert,
 };",
-    "relpath": "invoiceDao/index.ts",
+    "relpath": "daoInvoice/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
 
 import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
 import { SqlQueryFindInvoiceByIdOutput, SqlQueryFindInvoiceLineItemByIdOutput, SqlQueryFindPriceByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castInvoiceLineItemFromDatabaseObject } from '../invoiceLineItemDao/castFromDatabaseObject';
-import { castFromDatabaseObject as castPriceFromDatabaseObject } from '../priceDao/castFromDatabaseObject';
+import { castFromDatabaseObject as castInvoiceLineItemFromDatabaseObject } from '../daoInvoiceLineItem/castFromDatabaseObject';
+import { castFromDatabaseObject as castPriceFromDatabaseObject } from '../daoPrice/castFromDatabaseObject';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindInvoiceByIdOutput,
@@ -2058,7 +2058,7 @@ export const castFromDatabaseObject = (
     totalPrice: castPriceFromDatabaseObject(dbObject.total_price as SqlQueryFindPriceByIdOutput),
     status: dbObject.status as Invoice['status'],
   }) as HasMetadata<Invoice>;",
-    "relpath": "invoiceDao/castFromDatabaseObject.ts",
+    "relpath": "daoInvoice/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -2132,7 +2132,7 @@ export const findById = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "invoiceDao/findById.ts",
+    "relpath": "daoInvoice/findById.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -2207,7 +2207,7 @@ export const findByUnique = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "invoiceDao/findByUnique.ts",
+    "relpath": "daoInvoice/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -2281,7 +2281,7 @@ export const findByUuid = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "invoiceDao/findByUuid.ts",
+    "relpath": "daoInvoice/findByUuid.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -2290,8 +2290,8 @@ import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertInvoice } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { invoiceLineItemDao } from '../invoiceLineItemDao';
-import { priceDao } from '../priceDao';
+import { daoInvoiceLineItem } from '../daoInvoiceLineItem';
+import { daoPrice } from '../daoPrice';
 
 export const sql = \`
   -- query_name = upsert_invoice
@@ -2317,15 +2317,15 @@ export const upsert = async ({
     logDebug: log.debug,
     input: {
       externalId: invoice.externalId,
-      itemIds: await Promise.all(invoice.items.map(async (invoiceLineItem) => invoiceLineItem.id ? invoiceLineItem.id : (await invoiceLineItemDao.upsert({ dbConnection, invoiceLineItem })).id)),
-      totalPriceId: invoice.totalPrice.id ? invoice.totalPrice.id : (await priceDao.upsert({ dbConnection, price: invoice.totalPrice })).id,
+      itemIds: await Promise.all(invoice.items.map(async (invoiceLineItem) => invoiceLineItem.id ? invoiceLineItem.id : (await daoInvoiceLineItem.upsert({ dbConnection, invoiceLineItem })).id)),
+      totalPriceId: invoice.totalPrice.id ? invoice.totalPrice.id : (await daoPrice.upsert({ dbConnection, price: invoice.totalPrice })).id,
       status: invoice.status,
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
   return new Invoice({ ...invoice, id, uuid }) as HasMetadata<Invoice>;
 };",
-    "relpath": "invoiceDao/upsert.ts",
+    "relpath": "daoInvoice/upsert.ts",
   },
 ]
 `;

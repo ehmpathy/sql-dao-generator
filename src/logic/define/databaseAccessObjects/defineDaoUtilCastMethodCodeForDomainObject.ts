@@ -1,4 +1,4 @@
-import { camelCase, snakeCase } from 'change-case';
+import { camelCase, pascalCase, snakeCase } from 'change-case';
 import {
   DomainObjectMetadata,
   DomainObjectPropertyType,
@@ -46,9 +46,9 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
     ...nestedDomainObjectNames
       .map(
         (domainObjectName) =>
-          `import { castFromDatabaseObject as cast${domainObjectName}FromDatabaseObject } from '../${camelCase(
+          `import { castFromDatabaseObject as cast${domainObjectName}FromDatabaseObject } from '../dao${pascalCase(
             domainObjectName,
-          )}Dao/castFromDatabaseObject';`,
+          )}/castFromDatabaseObject';`,
       )
       .sort(),
   ];

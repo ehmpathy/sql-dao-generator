@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: build-image.dockerfile
-    container_name: superimportantdb_server
+    container_name: sqldaogeneratordb_server
     command: postgres -c 'max_connections=500'
     ports:
       - 7821:5432

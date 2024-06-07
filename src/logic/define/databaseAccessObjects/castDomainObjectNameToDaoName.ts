@@ -1,4 +1,4 @@
-import { camelCase } from 'change-case';
+import { pascalCase } from 'change-case';
 
 export const castDomainObjectNameToDaoName = (domainObjectName: string) =>
-  `${camelCase(domainObjectName)}Dao`;
+  `dao${pascalCase(domainObjectName)}`;

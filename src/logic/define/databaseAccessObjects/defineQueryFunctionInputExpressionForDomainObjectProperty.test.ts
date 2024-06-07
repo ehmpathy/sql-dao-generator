@@ -136,7 +136,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
           context: GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY,
         });
       expect(expression).toEqual(
-        'geocodeId: trainLocatedEvent.geocode.id ? trainLocatedEvent.geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: trainLocatedEvent.geocode })).id',
+        'geocodeId: trainLocatedEvent.geocode.id ? trainLocatedEvent.geocode.id : (await daoGeocode.upsert({ dbConnection, geocode: trainLocatedEvent.geocode })).id',
       );
     });
     it('should define the input expression correctly for an array of IMPLICIT_BY_UUID references', () => {
@@ -246,7 +246,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
           context: GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY,
         });
       expect(expression).toEqual(
-        'geocodeIds: await Promise.all(trainLocatedEvent.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await geocodeDao.upsert({ dbConnection, geocode })).id))',
+        'geocodeIds: await Promise.all(trainLocatedEvent.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await daoGeocode.upsert({ dbConnection, geocode })).id))',
       );
     });
   });

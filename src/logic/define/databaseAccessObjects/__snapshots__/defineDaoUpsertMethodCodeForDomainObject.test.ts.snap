@@ -7,7 +7,7 @@ import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrainLocatedEvent } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { geocodeDao } from '../geocodeDao';
+import { daoGeocode } from '../daoGeocode';
 
 export const sql = \`
   -- query_name = upsert_train_located_event
@@ -33,7 +33,7 @@ export const upsert = async ({
     input: {
       trainUuid: trainLocatedEvent.trainUuid,
       occurredAt: trainLocatedEvent.occurredAt,
-      geocodeIds: await Promise.all(trainLocatedEvent.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await geocodeDao.upsert({ dbConnection, geocode })).id)),
+      geocodeIds: await Promise.all(trainLocatedEvent.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await daoGeocode.upsert({ dbConnection, geocode })).id)),
     },
   });
   const { id } = results[0]!; // grab the db generated values
@@ -48,8 +48,8 @@ import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrain } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
-import { geocodeDao } from '../geocodeDao';
-import { trainBadgeDao } from '../trainBadgeDao';
+import { daoGeocode } from '../daoGeocode';
+import { daoTrainBadge } from '../daoTrainBadge';
 
 export const sql = \`
   -- query_name = upsert_train
@@ -82,9 +82,9 @@ export const upsert = async ({
     logDebug: log.debug,
     input: {
       tin: train.tin,
-      homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await geocodeDao.upsert({ dbConnection, geocode: train.homeStationGeocode })).id,
+      homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await daoGeocode.upsert({ dbConnection, geocode: train.homeStationGeocode })).id,
       leadEngineerUuid: train.leadEngineerUuid,
-      badgeIds: await Promise.all(train.badges.map(async (trainBadge) => trainBadge.id ? trainBadge.id : (await trainBadgeDao.upsert({ dbConnection, trainBadge })).id)),
+      badgeIds: await Promise.all(train.badges.map(async (trainBadge) => trainBadge.id ? trainBadge.id : (await daoTrainBadge.upsert({ dbConnection, trainBadge })).id)),
       locomotiveUuids: train.locomotiveUuids,
     },
   });

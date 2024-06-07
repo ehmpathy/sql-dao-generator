@@ -356,7 +356,7 @@ async ({
     input: {
       trainUuid: trainLocatedEvent.trainUuid,
       occurredAt: trainLocatedEvent.occurredAt,
-      geocodeIds: await Promise.all(trainLocatedEvent.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await geocodeDao.upsert({ dbConnection, geocode })).id)),
+      geocodeIds: await Promise.all(trainLocatedEvent.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await daoGeocode.upsert({ dbConnection, geocode })).id)),
     }
       `.trim(),
     ); // defines inputs correctly
@@ -556,9 +556,9 @@ async ({
       `
     input: {
       tin: train.tin,
-      homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await geocodeDao.upsert({ dbConnection, geocode: train.homeStationGeocode })).id,
+      homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await daoGeocode.upsert({ dbConnection, geocode: train.homeStationGeocode })).id,
       leadEngineerUuid: train.leadEngineerUuid,
-      badgeIds: await Promise.all(train.badges.map(async (trainBadge) => trainBadge.id ? trainBadge.id : (await trainBadgeDao.upsert({ dbConnection, trainBadge })).id)),
+      badgeIds: await Promise.all(train.badges.map(async (trainBadge) => trainBadge.id ? trainBadge.id : (await daoTrainBadge.upsert({ dbConnection, trainBadge })).id)),
       locomotiveUuids: train.locomotiveUuids,
     }
       `.trim(),

@@ -8,13 +8,13 @@ import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { upsert } from './upsert';
 
-export const geocodeDao = {
+export const daoGeocode = {
   findById,
   findByUnique,
   findByUuid,
   upsert,
 };",
-    "relpath": "geocodeDao/index.ts",
+    "relpath": "daoGeocode/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -31,7 +31,7 @@ export const castFromDatabaseObject = (
     latitude: dbObject.latitude,
     longitude: dbObject.longitude,
   }) as HasMetadata<Geocode>;",
-    "relpath": "geocodeDao/castFromDatabaseObject.ts",
+    "relpath": "daoGeocode/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -72,7 +72,7 @@ export const findById = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "geocodeDao/findById.ts",
+    "relpath": "daoGeocode/findById.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -118,7 +118,7 @@ export const findByUnique = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "geocodeDao/findByUnique.ts",
+    "relpath": "daoGeocode/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -159,7 +159,7 @@ export const findByUuid = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "geocodeDao/findByUuid.ts",
+    "relpath": "daoGeocode/findByUuid.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -197,7 +197,7 @@ export const upsert = async ({
   const { id, uuid } = results[0]!; // grab the db generated values
   return new Geocode({ ...geocode, id, uuid }) as HasMetadata<Geocode>;
 };",
-    "relpath": "geocodeDao/upsert.ts",
+    "relpath": "daoGeocode/upsert.ts",
   },
 ]
 `;
@@ -209,12 +209,12 @@ exports[`defineDaoCodeFilesForDomainObject should not have the findByUuid file i
 import { findByUnique } from './findByUnique';
 import { upsert } from './upsert';
 
-export const geocodeDao = {
+export const daoGeocode = {
   findById,
   findByUnique,
   upsert,
 };",
-    "relpath": "geocodeDao/index.ts",
+    "relpath": "daoGeocode/index.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -230,7 +230,7 @@ export const castFromDatabaseObject = (
     latitude: dbObject.latitude,
     longitude: dbObject.longitude,
   }) as HasMetadata<Geocode>;",
-    "relpath": "geocodeDao/castFromDatabaseObject.ts",
+    "relpath": "daoGeocode/castFromDatabaseObject.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -270,7 +270,7 @@ export const findById = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "geocodeDao/findById.ts",
+    "relpath": "daoGeocode/findById.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -315,7 +315,7 @@ export const findByUnique = async ({
   if (!dbObject) return null;
   return castFromDatabaseObject(dbObject);
 };",
-    "relpath": "geocodeDao/findByUnique.ts",
+    "relpath": "daoGeocode/findByUnique.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -353,7 +353,7 @@ export const upsert = async ({
   const { id } = results[0]!; // grab the db generated values
   return new Geocode({ ...geocode, id }) as HasMetadata<Geocode>;
 };",
-    "relpath": "geocodeDao/upsert.ts",
+    "relpath": "daoGeocode/upsert.ts",
   },
 ]
 `;
