@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/ehmpathy/sql-dao-generator/compare/v0.4.1...v0.4.2) (2024-06-07)
+
+
+### Bug Fixes
+
+* **refs:** unblock extract implicit refs in multi candidate suffix situations ([4aa9891](https://github.com/ehmpathy/sql-dao-generator/commit/4aa9891b4e9b9d49d2027fb35fad72a7900e89e7))
+
 ## [0.4.1](https://github.com/ehmpathy/sql-dao-generator/compare/v0.4.0...v0.4.1) (2024-05-26)
 
 
