@@ -1,7 +1,50 @@
+import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
 import { snakeCase } from 'change-case';
 
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
 import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
+
+const getMostCommonPrefixRedactedTableNameToken = (input: {
+  sqlSchemaRelationship: SqlSchemaToDomainObjectRelationship;
+  propertyRelationship: SqlSchemaToDomainObjectRelationship['properties'][number];
+}) => {
+  if (!input.propertyRelationship.sqlSchema.reference)
+    throw new UnexpectedCodePathError(
+      'can not getMostCommonPrefixRedactedTableNameToken of non reference property',
+      { input },
+    );
+
+  // define the names of the tables
+  const tableNameSource = input.sqlSchemaRelationship.name.sqlSchema;
+  const tableNameReferenced = snakeCase(
+    input.propertyRelationship.sqlSchema.reference.of.name,
+  );
+
+  // determine the most common prefix between the two, if any
+  const wordsInEntityReferenceTableName = tableNameSource.split('_');
+  const mostCommonPrefixWords = (() => {
+    const commonPrefixWords: string[] = [];
+    for (const commonPrefixCandidate of wordsInEntityReferenceTableName) {
+      const doesCandidateContributeToCommonPrefix =
+        tableNameReferenced.startsWith(
+          [...commonPrefixWords, commonPrefixCandidate].join('_'),
+        );
+      if (!doesCandidateContributeToCommonPrefix) break;
+      commonPrefixWords.push(commonPrefixCandidate);
+    }
+    return commonPrefixWords;
+  })();
+  const mostCommonPrefix = mostCommonPrefixWords.join('_');
+
+  // establish the join table name with the prefix removed
+  const referencedTableNameWithPrefixDeduped = tableNameReferenced.replace(
+    new RegExp(`^${mostCommonPrefix}_`), // todo: sync this logic to the sql-schema-generator
+    '',
+  );
+
+  // return it
+  return referencedTableNameWithPrefixDeduped;
+};
 
 export const defineSqlSchemaControlCodeForDomainObject = ({
   sqlSchemaRelationship,
@@ -47,9 +90,12 @@ export const defineSqlSchemaControlCodeForDomainObject = ({
       );
     }
     return resourceRelpaths.push(
-      `./tables/${sqlSchemaRelationship.name.sqlSchema}_to_${snakeCase(
-        propertyRelationship.sqlSchema.reference.of.name,
-      )}.sql`,
+      `./tables/${
+        sqlSchemaRelationship.name.sqlSchema
+      }_to_${getMostCommonPrefixRedactedTableNameToken({
+        sqlSchemaRelationship,
+        propertyRelationship,
+      })}.sql`,
     );
   });
 
@@ -87,9 +133,10 @@ export const defineSqlSchemaControlCodeForDomainObject = ({
       return resourceRelpaths.push(
         `./tables/${
           sqlSchemaRelationship.name.sqlSchema
-        }_version_to_${snakeCase(
-          propertyRelationship.sqlSchema.reference.of.name,
-        )}.sql`,
+        }_version_to_${getMostCommonPrefixRedactedTableNameToken({
+          sqlSchemaRelationship,
+          propertyRelationship,
+        })}.sql`,
       );
     });
 
