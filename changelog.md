@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.2](https://github.com/ehmpathy/sql-dao-generator/compare/v0.5.1...v0.5.2) (2024-06-09)
+
+
+### Bug Fixes
+
+* **control:** sync to updated join table name pattern to avoid postgres name len limits ([f841fdd](https://github.com/ehmpathy/sql-dao-generator/commit/f841fdd9b11dd88b5a0ba0fbc8bd8feb27543603))
+
 ## [0.5.1](https://github.com/ehmpathy/sql-dao-generator/compare/v0.5.0...v0.5.1) (2024-06-09)
 
 
