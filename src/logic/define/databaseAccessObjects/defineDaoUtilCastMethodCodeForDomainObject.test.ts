@@ -270,4 +270,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
     );
     expect(code).toMatchSnapshot();
   });
+  it.todo(
+    'should look correct when the same dobj is referenced more than once in a dobj',
+  );
 });

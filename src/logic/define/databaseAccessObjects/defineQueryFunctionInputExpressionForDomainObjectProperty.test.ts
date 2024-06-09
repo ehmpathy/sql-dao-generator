@@ -139,6 +139,74 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
         'geocodeId: trainLocatedEvent.geocode.id ? trainLocatedEvent.geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: trainLocatedEvent.geocode })).id',
       );
     });
+    it('should define the input expression correctly for a solo, nullable, DIRECT_BY_NESTING reference', () => {
+      const expression =
+        defineQueryFunctionInputExpressionForDomainObjectProperty({
+          domainObjectName: 'TrainLocatedEvent',
+          sqlSchemaProperty: {
+            name: 'geocode_id',
+            isArray: false,
+            isNullable: true,
+            isUpdatable: false,
+            isDatabaseGenerated: false,
+            reference: {
+              method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
+              of: {
+                name: 'Geocode',
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
+              },
+            },
+          },
+          domainObjectProperty: {
+            name: 'geocode',
+            type: DomainObjectPropertyType.REFERENCE,
+            of: {
+              name: 'Geocode',
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
+            },
+          },
+          allSqlSchemaRelationships: [
+            new SqlSchemaToDomainObjectRelationship({
+              name: { domainObject: 'Geocode', sqlSchema: 'geocode' },
+              properties: [
+                {
+                  domainObject: {
+                    name: 'latitude',
+                    type: DomainObjectPropertyType.NUMBER,
+                  },
+                  sqlSchema: {
+                    name: 'latitude',
+                    isArray: false,
+                    isNullable: false,
+                    isUpdatable: false,
+                    isDatabaseGenerated: false,
+                    reference: null,
+                  },
+                },
+                {
+                  domainObject: {
+                    name: 'longitude',
+                    type: DomainObjectPropertyType.NUMBER,
+                  },
+                  sqlSchema: {
+                    name: 'longitude',
+                    isArray: false,
+                    isNullable: false,
+                    isUpdatable: false,
+                    isDatabaseGenerated: false,
+                    reference: null,
+                  },
+                },
+              ],
+              decorations: { unique: { sqlSchema: null, domainObject: null } },
+            }),
+          ],
+          context: GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY,
+        });
+      expect(expression).toEqual(
+        'geocodeId: trainLocatedEvent.geocode === null ? null : trainLocatedEvent.geocode.id ? trainLocatedEvent.geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: trainLocatedEvent.geocode })).id',
+      );
+    });
     it('should define the input expression correctly for an array of IMPLICIT_BY_UUID references', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({
@@ -373,6 +441,74 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
           context: GetTypescriptCodeForPropertyContext.FOR_FIND_BY_QUERY,
         });
       expect(expression).toEqual('geocodeId: geocode.id');
+    });
+    it('should define the input expression correctly for a solo, nullable, DIRECT_BY_NESTING reference', () => {
+      const expression =
+        defineQueryFunctionInputExpressionForDomainObjectProperty({
+          domainObjectName: 'TrainLocatedEvent',
+          sqlSchemaProperty: {
+            name: 'geocode_id',
+            isArray: false,
+            isNullable: true,
+            isUpdatable: false,
+            isDatabaseGenerated: false,
+            reference: {
+              method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
+              of: {
+                name: 'Geocode',
+                extends: DomainObjectVariant.DOMAIN_LITERAL,
+              },
+            },
+          },
+          domainObjectProperty: {
+            name: 'geocode',
+            type: DomainObjectPropertyType.REFERENCE,
+            of: {
+              name: 'Geocode',
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
+            },
+          },
+          allSqlSchemaRelationships: [
+            new SqlSchemaToDomainObjectRelationship({
+              name: { domainObject: 'Geocode', sqlSchema: 'geocode' },
+              properties: [
+                {
+                  domainObject: {
+                    name: 'latitude',
+                    type: DomainObjectPropertyType.NUMBER,
+                  },
+                  sqlSchema: {
+                    name: 'latitude',
+                    isArray: false,
+                    isNullable: false,
+                    isUpdatable: false,
+                    isDatabaseGenerated: false,
+                    reference: null,
+                  },
+                },
+                {
+                  domainObject: {
+                    name: 'longitude',
+                    type: DomainObjectPropertyType.NUMBER,
+                  },
+                  sqlSchema: {
+                    name: 'longitude',
+                    isArray: false,
+                    isNullable: false,
+                    isUpdatable: false,
+                    isDatabaseGenerated: false,
+                    reference: null,
+                  },
+                },
+              ],
+              decorations: { unique: { sqlSchema: null, domainObject: null } },
+            }),
+          ],
+          context: GetTypescriptCodeForPropertyContext.FOR_FIND_BY_QUERY,
+        });
+      expect(expression).toEqual(
+        'geocodeId: geocode === null ? null : geocode.id',
+      );
     });
     it('should define the input expression correctly for an array of IMPLICIT_BY_UUID references', () => {
       const expression =

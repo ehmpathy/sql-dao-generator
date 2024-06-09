@@ -87,64 +87,68 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
 
   // define which domain objects are referenced in this method
   const referencedDomainObjectNames = [
-    domainObject.name, // the domain object itself is always referenced
-    ...(findByQueryType === FindByQueryType.UNIQUE
-      ? sqlSchemaRelationship.properties
-          .map(
-            ({
-              domainObject: domainObjectProperty,
-              sqlSchema: sqlSchemaProperty,
-            }) => {
-              // if its not explicitly defined property, then not needed in imports
-              if (!domainObjectProperty) return null;
+    ...new Set([
+      domainObject.name, // the domain object itself is always referenced
+      ...(findByQueryType === FindByQueryType.UNIQUE
+        ? sqlSchemaRelationship.properties
+            .map(
+              ({
+                domainObject: domainObjectProperty,
+                sqlSchema: sqlSchemaProperty,
+              }) => {
+                // if its not explicitly defined property, then not needed in imports
+                if (!domainObjectProperty) return null;
 
-              // if its not part of the unique key, then its not needed in imports
-              if (
-                !sqlSchemaRelationship.decorations.unique.sqlSchema?.includes(
-                  sqlSchemaProperty.name,
+                // if its not part of the unique key, then its not needed in imports
+                if (
+                  !sqlSchemaRelationship.decorations.unique.sqlSchema?.includes(
+                    sqlSchemaProperty.name,
+                  )
                 )
-              )
+                  return null;
+
+                // if its a solo reference to a domain literal, then its needed
+                if (
+                  isDomainObjectReferenceProperty(domainObjectProperty) &&
+                  domainObjectProperty.of.extends ===
+                    DomainObjectVariant.DOMAIN_LITERAL
+                )
+                  return domainObjectProperty.of.name;
+
+                // if its a array reference to a domain literal, then its needed
+                if (
+                  isDomainObjectArrayProperty(domainObjectProperty) &&
+                  isDomainObjectReferenceProperty(domainObjectProperty.of) &&
+                  domainObjectProperty.of.of.extends ===
+                    DomainObjectVariant.DOMAIN_LITERAL
+                )
+                  return domainObjectProperty.of.of.name;
+
+                // otherwise, we dont care about it
                 return null;
-
-              // if its a solo reference to a domain literal, then its needed
-              if (
-                isDomainObjectReferenceProperty(domainObjectProperty) &&
-                domainObjectProperty.of.extends ===
-                  DomainObjectVariant.DOMAIN_LITERAL
-              )
-                return domainObjectProperty.of.name;
-
-              // if its a array reference to a domain literal, then its needed
-              if (
-                isDomainObjectArrayProperty(domainObjectProperty) &&
-                isDomainObjectReferenceProperty(domainObjectProperty.of) &&
-                domainObjectProperty.of.of.extends ===
-                  DomainObjectVariant.DOMAIN_LITERAL
-              )
-                return domainObjectProperty.of.of.name;
-
-              // otherwise, we dont care about it
-              return null;
-            },
-          )
-          .filter(isPresent)
-      : []),
+              },
+            )
+            .filter(isPresent)
+        : []),
+    ]),
   ];
 
   // define the imports
   const imports = [
-    // always present imports
-    `import { ${
-      referencedDomainObjectNames.length > 1 ? 'HasId, ' : ''
-    }HasMetadata } from 'type-fns';`,
-    '', // split module from relative imports
-    "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
-    "import { log } from '$PATH_TO_LOG_OBJECT';",
-    `import { ${referencedDomainObjectNames
-      .sort()
-      .join(', ')} } from '$PATH_TO_DOMAIN_OBJECT';`,
-    `import { sqlQueryFind${domainObject.name}By${findByQueryType} } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';`,
-    "import { castFromDatabaseObject } from './castFromDatabaseObject';",
+    ...new Set([
+      // always present imports
+      `import { ${
+        referencedDomainObjectNames.length > 1 ? 'HasId, ' : ''
+      }HasMetadata } from 'type-fns';`,
+      '', // split module from relative imports
+      "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
+      "import { log } from '$PATH_TO_LOG_OBJECT';",
+      `import { ${referencedDomainObjectNames
+        .sort()
+        .join(', ')} } from '$PATH_TO_DOMAIN_OBJECT';`,
+      `import { sqlQueryFind${domainObject.name}By${findByQueryType} } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';`,
+      "import { castFromDatabaseObject } from './castFromDatabaseObject';",
+    ]),
   ];
 
   // define the where conditions

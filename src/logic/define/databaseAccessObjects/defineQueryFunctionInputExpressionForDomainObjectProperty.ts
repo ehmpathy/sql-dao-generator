@@ -68,22 +68,27 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
   ) {
     // handle solo reference
     if (!sqlSchemaProperty.isArray) {
+      const domainObjectPropertyVariableName =
+        context === GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY
+          ? `${domainObjectUpsertVarName}.${domainObjectProperty.name}`
+          : domainObjectProperty.name;
+
+      const nullabilityPrefix = sqlSchemaProperty.isNullable
+        ? `${domainObjectPropertyVariableName} === null ? null : `
+        : '';
+
       if (context === GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY)
         // e.g.,: `geocodeId: location.geocode.id ? location.geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: location.geocode })).id`
         return `${camelCase(
           sqlSchemaProperty.name,
-        )}: ${domainObjectUpsertVarName}.${
-          domainObjectProperty.name
-        }.id ? ${domainObjectUpsertVarName}.${
-          domainObjectProperty.name
-        }.id : (await ${castDomainObjectNameToDaoName(
+        )}: ${nullabilityPrefix}${domainObjectPropertyVariableName}.id ? ${domainObjectPropertyVariableName}.id : (await ${castDomainObjectNameToDaoName(
           referencedDomainObjectName,
         )}.upsert({ dbConnection, ${camelCase(
           referencedSqlSchemaName,
-        )}: ${domainObjectUpsertVarName}.${domainObjectProperty.name} })).id`;
+        )}: ${domainObjectPropertyVariableName} })).id`;
 
       // e.g., `geocodeId: geocode.id`
-      return `${camelCase(sqlSchemaProperty.name)}: ${
+      return `${camelCase(sqlSchemaProperty.name)}: ${nullabilityPrefix}${
         domainObjectProperty.name
       }.id`;
     }

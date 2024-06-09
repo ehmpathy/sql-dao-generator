@@ -20,37 +20,44 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
   sqlSchemaRelationship: SqlSchemaToDomainObjectRelationship;
 }) => {
   // define the referenced domain objects to hydrate
-  const nestedDomainObjectNames = Object.values(domainObject.properties)
-    .map((property) => {
-      if (isDomainObjectReferenceProperty(property)) return property.of.name;
-      if (
-        isDomainObjectArrayProperty(property) &&
-        isDomainObjectReferenceProperty(property.of)
-      )
-        return property.of.of.name;
-      return null;
-    })
-    .filter(isPresent)
-    .sort();
+  const nestedDomainObjectNames = [
+    ...new Set(
+      Object.values(domainObject.properties)
+        .map((property) => {
+          if (isDomainObjectReferenceProperty(property))
+            return property.of.name;
+          if (
+            isDomainObjectArrayProperty(property) &&
+            isDomainObjectReferenceProperty(property.of)
+          )
+            return property.of.of.name;
+          return null;
+        })
+        .filter(isPresent)
+        .sort(),
+    ),
+  ];
 
   // define the imports
   const imports = [
-    // always present imports
-    "import { HasMetadata } from 'type-fns';",
-    '', // split module from relative imports
-    `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`, // import this domain object; note: higher level function will swap out the import path
-    `import { ${[domainObject.name, ...nestedDomainObjectNames]
-      .map((domainObjectName) => `SqlQueryFind${domainObjectName}ByIdOutput`)
-      .sort()
-      .join(', ')} } from '$PATH_TO_GENERATED_SQL_TYPES';`,
-    ...nestedDomainObjectNames
-      .map(
-        (domainObjectName) =>
-          `import { castFromDatabaseObject as cast${domainObjectName}FromDatabaseObject } from '../${camelCase(
-            domainObjectName,
-          )}Dao/castFromDatabaseObject';`,
-      )
-      .sort(),
+    ...new Set([
+      // always present imports
+      "import { HasMetadata } from 'type-fns';",
+      '', // split module from relative imports
+      `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`, // import this domain object; note: higher level function will swap out the import path
+      `import { ${[domainObject.name, ...nestedDomainObjectNames]
+        .map((domainObjectName) => `SqlQueryFind${domainObjectName}ByIdOutput`)
+        .sort()
+        .join(', ')} } from '$PATH_TO_GENERATED_SQL_TYPES';`,
+      ...nestedDomainObjectNames
+        .map(
+          (domainObjectName) =>
+            `import { castFromDatabaseObject as cast${domainObjectName}FromDatabaseObject } from '../${camelCase(
+              domainObjectName,
+            )}Dao/castFromDatabaseObject';`,
+        )
+        .sort(),
+    ]),
   ];
 
   // define the output type
@@ -105,9 +112,15 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
           sqlSchemaProperty.reference.method ===
           SqlSchemaReferenceMethod.DIRECT_BY_NESTING
         ) {
+          const nullabilityPrefix = sqlSchemaProperty.isNullable
+            ? `dbObject.${snakeCase(
+                domainObjectProperty.name,
+              )} === null ? null : `
+            : '';
+
           // solo reference case
           if (!sqlSchemaProperty.isArray)
-            return `${domainObjectProperty.name}: cast${
+            return `${domainObjectProperty.name}: ${nullabilityPrefix}cast${
               sqlSchemaProperty.reference.of.name
             }FromDatabaseObject(dbObject.${snakeCase(
               domainObjectProperty.name,

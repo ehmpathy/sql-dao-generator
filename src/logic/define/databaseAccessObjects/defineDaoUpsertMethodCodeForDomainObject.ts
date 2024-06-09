@@ -27,28 +27,30 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
 
   // define the imports
   const imports = [
-    // always present imports
-    `import { HasMetadata${
-      isUniqueOnUuid ? ', HasUuid' : ''
-    } } from 'type-fns';`,
-    '', // split module from relative imports
-    "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
-    `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`,
-    "import { log } from '$PATH_TO_LOG_OBJECT';",
-    `import { sqlQueryUpsert${domainObject.name} } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';`,
-    ...sqlSchemaRelationship.properties
-      .filter(
-        (propertyRelationship) =>
-          propertyRelationship.sqlSchema.reference?.method ===
-          SqlSchemaReferenceMethod.DIRECT_BY_NESTING, // this property is nested directly
-      )
-      .map((propertyRelationship) => {
-        const nameOfDaoToImport = castDomainObjectNameToDaoName(
-          propertyRelationship.sqlSchema.reference!.of.name,
-        );
-        return `import { ${nameOfDaoToImport} } from '../${nameOfDaoToImport}';`;
-      })
-      .sort(),
+    ...new Set([
+      // always present imports
+      `import { HasMetadata${
+        isUniqueOnUuid ? ', HasUuid' : ''
+      } } from 'type-fns';`,
+      '', // split module from relative imports
+      "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
+      `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`,
+      "import { log } from '$PATH_TO_LOG_OBJECT';",
+      `import { sqlQueryUpsert${domainObject.name} } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';`,
+      ...sqlSchemaRelationship.properties
+        .filter(
+          (propertyRelationship) =>
+            propertyRelationship.sqlSchema.reference?.method ===
+            SqlSchemaReferenceMethod.DIRECT_BY_NESTING, // this property is nested directly
+        )
+        .map((propertyRelationship) => {
+          const nameOfDaoToImport = castDomainObjectNameToDaoName(
+            propertyRelationship.sqlSchema.reference!.of.name,
+          );
+          return `import { ${nameOfDaoToImport} } from '../${nameOfDaoToImport}';`;
+        })
+        .sort(),
+    ]),
   ];
 
   // define the query input expressions
