@@ -14,22 +14,6 @@ GeneratedCodeFile {
 - type: resource
   path: ./functions/upsert_certificate.sql
 
-# train_engineer
-- type: resource
-  path: ./tables/train_engineer.sql
-- type: resource
-  path: ./tables/train_engineer_version.sql
-- type: resource
-  path: ./tables/train_engineer_version_to_certificate.sql
-- type: resource
-  path: ./tables/train_engineer_version_to_license_uuid.sql
-- type: resource
-  path: ./tables/train_engineer_cvp.sql
-- type: resource
-  path: ./views/view_train_engineer_current.sql
-- type: resource
-  path: ./functions/upsert_train_engineer.sql
-
 # geocode
 - type: resource
   path: ./tables/geocode.sql
@@ -48,11 +32,27 @@ GeneratedCodeFile {
 - type: resource
   path: ./functions/upsert_locomotive.sql
 
-# train_located_event
+# price
 - type: resource
-  path: ./tables/train_located_event.sql
+  path: ./tables/price.sql
 - type: resource
-  path: ./functions/upsert_train_located_event.sql
+  path: ./functions/upsert_price.sql
+
+# train_engineer
+- type: resource
+  path: ./tables/train_engineer.sql
+- type: resource
+  path: ./tables/train_engineer_version.sql
+- type: resource
+  path: ./tables/train_engineer_version_to_certificate.sql
+- type: resource
+  path: ./tables/train_engineer_version_to_license_uuid.sql
+- type: resource
+  path: ./tables/train_engineer_cvp.sql
+- type: resource
+  path: ./views/view_train_engineer_current.sql
+- type: resource
+  path: ./functions/upsert_train_engineer.sql
 
 # train_station
 - type: resource
@@ -66,31 +66,11 @@ GeneratedCodeFile {
 - type: resource
   path: ./functions/upsert_train_station.sql
 
-# price
-- type: resource
-  path: ./tables/price.sql
-- type: resource
-  path: ./functions/upsert_price.sql
-
 # invoice_line_item
 - type: resource
   path: ./tables/invoice_line_item.sql
 - type: resource
   path: ./functions/upsert_invoice_line_item.sql
-
-# invoice
-- type: resource
-  path: ./tables/invoice.sql
-- type: resource
-  path: ./tables/invoice_version.sql
-- type: resource
-  path: ./tables/invoice_version_to_invoice_line_item.sql
-- type: resource
-  path: ./tables/invoice_cvp.sql
-- type: resource
-  path: ./views/view_invoice_current.sql
-- type: resource
-  path: ./functions/upsert_invoice.sql
 
 # train
 - type: resource
@@ -108,7 +88,39 @@ GeneratedCodeFile {
 - type: resource
   path: ./views/view_train_current.sql
 - type: resource
-  path: ./functions/upsert_train.sql",
+  path: ./functions/upsert_train.sql
+
+# train_located_event
+- type: resource
+  path: ./tables/train_located_event.sql
+- type: resource
+  path: ./functions/upsert_train_located_event.sql
+
+# async_task_predict_station_congestion
+- type: resource
+  path: ./tables/async_task_predict_station_congestion.sql
+- type: resource
+  path: ./tables/async_task_predict_station_congestion_version.sql
+- type: resource
+  path: ./tables/async_task_predict_station_congestion_cvp.sql
+- type: resource
+  path: ./views/view_async_task_predict_station_congestion_current.sql
+- type: resource
+  path: ./functions/upsert_async_task_predict_station_congestion.sql
+
+# invoice
+- type: resource
+  path: ./tables/invoice.sql
+- type: resource
+  path: ./tables/invoice_version.sql
+- type: resource
+  path: ./tables/invoice_version_to_invoice_line_item.sql
+- type: resource
+  path: ./tables/invoice_cvp.sql
+- type: resource
+  path: ./views/view_invoice_current.sql
+- type: resource
+  path: ./functions/upsert_invoice.sql",
   "relpath": "./domain.control.yml",
 }
 `;
