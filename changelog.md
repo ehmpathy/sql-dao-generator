@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.3](https://github.com/ehmpathy/sql-dao-generator/compare/v0.5.2...v0.5.3) (2024-06-09)
+
+
+### Bug Fixes
+
+* **dao:** handle nullable nested literals; prevent duplicate imports ([281b33f](https://github.com/ehmpathy/sql-dao-generator/commit/281b33ffd7e30731818ad6b451a9eac49a412785))
+
 ## [0.5.2](https://github.com/ehmpathy/sql-dao-generator/compare/v0.5.1...v0.5.2) (2024-06-09)
 
 
