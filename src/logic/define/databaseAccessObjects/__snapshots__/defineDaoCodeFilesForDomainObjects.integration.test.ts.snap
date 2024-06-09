@@ -8,6 +8,242 @@ import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { upsert } from './upsert';
 
+export const asyncTaskPredictStationCongestionDao = {
+  findById,
+  findByUnique,
+  findByUuid,
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoAsyncTaskPredictStationCongestion = asyncTaskPredictStationCongestionDao;",
+    "relpath": "asyncTaskPredictStationCongestionDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindAsyncTaskPredictStationCongestionByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindAsyncTaskPredictStationCongestionByIdOutput,
+): HasMetadata<AsyncTaskPredictStationCongestion> =>
+  new AsyncTaskPredictStationCongestion({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    createdAt: dbObject.created_at,
+    updatedAt: dbObject.updated_at,
+    status: dbObject.status as AsyncTaskPredictStationCongestion['status'],
+    stationUuid: dbObject.station_uuid,
+    trainLocatedEventUuid: dbObject.train_located_event_uuid,
+  }) as HasMetadata<AsyncTaskPredictStationCongestion>;",
+    "relpath": "asyncTaskPredictStationCongestionDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindAsyncTaskPredictStationCongestionById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_async_task_predict_station_congestion_by_id
+  SELECT
+    async_task_predict_station_congestion.id,
+    async_task_predict_station_congestion.uuid,
+    async_task_predict_station_congestion.created_at,
+    async_task_predict_station_congestion.updated_at,
+    async_task_predict_station_congestion.status,
+    (
+      SELECT train_station.uuid
+      FROM train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
+    ) AS station_uuid,
+    (
+      SELECT train_located_event.uuid
+      FROM train_located_event WHERE train_located_event.id = async_task_predict_station_congestion.train_located_event_id
+    ) AS train_located_event_uuid
+  FROM view_async_task_predict_station_congestion_current AS async_task_predict_station_congestion
+  WHERE async_task_predict_station_congestion.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<AsyncTaskPredictStationCongestion> | null> => {
+  const results = await sqlQueryFindAsyncTaskPredictStationCongestionById({
+    dbExecute: context.dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "asyncTaskPredictStationCongestionDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindAsyncTaskPredictStationCongestionByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_async_task_predict_station_congestion_by_unique
+  SELECT
+    async_task_predict_station_congestion.id,
+    async_task_predict_station_congestion.uuid,
+    async_task_predict_station_congestion.created_at,
+    async_task_predict_station_congestion.updated_at,
+    async_task_predict_station_congestion.status,
+    (
+      SELECT train_station.uuid
+      FROM train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
+    ) AS station_uuid,
+    (
+      SELECT train_located_event.uuid
+      FROM train_located_event WHERE train_located_event.id = async_task_predict_station_congestion.train_located_event_id
+    ) AS train_located_event_uuid
+  FROM view_async_task_predict_station_congestion_current AS async_task_predict_station_congestion
+  WHERE 1=1
+    AND async_task_predict_station_congestion.station_id = (SELECT id FROM train_station WHERE train_station.uuid = :stationUuid)
+    AND async_task_predict_station_congestion.train_located_event_id = (SELECT id FROM train_located_event WHERE train_located_event.uuid = :trainLocatedEventUuid);
+\`;
+
+export const findByUnique = async (
+  {
+    stationUuid,
+    trainLocatedEventUuid,
+  }: {
+    stationUuid: string;
+    trainLocatedEventUuid: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<AsyncTaskPredictStationCongestion> | null> => {
+  const results = await sqlQueryFindAsyncTaskPredictStationCongestionByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      stationUuid,
+      trainLocatedEventUuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "asyncTaskPredictStationCongestionDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindAsyncTaskPredictStationCongestionByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_async_task_predict_station_congestion_by_uuid
+  SELECT
+    async_task_predict_station_congestion.id,
+    async_task_predict_station_congestion.uuid,
+    async_task_predict_station_congestion.created_at,
+    async_task_predict_station_congestion.updated_at,
+    async_task_predict_station_congestion.status,
+    (
+      SELECT train_station.uuid
+      FROM train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
+    ) AS station_uuid,
+    (
+      SELECT train_located_event.uuid
+      FROM train_located_event WHERE train_located_event.id = async_task_predict_station_congestion.train_located_event_id
+    ) AS train_located_event_uuid
+  FROM view_async_task_predict_station_congestion_current AS async_task_predict_station_congestion
+  WHERE async_task_predict_station_congestion.uuid = :uuid;
+\`;
+
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<AsyncTaskPredictStationCongestion> | null> => {
+  const results = await sqlQueryFindAsyncTaskPredictStationCongestionByUuid({
+    dbExecute: context.dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      uuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "asyncTaskPredictStationCongestionDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryUpsertAsyncTaskPredictStationCongestion } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+
+export const sql = \`
+  -- query_name = upsert_async_task_predict_station_congestion
+  SELECT
+    dgv.id, dgv.uuid, dgv.created_at, dgv.updated_at
+  FROM upsert_async_task_predict_station_congestion(
+    :status,
+    (SELECT id FROM train_station WHERE train_station.uuid = :stationUuid),
+    (SELECT id FROM train_located_event WHERE train_located_event.uuid = :trainLocatedEventUuid)
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    asyncTaskPredictStationCongestion,
+  }: {
+    asyncTaskPredictStationCongestion: AsyncTaskPredictStationCongestion;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<AsyncTaskPredictStationCongestion>> => {
+  const results = await sqlQueryUpsertAsyncTaskPredictStationCongestion({
+    dbExecute: context.dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      status: asyncTaskPredictStationCongestion.status,
+      stationUuid: asyncTaskPredictStationCongestion.stationUuid,
+      trainLocatedEventUuid: asyncTaskPredictStationCongestion.trainLocatedEventUuid,
+    },
+  });
+  const { id, uuid, created_at: createdAt, updated_at: updatedAt } = results[0]!; // grab the db generated values
+  return new AsyncTaskPredictStationCongestion({ ...asyncTaskPredictStationCongestion, id, uuid, createdAt, updatedAt }) as HasMetadata<AsyncTaskPredictStationCongestion>;
+};",
+    "relpath": "asyncTaskPredictStationCongestionDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+import { upsert } from './upsert';
+
 export const carriageDao = {
   findById,
   findByUnique,
@@ -58,15 +294,16 @@ export const sql = \`
   WHERE carriage.id = :id;
 \`;
 
-export const findById = async ({
-  dbConnection,
-  id,
-}: {
-  dbConnection: DatabaseConnection;
-  id: number;
-}): Promise<HasMetadata<Carriage> | null> => {
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Carriage> | null> => {
   const results = await sqlQueryFindCarriageById({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       id,
@@ -101,15 +338,16 @@ export const sql = \`
     AND carriage.uuid = :uuid;
 \`;
 
-export const findByUnique = async ({
-  dbConnection,
-  uuid,
-}: {
-  dbConnection: DatabaseConnection;
-  uuid: string;
-}): Promise<HasMetadata<Carriage> | null> => {
+export const findByUnique = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Carriage> | null> => {
   const results = await sqlQueryFindCarriageByUnique({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       uuid,
@@ -143,15 +381,16 @@ export const sql = \`
   WHERE carriage.uuid = :uuid;
 \`;
 
-export const findByUuid = async ({
-  dbConnection,
-  uuid,
-}: {
-  dbConnection: DatabaseConnection;
-  uuid: string;
-}): Promise<HasMetadata<Carriage> | null> => {
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Carriage> | null> => {
   const results = await sqlQueryFindCarriageByUuid({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       uuid,
@@ -184,15 +423,16 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  carriage,
-}: {
-  dbConnection: DatabaseConnection;
-  carriage: HasUuid<Carriage>;
-}): Promise<HasMetadata<Carriage>> => {
+export const upsert = async (
+  {
+    carriage,
+  }: {
+    carriage: HasUuid<Carriage>;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Carriage>> => {
   const results = await sqlQueryUpsertCarriage({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       uuid: carriage.uuid,
@@ -256,15 +496,16 @@ export const sql = \`
   WHERE certificate.id = :id;
 \`;
 
-export const findById = async ({
-  dbConnection,
-  id,
-}: {
-  dbConnection: DatabaseConnection;
-  id: number;
-}): Promise<HasMetadata<Certificate> | null> => {
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Certificate> | null> => {
   const results = await sqlQueryFindCertificateById({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       id,
@@ -298,17 +539,18 @@ export const sql = \`
     AND certificate.industry_id = :industryId;
 \`;
 
-export const findByUnique = async ({
-  dbConnection,
-  type,
-  industryId,
-}: {
-  dbConnection: DatabaseConnection;
-  type: Certificate['type'];
-  industryId: string;
-}): Promise<HasMetadata<Certificate> | null> => {
+export const findByUnique = async (
+  {
+    type,
+    industryId,
+  }: {
+    type: Certificate['type'];
+    industryId: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Certificate> | null> => {
   const results = await sqlQueryFindCertificateByUnique({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       type,
@@ -340,15 +582,16 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  certificate,
-}: {
-  dbConnection: DatabaseConnection;
-  certificate: Certificate;
-}): Promise<HasMetadata<Certificate>> => {
+export const upsert = async (
+  {
+    certificate,
+  }: {
+    certificate: Certificate;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Certificate>> => {
   const results = await sqlQueryUpsertCertificate({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       type: certificate.type,
@@ -435,15 +678,16 @@ export const sql = \`
   WHERE train_engineer.id = :id;
 \`;
 
-export const findById = async ({
-  dbConnection,
-  id,
-}: {
-  dbConnection: DatabaseConnection;
-  id: number;
-}): Promise<HasMetadata<TrainEngineer> | null> => {
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainEngineer> | null> => {
   const results = await sqlQueryFindTrainEngineerById({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       id,
@@ -495,15 +739,16 @@ export const sql = \`
     AND train_engineer.social_security_number_hash = :socialSecurityNumberHash;
 \`;
 
-export const findByUnique = async ({
-  dbConnection,
-  socialSecurityNumberHash,
-}: {
-  dbConnection: DatabaseConnection;
-  socialSecurityNumberHash: string;
-}): Promise<HasMetadata<TrainEngineer> | null> => {
+export const findByUnique = async (
+  {
+    socialSecurityNumberHash,
+  }: {
+    socialSecurityNumberHash: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainEngineer> | null> => {
   const results = await sqlQueryFindTrainEngineerByUnique({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       socialSecurityNumberHash,
@@ -554,15 +799,16 @@ export const sql = \`
   WHERE train_engineer.uuid = :uuid;
 \`;
 
-export const findByUuid = async ({
-  dbConnection,
-  uuid,
-}: {
-  dbConnection: DatabaseConnection;
-  uuid: string;
-}): Promise<HasMetadata<TrainEngineer> | null> => {
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainEngineer> | null> => {
   const results = await sqlQueryFindTrainEngineerByUuid({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       uuid,
@@ -596,19 +842,20 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  trainEngineer,
-}: {
-  dbConnection: DatabaseConnection;
-  trainEngineer: TrainEngineer;
-}): Promise<HasMetadata<TrainEngineer>> => {
+export const upsert = async (
+  {
+    trainEngineer,
+  }: {
+    trainEngineer: TrainEngineer;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainEngineer>> => {
   const results = await sqlQueryUpsertTrainEngineer({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       socialSecurityNumberHash: trainEngineer.socialSecurityNumberHash,
-      certificateIds: await Promise.all(trainEngineer.certificates.map(async (certificate) => certificate.id ? certificate.id : (await certificateDao.upsert({ dbConnection, certificate })).id)),
+      certificateIds: await Promise.all(trainEngineer.certificates.map(async (certificate) => certificate.id ? certificate.id : (await certificateDao.upsert({ certificate }, context)).id)),
       licenseUuids: trainEngineer.licenseUuids,
       name: trainEngineer.name,
     },
@@ -668,15 +915,16 @@ export const sql = \`
   WHERE geocode.id = :id;
 \`;
 
-export const findById = async ({
-  dbConnection,
-  id,
-}: {
-  dbConnection: DatabaseConnection;
-  id: number;
-}): Promise<HasMetadata<Geocode> | null> => {
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeById({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       id,
@@ -710,17 +958,18 @@ export const sql = \`
     AND geocode.longitude = :longitude;
 \`;
 
-export const findByUnique = async ({
-  dbConnection,
-  latitude,
-  longitude,
-}: {
-  dbConnection: DatabaseConnection;
-  latitude: number;
-  longitude: number;
-}): Promise<HasMetadata<Geocode> | null> => {
+export const findByUnique = async (
+  {
+    latitude,
+    longitude,
+  }: {
+    latitude: number;
+    longitude: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUnique({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       latitude,
@@ -752,15 +1001,16 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  geocode,
-}: {
-  dbConnection: DatabaseConnection;
-  geocode: Geocode;
-}): Promise<HasMetadata<Geocode>> => {
+export const upsert = async (
+  {
+    geocode,
+  }: {
+    geocode: Geocode;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode>> => {
   const results = await sqlQueryUpsertGeocode({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       latitude: geocode.latitude,
@@ -865,15 +1115,16 @@ export const sql = \`
   WHERE train.id = :id;
 \`;
 
-export const findById = async ({
-  dbConnection,
-  id,
-}: {
-  dbConnection: DatabaseConnection;
-  id: number;
-}): Promise<HasMetadata<Train> | null> => {
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Train> | null> => {
   const results = await sqlQueryFindTrainById({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       id,
@@ -940,15 +1191,16 @@ export const sql = \`
     AND train.combination_id = :combinationId;
 \`;
 
-export const findByUnique = async ({
-  dbConnection,
-  combinationId,
-}: {
-  dbConnection: DatabaseConnection;
-  combinationId: string;
-}): Promise<HasMetadata<Train> | null> => {
+export const findByUnique = async (
+  {
+    combinationId,
+  }: {
+    combinationId: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Train> | null> => {
   const results = await sqlQueryFindTrainByUnique({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       combinationId,
@@ -1014,15 +1266,16 @@ export const sql = \`
   WHERE train.uuid = :uuid;
 \`;
 
-export const findByUuid = async ({
-  dbConnection,
-  uuid,
-}: {
-  dbConnection: DatabaseConnection;
-  uuid: string;
-}): Promise<HasMetadata<Train> | null> => {
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Train> | null> => {
   const results = await sqlQueryFindTrainByUuid({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       uuid,
@@ -1077,18 +1330,19 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  train,
-}: {
-  dbConnection: DatabaseConnection;
-  train: Train;
-}): Promise<HasMetadata<Train>> => {
+export const upsert = async (
+  {
+    train,
+  }: {
+    train: Train;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Train>> => {
   const results = await sqlQueryUpsertTrain({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
-      homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await geocodeDao.upsert({ dbConnection, geocode: train.homeStationGeocode })).id,
+      homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await geocodeDao.upsert({ geocode: train.homeStationGeocode }, context)).id,
       combinationId: train.combinationId,
       locomotiveUuids: train.locomotiveUuids,
       carriageUuids: train.carriageUuids,
@@ -1166,15 +1420,16 @@ export const sql = \`
   WHERE locomotive.id = :id;
 \`;
 
-export const findById = async ({
-  dbConnection,
-  id,
-}: {
-  dbConnection: DatabaseConnection;
-  id: number;
-}): Promise<HasMetadata<Locomotive> | null> => {
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Locomotive> | null> => {
   const results = await sqlQueryFindLocomotiveById({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       id,
@@ -1213,15 +1468,16 @@ export const sql = \`
     AND locomotive.ein = :ein;
 \`;
 
-export const findByUnique = async ({
-  dbConnection,
-  ein,
-}: {
-  dbConnection: DatabaseConnection;
-  ein: string;
-}): Promise<HasMetadata<Locomotive> | null> => {
+export const findByUnique = async (
+  {
+    ein,
+  }: {
+    ein: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Locomotive> | null> => {
   const results = await sqlQueryFindLocomotiveByUnique({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       ein,
@@ -1259,15 +1515,16 @@ export const sql = \`
   WHERE locomotive.uuid = :uuid;
 \`;
 
-export const findByUuid = async ({
-  dbConnection,
-  uuid,
-}: {
-  dbConnection: DatabaseConnection;
-  uuid: string;
-}): Promise<HasMetadata<Locomotive> | null> => {
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Locomotive> | null> => {
   const results = await sqlQueryFindLocomotiveByUuid({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       uuid,
@@ -1300,15 +1557,16 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  locomotive,
-}: {
-  dbConnection: DatabaseConnection;
-  locomotive: Locomotive;
-}): Promise<HasMetadata<Locomotive>> => {
+export const upsert = async (
+  {
+    locomotive,
+  }: {
+    locomotive: Locomotive;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Locomotive>> => {
   const results = await sqlQueryUpsertLocomotive({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       ein: locomotive.ein,
@@ -1385,15 +1643,16 @@ export const sql = \`
   WHERE train_located_event.id = :id;
 \`;
 
-export const findById = async ({
-  dbConnection,
-  id,
-}: {
-  dbConnection: DatabaseConnection;
-  id: number;
-}): Promise<HasMetadata<TrainLocatedEvent> | null> => {
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainLocatedEvent> | null> => {
   const results = await sqlQueryFindTrainLocatedEventById({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       id,
@@ -1438,17 +1697,18 @@ export const sql = \`
     AND train_located_event.occurred_at = :occurredAt;
 \`;
 
-export const findByUnique = async ({
-  dbConnection,
-  trainUuid,
-  occurredAt,
-}: {
-  dbConnection: DatabaseConnection;
-  trainUuid: string;
-  occurredAt: string;
-}): Promise<HasMetadata<TrainLocatedEvent> | null> => {
+export const findByUnique = async (
+  {
+    trainUuid,
+    occurredAt,
+  }: {
+    trainUuid: string;
+    occurredAt: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainLocatedEvent> | null> => {
   const results = await sqlQueryFindTrainLocatedEventByUnique({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       trainUuid,
@@ -1482,20 +1742,21 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  trainLocatedEvent,
-}: {
-  dbConnection: DatabaseConnection;
-  trainLocatedEvent: TrainLocatedEvent;
-}): Promise<HasMetadata<TrainLocatedEvent>> => {
+export const upsert = async (
+  {
+    trainLocatedEvent,
+  }: {
+    trainLocatedEvent: TrainLocatedEvent;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainLocatedEvent>> => {
   const results = await sqlQueryUpsertTrainLocatedEvent({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       trainUuid: trainLocatedEvent.trainUuid,
       occurredAt: trainLocatedEvent.occurredAt,
-      geocodeId: trainLocatedEvent.geocode.id ? trainLocatedEvent.geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: trainLocatedEvent.geocode })).id,
+      geocodeId: trainLocatedEvent.geocode.id ? trainLocatedEvent.geocode.id : (await geocodeDao.upsert({ geocode: trainLocatedEvent.geocode }, context)).id,
     },
   });
   const { id } = results[0]!; // grab the db generated values
@@ -1565,15 +1826,16 @@ export const sql = \`
   WHERE train_station.id = :id;
 \`;
 
-export const findById = async ({
-  dbConnection,
-  id,
-}: {
-  dbConnection: DatabaseConnection;
-  id: number;
-}): Promise<HasMetadata<TrainStation> | null> => {
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainStation> | null> => {
   const results = await sqlQueryFindTrainStationById({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       id,
@@ -1614,15 +1876,16 @@ export const sql = \`
     AND train_station.geocode_id = :geocodeId;
 \`;
 
-export const findByUnique = async ({
-  dbConnection,
-  geocode,
-}: {
-  dbConnection: DatabaseConnection;
-  geocode: HasId<Geocode>;
-}): Promise<HasMetadata<TrainStation> | null> => {
+export const findByUnique = async (
+  {
+    geocode,
+  }: {
+    geocode: HasId<Geocode>;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainStation> | null> => {
   const results = await sqlQueryFindTrainStationByUnique({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       geocodeId: geocode.id,
@@ -1662,15 +1925,16 @@ export const sql = \`
   WHERE train_station.uuid = :uuid;
 \`;
 
-export const findByUuid = async ({
-  dbConnection,
-  uuid,
-}: {
-  dbConnection: DatabaseConnection;
-  uuid: string;
-}): Promise<HasMetadata<TrainStation> | null> => {
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainStation> | null> => {
   const results = await sqlQueryFindTrainStationByUuid({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       uuid,
@@ -1702,18 +1966,19 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  trainStation,
-}: {
-  dbConnection: DatabaseConnection;
-  trainStation: TrainStation;
-}): Promise<HasMetadata<TrainStation>> => {
+export const upsert = async (
+  {
+    trainStation,
+  }: {
+    trainStation: TrainStation;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainStation>> => {
   const results = await sqlQueryUpsertTrainStation({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
-      geocodeId: trainStation.geocode.id ? trainStation.geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: trainStation.geocode })).id,
+      geocodeId: trainStation.geocode.id ? trainStation.geocode.id : (await geocodeDao.upsert({ geocode: trainStation.geocode }, context)).id,
       name: trainStation.name,
     },
   });
@@ -1772,15 +2037,16 @@ export const sql = \`
   WHERE price.id = :id;
 \`;
 
-export const findById = async ({
-  dbConnection,
-  id,
-}: {
-  dbConnection: DatabaseConnection;
-  id: number;
-}): Promise<HasMetadata<Price> | null> => {
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Price> | null> => {
   const results = await sqlQueryFindPriceById({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       id,
@@ -1814,17 +2080,18 @@ export const sql = \`
     AND price.currency = :currency;
 \`;
 
-export const findByUnique = async ({
-  dbConnection,
-  amount,
-  currency,
-}: {
-  dbConnection: DatabaseConnection;
-  amount: number;
-  currency: Price['currency'];
-}): Promise<HasMetadata<Price> | null> => {
+export const findByUnique = async (
+  {
+    amount,
+    currency,
+  }: {
+    amount: number;
+    currency: Price['currency'];
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Price> | null> => {
   const results = await sqlQueryFindPriceByUnique({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       amount,
@@ -1856,15 +2123,16 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  price,
-}: {
-  dbConnection: DatabaseConnection;
-  price: Price;
-}): Promise<HasMetadata<Price>> => {
+export const upsert = async (
+  {
+    price,
+  }: {
+    price: Price;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Price>> => {
   const results = await sqlQueryUpsertPrice({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       amount: price.amount,
@@ -1936,15 +2204,16 @@ export const sql = \`
   WHERE invoice_line_item.id = :id;
 \`;
 
-export const findById = async ({
-  dbConnection,
-  id,
-}: {
-  dbConnection: DatabaseConnection;
-  id: number;
-}): Promise<HasMetadata<InvoiceLineItem> | null> => {
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<InvoiceLineItem> | null> => {
   const results = await sqlQueryFindInvoiceLineItemById({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       id,
@@ -1987,19 +2256,20 @@ export const sql = \`
     AND invoice_line_item.explanation = :explanation;
 \`;
 
-export const findByUnique = async ({
-  dbConnection,
-  price,
-  title,
-  explanation,
-}: {
-  dbConnection: DatabaseConnection;
-  price: HasId<Price>;
-  title: string;
-  explanation: string;
-}): Promise<HasMetadata<InvoiceLineItem> | null> => {
+export const findByUnique = async (
+  {
+    price,
+    title,
+    explanation,
+  }: {
+    price: HasId<Price>;
+    title: string;
+    explanation: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<InvoiceLineItem> | null> => {
   const results = await sqlQueryFindInvoiceLineItemByUnique({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       priceId: price.id,
@@ -2034,18 +2304,19 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  invoiceLineItem,
-}: {
-  dbConnection: DatabaseConnection;
-  invoiceLineItem: InvoiceLineItem;
-}): Promise<HasMetadata<InvoiceLineItem>> => {
+export const upsert = async (
+  {
+    invoiceLineItem,
+  }: {
+    invoiceLineItem: InvoiceLineItem;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<InvoiceLineItem>> => {
   const results = await sqlQueryUpsertInvoiceLineItem({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
-      priceId: invoiceLineItem.price.id ? invoiceLineItem.price.id : (await priceDao.upsert({ dbConnection, price: invoiceLineItem.price })).id,
+      priceId: invoiceLineItem.price.id ? invoiceLineItem.price.id : (await priceDao.upsert({ price: invoiceLineItem.price }, context)).id,
       title: invoiceLineItem.title,
       explanation: invoiceLineItem.explanation,
     },
@@ -2146,15 +2417,16 @@ export const sql = \`
   WHERE invoice.id = :id;
 \`;
 
-export const findById = async ({
-  dbConnection,
-  id,
-}: {
-  dbConnection: DatabaseConnection;
-  id: number;
-}): Promise<HasMetadata<Invoice> | null> => {
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Invoice> | null> => {
   const results = await sqlQueryFindInvoiceById({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       id,
@@ -2221,15 +2493,16 @@ export const sql = \`
     AND invoice.external_id = :externalId;
 \`;
 
-export const findByUnique = async ({
-  dbConnection,
-  externalId,
-}: {
-  dbConnection: DatabaseConnection;
-  externalId: string;
-}): Promise<HasMetadata<Invoice> | null> => {
+export const findByUnique = async (
+  {
+    externalId,
+  }: {
+    externalId: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Invoice> | null> => {
   const results = await sqlQueryFindInvoiceByUnique({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       externalId,
@@ -2295,15 +2568,16 @@ export const sql = \`
   WHERE invoice.uuid = :uuid;
 \`;
 
-export const findByUuid = async ({
-  dbConnection,
-  uuid,
-}: {
-  dbConnection: DatabaseConnection;
-  uuid: string;
-}): Promise<HasMetadata<Invoice> | null> => {
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Invoice> | null> => {
   const results = await sqlQueryFindInvoiceByUuid({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       uuid,
@@ -2338,20 +2612,21 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  invoice,
-}: {
-  dbConnection: DatabaseConnection;
-  invoice: Invoice;
-}): Promise<HasMetadata<Invoice>> => {
+export const upsert = async (
+  {
+    invoice,
+  }: {
+    invoice: Invoice;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Invoice>> => {
   const results = await sqlQueryUpsertInvoice({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       externalId: invoice.externalId,
-      itemIds: await Promise.all(invoice.items.map(async (invoiceLineItem) => invoiceLineItem.id ? invoiceLineItem.id : (await invoiceLineItemDao.upsert({ dbConnection, invoiceLineItem })).id)),
-      totalPriceId: invoice.totalPrice.id ? invoice.totalPrice.id : (await priceDao.upsert({ dbConnection, price: invoice.totalPrice })).id,
+      itemIds: await Promise.all(invoice.items.map(async (invoiceLineItem) => invoiceLineItem.id ? invoiceLineItem.id : (await invoiceLineItemDao.upsert({ invoiceLineItem }, context)).id)),
+      totalPriceId: invoice.totalPrice.id ? invoice.totalPrice.id : (await priceDao.upsert({ price: invoice.totalPrice }, context)).id,
       status: invoice.status,
     },
   });

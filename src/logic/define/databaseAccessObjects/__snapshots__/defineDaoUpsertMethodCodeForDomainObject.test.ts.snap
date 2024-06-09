@@ -20,20 +20,21 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  trainLocatedEvent,
-}: {
-  dbConnection: DatabaseConnection;
-  trainLocatedEvent: TrainLocatedEvent;
-}): Promise<HasMetadata<TrainLocatedEvent>> => {
+export const upsert = async (
+  {
+    trainLocatedEvent,
+  }: {
+    trainLocatedEvent: TrainLocatedEvent;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainLocatedEvent>> => {
   const results = await sqlQueryUpsertTrainLocatedEvent({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       trainUuid: trainLocatedEvent.trainUuid,
       occurredAt: trainLocatedEvent.occurredAt,
-      geocodeIds: await Promise.all(trainLocatedEvent.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await geocodeDao.upsert({ dbConnection, geocode })).id)),
+      geocodeIds: await Promise.all(trainLocatedEvent.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await geocodeDao.upsert({ geocode }, context)).id)),
     },
   });
   const { id } = results[0]!; // grab the db generated values
@@ -70,21 +71,22 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  train,
-}: {
-  dbConnection: DatabaseConnection;
-  train: Train;
-}): Promise<HasMetadata<Train>> => {
+export const upsert = async (
+  {
+    train,
+  }: {
+    train: Train;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Train>> => {
   const results = await sqlQueryUpsertTrain({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       tin: train.tin,
-      homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await geocodeDao.upsert({ dbConnection, geocode: train.homeStationGeocode })).id,
+      homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await geocodeDao.upsert({ geocode: train.homeStationGeocode }, context)).id,
       leadEngineerUuid: train.leadEngineerUuid,
-      badgeIds: await Promise.all(train.badges.map(async (trainBadge) => trainBadge.id ? trainBadge.id : (await trainBadgeDao.upsert({ dbConnection, trainBadge })).id)),
+      badgeIds: await Promise.all(train.badges.map(async (trainBadge) => trainBadge.id ? trainBadge.id : (await trainBadgeDao.upsert({ trainBadge }, context)).id)),
       locomotiveUuids: train.locomotiveUuids,
     },
   });
@@ -112,15 +114,16 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  carriage,
-}: {
-  dbConnection: DatabaseConnection;
-  carriage: Carriage;
-}): Promise<HasMetadata<Carriage>> => {
+export const upsert = async (
+  {
+    carriage,
+  }: {
+    carriage: Carriage;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Carriage>> => {
   const results = await sqlQueryUpsertCarriage({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       cin: carriage.cin,
@@ -151,15 +154,16 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  geocode,
-}: {
-  dbConnection: DatabaseConnection;
-  geocode: Geocode;
-}): Promise<HasMetadata<Geocode>> => {
+export const upsert = async (
+  {
+    geocode,
+  }: {
+    geocode: Geocode;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode>> => {
   const results = await sqlQueryUpsertGeocode({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       latitude: geocode.latitude,
@@ -190,15 +194,16 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  carriage,
-}: {
-  dbConnection: DatabaseConnection;
-  carriage: Carriage;
-}): Promise<HasMetadata<Carriage>> => {
+export const upsert = async (
+  {
+    carriage,
+  }: {
+    carriage: Carriage;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Carriage>> => {
   const results = await sqlQueryUpsertCarriage({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       cin: carriage.cin,

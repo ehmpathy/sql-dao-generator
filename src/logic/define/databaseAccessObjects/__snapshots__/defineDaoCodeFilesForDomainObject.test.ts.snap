@@ -56,15 +56,16 @@ export const sql = \`
   WHERE geocode.id = :id;
 \`;
 
-export const findById = async ({
-  dbConnection,
-  id,
-}: {
-  dbConnection: DatabaseConnection;
-  id: number;
-}): Promise<HasMetadata<Geocode> | null> => {
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeById({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       id,
@@ -99,17 +100,18 @@ export const sql = \`
     AND geocode.longitude = :longitude;
 \`;
 
-export const findByUnique = async ({
-  dbConnection,
-  latitude,
-  longitude,
-}: {
-  dbConnection: DatabaseConnection;
-  latitude: number;
-  longitude: number;
-}): Promise<HasMetadata<Geocode> | null> => {
+export const findByUnique = async (
+  {
+    latitude,
+    longitude,
+  }: {
+    latitude: number;
+    longitude: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUnique({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       latitude,
@@ -143,15 +145,16 @@ export const sql = \`
   WHERE geocode.uuid = :uuid;
 \`;
 
-export const findByUuid = async ({
-  dbConnection,
-  uuid,
-}: {
-  dbConnection: DatabaseConnection;
-  uuid: string;
-}): Promise<HasMetadata<Geocode> | null> => {
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUuid({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       uuid,
@@ -182,15 +185,16 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  geocode,
-}: {
-  dbConnection: DatabaseConnection;
-  geocode: Geocode;
-}): Promise<HasMetadata<Geocode>> => {
+export const upsert = async (
+  {
+    geocode,
+  }: {
+    geocode: Geocode;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode>> => {
   const results = await sqlQueryUpsertGeocode({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       latitude: geocode.latitude,
@@ -257,15 +261,16 @@ export const sql = \`
   WHERE geocode.id = :id;
 \`;
 
-export const findById = async ({
-  dbConnection,
-  id,
-}: {
-  dbConnection: DatabaseConnection;
-  id: number;
-}): Promise<HasMetadata<Geocode> | null> => {
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeById({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       id,
@@ -299,17 +304,18 @@ export const sql = \`
     AND geocode.longitude = :longitude;
 \`;
 
-export const findByUnique = async ({
-  dbConnection,
-  latitude,
-  longitude,
-}: {
-  dbConnection: DatabaseConnection;
-  latitude: number;
-  longitude: number;
-}): Promise<HasMetadata<Geocode> | null> => {
+export const findByUnique = async (
+  {
+    latitude,
+    longitude,
+  }: {
+    latitude: number;
+    longitude: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUnique({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       latitude,
@@ -341,15 +347,16 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  geocode,
-}: {
-  dbConnection: DatabaseConnection;
-  geocode: Geocode;
-}): Promise<HasMetadata<Geocode>> => {
+export const upsert = async (
+  {
+    geocode,
+  }: {
+    geocode: Geocode;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode>> => {
   const results = await sqlQueryUpsertGeocode({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       latitude: geocode.latitude,

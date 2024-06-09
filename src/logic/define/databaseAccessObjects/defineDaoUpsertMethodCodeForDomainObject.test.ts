@@ -52,13 +52,14 @@ describe('defineDaoUpsertMethodCodeForDomainObject', () => {
     ); // calls upsert correctly
     expect(code).toContain(
       `
-export const upsert = async ({
-  dbConnection,
-  geocode,
-}: {
-  dbConnection: DatabaseConnection;
-  geocode: Geocode;
-}): Promise<HasMetadata<Geocode>>
+export const upsert = async (
+  {
+    geocode,
+  }: {
+    geocode: Geocode;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode>>
       `.trim(),
     ); // defines fn correctly
     expect(code).toContain('await sqlQueryUpsertGeocode({');
@@ -135,13 +136,14 @@ export const upsert = async ({
     ); // calls upsert correctly
     expect(code).toContain(
       `
-async ({
-  dbConnection,
-  carriage,
-}: {
-  dbConnection: DatabaseConnection;
-  carriage: Carriage;
-}): Promise<HasMetadata<Carriage>>
+async (
+  {
+    carriage,
+  }: {
+    carriage: Carriage;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Carriage>>
       `.trim(),
     ); // defines fn correctly
     expect(code).toContain('await sqlQueryUpsertCarriage({');
@@ -225,13 +227,14 @@ async ({
     ); // calls upsert correctly
     expect(code).toContain(
       `
-async ({
-  dbConnection,
-  carriage,
-}: {
-  dbConnection: DatabaseConnection;
-  carriage: Carriage;
-}): Promise<HasMetadata<Carriage>>
+async (
+  {
+    carriage,
+  }: {
+    carriage: Carriage;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Carriage>>
       `.trim(),
     ); // defines fn correctly
     expect(code).toContain('await sqlQueryUpsertCarriage({');
@@ -341,13 +344,14 @@ async ({
     ); // calls upsert correctly
     expect(code).toContain(
       `
-async ({
-  dbConnection,
-  trainLocatedEvent,
-}: {
-  dbConnection: DatabaseConnection;
-  trainLocatedEvent: TrainLocatedEvent;
-}): Promise<HasMetadata<TrainLocatedEvent>>
+async (
+  {
+    trainLocatedEvent,
+  }: {
+    trainLocatedEvent: TrainLocatedEvent;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainLocatedEvent>>
       `.trim(),
     ); // defines fn correctly
     expect(code).toContain('await sqlQueryUpsertTrainLocatedEvent({');
@@ -356,7 +360,7 @@ async ({
     input: {
       trainUuid: trainLocatedEvent.trainUuid,
       occurredAt: trainLocatedEvent.occurredAt,
-      geocodeIds: await Promise.all(trainLocatedEvent.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await geocodeDao.upsert({ dbConnection, geocode })).id)),
+      geocodeIds: await Promise.all(trainLocatedEvent.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await geocodeDao.upsert({ geocode }, context)).id)),
     }
       `.trim(),
     ); // defines inputs correctly
@@ -542,13 +546,14 @@ async ({
     ); // calls upsert correctly
     expect(code).toContain(
       `
-async ({
-  dbConnection,
-  train,
-}: {
-  dbConnection: DatabaseConnection;
-  train: Train;
-}): Promise<HasMetadata<Train>>
+async (
+  {
+    train,
+  }: {
+    train: Train;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Train>>
       `.trim(),
     ); // defines fn correctly
     expect(code).toContain('await sqlQueryUpsertTrain({');
@@ -556,9 +561,9 @@ async ({
       `
     input: {
       tin: train.tin,
-      homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await geocodeDao.upsert({ dbConnection, geocode: train.homeStationGeocode })).id,
+      homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await geocodeDao.upsert({ geocode: train.homeStationGeocode }, context)).id,
       leadEngineerUuid: train.leadEngineerUuid,
-      badgeIds: await Promise.all(train.badges.map(async (trainBadge) => trainBadge.id ? trainBadge.id : (await trainBadgeDao.upsert({ dbConnection, trainBadge })).id)),
+      badgeIds: await Promise.all(train.badges.map(async (trainBadge) => trainBadge.id ? trainBadge.id : (await trainBadgeDao.upsert({ trainBadge }, context)).id)),
       locomotiveUuids: train.locomotiveUuids,
     }
       `.trim(),

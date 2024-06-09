@@ -809,15 +809,16 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       expect(code).toContain('  AND geocode.longitude = :longitude'); // condition
       expect(code).toContain(
         `
-async ({
-  dbConnection,
-  latitude,
-  longitude,
-}: {
-  dbConnection: DatabaseConnection;
-  latitude: number;
-  longitude: number;
-}): Promise<HasMetadata<Geocode> | null> =>
+async (
+  {
+    latitude,
+    longitude,
+  }: {
+    latitude: number;
+    longitude: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode> | null> =>
         `.trim(),
       );
       expect(code).toContain('await sqlQueryFindGeocodeByUnique({');
@@ -956,13 +957,13 @@ async ({
       expect(code).toContain('  AND carriage.cin = :cin'); // condition
       expect(code).toContain(
         `
-async ({
-  dbConnection,
-  cin,
-}: {
-  dbConnection: DatabaseConnection;
-  cin: string;
-})
+async (
+  {
+    cin,
+  }: {
+    cin: string;
+  },
+  context:
       `.trim(),
       );
       expect(code).toContain('await sqlQueryFindCarriageByUnique({');
@@ -1025,13 +1026,13 @@ async ({
       expect(code).toContain('  AND carriage.uuid = :uuid'); // condition
       expect(code).toContain(
         `
-async ({
-  dbConnection,
-  uuid,
-}: {
-  dbConnection: DatabaseConnection;
-  uuid: string;
-})
+async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context:
       `.trim(),
       );
       expect(code).toContain('await sqlQueryFindCarriageByUnique({');
@@ -1123,13 +1124,13 @@ async ({
       expect(code).toContain('  AND station.geocode_id = :geocodeId'); // condition
       expect(code).toContain(
         `
-async ({
-  dbConnection,
-  geocode,
-}: {
-  dbConnection: DatabaseConnection;
-  geocode: HasId<Geocode>;
-})
+async (
+  {
+    geocode,
+  }: {
+    geocode: HasId<Geocode>;
+  },
+  context
       `.trim(),
       );
       expect(code).toContain('await sqlQueryFindStationByUnique({');
@@ -1234,15 +1235,16 @@ async ({
       ); // condition
       expect(code).toContain(
         `
-async ({
-  dbConnection,
-  trainUuid,
-  occurredAt,
-}: {
-  dbConnection: DatabaseConnection;
-  trainUuid: string;
-  occurredAt: Date;
-})
+async (
+  {
+    trainUuid,
+    occurredAt,
+  }: {
+    trainUuid: string;
+    occurredAt: Date;
+  },
+  context: { dbConnection: DatabaseConnection },
+)
         `.trim(),
       );
       expect(code).toContain('await sqlQueryFindTrainLocatedEventByUnique(');
@@ -1614,19 +1616,20 @@ async ({
       ); // condition
       expect(code).toContain(
         `
-async ({
-  dbConnection,
-  homeStationGeocode,
-  badges,
-  locomotiveUuids,
-  leadEngineerUuid,
-}: {
-  dbConnection: DatabaseConnection;
-  homeStationGeocode: HasId<Geocode>;
-  badges: HasId<TrainBadge>[];
-  locomotiveUuids: string[];
-  leadEngineerUuid: string;
-}): Promise<HasMetadata<Train> | null> =>
+async (
+  {
+    homeStationGeocode,
+    badges,
+    locomotiveUuids,
+    leadEngineerUuid,
+  }: {
+    homeStationGeocode: HasId<Geocode>;
+    badges: HasId<TrainBadge>[];
+    locomotiveUuids: string[];
+    leadEngineerUuid: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Train> | null> =>
       `.trim(),
       );
       expect(code).toContain('await sqlQueryFindTrainByUnique(');

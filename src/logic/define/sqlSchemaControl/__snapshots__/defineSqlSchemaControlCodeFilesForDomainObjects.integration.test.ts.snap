@@ -80,7 +80,7 @@ GeneratedCodeFile {
 - type: resource
   path: ./tables/train_to_carriage.sql
 - type: resource
-  path: ./tables/train_to_train_engineer.sql
+  path: ./tables/train_to_engineer.sql
 - type: resource
   path: ./tables/train_version.sql
 - type: resource
@@ -114,7 +114,7 @@ GeneratedCodeFile {
 - type: resource
   path: ./tables/invoice_version.sql
 - type: resource
-  path: ./tables/invoice_version_to_invoice_line_item.sql
+  path: ./tables/invoice_version_to_line_item.sql
 - type: resource
   path: ./tables/invoice_cvp.sql
 - type: resource

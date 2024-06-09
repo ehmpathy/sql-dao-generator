@@ -112,17 +112,18 @@ export const sql = \`
   ) as dgv;
 \`;
 
-export const upsert = async ({
-  dbConnection,
-  ${camelCase(domainObject.name)},
-}: {
-  dbConnection: DatabaseConnection;
-  ${camelCase(domainObject.name)}: ${
+export const upsert = async (
+  {
+    ${camelCase(domainObject.name)},
+  }: {
+    ${camelCase(domainObject.name)}: ${
     isUniqueOnUuid ? `HasUuid<${domainObject.name}>` : domainObject.name
   };
-}): Promise<${outputType}> => {
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<${outputType}> => {
   const results = await sqlQueryUpsert${domainObject.name}({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       ${queryFunctionInputExpressions.join(',\n      ')},

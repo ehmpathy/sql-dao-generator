@@ -78,14 +78,14 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
         : '';
 
       if (context === GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY)
-        // e.g.,: `geocodeId: location.geocode.id ? location.geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: location.geocode })).id`
+        // e.g.,: `geocodeId: location.geocode.id ? location.geocode.id : (await geocodeDao.upsert({ geocode: location.geocode }, context)).id`
         return `${camelCase(
           sqlSchemaProperty.name,
         )}: ${nullabilityPrefix}${domainObjectPropertyVariableName}.id ? ${domainObjectPropertyVariableName}.id : (await ${castDomainObjectNameToDaoName(
           referencedDomainObjectName,
-        )}.upsert({ dbConnection, ${camelCase(
+        )}.upsert({ ${camelCase(
           referencedSqlSchemaName,
-        )}: ${domainObjectPropertyVariableName} })).id`;
+        )}: ${domainObjectPropertyVariableName} }, context)).id`;
 
       // e.g., `geocodeId: geocode.id`
       return `${camelCase(sqlSchemaProperty.name)}: ${nullabilityPrefix}${
@@ -96,7 +96,7 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
     // handle array of references
     if (sqlSchemaProperty.isArray) {
       if (context === GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY)
-        // e.g.,: `geocodeIds: await Promise.all(location.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await geocodeDao.upsert({ dbConnection, geocode: location.geocode })).id)`
+        // e.g.,: `geocodeIds: await Promise.all(location.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await geocodeDao.upsert({ geocode: location.geocode }, context)).id)`
         return `${camelCase(
           sqlSchemaProperty.name,
         )}: await Promise.all(${domainObjectUpsertVarName}.${
@@ -107,9 +107,7 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
           referencedSqlSchemaName,
         )}.id : (await ${castDomainObjectNameToDaoName(
           referencedDomainObjectName,
-        )}.upsert({ dbConnection, ${camelCase(
-          referencedSqlSchemaName,
-        )} })).id))`;
+        )}.upsert({ ${camelCase(referencedSqlSchemaName)} }, context)).id))`;
 
       // e.g., `geocodeIds: geocodes.map(geocode => geocode.id)`
       return `${camelCase(sqlSchemaProperty.name)}: ${

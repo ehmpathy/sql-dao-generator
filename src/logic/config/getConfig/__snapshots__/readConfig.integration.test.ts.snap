@@ -8,6 +8,72 @@ exports[`readConfig should be able to read the example config provisioned in __t
       DomainObjectMetadata {
         "decorations": {
           "unique": [
+            "stationUuid",
+            "trainLocatedEventUuid",
+          ],
+          "updatable": [
+            "status",
+          ],
+        },
+        "extends": "DomainEntity",
+        "name": "AsyncTaskPredictStationCongestion",
+        "properties": {
+          "createdAt": DomainObjectPropertyMetadata {
+            "name": "createdAt",
+            "nullable": false,
+            "required": false,
+            "type": "DATE",
+          },
+          "id": DomainObjectPropertyMetadata {
+            "name": "id",
+            "nullable": false,
+            "required": false,
+            "type": "NUMBER",
+          },
+          "stationUuid": DomainObjectPropertyMetadata {
+            "name": "stationUuid",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "status": DomainObjectPropertyMetadata {
+            "name": "status",
+            "nullable": false,
+            "of": [
+              "HALTED",
+              "SCHEDULED",
+              "QUEUED",
+              "ATTEMPTED",
+              "FULFILLED",
+              "FAILED",
+              "CANCELED",
+            ],
+            "required": true,
+            "type": "ENUM",
+          },
+          "trainLocatedEventUuid": DomainObjectPropertyMetadata {
+            "name": "trainLocatedEventUuid",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "updatedAt": DomainObjectPropertyMetadata {
+            "name": "updatedAt",
+            "nullable": false,
+            "required": false,
+            "type": "DATE",
+          },
+          "uuid": DomainObjectPropertyMetadata {
+            "name": "uuid",
+            "nullable": false,
+            "required": false,
+            "type": "STRING",
+          },
+        },
+      },
+      DomainObjectMetadata {
+        "decorations": {
+          "unique": [
             "uuid",
           ],
           "updatable": [],

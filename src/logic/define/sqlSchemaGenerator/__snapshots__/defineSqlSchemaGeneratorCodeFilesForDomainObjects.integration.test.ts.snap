@@ -3,7 +3,8 @@
 exports[`defineSqlSchemaGeneratorCodeFilesForDomainObjects should work on the example project 1`] = `
 [
   GeneratedCodeFile {
-    "content": "import { carriage } from './carriage';
+    "content": "import { asyncTaskPredictStationCongestion } from './asyncTaskPredictStationCongestion';
+import { carriage } from './carriage';
 import { certificate } from './certificate';
 import { geocode } from './geocode';
 import { invoice } from './invoice';
@@ -19,6 +20,7 @@ import { trainStation } from './trainStation';
  * all of the domain objects which we want to create sql-schema-resources for with sql-schema-generator
  */
 export const generateSqlSchemasFor = [
+  asyncTaskPredictStationCongestion,
   carriage,
   certificate,
   trainEngineer,
@@ -32,6 +34,26 @@ export const generateSqlSchemasFor = [
   invoice,
 ];",
     "relpath": "index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+import { trainLocatedEvent } from './trainLocatedEvent';
+import { trainStation } from './trainStation';
+
+/**
+ * sql-schema for the domain entity 'AsyncTaskPredictStationCongestion'
+ */
+export const asyncTaskPredictStationCongestion: Entity = new Entity({
+  name: 'async_task_predict_station_congestion',
+  properties: {
+    status: { ...prop.ENUM(['HALTED', 'SCHEDULED', 'QUEUED', 'ATTEMPTED', 'FULFILLED', 'FAILED', 'CANCELED']), updatable: true },
+    station_id: prop.REFERENCES(trainStation),
+    train_located_event_id: prop.REFERENCES(trainLocatedEvent),
+  },
+  unique: ['station_id', 'train_located_event_id'],
+});",
+    "relpath": "asyncTaskPredictStationCongestion.ts",
   },
   GeneratedCodeFile {
     "content": "import { Entity, prop } from 'sql-schema-generator';

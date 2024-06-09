@@ -6,6 +6,170 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
     "decorations": {
       "unique": {
         "domainObject": [
+          "stationUuid",
+          "trainLocatedEventUuid",
+        ],
+        "sqlSchema": [
+          "station_id",
+          "train_located_event_id",
+        ],
+      },
+    },
+    "name": {
+      "domainObject": "AsyncTaskPredictStationCongestion",
+      "sqlSchema": "async_task_predict_station_congestion",
+    },
+    "properties": [
+      {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "id",
+          "nullable": false,
+          "required": false,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "id",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "uuid",
+          "nullable": false,
+          "required": false,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "uuid",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "createdAt",
+          "nullable": false,
+          "required": false,
+          "type": "DATE",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "created_at",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "effective_at",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "updatedAt",
+          "nullable": false,
+          "required": false,
+          "type": "DATE",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "updated_at",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "status",
+          "nullable": false,
+          "of": [
+            "HALTED",
+            "SCHEDULED",
+            "QUEUED",
+            "ATTEMPTED",
+            "FULFILLED",
+            "FAILED",
+            "CANCELED",
+          ],
+          "required": true,
+          "type": "ENUM",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": true,
+          "name": "status",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "stationUuid",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "station_id",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "IMPLICIT_BY_UUID",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainEntity",
+              "name": "TrainStation",
+            },
+          },
+        },
+      },
+      {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "trainLocatedEventUuid",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "train_located_event_id",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "IMPLICIT_BY_UUID",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainEvent",
+              "name": "TrainLocatedEvent",
+            },
+          },
+        },
+      },
+    ],
+  },
+  SqlSchemaToDomainObjectRelationship {
+    "decorations": {
+      "unique": {
+        "domainObject": [
           "uuid",
         ],
         "sqlSchema": [

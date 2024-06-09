@@ -353,17 +353,18 @@ export const sql = \`
   WHERE ${whereConditions};
 \`;
 
-export const findBy${findByQueryType} = async ({
-  dbConnection,
-  ${Object.keys(parameters).join(',\n  ')},
-}: {
-  dbConnection: DatabaseConnection;
-  ${Object.entries(parameters)
-    .map((entry) => `${entry[0]}: ${entry[1]}`)
-    .join(';\n  ')};
-}): Promise<${outputType} | null> => {
+export const findBy${findByQueryType} = async (
+  {
+    ${Object.keys(parameters).join(',\n    ')},
+  }: {
+    ${Object.entries(parameters)
+      .map((entry) => `${entry[0]}: ${entry[1]}`)
+      .join(';\n    ')};
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<${outputType} | null> => {
   const results = await sqlQueryFind${domainObject.name}By${findByQueryType}({
-    dbExecute: dbConnection.query,
+    dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
       ${queryFunctionInputExpressions.join(',\n      ')},
