@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/ehmpathy/sql-dao-generator/compare/v0.5.0...v0.5.1) (2024-06-09)
+
+
+### Bug Fixes
+
+* **control:** reliably sort schema control declaration by dependency order ([286e62d](https://github.com/ehmpathy/sql-dao-generator/commit/286e62dcd2690a73b065ea796efbaf8e797b8ced))
+
 ## [0.5.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.4.2...v0.5.0) (2024-06-07)
 
 
