@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.6.0...v0.7.0) (2024-06-10)
+
+
+### Features
+
+* **alias:** support dobj alias for reference variable name ([faffacc](https://github.com/ehmpathy/sql-dao-generator/commit/faffacc73e5ce3276b35c74c809a78540ed10a9d))
+
 ## [0.6.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.5.3...v0.6.0) (2024-06-09)
 
 
