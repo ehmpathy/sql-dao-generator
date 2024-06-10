@@ -19,6 +19,8 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
         longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
       },
       decorations: {
+        alias: null,
+        primary: null,
         unique: null,
         updatable: null,
       },
@@ -77,6 +79,8 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
         },
       },
       decorations: {
+        alias: null,
+        primary: null,
         unique: ['cin'],
         updatable: ['capacity'],
       },
@@ -136,6 +140,8 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
         },
       },
       decorations: {
+        alias: null,
+        primary: null,
         unique: ['trainUuid', 'occurredAt'],
         updatable: [],
       },
@@ -221,6 +227,8 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
         },
       },
       decorations: {
+        alias: null,
+        primary: null,
         unique: ['tin'],
         updatable: [
           'homeStationGeocode',

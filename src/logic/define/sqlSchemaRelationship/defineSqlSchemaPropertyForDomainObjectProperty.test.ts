@@ -175,6 +175,8 @@ describe('defineSqlSchemaPropertyForDomainObjectProperty', () => {
         domainObject: {
           ...createExampleDomainObjectMetadata(),
           decorations: {
+            alias: null,
+            primary: null,
             updatable: ['socialSecurityNumberHash'],
             unique: null,
           },

@@ -16,6 +16,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: 'TrainEngineer',
+          dobjInputVarName: 'trainEngineer',
           sqlSchemaProperty: {
             name: 'social_security_number_hash',
             isArray: false,
@@ -39,6 +40,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: 'Train',
+          dobjInputVarName: 'train',
           sqlSchemaProperty: {
             name: 'lead_engineer_id',
             isArray: false,
@@ -75,6 +77,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: 'TrainLocatedEvent',
+          dobjInputVarName: 'trainLocatedEvent',
           sqlSchemaProperty: {
             name: 'geocode_id',
             isArray: false,
@@ -143,6 +146,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: 'TrainLocatedEvent',
+          dobjInputVarName: 'trainLocatedEvent',
           sqlSchemaProperty: {
             name: 'geocode_id',
             isArray: false,
@@ -211,6 +215,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: 'Train',
+          dobjInputVarName: 'train',
           sqlSchemaProperty: {
             name: 'assigned_engineer_ids',
             isArray: true,
@@ -250,6 +255,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: 'TrainLocatedEvent',
+          dobjInputVarName: 'trainLocatedEvent',
           sqlSchemaProperty: {
             name: 'geocode_ids',
             isArray: true,
@@ -323,6 +329,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: 'TrainEngineer',
+          dobjInputVarName: 'trainEngineer',
           sqlSchemaProperty: {
             name: 'social_security_number_hash',
             isArray: false,
@@ -344,6 +351,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: 'Train',
+          dobjInputVarName: 'train',
           sqlSchemaProperty: {
             name: 'lead_engineer_id',
             isArray: false,
@@ -380,6 +388,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: 'TrainLocatedEvent',
+          dobjInputVarName: 'trainLocatedEvent',
           sqlSchemaProperty: {
             name: 'geocode_id',
             isArray: false,
@@ -446,6 +455,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: 'TrainLocatedEvent',
+          dobjInputVarName: 'trainLocatedEvent',
           sqlSchemaProperty: {
             name: 'geocode_id',
             isArray: false,
@@ -514,6 +524,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: 'Train',
+          dobjInputVarName: 'train',
           sqlSchemaProperty: {
             name: 'assigned_engineer_ids',
             isArray: true,
@@ -553,6 +564,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: 'TrainLocatedEvent',
+          dobjInputVarName: 'trailLocatedEvent',
           sqlSchemaProperty: {
             name: 'geocode_ids',
             isArray: true,

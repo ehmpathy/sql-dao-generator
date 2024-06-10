@@ -25,6 +25,10 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
   const sqlSchemaName = sqlSchemaRelationship.name.sqlSchema;
   const isUniqueOnUuid = !!domainObject.decorations.unique?.includes('uuid');
 
+  // define the dobj name to use in the input
+  const dobjInputVarName =
+    domainObject.decorations.alias ?? camelCase(domainObject.name);
+
   // define the imports
   const imports = [
     ...new Set([
@@ -77,6 +81,7 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
       ({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: domainObject.name,
+          dobjInputVarName,
           sqlSchemaProperty,
           domainObjectProperty,
           allSqlSchemaRelationships,
@@ -114,9 +119,9 @@ export const sql = \`
 
 export const upsert = async (
   {
-    ${camelCase(domainObject.name)},
+    ${dobjInputVarName},
   }: {
-    ${camelCase(domainObject.name)}: ${
+    ${dobjInputVarName}: ${
     isUniqueOnUuid ? `HasUuid<${domainObject.name}>` : domainObject.name
   };
   },
@@ -137,9 +142,9 @@ export const upsert = async (
       return `${sqlSchemaPropertyName}: ${domainObjectPropertyName}`;
     })
     .join(', ')} } = results[0]!; // grab the db generated values
-  return new ${domainObject.name}({ ...${camelCase(
-    domainObject.name,
-  )}, ${dbGeneratedPropertiesOnDomainObject
+  return new ${
+    domainObject.name
+  }({ ...${dobjInputVarName}, ${dbGeneratedPropertiesOnDomainObject
     .map((sqlSchemaPropertyName) => camelCase(sqlSchemaPropertyName))
     .join(', ')} }) as ${outputType};
 };

@@ -42,6 +42,43 @@ export const upsert = async (
 };"
 `;
 
+exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for a simple domain entity with a custom alias 1`] = `
+"import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { AsyncTaskGrantWish } from '$PATH_TO_DOMAIN_OBJECT';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryUpsertAsyncTaskGrantWish } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+
+export const sql = \`
+  -- query_name = upsert_async_task_grant_wish
+  SELECT
+    dgv.id, dgv.uuid
+  FROM upsert_async_task_grant_wish(
+    :exid
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    task,
+  }: {
+    task: AsyncTaskGrantWish;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<AsyncTaskGrantWish>> => {
+  const results = await sqlQueryUpsertAsyncTaskGrantWish({
+    dbExecute: context.dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      exid: task.exid,
+    },
+  });
+  const { id, uuid } = results[0]!; // grab the db generated values
+  return new AsyncTaskGrantWish({ ...task, id, uuid }) as HasMetadata<AsyncTaskGrantWish>;
+};"
+`;
+
 exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
 "import { HasMetadata } from 'type-fns';
 

@@ -13,7 +13,12 @@ export const createExampleDomainObjectMetadata = ({
       name: 'ExampleDomainLiteral',
       extends: DomainObjectVariant.DOMAIN_LITERAL,
       properties: {},
-      decorations: { unique: null, updatable: null },
+      decorations: {
+        alias: null,
+        primary: null,
+        unique: null,
+        updatable: null,
+      },
     });
 
   if (extend === DomainObjectVariant.DOMAIN_ENTITY)
@@ -21,14 +26,24 @@ export const createExampleDomainObjectMetadata = ({
       name: 'ExampleDomainEntity',
       extends: DomainObjectVariant.DOMAIN_LITERAL,
       properties: {},
-      decorations: { unique: ['uuid'], updatable: [] },
+      decorations: {
+        alias: null,
+        primary: null,
+        unique: ['uuid'],
+        updatable: [],
+      },
     });
   if (extend === DomainObjectVariant.DOMAIN_EVENT)
     return new DomainObjectMetadata({
       name: 'ExampleDomainEvent',
       extends: extend,
       properties: {},
-      decorations: { unique: ['uuid'], updatable: null },
+      decorations: {
+        alias: null,
+        primary: null,
+        unique: ['uuid'],
+        updatable: null,
+      },
     });
   throw new Error(
     'unsupported domain object variant to create example object for',

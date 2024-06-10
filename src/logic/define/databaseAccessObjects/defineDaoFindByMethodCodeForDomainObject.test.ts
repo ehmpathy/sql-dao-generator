@@ -27,6 +27,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: null,
           updatable: null,
         },
@@ -89,6 +91,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['cin'],
           updatable: ['capacity'],
         },
@@ -153,6 +157,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['trainUuid', 'occurredAt'],
           updatable: [],
         },
@@ -184,6 +190,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               },
             },
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: null,
             },
@@ -268,6 +276,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['tin'],
           updatable: [
             'homeStation',
@@ -305,6 +315,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               },
             },
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: null,
             },
@@ -332,6 +344,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               },
             },
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: null,
             },
@@ -346,7 +360,12 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
             properties: {
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
-            decorations: { unique: ['uuid'], updatable: [] },
+            decorations: {
+              alias: null,
+              primary: null,
+              unique: ['uuid'],
+              updatable: [],
+            },
           }),
           allDomainObjects: [domainObject],
         });
@@ -358,7 +377,12 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
             properties: {
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
-            decorations: { unique: ['uuid'], updatable: [] },
+            decorations: {
+              alias: null,
+              primary: null,
+              unique: ['uuid'],
+              updatable: [],
+            },
           }),
           allDomainObjects: [domainObject],
         });
@@ -407,6 +431,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: null,
           updatable: null,
         },
@@ -468,6 +494,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['cin'],
           updatable: ['capacity'],
         },
@@ -532,6 +560,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['trainUuid', 'occurredAt'],
           updatable: [],
         },
@@ -558,6 +588,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               },
             },
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: null,
             },
@@ -644,6 +676,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['tin'],
           updatable: [
             'homeStation',
@@ -679,6 +713,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               },
             },
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: null,
             },
@@ -706,6 +742,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               },
             },
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: null,
             },
@@ -720,7 +758,12 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
             properties: {
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
-            decorations: { unique: ['uuid'], updatable: [] },
+            decorations: {
+              alias: null,
+              primary: null,
+              unique: ['uuid'],
+              updatable: [],
+            },
           }),
           allDomainObjects: [domainObject],
         });
@@ -732,7 +775,12 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
             properties: {
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
-            decorations: { unique: ['uuid'], updatable: [] },
+            decorations: {
+              alias: null,
+              primary: null,
+              unique: ['uuid'],
+              updatable: [],
+            },
           }),
           allDomainObjects: [domainObject],
         });
@@ -781,6 +829,8 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: null,
           updatable: null,
         },
@@ -842,6 +892,8 @@ async (
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: null,
           updatable: null,
         },
@@ -870,6 +922,8 @@ async (
               },
             },
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: null,
             },
@@ -928,6 +982,8 @@ async (
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['cin'],
           updatable: ['capacity'],
         },
@@ -998,6 +1054,8 @@ async (
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['uuid'],
           updatable: ['capacity'],
         },
@@ -1069,6 +1127,8 @@ async (
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['geocode'],
           updatable: ['name'],
         },
@@ -1095,6 +1155,8 @@ async (
               },
             },
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: null,
             },
@@ -1171,6 +1233,8 @@ async (
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['trainUuid', 'occurredAt'],
           updatable: [],
         },
@@ -1197,6 +1261,8 @@ async (
               },
             },
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: null,
             },
@@ -1303,6 +1369,8 @@ async (
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['tin'],
           updatable: [
             'homeStation',
@@ -1338,6 +1406,8 @@ async (
               },
             },
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: null,
             },
@@ -1365,6 +1435,8 @@ async (
               },
             },
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: null,
             },
@@ -1379,7 +1451,12 @@ async (
             properties: {
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
-            decorations: { unique: ['uuid'], updatable: [] },
+            decorations: {
+              alias: null,
+              primary: null,
+              unique: ['uuid'],
+              updatable: [],
+            },
           }),
           allDomainObjects: [domainObject],
         });
@@ -1391,7 +1468,12 @@ async (
             properties: {
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
-            decorations: { unique: ['uuid'], updatable: [] },
+            decorations: {
+              alias: null,
+              primary: null,
+              unique: ['uuid'],
+              updatable: [],
+            },
           }),
           allDomainObjects: [domainObject],
         });
@@ -1482,6 +1564,8 @@ async (
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: [
             'homeStationGeocode',
             'badges',
@@ -1518,6 +1602,8 @@ async (
               },
             },
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: null,
             },
@@ -1544,6 +1630,8 @@ async (
               },
             },
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: null,
             },
@@ -1558,7 +1646,12 @@ async (
             properties: {
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
-            decorations: { unique: ['uuid'], updatable: [] },
+            decorations: {
+              alias: null,
+              primary: null,
+              unique: ['uuid'],
+              updatable: [],
+            },
           }),
           allDomainObjects: [domainObject],
         });
@@ -1570,7 +1663,12 @@ async (
             properties: {
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
-            decorations: { unique: ['uuid'], updatable: [] },
+            decorations: {
+              alias: null,
+              primary: null,
+              unique: ['uuid'],
+              updatable: [],
+            },
           }),
           allDomainObjects: [domainObject],
         });

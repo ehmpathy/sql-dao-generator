@@ -85,6 +85,10 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
       sqlSchemaProperty.isUpdatable || sqlSchemaProperty.isArray,
   );
 
+  // define the dobj name to use in the input
+  const dobjInputVarName =
+    domainObject.decorations.alias ?? camelCase(domainObject.name);
+
   // define which domain objects are referenced in this method
   const referencedDomainObjectNames = [
     ...new Set([
@@ -297,6 +301,7 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
             } = propertyRelationship;
             return defineQueryFunctionInputExpressionForDomainObjectProperty({
               domainObjectName: domainObject.name,
+              dobjInputVarName,
               sqlSchemaProperty,
               domainObjectProperty,
               allSqlSchemaRelationships,

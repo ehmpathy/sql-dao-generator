@@ -14,24 +14,23 @@ export enum GetTypescriptCodeForPropertyContext {
 
 export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
   domainObjectName,
+  dobjInputVarName,
   sqlSchemaProperty,
   domainObjectProperty,
   allSqlSchemaRelationships,
   context,
 }: {
   domainObjectName: string;
+  dobjInputVarName: string;
   sqlSchemaProperty: SqlSchemaPropertyMetadata;
   domainObjectProperty: DomainObjectPropertyMetadata;
   allSqlSchemaRelationships: SqlSchemaToDomainObjectRelationship[];
   context: GetTypescriptCodeForPropertyContext;
 }): string => {
-  // define constant used for upsert context
-  const domainObjectUpsertVarName = camelCase(domainObjectName);
-
   // if its a non-reference, then just return the property directly
   if (!sqlSchemaProperty.reference) {
     if (context === GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY)
-      return `${domainObjectProperty.name}: ${domainObjectUpsertVarName}.${domainObjectProperty.name}`;
+      return `${domainObjectProperty.name}: ${dobjInputVarName}.${domainObjectProperty.name}`;
     return domainObjectProperty.name;
   }
 
@@ -57,7 +56,7 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
     SqlSchemaReferenceMethod.IMPLICIT_BY_UUID
   ) {
     if (context === GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY)
-      return `${domainObjectProperty.name}: ${domainObjectUpsertVarName}.${domainObjectProperty.name}`;
+      return `${domainObjectProperty.name}: ${dobjInputVarName}.${domainObjectProperty.name}`;
     return `${domainObjectProperty.name}`;
   }
 
@@ -70,7 +69,7 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
     if (!sqlSchemaProperty.isArray) {
       const domainObjectPropertyVariableName =
         context === GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY
-          ? `${domainObjectUpsertVarName}.${domainObjectProperty.name}`
+          ? `${dobjInputVarName}.${domainObjectProperty.name}`
           : domainObjectProperty.name;
 
       const nullabilityPrefix = sqlSchemaProperty.isNullable
@@ -99,7 +98,7 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
         // e.g.,: `geocodeIds: await Promise.all(location.geocodes.map(async (geocode) => geocode.id ? geocode.id : (await geocodeDao.upsert({ geocode: location.geocode }, context)).id)`
         return `${camelCase(
           sqlSchemaProperty.name,
-        )}: await Promise.all(${domainObjectUpsertVarName}.${
+        )}: await Promise.all(${dobjInputVarName}.${
           domainObjectProperty.name
         }.map(async (${camelCase(referencedSqlSchemaName)}) => ${camelCase(
           referencedSqlSchemaName,

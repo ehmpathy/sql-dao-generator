@@ -7,6 +7,8 @@ exports[`readConfig should be able to read the example config provisioned in __t
     "objects": [
       DomainObjectMetadata {
         "decorations": {
+          "alias": null,
+          "primary": null,
           "unique": [
             "stationUuid",
             "trainLocatedEventUuid",
@@ -73,6 +75,8 @@ exports[`readConfig should be able to read the example config provisioned in __t
       },
       DomainObjectMetadata {
         "decorations": {
+          "alias": null,
+          "primary": null,
           "unique": [
             "uuid",
           ],
@@ -119,6 +123,8 @@ exports[`readConfig should be able to read the example config provisioned in __t
       },
       DomainObjectMetadata {
         "decorations": {
+          "alias": null,
+          "primary": null,
           "unique": null,
           "updatable": null,
         },
@@ -152,6 +158,8 @@ exports[`readConfig should be able to read the example config provisioned in __t
       },
       DomainObjectMetadata {
         "decorations": {
+          "alias": null,
+          "primary": null,
           "unique": null,
           "updatable": null,
         },
@@ -180,6 +188,8 @@ exports[`readConfig should be able to read the example config provisioned in __t
       },
       DomainObjectMetadata {
         "decorations": {
+          "alias": null,
+          "primary": null,
           "unique": [
             "externalId",
           ],
@@ -253,6 +263,8 @@ exports[`readConfig should be able to read the example config provisioned in __t
       },
       DomainObjectMetadata {
         "decorations": {
+          "alias": null,
+          "primary": null,
           "unique": null,
           "updatable": null,
         },
@@ -291,6 +303,8 @@ exports[`readConfig should be able to read the example config provisioned in __t
       },
       DomainObjectMetadata {
         "decorations": {
+          "alias": null,
+          "primary": null,
           "unique": [
             "ein",
           ],
@@ -366,6 +380,8 @@ exports[`readConfig should be able to read the example config provisioned in __t
       },
       DomainObjectMetadata {
         "decorations": {
+          "alias": null,
+          "primary": null,
           "unique": null,
           "updatable": null,
         },
@@ -397,6 +413,8 @@ exports[`readConfig should be able to read the example config provisioned in __t
       },
       DomainObjectMetadata {
         "decorations": {
+          "alias": null,
+          "primary": null,
           "unique": [
             "combinationId",
           ],
@@ -489,6 +507,8 @@ exports[`readConfig should be able to read the example config provisioned in __t
       },
       DomainObjectMetadata {
         "decorations": {
+          "alias": null,
+          "primary": null,
           "unique": [
             "socialSecurityNumberHash",
           ],
@@ -555,6 +575,8 @@ exports[`readConfig should be able to read the example config provisioned in __t
       },
       DomainObjectMetadata {
         "decorations": {
+          "alias": null,
+          "primary": null,
           "unique": [
             "geocode",
           ],

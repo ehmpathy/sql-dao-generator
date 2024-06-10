@@ -19,6 +19,8 @@ describe('defineDaoCodeFilesForDomainObject', () => {
         longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
       },
       decorations: {
+        alias: null,
+        primary: null,
         unique: null,
         updatable: null,
       },
@@ -47,6 +49,8 @@ describe('defineDaoCodeFilesForDomainObject', () => {
         longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
       },
       decorations: {
+        alias: null,
+        primary: null,
         unique: null,
         updatable: null,
       },

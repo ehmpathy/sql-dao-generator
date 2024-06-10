@@ -24,6 +24,8 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
         },
       },
       decorations: {
+        alias: null,
+        primary: null,
         unique: null,
         updatable: null,
       },
@@ -78,6 +80,8 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
         },
       },
       decorations: {
+        alias: null,
+        primary: null,
         unique: ['cin'],
         updatable: ['capacity'],
       },
@@ -141,6 +145,8 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
         },
       },
       decorations: {
+        alias: null,
+        primary: null,
         unique: ['trainUuid', 'occurredAt'],
         updatable: [],
       },
@@ -216,6 +222,8 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
         },
       },
       decorations: {
+        alias: null,
+        primary: null,
         unique: ['uuid'],
         updatable: ['locomotiveUuids', 'leadEngineerUuid', 'sensorUuids'],
       },

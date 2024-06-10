@@ -23,6 +23,8 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: null,
           updatable: null,
         },
@@ -53,6 +55,8 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: null,
           updatable: null,
         },
@@ -110,6 +114,8 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['cin'],
           updatable: ['capacity'],
         },
@@ -153,6 +159,8 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['trainUuid', 'occurredAt'],
           updatable: [],
         },

@@ -15,6 +15,8 @@ describe('assertDomainObjectIsSafeToHaveSqlSchema', () => {
             extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {},
             decorations: {
+              alias: null,
+              primary: null,
               unique: ['latitude'],
               updatable: null,
             },
@@ -35,6 +37,8 @@ describe('assertDomainObjectIsSafeToHaveSqlSchema', () => {
             extends: DomainObjectVariant.DOMAIN_LITERAL,
             properties: {},
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: ['latitude'],
             },
@@ -57,6 +61,8 @@ describe('assertDomainObjectIsSafeToHaveSqlSchema', () => {
             extends: DomainObjectVariant.DOMAIN_ENTITY,
             properties: {},
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: [],
             },
@@ -77,6 +83,8 @@ describe('assertDomainObjectIsSafeToHaveSqlSchema', () => {
             extends: DomainObjectVariant.DOMAIN_ENTITY,
             properties: {},
             decorations: {
+              alias: null,
+              primary: null,
               unique: ['cin'],
               updatable: null,
             },
@@ -99,6 +107,8 @@ describe('assertDomainObjectIsSafeToHaveSqlSchema', () => {
             extends: DomainObjectVariant.DOMAIN_EVENT,
             properties: {},
             decorations: {
+              alias: null,
+              primary: null,
               unique: null,
               updatable: [],
             },

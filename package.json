@@ -81,7 +81,7 @@
     "chalk": "2.4.2",
     "change-case": "4.1.1",
     "domain-objects": "0.20.0",
-    "domain-objects-metadata": "0.7.1",
+    "domain-objects-metadata": "0.7.3",
     "fast-glob": "3.2.2",
     "joi": "17.4.0",
     "lodash.omit": "4.5.0",

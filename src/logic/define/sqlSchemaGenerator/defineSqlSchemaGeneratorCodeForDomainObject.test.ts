@@ -25,6 +25,8 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: null,
           updatable: null,
         },
@@ -104,6 +106,8 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['uuid'],
           updatable: [
             'homeStation',
@@ -177,7 +181,12 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
             type: DomainObjectPropertyType.NUMBER,
           },
         },
-        decorations: { unique: null, updatable: null },
+        decorations: {
+          alias: null,
+          primary: null,
+          unique: null,
+          updatable: null,
+        },
       });
       const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
         domainObject,
@@ -236,6 +245,8 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['cin'],
           updatable: [],
         },
@@ -297,6 +308,8 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
           },
         },
         decorations: {
+          alias: null,
+          primary: null,
           unique: ['trainUuid', 'occurredAt'],
           updatable: [],
         },
