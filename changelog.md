@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.5.3...v0.6.0) (2024-06-09)
+
+
+### Features
+
+* **context:** generate dao with separate context parameter per procedure pattern ([e1d97c6](https://github.com/ehmpathy/sql-dao-generator/commit/e1d97c62f417d9a3fa777b8daccb1d0fe08d12c8))
+
 ## [0.5.3](https://github.com/ehmpathy/sql-dao-generator/compare/v0.5.2...v0.5.3) (2024-06-09)
 
 
