@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/ehmpathy/sql-dao-generator/compare/v0.7.0...v0.7.1) (2024-06-14)
+
+
+### Bug Fixes
+
+* **deps:** bump min sql-code-gen version to decrease errors ([c22f88b](https://github.com/ehmpathy/sql-dao-generator/commit/c22f88b9fc21c420b3f00d970f0b0e0983b5c12d))
+
 ## [0.7.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.6.0...v0.7.0) (2024-06-10)
 
 
