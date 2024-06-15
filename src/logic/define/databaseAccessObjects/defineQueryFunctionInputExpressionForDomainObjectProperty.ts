@@ -89,7 +89,9 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
       // e.g., `geocodeId: geocode.id`
       return `${camelCase(sqlSchemaProperty.name)}: ${nullabilityPrefix}${
         domainObjectProperty.name
-      }.id`;
+      }.id ? ${domainObjectPropertyVariableName}.id : ((await ${castDomainObjectNameToDaoName(
+        referencedDomainObjectName,
+      )}.findByUnique(${domainObjectPropertyVariableName}, context))?.id ?? -1)`;
     }
 
     // handle array of references
@@ -109,11 +111,17 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
         )}.upsert({ ${camelCase(referencedSqlSchemaName)} }, context)).id))`;
 
       // e.g., `geocodeIds: geocodes.map(geocode => geocode.id)`
-      return `${camelCase(sqlSchemaProperty.name)}: ${
+      return `${camelCase(sqlSchemaProperty.name)}: await Promise.all(${
         domainObjectProperty.name
-      }.map((${camelCase(referencedSqlSchemaName)}) => ${camelCase(
+      }.map(async (${camelCase(referencedSqlSchemaName)}) => ${camelCase(
         referencedSqlSchemaName,
-      )}.id)`;
+      )}.id ? ${camelCase(
+        referencedSqlSchemaName,
+      )}.id : ((await ${castDomainObjectNameToDaoName(
+        referencedDomainObjectName,
+      )}.findByUnique(${camelCase(
+        referencedSqlSchemaName,
+      )}, context))?.id ?? -1) ))`;
     }
   }
 

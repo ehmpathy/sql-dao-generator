@@ -1849,13 +1849,14 @@ export const findById = async (
     "relpath": "trainStationDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasId, HasMetadata } from 'type-fns';
+    "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { Geocode, TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainStationByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
+import { geocodeDao } from '../geocodeDao';
 
 export const sql = \`
   -- query_name = find_train_station_by_unique
@@ -1880,7 +1881,7 @@ export const findByUnique = async (
   {
     geocode,
   }: {
-    geocode: HasId<Geocode>;
+    geocode: Geocode;
   },
   context: { dbConnection: DatabaseConnection },
 ): Promise<HasMetadata<TrainStation> | null> => {
@@ -1888,7 +1889,7 @@ export const findByUnique = async (
     dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
-      geocodeId: geocode.id,
+      geocodeId: geocode.id ? geocode.id : ((await geocodeDao.findByUnique(geocode, context))?.id ?? -1),
     },
   });
   const [dbObject, ...moreDbObjects] = results;
@@ -2227,13 +2228,14 @@ export const findById = async (
     "relpath": "invoiceLineItemDao/findById.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasId, HasMetadata } from 'type-fns';
+    "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { InvoiceLineItem, Price } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindInvoiceLineItemByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
+import { priceDao } from '../priceDao';
 
 export const sql = \`
   -- query_name = find_invoice_line_item_by_unique
@@ -2262,7 +2264,7 @@ export const findByUnique = async (
     title,
     explanation,
   }: {
-    price: HasId<Price>;
+    price: Price;
     title: string;
     explanation: string;
   },
@@ -2272,7 +2274,7 @@ export const findByUnique = async (
     dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
-      priceId: price.id,
+      priceId: price.id ? price.id : ((await priceDao.findByUnique(price, context))?.id ?? -1),
       title,
       explanation,
     },

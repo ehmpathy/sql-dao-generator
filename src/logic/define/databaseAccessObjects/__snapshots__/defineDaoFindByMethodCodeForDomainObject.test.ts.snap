@@ -284,13 +284,15 @@ export const findByUnique = async (
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for domain entity that is unique on references, solo and array, implicit and nested 1`] = `
-"import { HasId, HasMetadata } from 'type-fns';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { Geocode, Train, TrainBadge } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
+import { geocodeDao } from '../geocodeDao';
+import { trainBadgeDao } from '../trainBadgeDao';
 
 export const sql = \`
   -- query_name = find_train_by_unique
@@ -357,8 +359,8 @@ export const findByUnique = async (
     locomotiveUuids,
     leadEngineerUuid,
   }: {
-    homeStationGeocode: HasId<Geocode>;
-    badges: HasId<TrainBadge>[];
+    homeStationGeocode: Geocode;
+    badges: TrainBadge[];
     locomotiveUuids: string[];
     leadEngineerUuid: string;
   },
@@ -368,8 +370,8 @@ export const findByUnique = async (
     dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
-      homeStationGeocodeId: homeStationGeocode.id,
-      badgeIds: badges.map((trainBadge) => trainBadge.id),
+      homeStationGeocodeId: homeStationGeocode.id ? homeStationGeocode.id : ((await geocodeDao.findByUnique(homeStationGeocode, context))?.id ?? -1),
+      badgeIds: await Promise.all(badges.map(async (trainBadge) => trainBadge.id ? trainBadge.id : ((await trainBadgeDao.findByUnique(trainBadge, context))?.id ?? -1) )),
       locomotiveUuids,
       leadEngineerUuid,
     },
@@ -592,13 +594,14 @@ export const findByUnique = async (
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for simple literal that references another literal 1`] = `
-"import { HasId, HasMetadata } from 'type-fns';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { InvoiceLineItem, Price } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindInvoiceLineItemByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
+import { priceDao } from '../priceDao';
 
 export const sql = \`
   -- query_name = find_invoice_line_item_by_unique
@@ -622,7 +625,7 @@ export const findByUnique = async (
   {
     price,
   }: {
-    price: HasId<Price>;
+    price: Price;
   },
   context: { dbConnection: DatabaseConnection },
 ): Promise<HasMetadata<InvoiceLineItem> | null> => {
@@ -630,7 +633,7 @@ export const findByUnique = async (
     dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
-      priceId: price.id,
+      priceId: price.id ? price.id : ((await priceDao.findByUnique(price, context))?.id ?? -1),
     },
   });
   const [dbObject, ...moreDbObjects] = results;
@@ -641,13 +644,14 @@ export const findByUnique = async (
 `;
 
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look for a domain entity unique on a nested domain object 1`] = `
-"import { HasId, HasMetadata } from 'type-fns';
+"import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { Geocode, Station } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindStationByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
+import { geocodeDao } from '../geocodeDao';
 
 export const sql = \`
   -- query_name = find_station_by_unique
@@ -671,7 +675,7 @@ export const findByUnique = async (
   {
     geocode,
   }: {
-    geocode: HasId<Geocode>;
+    geocode: Geocode;
   },
   context: { dbConnection: DatabaseConnection },
 ): Promise<HasMetadata<Station> | null> => {
@@ -679,7 +683,7 @@ export const findByUnique = async (
     dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
-      geocodeId: geocode.id,
+      geocodeId: geocode.id ? geocode.id : ((await geocodeDao.findByUnique(geocode, context))?.id ?? -1),
     },
   });
   const [dbObject, ...moreDbObjects] = results;

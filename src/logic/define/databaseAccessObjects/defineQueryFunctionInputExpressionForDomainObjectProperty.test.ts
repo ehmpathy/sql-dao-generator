@@ -449,7 +449,9 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
           ],
           context: GetTypescriptCodeForPropertyContext.FOR_FIND_BY_QUERY,
         });
-      expect(expression).toEqual('geocodeId: geocode.id');
+      expect(expression).toEqual(
+        'geocodeId: geocode.id ? geocode.id : ((await geocodeDao.findByUnique(geocode, context))?.id ?? -1)',
+      );
     });
     it('should define the input expression correctly for a solo, nullable, DIRECT_BY_NESTING reference', () => {
       const expression =
@@ -517,7 +519,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
           context: GetTypescriptCodeForPropertyContext.FOR_FIND_BY_QUERY,
         });
       expect(expression).toEqual(
-        'geocodeId: geocode === null ? null : geocode.id',
+        'geocodeId: geocode === null ? null : geocode.id ? geocode.id : ((await geocodeDao.findByUnique(geocode, context))?.id ?? -1)',
       );
     });
     it('should define the input expression correctly for an array of IMPLICIT_BY_UUID references', () => {
@@ -629,7 +631,7 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
           context: GetTypescriptCodeForPropertyContext.FOR_FIND_BY_QUERY,
         });
       expect(expression).toEqual(
-        'geocodeIds: geocodes.map((geocode) => geocode.id)',
+        'geocodeIds: await Promise.all(geocodes.map(async (geocode) => geocode.id ? geocode.id : ((await geocodeDao.findByUnique(geocode, context))?.id ?? -1) ))',
       );
     });
   });

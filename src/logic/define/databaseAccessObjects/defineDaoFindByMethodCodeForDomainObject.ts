@@ -13,6 +13,7 @@ import { SqlSchemaPropertyMetadata } from '../../../domain/objects/SqlSchemaProp
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
 import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
+import { castDomainObjectNameToDaoName } from './castDomainObjectNameToDaoName';
 import { defineOutputTypeOfFoundDomainObject } from './defineOutputTypeOfFoundDomainObject';
 import {
   defineQueryFunctionInputExpressionForDomainObjectProperty,
@@ -48,7 +49,7 @@ const getTypescriptTypeForDomainObjectProperty = ({
     return `${domainObjectName}['${domainObjectProperty.name}']`;
   if (domainObjectProperty.type === DomainObjectPropertyType.REFERENCE) {
     const referencedDomainObjectName = sqlSchemaProperty.reference!.of.name;
-    return `HasId<${referencedDomainObjectName}>`;
+    return referencedDomainObjectName;
   }
   if (domainObjectProperty.type === DomainObjectPropertyType.ARRAY) {
     if (
@@ -57,7 +58,7 @@ const getTypescriptTypeForDomainObjectProperty = ({
     )
       return 'string[]';
     const referencedDomainObjectName = sqlSchemaProperty.reference!.of.name;
-    return `HasId<${referencedDomainObjectName}>[]`;
+    return `${referencedDomainObjectName}[]`;
   }
   throw new UnexpectedCodePathDetectedError({
     reason:
@@ -141,9 +142,7 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
   const imports = [
     ...new Set([
       // always present imports
-      `import { ${
-        referencedDomainObjectNames.length > 1 ? 'HasId, ' : ''
-      }HasMetadata } from 'type-fns';`,
+      `import { HasMetadata } from 'type-fns';`,
       '', // split module from relative imports
       "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
       "import { log } from '$PATH_TO_LOG_OBJECT';",
@@ -152,6 +151,24 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
         .join(', ')} } from '$PATH_TO_DOMAIN_OBJECT';`,
       `import { sqlQueryFind${domainObject.name}By${findByQueryType} } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';`,
       "import { castFromDatabaseObject } from './castFromDatabaseObject';",
+      ...sqlSchemaRelationship.properties
+        .map((property) =>
+          property.sqlSchema.reference?.method ===
+          SqlSchemaReferenceMethod.DIRECT_BY_NESTING
+            ? property.sqlSchema.reference.of.name
+            : null,
+        )
+        .filter(isPresent)
+        .filter((nestedDomainObjectName) =>
+          referencedDomainObjectNames.includes(nestedDomainObjectName),
+        )
+        .map((referencedDomainObjectName) => {
+          const nameOfDaoToImport = castDomainObjectNameToDaoName(
+            referencedDomainObjectName,
+          );
+          return `import { ${nameOfDaoToImport} } from '../${nameOfDaoToImport}';`;
+        })
+        .sort(),
     ]),
   ];
 

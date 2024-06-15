@@ -1190,7 +1190,7 @@ async (
   {
     geocode,
   }: {
-    geocode: HasId<Geocode>;
+    geocode: Geocode;
   },
   context
       `.trim(),
@@ -1721,8 +1721,8 @@ async (
     locomotiveUuids,
     leadEngineerUuid,
   }: {
-    homeStationGeocode: HasId<Geocode>;
-    badges: HasId<TrainBadge>[];
+    homeStationGeocode: Geocode;
+    badges: TrainBadge[];
     locomotiveUuids: string[];
     leadEngineerUuid: string;
   },
