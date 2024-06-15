@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.3](https://github.com/ehmpathy/sql-dao-generator/compare/v0.7.2...v0.7.3) (2024-06-15)
+
+
+### Bug Fixes
+
+* **alias:** correctly identify upsert varname based on alias in upsert derefs ([e3e6a3c](https://github.com/ehmpathy/sql-dao-generator/commit/e3e6a3cbdf142ac8acbffbbc112b2b787c1fce30))
+
 ## [0.7.2](https://github.com/ehmpathy/sql-dao-generator/compare/v0.7.1...v0.7.2) (2024-06-15)
 
 
