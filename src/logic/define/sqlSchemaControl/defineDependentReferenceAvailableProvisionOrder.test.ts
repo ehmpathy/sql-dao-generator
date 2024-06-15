@@ -17,7 +17,7 @@ describe('defineDependentReferenceAvailableProvisionOrder', () => {
       defineDependentReferenceAvailableProvisionOrder({
         sqlSchemaRelationships,
       });
-    console.log({ order, reason, depth });
+    // console.log({ order, reason, depth });
 
     expect({ order, reason, depth }).toMatchSnapshot();
   });

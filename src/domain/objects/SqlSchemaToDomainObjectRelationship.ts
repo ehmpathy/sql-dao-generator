@@ -18,6 +18,9 @@ const schema = Joi.object().keys({
     )
     .required(),
   decorations: Joi.object().keys({
+    alias: Joi.object().keys({
+      domainObject: Joi.string().required().allow(null),
+    }),
     unique: Joi.object().keys({
       domainObject: Joi.array().items(Joi.string()).required().allow(null),
       sqlSchema: Joi.array().items(Joi.string()).required().allow(null),
@@ -35,6 +38,9 @@ export interface SqlSchemaToDomainObjectRelationship {
     domainObject: DomainObjectPropertyMetadata | null; // may be null, if the sql-schema-property is a db-generated property that was not defined by the user in the domain-object
   }[];
   decorations: {
+    alias: {
+      domainObject: string | null;
+    };
     unique: {
       sqlSchema: string[] | null;
       domainObject: string[] | null;

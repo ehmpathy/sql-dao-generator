@@ -40,6 +40,39 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
     ]); // should be all of the properties, since domain literal
     expect(relationship).toMatchSnapshot();
   });
+  it('should look right for a domain-literal with an alias', () => {
+    const relationship = defineSqlSchemaRelationshipForDomainObject({
+      domainObject: new DomainObjectMetadata({
+        name: 'PreciseGeocode',
+        extends: DomainObjectVariant.DOMAIN_LITERAL,
+        properties: {
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+          latitude: { name: 'latitude', type: DomainObjectPropertyType.NUMBER },
+          longitude: {
+            name: 'longitude',
+            type: DomainObjectPropertyType.NUMBER,
+          },
+        },
+        decorations: {
+          alias: 'geocode',
+          primary: null,
+          unique: null,
+          updatable: null,
+        },
+      }),
+      allDomainObjects: [],
+    });
+    expect(relationship.name.sqlSchema).toEqual('precise_geocode'); // should be snake case
+    expect(relationship.properties.length).toEqual(5); // sanity check
+    expect(relationship.decorations.alias.domainObject).toEqual('geocode');
+    expect(relationship.decorations.unique.domainObject).toEqual(null); // it wasn't defined, since domain literal
+    expect(relationship.decorations.unique.sqlSchema).toEqual([
+      'latitude',
+      'longitude',
+    ]); // should be all of the properties, since domain literal
+    expect(relationship).toMatchSnapshot();
+  });
   it('should look right for another domain-literal, one with multi word property names', () => {
     const relationship = defineSqlSchemaRelationshipForDomainObject({
       domainObject: new DomainObjectMetadata({

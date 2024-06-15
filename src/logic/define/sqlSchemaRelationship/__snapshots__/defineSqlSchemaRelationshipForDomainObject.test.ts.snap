@@ -3,6 +3,9 @@
 exports[`defineSqlSchemarelationshipForDomainObject should look right for a domain-entity 1`] = `
 SqlSchemaToDomainObjectRelationship {
   "decorations": {
+    "alias": {
+      "domainObject": null,
+    },
     "unique": {
       "domainObject": [
         "cin",
@@ -160,6 +163,9 @@ SqlSchemaToDomainObjectRelationship {
 exports[`defineSqlSchemarelationshipForDomainObject should look right for a domain-event 1`] = `
 SqlSchemaToDomainObjectRelationship {
   "decorations": {
+    "alias": {
+      "domainObject": null,
+    },
     "unique": {
       "domainObject": [
         "trainUuid",
@@ -281,6 +287,99 @@ SqlSchemaToDomainObjectRelationship {
 exports[`defineSqlSchemarelationshipForDomainObject should look right for a domain-literal 1`] = `
 SqlSchemaToDomainObjectRelationship {
   "decorations": {
+    "alias": {
+      "domainObject": null,
+    },
+    "unique": {
+      "domainObject": null,
+      "sqlSchema": [
+        "latitude",
+        "longitude",
+      ],
+    },
+  },
+  "name": {
+    "domainObject": "PreciseGeocode",
+    "sqlSchema": "precise_geocode",
+  },
+  "properties": [
+    {
+      "domainObject": {
+        "name": "id",
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "id",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "uuid",
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "uuid",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "created_at",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "latitude",
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "latitude",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "longitude",
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "longitude",
+        "reference": null,
+      },
+    },
+  ],
+}
+`;
+
+exports[`defineSqlSchemarelationshipForDomainObject should look right for a domain-literal with an alias 1`] = `
+SqlSchemaToDomainObjectRelationship {
+  "decorations": {
+    "alias": {
+      "domainObject": "geocode",
+    },
     "unique": {
       "domainObject": null,
       "sqlSchema": [
@@ -368,6 +467,9 @@ SqlSchemaToDomainObjectRelationship {
 exports[`defineSqlSchemarelationshipForDomainObject should look right for another domain-literal, one with multi word property names 1`] = `
 SqlSchemaToDomainObjectRelationship {
   "decorations": {
+    "alias": {
+      "domainObject": null,
+    },
     "unique": {
       "domainObject": null,
       "sqlSchema": [

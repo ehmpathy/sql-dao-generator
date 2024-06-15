@@ -139,6 +139,9 @@ export const defineSqlSchemaRelationshipForDomainObject = ({
     },
     properties: propertiesRelationship,
     decorations: {
+      alias: {
+        domainObject: domainObject.decorations.alias,
+      },
       unique: {
         sqlSchema: sqlSchemaUniqueKeys,
         domainObject: domainObject.decorations.unique,

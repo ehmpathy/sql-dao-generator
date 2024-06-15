@@ -56,7 +56,13 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
               sqlSchema: 'train_engineer',
             },
             properties: [],
-            decorations: { unique: { sqlSchema: null, domainObject: null } },
+            decorations: {
+              alias: { domainObject: null },
+              unique: {
+                sqlSchema: null,
+                domainObject: null,
+              },
+            },
           }),
         ], // not needed for this one
       });
@@ -99,7 +105,13 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
               sqlSchema: 'train_engineer',
             },
             properties: [],
-            decorations: { unique: { sqlSchema: null, domainObject: null } },
+            decorations: {
+              alias: { domainObject: null },
+              unique: {
+                sqlSchema: null,
+                domainObject: null,
+              },
+            },
           }),
         ], // not needed for this one
       });
@@ -182,7 +194,13 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                 },
               },
             ],
-            decorations: { unique: { sqlSchema: null, domainObject: null } },
+            decorations: {
+              alias: { domainObject: null },
+              unique: {
+                sqlSchema: null,
+                domainObject: null,
+              },
+            },
           }),
         ],
       });
@@ -255,7 +273,13 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                 },
               },
             ],
-            decorations: { unique: { sqlSchema: null, domainObject: null } },
+            decorations: {
+              alias: { domainObject: null },
+              unique: {
+                sqlSchema: null,
+                domainObject: null,
+              },
+            },
           }),
         ],
       });
@@ -355,7 +379,13 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                 },
               },
             ],
-            decorations: { unique: { sqlSchema: null, domainObject: null } },
+            decorations: {
+              alias: { domainObject: null },
+              unique: {
+                sqlSchema: null,
+                domainObject: null,
+              },
+            },
           }),
           new SqlSchemaToDomainObjectRelationship({
             name: { domainObject: 'Price', sqlSchema: 'price' },
@@ -390,7 +420,13 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                 },
               },
             ],
-            decorations: { unique: { sqlSchema: null, domainObject: null } },
+            decorations: {
+              alias: { domainObject: null },
+              unique: {
+                sqlSchema: null,
+                domainObject: null,
+              },
+            },
           }),
         ],
       });
@@ -492,7 +528,13 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                 },
               },
             ],
-            decorations: { unique: { sqlSchema: null, domainObject: null } },
+            decorations: {
+              alias: { domainObject: null },
+              unique: {
+                sqlSchema: null,
+                domainObject: null,
+              },
+            },
           }),
           new SqlSchemaToDomainObjectRelationship({
             name: { domainObject: 'Price', sqlSchema: 'price' },
@@ -527,7 +569,13 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                 },
               },
             ],
-            decorations: { unique: { sqlSchema: null, domainObject: null } },
+            decorations: {
+              alias: { domainObject: null },
+              unique: {
+                sqlSchema: null,
+                domainObject: null,
+              },
+            },
           }),
         ],
       });
@@ -628,7 +676,13 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                 },
               },
             ],
-            decorations: { unique: { sqlSchema: null, domainObject: null } },
+            decorations: {
+              alias: { domainObject: null },
+              unique: {
+                sqlSchema: null,
+                domainObject: null,
+              },
+            },
           }),
           new SqlSchemaToDomainObjectRelationship({
             name: { domainObject: 'Price', sqlSchema: 'price' },
@@ -663,7 +717,10 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
                 },
               },
             ],
-            decorations: { unique: { sqlSchema: null, domainObject: null } },
+            decorations: {
+              alias: { domainObject: null },
+              unique: { sqlSchema: null, domainObject: null },
+            },
           }),
         ],
       });

@@ -4,6 +4,9 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
 [
   SqlSchemaToDomainObjectRelationship {
     "decorations": {
+      "alias": {
+        "domainObject": null,
+      },
       "unique": {
         "domainObject": [
           "stationUuid",
@@ -168,6 +171,9 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
   },
   SqlSchemaToDomainObjectRelationship {
     "decorations": {
+      "alias": {
+        "domainObject": null,
+      },
       "unique": {
         "domainObject": [
           "uuid",
@@ -281,6 +287,9 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
   },
   SqlSchemaToDomainObjectRelationship {
     "decorations": {
+      "alias": {
+        "domainObject": null,
+      },
       "unique": {
         "domainObject": null,
         "sqlSchema": [
@@ -373,6 +382,9 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
   },
   SqlSchemaToDomainObjectRelationship {
     "decorations": {
+      "alias": {
+        "domainObject": null,
+      },
       "unique": {
         "domainObject": [
           "socialSecurityNumberHash",
@@ -540,6 +552,9 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
   },
   SqlSchemaToDomainObjectRelationship {
     "decorations": {
+      "alias": {
+        "domainObject": null,
+      },
       "unique": {
         "domainObject": null,
         "sqlSchema": [
@@ -627,6 +642,9 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
   },
   SqlSchemaToDomainObjectRelationship {
     "decorations": {
+      "alias": {
+        "domainObject": null,
+      },
       "unique": {
         "domainObject": [
           "combinationId",
@@ -875,6 +893,9 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
   },
   SqlSchemaToDomainObjectRelationship {
     "decorations": {
+      "alias": {
+        "domainObject": null,
+      },
       "unique": {
         "domainObject": [
           "ein",
@@ -1044,6 +1065,9 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
   },
   SqlSchemaToDomainObjectRelationship {
     "decorations": {
+      "alias": {
+        "domainObject": null,
+      },
       "unique": {
         "domainObject": [
           "trainUuid",
@@ -1166,6 +1190,9 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
   },
   SqlSchemaToDomainObjectRelationship {
     "decorations": {
+      "alias": {
+        "domainObject": null,
+      },
       "unique": {
         "domainObject": [
           "geocode",
@@ -1291,6 +1318,9 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
   },
   SqlSchemaToDomainObjectRelationship {
     "decorations": {
+      "alias": {
+        "domainObject": null,
+      },
       "unique": {
         "domainObject": null,
         "sqlSchema": [
@@ -1381,6 +1411,9 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
   },
   SqlSchemaToDomainObjectRelationship {
     "decorations": {
+      "alias": {
+        "domainObject": null,
+      },
       "unique": {
         "domainObject": null,
         "sqlSchema": [
@@ -1495,6 +1528,9 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
   },
   SqlSchemaToDomainObjectRelationship {
     "decorations": {
+      "alias": {
+        "domainObject": null,
+      },
       "unique": {
         "domainObject": [
           "externalId",

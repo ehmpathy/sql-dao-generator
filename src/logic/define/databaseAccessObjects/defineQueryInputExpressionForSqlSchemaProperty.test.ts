@@ -52,7 +52,13 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
         new SqlSchemaToDomainObjectRelationship({
           name: { domainObject: 'TrainEngineer', sqlSchema: 'train_engineer' },
           properties: [],
-          decorations: { unique: { sqlSchema: null, domainObject: null } },
+          decorations: {
+            alias: { domainObject: null },
+            unique: {
+              sqlSchema: null,
+              domainObject: null,
+            },
+          },
         }),
       ], // not needed for this one
     });
@@ -118,7 +124,13 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
               },
             },
           ],
-          decorations: { unique: { sqlSchema: null, domainObject: null } },
+          decorations: {
+            alias: { domainObject: null },
+            unique: {
+              sqlSchema: null,
+              domainObject: null,
+            },
+          },
         }),
       ],
     });
@@ -152,7 +164,13 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
         new SqlSchemaToDomainObjectRelationship({
           name: { domainObject: 'TrainEngineer', sqlSchema: 'train_engineer' },
           properties: [],
-          decorations: { unique: { sqlSchema: null, domainObject: null } },
+          decorations: {
+            alias: { domainObject: null },
+            unique: {
+              sqlSchema: null,
+              domainObject: null,
+            },
+          },
         }),
       ], // not needed for this one
     });
@@ -233,7 +251,13 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
               },
             },
           ],
-          decorations: { unique: { sqlSchema: null, domainObject: null } },
+          decorations: {
+            alias: { domainObject: null },
+            unique: {
+              sqlSchema: null,
+              domainObject: null,
+            },
+          },
         }),
       ],
     });

@@ -49,6 +49,15 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
     referencedSqlSchemaRelationship.name.sqlSchema;
   const referencedDomainObjectName =
     referencedSqlSchemaRelationship.name.domainObject;
+  const referencedDomainObjectAttributeName = camelCase(
+    referencedSqlSchemaName,
+  );
+  const referencedDomainObjectUpsertInputVariableName =
+    referencedSqlSchemaRelationship.decorations.alias.domainObject
+      ? camelCase(
+          referencedSqlSchemaRelationship.decorations.alias.domainObject,
+        )
+      : referencedDomainObjectAttributeName;
 
   // if its an implicit uuid reference, then all the legwork is done in the sql. simple case here
   if (
@@ -82,9 +91,7 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
           sqlSchemaProperty.name,
         )}: ${nullabilityPrefix}${domainObjectPropertyVariableName}.id ? ${domainObjectPropertyVariableName}.id : (await ${castDomainObjectNameToDaoName(
           referencedDomainObjectName,
-        )}.upsert({ ${camelCase(
-          referencedSqlSchemaName,
-        )}: ${domainObjectPropertyVariableName} }, context)).id`;
+        )}.upsert({ ${referencedDomainObjectUpsertInputVariableName}: ${domainObjectPropertyVariableName} }, context)).id`;
 
       // e.g., `geocodeId: geocode.id`
       return `${camelCase(sqlSchemaProperty.name)}: ${nullabilityPrefix}${
@@ -102,26 +109,16 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
           sqlSchemaProperty.name,
         )}: await Promise.all(${dobjInputVarName}.${
           domainObjectProperty.name
-        }.map(async (${camelCase(referencedSqlSchemaName)}) => ${camelCase(
-          referencedSqlSchemaName,
-        )}.id ? ${camelCase(
-          referencedSqlSchemaName,
-        )}.id : (await ${castDomainObjectNameToDaoName(
+        }.map(async (${referencedDomainObjectUpsertInputVariableName}) => ${referencedDomainObjectUpsertInputVariableName}.id ? ${referencedDomainObjectUpsertInputVariableName}.id : (await ${castDomainObjectNameToDaoName(
           referencedDomainObjectName,
-        )}.upsert({ ${camelCase(referencedSqlSchemaName)} }, context)).id))`;
+        )}.upsert({ ${referencedDomainObjectUpsertInputVariableName} }, context)).id))`;
 
       // e.g., `geocodeIds: geocodes.map(geocode => geocode.id)`
       return `${camelCase(sqlSchemaProperty.name)}: await Promise.all(${
         domainObjectProperty.name
-      }.map(async (${camelCase(referencedSqlSchemaName)}) => ${camelCase(
-        referencedSqlSchemaName,
-      )}.id ? ${camelCase(
-        referencedSqlSchemaName,
-      )}.id : ((await ${castDomainObjectNameToDaoName(
+      }.map(async (${referencedDomainObjectAttributeName}) => ${referencedDomainObjectAttributeName}.id ? ${referencedDomainObjectAttributeName}.id : ((await ${castDomainObjectNameToDaoName(
         referencedDomainObjectName,
-      )}.findByUnique(${camelCase(
-        referencedSqlSchemaName,
-      )}, context))?.id ?? -1) ))`;
+      )}.findByUnique(${referencedDomainObjectAttributeName}, context))?.id ?? -1) ))`;
     }
   }
 
