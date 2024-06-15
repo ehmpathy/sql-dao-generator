@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.2](https://github.com/ehmpathy/sql-dao-generator/compare/v0.7.1...v0.7.2) (2024-06-15)
+
+
+### Bug Fixes
+
+* **findby:** findByUnique with nested dobj should not require HasId ([2281436](https://github.com/ehmpathy/sql-dao-generator/commit/22814363d4e241e8a9a9252fa6702f3f33d4acbd))
+
 ## [0.7.1](https://github.com/ehmpathy/sql-dao-generator/compare/v0.7.0...v0.7.1) (2024-06-14)
 
 
