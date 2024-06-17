@@ -32,8 +32,24 @@ exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_ne
         ),
         'title', invoice_line_item.title
       ) AS json_build_object
-      FROM invoice_line_item WHERE invoice_line_item.id = invoice.line_item_id
+      FROM view_invoice_line_item_current AS invoice_line_item WHERE invoice_line_item.id = invoice.line_item_id
     ) AS line_item"
+`;
+
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for a solo DIRECT_BY_NESTING reference with its own array IMPLICIT_BY_UUID reference 1`] = `
+"(
+      SELECT json_build_object(
+        'id', lead_capture.id,
+        'lead_capture_event_uuids', (
+          SELECT COALESCE(array_agg(lead_capture_event.uuid ORDER BY lead_capture_event_ref.array_order_index), array[]::uuid[]) AS array_agg
+          FROM lead_capture_event
+          JOIN unnest(lead_capture.lead_capture_event_ids) WITH ORDINALITY
+            AS lead_capture_event_ref (id, array_order_index)
+            ON lead_capture_event.id = lead_capture_event_ref.id
+        )
+      ) AS json_build_object
+      FROM view_lead_capture_current AS lead_capture WHERE lead_capture.id = lead.lead_capture_id
+    ) AS lead_capture"
 `;
 
 exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for a solo DIRECT_BY_NESTING reference with its own solo DIRECT_BY_NESTING reference 1`] = `

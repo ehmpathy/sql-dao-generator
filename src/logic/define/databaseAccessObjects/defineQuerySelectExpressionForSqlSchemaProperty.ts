@@ -7,6 +7,7 @@ import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/Sql
 import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
 import { isADirectlyNestedDomainObjectProperty } from '../sqlSchemaRelationship/isADirectlyNestedDomainObjectProperty';
 import { isAUserDefinedDomainObjectProperty } from '../sqlSchemaRelationship/isAUserDefinedDomainObjectProperty';
+import { isAnImplicitlyReferencedDomainObjectProperty } from '../sqlSchemaRelationship/isAnImplicitlyReferencedDomainObjectProperty';
 
 const indentByNestingDepth = ({
   depthOfNesting,
@@ -55,6 +56,14 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
     }); // fail fast, this should not occur
   const referencedSqlSchemaName =
     referencedSqlSchemaRelationship.name.sqlSchema;
+  const referencedSqlSchemaHasCurrentView =
+    referencedSqlSchemaRelationship.properties.some(
+      ({ sqlSchema: sqlSchemaProperty }) =>
+        sqlSchemaProperty.isUpdatable || sqlSchemaProperty.isArray,
+    );
+  const fromSqlSchemaExpression = referencedSqlSchemaHasCurrentView
+    ? `view_${referencedSqlSchemaName}_current AS ${referencedSqlSchemaName}` // todo: make the `current` view take the default namespace, so that we dont have to do this check anymore; e.g., the static table should always have `_static` suffix and the view should always be the interface, for backwards compat and evolvability
+    : referencedSqlSchemaName;
   const selectExpressionAlias =
     depthOfNesting === 0 ? ` AS ${snakeCase(domainObjectProperty.name)}` : ''; // alias only required on root level property, not nested ones, since those are named through json syntax already
 
@@ -68,7 +77,7 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
       return `
     (
       SELECT ${referencedSqlSchemaName}.uuid
-      FROM ${referencedSqlSchemaName} WHERE ${referencedSqlSchemaName}.id = ${sqlSchemaName}.${sqlSchemaProperty.name}
+      FROM ${fromSqlSchemaExpression} WHERE ${referencedSqlSchemaName}.id = ${sqlSchemaName}.${sqlSchemaProperty.name}
     )${selectExpressionAlias}
           `.trim();
 
@@ -76,7 +85,7 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
     return `
     (
       SELECT COALESCE(array_agg(${referencedSqlSchemaName}.uuid ORDER BY ${referencedSqlSchemaName}_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM ${referencedSqlSchemaName}
+      FROM ${fromSqlSchemaExpression}
       JOIN unnest(${sqlSchemaName}.${sqlSchemaProperty.name}) WITH ORDINALITY
         AS ${referencedSqlSchemaName}_ref (id, array_order_index)
         ON ${referencedSqlSchemaName}.id = ${referencedSqlSchemaName}_ref.id
@@ -101,12 +110,17 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
               sqlSchema: referencedSqlSchemaProperty,
               domainObject: referencedDomainObjectProperty,
             }) => {
-              const jsonKey = isADirectlyNestedDomainObjectProperty({
-                sqlSchema: referencedSqlSchemaProperty,
-                domainObject: referencedDomainObjectProperty,
-              })
-                ? snakeCase(referencedDomainObjectProperty.name) // if its a directly nested domain object reference, then refer to it by domain object name
-                : referencedSqlSchemaProperty.name; // otherwise, by the sql property name
+              const jsonKey =
+                isADirectlyNestedDomainObjectProperty({
+                  sqlSchema: referencedSqlSchemaProperty,
+                  domainObject: referencedDomainObjectProperty,
+                }) ||
+                isAnImplicitlyReferencedDomainObjectProperty({
+                  sqlSchema: referencedSqlSchemaProperty,
+                  domainObject: referencedDomainObjectProperty,
+                })
+                  ? snakeCase(referencedDomainObjectProperty.name) // if its a reference, then refer to it by the dobj.property name
+                  : referencedSqlSchemaProperty.name; // otherwise, by the sql property name
               const jsonValueSelectExpression = indentByNestingDepth({
                 depthOfNesting,
                 selectExpression:
@@ -123,7 +137,7 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
           )
           .join(',\n        ')}
       ) AS json_build_object
-      FROM ${referencedSqlSchemaName} WHERE ${referencedSqlSchemaName}.id = ${sqlSchemaName}.${
+      FROM ${fromSqlSchemaExpression} WHERE ${referencedSqlSchemaName}.id = ${sqlSchemaName}.${
         sqlSchemaProperty.name
       }
     )${selectExpressionAlias}
@@ -169,7 +183,7 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
         ),
         '[]'::json
       ) AS json_agg
-      FROM ${referencedSqlSchemaName}
+      FROM ${fromSqlSchemaExpression}
       JOIN unnest(${sqlSchemaName}.${sqlSchemaProperty.name}) WITH ORDINALITY
         AS ${referencedSqlSchemaName}_ref (id, array_order_index)
         ON ${referencedSqlSchemaName}.id = ${referencedSqlSchemaName}_ref.id

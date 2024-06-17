@@ -58,7 +58,7 @@ export const sql = \`
     async_task_predict_station_congestion.status,
     (
       SELECT train_station.uuid
-      FROM train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
+      FROM view_train_station_current AS train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
     ) AS station_uuid,
     (
       SELECT train_located_event.uuid
@@ -109,7 +109,7 @@ export const sql = \`
     async_task_predict_station_congestion.status,
     (
       SELECT train_station.uuid
-      FROM train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
+      FROM view_train_station_current AS train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
     ) AS station_uuid,
     (
       SELECT train_located_event.uuid
@@ -165,7 +165,7 @@ export const sql = \`
     async_task_predict_station_congestion.status,
     (
       SELECT train_station.uuid
-      FROM train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
+      FROM view_train_station_current AS train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
     ) AS station_uuid,
     (
       SELECT train_located_event.uuid
@@ -1087,7 +1087,7 @@ export const sql = \`
     train.combination_id,
     (
       SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM locomotive
+      FROM view_locomotive_current AS locomotive
       JOIN unnest(train.locomotive_ids) WITH ORDINALITY
         AS locomotive_ref (id, array_order_index)
         ON locomotive.id = locomotive_ref.id
@@ -1101,14 +1101,14 @@ export const sql = \`
     ) AS carriage_uuids,
     (
       SELECT COALESCE(array_agg(train_engineer.uuid ORDER BY train_engineer_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM train_engineer
+      FROM view_train_engineer_current AS train_engineer
       JOIN unnest(train.engineer_ids) WITH ORDINALITY
         AS train_engineer_ref (id, array_order_index)
         ON train_engineer.id = train_engineer_ref.id
     ) AS engineer_uuids,
     (
       SELECT train_engineer.uuid
-      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
+      FROM view_train_engineer_current AS train_engineer WHERE train_engineer.id = train.lead_engineer_id
     ) AS lead_engineer_uuid,
     train.status
   FROM view_train_current AS train
@@ -1162,7 +1162,7 @@ export const sql = \`
     train.combination_id,
     (
       SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM locomotive
+      FROM view_locomotive_current AS locomotive
       JOIN unnest(train.locomotive_ids) WITH ORDINALITY
         AS locomotive_ref (id, array_order_index)
         ON locomotive.id = locomotive_ref.id
@@ -1176,14 +1176,14 @@ export const sql = \`
     ) AS carriage_uuids,
     (
       SELECT COALESCE(array_agg(train_engineer.uuid ORDER BY train_engineer_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM train_engineer
+      FROM view_train_engineer_current AS train_engineer
       JOIN unnest(train.engineer_ids) WITH ORDINALITY
         AS train_engineer_ref (id, array_order_index)
         ON train_engineer.id = train_engineer_ref.id
     ) AS engineer_uuids,
     (
       SELECT train_engineer.uuid
-      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
+      FROM view_train_engineer_current AS train_engineer WHERE train_engineer.id = train.lead_engineer_id
     ) AS lead_engineer_uuid,
     train.status
   FROM view_train_current AS train
@@ -1238,7 +1238,7 @@ export const sql = \`
     train.combination_id,
     (
       SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM locomotive
+      FROM view_locomotive_current AS locomotive
       JOIN unnest(train.locomotive_ids) WITH ORDINALITY
         AS locomotive_ref (id, array_order_index)
         ON locomotive.id = locomotive_ref.id
@@ -1252,14 +1252,14 @@ export const sql = \`
     ) AS carriage_uuids,
     (
       SELECT COALESCE(array_agg(train_engineer.uuid ORDER BY train_engineer_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM train_engineer
+      FROM view_train_engineer_current AS train_engineer
       JOIN unnest(train.engineer_ids) WITH ORDINALITY
         AS train_engineer_ref (id, array_order_index)
         ON train_engineer.id = train_engineer_ref.id
     ) AS engineer_uuids,
     (
       SELECT train_engineer.uuid
-      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
+      FROM view_train_engineer_current AS train_engineer WHERE train_engineer.id = train.lead_engineer_id
     ) AS lead_engineer_uuid,
     train.status
   FROM view_train_current AS train
@@ -1628,7 +1628,7 @@ export const sql = \`
     train_located_event.id,
     (
       SELECT train.uuid
-      FROM train WHERE train.id = train_located_event.train_id
+      FROM view_train_current AS train WHERE train.id = train_located_event.train_id
     ) AS train_uuid,
     train_located_event.occurred_at,
     (
@@ -1680,7 +1680,7 @@ export const sql = \`
     train_located_event.id,
     (
       SELECT train.uuid
-      FROM train WHERE train.id = train_located_event.train_id
+      FROM view_train_current AS train WHERE train.id = train_located_event.train_id
     ) AS train_uuid,
     train_located_event.occurred_at,
     (

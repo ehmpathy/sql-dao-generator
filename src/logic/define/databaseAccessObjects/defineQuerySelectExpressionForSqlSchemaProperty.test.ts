@@ -581,13 +581,166 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
       });
       expect(expression).toContain('SELECT json_build_object'); // should grab a json object
       expect(expression).toContain(
-        'FROM invoice_line_item WHERE invoice_line_item.id = invoice.line_item_id',
+        'FROM view_invoice_line_item_current AS invoice_line_item WHERE invoice_line_item.id = invoice.line_item_id',
       ); // from the right table
       expect(expression).toContain('FROM price'); // from the right table
       expect(expression).toContain('ON price.id = price_ref.id'); // from the right table
       expect(expression).toContain('AS line_item'); // with the correct output name
       expect(expression).toMatchSnapshot();
     });
+    it('should define the select expression correctly for a solo DIRECT_BY_NESTING reference with its own array IMPLICIT_BY_UUID reference', () => {
+      const expression = defineQuerySelectExpressionForSqlSchemaProperty({
+        sqlSchemaName: 'lead',
+        sqlSchemaProperty: {
+          name: 'lead_capture_id',
+          isArray: false,
+          isNullable: false,
+          isUpdatable: false,
+          isDatabaseGenerated: false,
+          reference: {
+            method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
+            of: {
+              name: 'LeadCapture',
+              extends: DomainObjectVariant.DOMAIN_LITERAL,
+            },
+          },
+        },
+        domainObjectProperty: {
+          name: 'leadCapture',
+          type: DomainObjectPropertyType.REFERENCE,
+          of: {
+            name: 'LeadCapture',
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
+          },
+        },
+        allSqlSchemaRelationships: [
+          new SqlSchemaToDomainObjectRelationship({
+            name: {
+              domainObject: 'LeadCapture',
+              sqlSchema: 'lead_capture',
+            },
+            properties: [
+              {
+                domainObject: {
+                  name: 'id',
+                  type: DomainObjectPropertyType.NUMBER,
+                },
+                sqlSchema: {
+                  name: 'id',
+                  isArray: false,
+                  isNullable: false,
+                  isUpdatable: false,
+                  isDatabaseGenerated: false,
+                  reference: null,
+                },
+              },
+              {
+                domainObject: {
+                  name: 'leadCaptureEventUuids',
+                  type: DomainObjectPropertyType.ARRAY,
+                  of: {
+                    type: DomainObjectPropertyType.STRING,
+                  },
+                },
+                sqlSchema: {
+                  name: 'lead_capture_event_ids',
+                  isArray: true,
+                  isNullable: false,
+                  isUpdatable: false,
+                  isDatabaseGenerated: false,
+                  reference: {
+                    method: SqlSchemaReferenceMethod.IMPLICIT_BY_UUID,
+                    of: {
+                      name: 'LeadCaptureEvent',
+                      extends: DomainObjectVariant.DOMAIN_ENTITY,
+                    },
+                  },
+                },
+              },
+            ],
+            decorations: {
+              alias: { domainObject: null },
+              unique: {
+                sqlSchema: null,
+                domainObject: null,
+              },
+            },
+          }),
+          new SqlSchemaToDomainObjectRelationship({
+            name: {
+              domainObject: 'LeadCaptureEvent',
+              sqlSchema: 'lead_capture_event',
+            },
+            properties: [
+              {
+                domainObject: {
+                  name: 'id',
+                  type: DomainObjectPropertyType.NUMBER,
+                },
+                sqlSchema: {
+                  name: 'id',
+                  isArray: false,
+                  isNullable: false,
+                  isUpdatable: false,
+                  isDatabaseGenerated: false,
+                  reference: null,
+                },
+              },
+              {
+                domainObject: {
+                  name: 'uuid',
+                  type: DomainObjectPropertyType.STRING,
+                },
+                sqlSchema: {
+                  name: 'uuid',
+                  isArray: false,
+                  isNullable: false,
+                  isUpdatable: false,
+                  isDatabaseGenerated: false,
+                  reference: null,
+                },
+              },
+              {
+                domainObject: {
+                  name: 'occurredAt',
+                  type: DomainObjectPropertyType.DATE,
+                },
+                sqlSchema: {
+                  name: 'occurredAt',
+                  isArray: false,
+                  isNullable: false,
+                  isUpdatable: false,
+                  isDatabaseGenerated: false,
+                  reference: null,
+                },
+              },
+            ],
+            decorations: {
+              alias: { domainObject: null },
+              unique: {
+                sqlSchema: null,
+                domainObject: null,
+              },
+            },
+          }),
+        ],
+      });
+      expect(expression).toContain('SELECT json_build_object'); // should grab a json object
+      expect(expression).toContain('lead_capture_event_uuids'); // should grab the right key name
+      expect(expression).toContain(
+        'SELECT COALESCE(array_agg(lead_capture_event.uuid ORDER BY lead_capture_event_ref.array_order_index), array[]::uuid[])', // should grab the right value
+      );
+      expect(expression).toContain(
+        'FROM view_lead_capture_current AS lead_capture WHERE lead_capture.id = lead.lead_capture_id',
+      ); // from the right table
+      expect(expression).toContain('FROM lead_capture_event'); // from the right table
+      expect(expression).toContain(
+        'ON lead_capture_event.id = lead_capture_event_ref.id',
+      ); // from the right table
+      expect(expression).toContain('AS lead_capture'); // with the correct output name
+      expect(expression).toMatchSnapshot();
+    });
+
     it('should define the select expression correctly for an array DIRECT_BY_NESTING reference with its own solo DIRECT_BY_NESTING reference', () => {
       const expression = defineQuerySelectExpressionForSqlSchemaProperty({
         sqlSchemaName: 'invoice',
