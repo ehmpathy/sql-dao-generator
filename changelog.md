@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.4](https://github.com/ehmpathy/sql-dao-generator/compare/v0.7.3...v0.7.4) (2024-06-17)
+
+
+### Bug Fixes
+
+* **query:** dereference nested array dobjs via view when needed ([202017c](https://github.com/ehmpathy/sql-dao-generator/commit/202017c353da754e3f1a3edcbc08a591a4ce44b0))
+
 ## [0.7.3](https://github.com/ehmpathy/sql-dao-generator/compare/v0.7.2...v0.7.3) (2024-06-15)
 
 
