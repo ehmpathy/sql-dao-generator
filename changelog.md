@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.7.4...v0.8.0) (2024-06-30)
+
+
+### Features
+
+* **hydrated:** dedupe query expressions in dao via hydrated view ([07e51e3](https://github.com/ehmpathy/sql-dao-generator/commit/07e51e35e2c7afaa0e3337c0574e1428d77eeaf1))
+
 ## [0.7.4](https://github.com/ehmpathy/sql-dao-generator/compare/v0.7.3...v0.7.4) (2024-06-17)
 
 
