@@ -11,6 +11,8 @@ exports[`defineSqlSchemaControlCodeForDomainObject should look right for a domai
 - type: resource
   path: ./views/view_train_located_event_current.sql
 - type: resource
+  path: ./views/view_train_located_event_hydrated.sql
+- type: resource
   path: ./functions/upsert_train_located_event.sql"
 `;
 
@@ -31,6 +33,8 @@ exports[`defineSqlSchemaControlCodeForDomainObject should look right for a domai
 - type: resource
   path: ./views/view_train_current.sql
 - type: resource
+  path: ./views/view_train_hydrated.sql
+- type: resource
   path: ./functions/upsert_train.sql"
 `;
 
@@ -45,6 +49,8 @@ exports[`defineSqlSchemaControlCodeForDomainObject should look right for a domai
 - type: resource
   path: ./views/view_carriage_current.sql
 - type: resource
+  path: ./views/view_carriage_hydrated.sql
+- type: resource
   path: ./functions/upsert_carriage.sql"
 `;
 
@@ -52,6 +58,8 @@ exports[`defineSqlSchemaControlCodeForDomainObject should look right for a simpl
 "# geocode
 - type: resource
   path: ./tables/geocode.sql
+- type: resource
+  path: ./views/view_geocode_hydrated.sql
 - type: resource
   path: ./functions/upsert_geocode.sql"
 `;

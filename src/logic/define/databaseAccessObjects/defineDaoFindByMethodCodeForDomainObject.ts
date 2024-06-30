@@ -204,7 +204,13 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
               domainObject: domainObjectProperty,
               sqlSchema: sqlSchemaProperty,
             } = propertyRelationship;
-            return `${sqlSchemaName}.${sqlSchemaPropertyName} = ${defineQueryInputExpressionForSqlSchemaProperty(
+            const isDirectlyNestedDomainLiteral = Boolean(
+              sqlSchemaProperty.reference,
+            );
+            const sourceTableAlias = isDirectlyNestedDomainLiteral
+              ? `view_${sqlSchemaName}_current`
+              : sqlSchemaName;
+            return `${sourceTableAlias}.${sqlSchemaPropertyName} = ${defineQueryInputExpressionForSqlSchemaProperty(
               {
                 sqlSchemaName,
                 sqlSchemaProperty,
@@ -342,6 +348,15 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
   // define the output type
   const outputType = defineOutputTypeOfFoundDomainObject(domainObject);
 
+  // define whether there was a directly nested  dobjs
+  const hasReferenceInUniqueKey = sqlSchemaRelationship.properties.some(
+    (property) =>
+      property.sqlSchema.reference &&
+      sqlSchemaRelationship.decorations.unique.sqlSchema?.includes(
+        property.sqlSchema.name,
+      ),
+  );
+
   // define the content
   const code = `
 ${imports.join('\n')}
@@ -350,28 +365,23 @@ export const sql = \`
   -- query_name = find_${sqlSchemaName}_by_${snakeCase(findByQueryType)}
   SELECT
     ${sqlSchemaRelationship.properties
-      .map(
-        ({
-          sqlSchema: sqlSchemaProperty,
-          domainObject: domainObjectProperty,
-        }) => {
-          if (!domainObjectProperty) return null;
-          return defineQuerySelectExpressionForSqlSchemaProperty({
-            sqlSchemaName,
-            sqlSchemaProperty,
-            domainObjectProperty,
-            allSqlSchemaRelationships,
-          });
-        },
+      .map(({ domainObject: domainObjectProperty }) =>
+        !domainObjectProperty
+          ? null
+          : `${sqlSchemaName}.${snakeCase(domainObjectProperty.name)}`,
       )
       .filter(isPresent)
-      .flat()
       .join(',\n    ')}
-  FROM ${
-    hasCurrentView
-      ? `view_${sqlSchemaName}_current AS ${sqlSchemaName}`
-      : sqlSchemaName
-  }
+  ${[
+    `FROM view_${sqlSchemaName}_hydrated AS ${sqlSchemaName}`,
+    hasReferenceInUniqueKey && findByQueryType === FindByQueryType.UNIQUE
+      ? hasCurrentView
+        ? `JOIN view_${sqlSchemaName}_current ON ${sqlSchemaName}.id = view_${sqlSchemaName}_current.id`
+        : `JOIN ${sqlSchemaName} as view_${sqlSchemaName}_current ON ${sqlSchemaName}.id = view_${sqlSchemaName}_current.id` // todo: upgrade schemas to always supply a "current" view && _static table
+      : null,
+  ]
+    .filter(isPresent)
+    .join('\n  ')}
   WHERE ${whereConditions};
 \`;
 

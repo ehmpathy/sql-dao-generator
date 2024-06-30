@@ -56,15 +56,9 @@ export const sql = \`
     async_task_predict_station_congestion.created_at,
     async_task_predict_station_congestion.updated_at,
     async_task_predict_station_congestion.status,
-    (
-      SELECT train_station.uuid
-      FROM view_train_station_current AS train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
-    ) AS station_uuid,
-    (
-      SELECT train_located_event.uuid
-      FROM train_located_event WHERE train_located_event.id = async_task_predict_station_congestion.train_located_event_id
-    ) AS train_located_event_uuid
-  FROM view_async_task_predict_station_congestion_current AS async_task_predict_station_congestion
+    async_task_predict_station_congestion.station_uuid,
+    async_task_predict_station_congestion.train_located_event_uuid
+  FROM view_async_task_predict_station_congestion_hydrated AS async_task_predict_station_congestion
   WHERE async_task_predict_station_congestion.id = :id;
 \`;
 
@@ -107,18 +101,13 @@ export const sql = \`
     async_task_predict_station_congestion.created_at,
     async_task_predict_station_congestion.updated_at,
     async_task_predict_station_congestion.status,
-    (
-      SELECT train_station.uuid
-      FROM view_train_station_current AS train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
-    ) AS station_uuid,
-    (
-      SELECT train_located_event.uuid
-      FROM train_located_event WHERE train_located_event.id = async_task_predict_station_congestion.train_located_event_id
-    ) AS train_located_event_uuid
-  FROM view_async_task_predict_station_congestion_current AS async_task_predict_station_congestion
+    async_task_predict_station_congestion.station_uuid,
+    async_task_predict_station_congestion.train_located_event_uuid
+  FROM view_async_task_predict_station_congestion_hydrated AS async_task_predict_station_congestion
+  JOIN view_async_task_predict_station_congestion_current ON async_task_predict_station_congestion.id = view_async_task_predict_station_congestion_current.id
   WHERE 1=1
-    AND async_task_predict_station_congestion.station_id = (SELECT id FROM train_station WHERE train_station.uuid = :stationUuid)
-    AND async_task_predict_station_congestion.train_located_event_id = (SELECT id FROM train_located_event WHERE train_located_event.uuid = :trainLocatedEventUuid);
+    AND view_async_task_predict_station_congestion_current.station_id = (SELECT id FROM train_station WHERE train_station.uuid = :stationUuid)
+    AND view_async_task_predict_station_congestion_current.train_located_event_id = (SELECT id FROM train_located_event WHERE train_located_event.uuid = :trainLocatedEventUuid);
 \`;
 
 export const findByUnique = async (
@@ -163,15 +152,9 @@ export const sql = \`
     async_task_predict_station_congestion.created_at,
     async_task_predict_station_congestion.updated_at,
     async_task_predict_station_congestion.status,
-    (
-      SELECT train_station.uuid
-      FROM view_train_station_current AS train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
-    ) AS station_uuid,
-    (
-      SELECT train_located_event.uuid
-      FROM train_located_event WHERE train_located_event.id = async_task_predict_station_congestion.train_located_event_id
-    ) AS train_located_event_uuid
-  FROM view_async_task_predict_station_congestion_current AS async_task_predict_station_congestion
+    async_task_predict_station_congestion.station_uuid,
+    async_task_predict_station_congestion.train_located_event_uuid
+  FROM view_async_task_predict_station_congestion_hydrated AS async_task_predict_station_congestion
   WHERE async_task_predict_station_congestion.uuid = :uuid;
 \`;
 
@@ -290,7 +273,7 @@ export const sql = \`
     carriage.cin,
     carriage.carries,
     carriage.capacity
-  FROM carriage
+  FROM view_carriage_hydrated AS carriage
   WHERE carriage.id = :id;
 \`;
 
@@ -333,7 +316,7 @@ export const sql = \`
     carriage.cin,
     carriage.carries,
     carriage.capacity
-  FROM carriage
+  FROM view_carriage_hydrated AS carriage
   WHERE 1=1
     AND carriage.uuid = :uuid;
 \`;
@@ -377,7 +360,7 @@ export const sql = \`
     carriage.cin,
     carriage.carries,
     carriage.capacity
-  FROM carriage
+  FROM view_carriage_hydrated AS carriage
   WHERE carriage.uuid = :uuid;
 \`;
 
@@ -492,7 +475,7 @@ export const sql = \`
     certificate.id,
     certificate.type,
     certificate.industry_id
-  FROM certificate
+  FROM view_certificate_hydrated AS certificate
   WHERE certificate.id = :id;
 \`;
 
@@ -533,7 +516,7 @@ export const sql = \`
     certificate.id,
     certificate.type,
     certificate.industry_id
-  FROM certificate
+  FROM view_certificate_hydrated AS certificate
   WHERE 1=1
     AND certificate.type = :type
     AND certificate.industry_id = :industryId;
@@ -655,26 +638,10 @@ export const sql = \`
     train_engineer.id,
     train_engineer.uuid,
     train_engineer.social_security_number_hash,
-    (
-      SELECT COALESCE(
-        json_agg(
-          json_build_object(
-            'id', certificate.id,
-            'type', certificate.type,
-            'industry_id', certificate.industry_id
-          )
-          ORDER BY certificate_ref.array_order_index
-        ),
-        '[]'::json
-      ) AS json_agg
-      FROM certificate
-      JOIN unnest(train_engineer.certificate_ids) WITH ORDINALITY
-        AS certificate_ref (id, array_order_index)
-        ON certificate.id = certificate_ref.id
-    ) AS certificates,
+    train_engineer.certificates,
     train_engineer.license_uuids,
     train_engineer.name
-  FROM view_train_engineer_current AS train_engineer
+  FROM view_train_engineer_hydrated AS train_engineer
   WHERE train_engineer.id = :id;
 \`;
 
@@ -715,26 +682,10 @@ export const sql = \`
     train_engineer.id,
     train_engineer.uuid,
     train_engineer.social_security_number_hash,
-    (
-      SELECT COALESCE(
-        json_agg(
-          json_build_object(
-            'id', certificate.id,
-            'type', certificate.type,
-            'industry_id', certificate.industry_id
-          )
-          ORDER BY certificate_ref.array_order_index
-        ),
-        '[]'::json
-      ) AS json_agg
-      FROM certificate
-      JOIN unnest(train_engineer.certificate_ids) WITH ORDINALITY
-        AS certificate_ref (id, array_order_index)
-        ON certificate.id = certificate_ref.id
-    ) AS certificates,
+    train_engineer.certificates,
     train_engineer.license_uuids,
     train_engineer.name
-  FROM view_train_engineer_current AS train_engineer
+  FROM view_train_engineer_hydrated AS train_engineer
   WHERE 1=1
     AND train_engineer.social_security_number_hash = :socialSecurityNumberHash;
 \`;
@@ -776,26 +727,10 @@ export const sql = \`
     train_engineer.id,
     train_engineer.uuid,
     train_engineer.social_security_number_hash,
-    (
-      SELECT COALESCE(
-        json_agg(
-          json_build_object(
-            'id', certificate.id,
-            'type', certificate.type,
-            'industry_id', certificate.industry_id
-          )
-          ORDER BY certificate_ref.array_order_index
-        ),
-        '[]'::json
-      ) AS json_agg
-      FROM certificate
-      JOIN unnest(train_engineer.certificate_ids) WITH ORDINALITY
-        AS certificate_ref (id, array_order_index)
-        ON certificate.id = certificate_ref.id
-    ) AS certificates,
+    train_engineer.certificates,
     train_engineer.license_uuids,
     train_engineer.name
-  FROM view_train_engineer_current AS train_engineer
+  FROM view_train_engineer_hydrated AS train_engineer
   WHERE train_engineer.uuid = :uuid;
 \`;
 
@@ -911,7 +846,7 @@ export const sql = \`
     geocode.id,
     geocode.latitude,
     geocode.longitude
-  FROM geocode
+  FROM view_geocode_hydrated AS geocode
   WHERE geocode.id = :id;
 \`;
 
@@ -952,7 +887,7 @@ export const sql = \`
     geocode.id,
     geocode.latitude,
     geocode.longitude
-  FROM geocode
+  FROM view_geocode_hydrated AS geocode
   WHERE 1=1
     AND geocode.latitude = :latitude
     AND geocode.longitude = :longitude;
@@ -1076,42 +1011,14 @@ export const sql = \`
   SELECT
     train.id,
     train.uuid,
-    (
-      SELECT json_build_object(
-        'id', geocode.id,
-        'latitude', geocode.latitude,
-        'longitude', geocode.longitude
-      ) AS json_build_object
-      FROM geocode WHERE geocode.id = train.home_station_geocode_id
-    ) AS home_station_geocode,
+    train.home_station_geocode,
     train.combination_id,
-    (
-      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM view_locomotive_current AS locomotive
-      JOIN unnest(train.locomotive_ids) WITH ORDINALITY
-        AS locomotive_ref (id, array_order_index)
-        ON locomotive.id = locomotive_ref.id
-    ) AS locomotive_uuids,
-    (
-      SELECT COALESCE(array_agg(carriage.uuid ORDER BY carriage_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM carriage
-      JOIN unnest(train.carriage_ids) WITH ORDINALITY
-        AS carriage_ref (id, array_order_index)
-        ON carriage.id = carriage_ref.id
-    ) AS carriage_uuids,
-    (
-      SELECT COALESCE(array_agg(train_engineer.uuid ORDER BY train_engineer_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM view_train_engineer_current AS train_engineer
-      JOIN unnest(train.engineer_ids) WITH ORDINALITY
-        AS train_engineer_ref (id, array_order_index)
-        ON train_engineer.id = train_engineer_ref.id
-    ) AS engineer_uuids,
-    (
-      SELECT train_engineer.uuid
-      FROM view_train_engineer_current AS train_engineer WHERE train_engineer.id = train.lead_engineer_id
-    ) AS lead_engineer_uuid,
+    train.locomotive_uuids,
+    train.carriage_uuids,
+    train.engineer_uuids,
+    train.lead_engineer_uuid,
     train.status
-  FROM view_train_current AS train
+  FROM view_train_hydrated AS train
   WHERE train.id = :id;
 \`;
 
@@ -1151,42 +1058,14 @@ export const sql = \`
   SELECT
     train.id,
     train.uuid,
-    (
-      SELECT json_build_object(
-        'id', geocode.id,
-        'latitude', geocode.latitude,
-        'longitude', geocode.longitude
-      ) AS json_build_object
-      FROM geocode WHERE geocode.id = train.home_station_geocode_id
-    ) AS home_station_geocode,
+    train.home_station_geocode,
     train.combination_id,
-    (
-      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM view_locomotive_current AS locomotive
-      JOIN unnest(train.locomotive_ids) WITH ORDINALITY
-        AS locomotive_ref (id, array_order_index)
-        ON locomotive.id = locomotive_ref.id
-    ) AS locomotive_uuids,
-    (
-      SELECT COALESCE(array_agg(carriage.uuid ORDER BY carriage_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM carriage
-      JOIN unnest(train.carriage_ids) WITH ORDINALITY
-        AS carriage_ref (id, array_order_index)
-        ON carriage.id = carriage_ref.id
-    ) AS carriage_uuids,
-    (
-      SELECT COALESCE(array_agg(train_engineer.uuid ORDER BY train_engineer_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM view_train_engineer_current AS train_engineer
-      JOIN unnest(train.engineer_ids) WITH ORDINALITY
-        AS train_engineer_ref (id, array_order_index)
-        ON train_engineer.id = train_engineer_ref.id
-    ) AS engineer_uuids,
-    (
-      SELECT train_engineer.uuid
-      FROM view_train_engineer_current AS train_engineer WHERE train_engineer.id = train.lead_engineer_id
-    ) AS lead_engineer_uuid,
+    train.locomotive_uuids,
+    train.carriage_uuids,
+    train.engineer_uuids,
+    train.lead_engineer_uuid,
     train.status
-  FROM view_train_current AS train
+  FROM view_train_hydrated AS train
   WHERE 1=1
     AND train.combination_id = :combinationId;
 \`;
@@ -1227,42 +1106,14 @@ export const sql = \`
   SELECT
     train.id,
     train.uuid,
-    (
-      SELECT json_build_object(
-        'id', geocode.id,
-        'latitude', geocode.latitude,
-        'longitude', geocode.longitude
-      ) AS json_build_object
-      FROM geocode WHERE geocode.id = train.home_station_geocode_id
-    ) AS home_station_geocode,
+    train.home_station_geocode,
     train.combination_id,
-    (
-      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM view_locomotive_current AS locomotive
-      JOIN unnest(train.locomotive_ids) WITH ORDINALITY
-        AS locomotive_ref (id, array_order_index)
-        ON locomotive.id = locomotive_ref.id
-    ) AS locomotive_uuids,
-    (
-      SELECT COALESCE(array_agg(carriage.uuid ORDER BY carriage_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM carriage
-      JOIN unnest(train.carriage_ids) WITH ORDINALITY
-        AS carriage_ref (id, array_order_index)
-        ON carriage.id = carriage_ref.id
-    ) AS carriage_uuids,
-    (
-      SELECT COALESCE(array_agg(train_engineer.uuid ORDER BY train_engineer_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM view_train_engineer_current AS train_engineer
-      JOIN unnest(train.engineer_ids) WITH ORDINALITY
-        AS train_engineer_ref (id, array_order_index)
-        ON train_engineer.id = train_engineer_ref.id
-    ) AS engineer_uuids,
-    (
-      SELECT train_engineer.uuid
-      FROM view_train_engineer_current AS train_engineer WHERE train_engineer.id = train.lead_engineer_id
-    ) AS lead_engineer_uuid,
+    train.locomotive_uuids,
+    train.carriage_uuids,
+    train.engineer_uuids,
+    train.lead_engineer_uuid,
     train.status
-  FROM view_train_current AS train
+  FROM view_train_hydrated AS train
   WHERE train.uuid = :uuid;
 \`;
 
@@ -1416,7 +1267,7 @@ export const sql = \`
     locomotive.fuel,
     locomotive.capacity,
     locomotive.milage
-  FROM view_locomotive_current AS locomotive
+  FROM view_locomotive_hydrated AS locomotive
   WHERE locomotive.id = :id;
 \`;
 
@@ -1463,7 +1314,7 @@ export const sql = \`
     locomotive.fuel,
     locomotive.capacity,
     locomotive.milage
-  FROM view_locomotive_current AS locomotive
+  FROM view_locomotive_hydrated AS locomotive
   WHERE 1=1
     AND locomotive.ein = :ein;
 \`;
@@ -1511,7 +1362,7 @@ export const sql = \`
     locomotive.fuel,
     locomotive.capacity,
     locomotive.milage
-  FROM view_locomotive_current AS locomotive
+  FROM view_locomotive_hydrated AS locomotive
   WHERE locomotive.uuid = :uuid;
 \`;
 
@@ -1626,20 +1477,10 @@ export const sql = \`
   -- query_name = find_train_located_event_by_id
   SELECT
     train_located_event.id,
-    (
-      SELECT train.uuid
-      FROM view_train_current AS train WHERE train.id = train_located_event.train_id
-    ) AS train_uuid,
+    train_located_event.train_uuid,
     train_located_event.occurred_at,
-    (
-      SELECT json_build_object(
-        'id', geocode.id,
-        'latitude', geocode.latitude,
-        'longitude', geocode.longitude
-      ) AS json_build_object
-      FROM geocode WHERE geocode.id = train_located_event.geocode_id
-    ) AS geocode
-  FROM train_located_event
+    train_located_event.geocode
+  FROM view_train_located_event_hydrated AS train_located_event
   WHERE train_located_event.id = :id;
 \`;
 
@@ -1678,22 +1519,13 @@ export const sql = \`
   -- query_name = find_train_located_event_by_unique
   SELECT
     train_located_event.id,
-    (
-      SELECT train.uuid
-      FROM view_train_current AS train WHERE train.id = train_located_event.train_id
-    ) AS train_uuid,
+    train_located_event.train_uuid,
     train_located_event.occurred_at,
-    (
-      SELECT json_build_object(
-        'id', geocode.id,
-        'latitude', geocode.latitude,
-        'longitude', geocode.longitude
-      ) AS json_build_object
-      FROM geocode WHERE geocode.id = train_located_event.geocode_id
-    ) AS geocode
-  FROM train_located_event
+    train_located_event.geocode
+  FROM view_train_located_event_hydrated AS train_located_event
+  JOIN train_located_event as view_train_located_event_current ON train_located_event.id = view_train_located_event_current.id
   WHERE 1=1
-    AND train_located_event.train_id = (SELECT id FROM train WHERE train.uuid = :trainUuid)
+    AND view_train_located_event_current.train_id = (SELECT id FROM train WHERE train.uuid = :trainUuid)
     AND train_located_event.occurred_at = :occurredAt;
 \`;
 
@@ -1813,16 +1645,9 @@ export const sql = \`
   SELECT
     train_station.id,
     train_station.uuid,
-    (
-      SELECT json_build_object(
-        'id', geocode.id,
-        'latitude', geocode.latitude,
-        'longitude', geocode.longitude
-      ) AS json_build_object
-      FROM geocode WHERE geocode.id = train_station.geocode_id
-    ) AS geocode,
+    train_station.geocode,
     train_station.name
-  FROM view_train_station_current AS train_station
+  FROM view_train_station_hydrated AS train_station
   WHERE train_station.id = :id;
 \`;
 
@@ -1863,18 +1688,12 @@ export const sql = \`
   SELECT
     train_station.id,
     train_station.uuid,
-    (
-      SELECT json_build_object(
-        'id', geocode.id,
-        'latitude', geocode.latitude,
-        'longitude', geocode.longitude
-      ) AS json_build_object
-      FROM geocode WHERE geocode.id = train_station.geocode_id
-    ) AS geocode,
+    train_station.geocode,
     train_station.name
-  FROM view_train_station_current AS train_station
+  FROM view_train_station_hydrated AS train_station
+  JOIN view_train_station_current ON train_station.id = view_train_station_current.id
   WHERE 1=1
-    AND train_station.geocode_id = :geocodeId;
+    AND view_train_station_current.geocode_id = :geocodeId;
 \`;
 
 export const findByUnique = async (
@@ -1913,16 +1732,9 @@ export const sql = \`
   SELECT
     train_station.id,
     train_station.uuid,
-    (
-      SELECT json_build_object(
-        'id', geocode.id,
-        'latitude', geocode.latitude,
-        'longitude', geocode.longitude
-      ) AS json_build_object
-      FROM geocode WHERE geocode.id = train_station.geocode_id
-    ) AS geocode,
+    train_station.geocode,
     train_station.name
-  FROM view_train_station_current AS train_station
+  FROM view_train_station_hydrated AS train_station
   WHERE train_station.uuid = :uuid;
 \`;
 
@@ -2034,7 +1846,7 @@ export const sql = \`
     price.id,
     price.amount,
     price.currency
-  FROM price
+  FROM view_price_hydrated AS price
   WHERE price.id = :id;
 \`;
 
@@ -2075,7 +1887,7 @@ export const sql = \`
     price.id,
     price.amount,
     price.currency
-  FROM price
+  FROM view_price_hydrated AS price
   WHERE 1=1
     AND price.amount = :amount
     AND price.currency = :currency;
@@ -2191,17 +2003,10 @@ export const sql = \`
   -- query_name = find_invoice_line_item_by_id
   SELECT
     invoice_line_item.id,
-    (
-      SELECT json_build_object(
-        'id', price.id,
-        'amount', price.amount,
-        'currency', price.currency
-      ) AS json_build_object
-      FROM price WHERE price.id = invoice_line_item.price_id
-    ) AS price,
+    invoice_line_item.price,
     invoice_line_item.title,
     invoice_line_item.explanation
-  FROM invoice_line_item
+  FROM view_invoice_line_item_hydrated AS invoice_line_item
   WHERE invoice_line_item.id = :id;
 \`;
 
@@ -2241,19 +2046,13 @@ export const sql = \`
   -- query_name = find_invoice_line_item_by_unique
   SELECT
     invoice_line_item.id,
-    (
-      SELECT json_build_object(
-        'id', price.id,
-        'amount', price.amount,
-        'currency', price.currency
-      ) AS json_build_object
-      FROM price WHERE price.id = invoice_line_item.price_id
-    ) AS price,
+    invoice_line_item.price,
     invoice_line_item.title,
     invoice_line_item.explanation
-  FROM invoice_line_item
+  FROM view_invoice_line_item_hydrated AS invoice_line_item
+  JOIN invoice_line_item as view_invoice_line_item_current ON invoice_line_item.id = view_invoice_line_item_current.id
   WHERE 1=1
-    AND invoice_line_item.price_id = :priceId
+    AND view_invoice_line_item_current.price_id = :priceId
     AND invoice_line_item.title = :title
     AND invoice_line_item.explanation = :explanation;
 \`;
@@ -2381,41 +2180,10 @@ export const sql = \`
     invoice.id,
     invoice.uuid,
     invoice.external_id,
-    (
-      SELECT COALESCE(
-        json_agg(
-          json_build_object(
-            'id', invoice_line_item.id,
-            'price', (
-              SELECT json_build_object(
-                'id', price.id,
-                'amount', price.amount,
-                'currency', price.currency
-              ) AS json_build_object
-              FROM price WHERE price.id = invoice_line_item.price_id
-            ),
-            'title', invoice_line_item.title,
-            'explanation', invoice_line_item.explanation
-          )
-          ORDER BY invoice_line_item_ref.array_order_index
-        ),
-        '[]'::json
-      ) AS json_agg
-      FROM invoice_line_item
-      JOIN unnest(invoice.item_ids) WITH ORDINALITY
-        AS invoice_line_item_ref (id, array_order_index)
-        ON invoice_line_item.id = invoice_line_item_ref.id
-    ) AS items,
-    (
-      SELECT json_build_object(
-        'id', price.id,
-        'amount', price.amount,
-        'currency', price.currency
-      ) AS json_build_object
-      FROM price WHERE price.id = invoice.total_price_id
-    ) AS total_price,
+    invoice.items,
+    invoice.total_price,
     invoice.status
-  FROM view_invoice_current AS invoice
+  FROM view_invoice_hydrated AS invoice
   WHERE invoice.id = :id;
 \`;
 
@@ -2456,41 +2224,10 @@ export const sql = \`
     invoice.id,
     invoice.uuid,
     invoice.external_id,
-    (
-      SELECT COALESCE(
-        json_agg(
-          json_build_object(
-            'id', invoice_line_item.id,
-            'price', (
-              SELECT json_build_object(
-                'id', price.id,
-                'amount', price.amount,
-                'currency', price.currency
-              ) AS json_build_object
-              FROM price WHERE price.id = invoice_line_item.price_id
-            ),
-            'title', invoice_line_item.title,
-            'explanation', invoice_line_item.explanation
-          )
-          ORDER BY invoice_line_item_ref.array_order_index
-        ),
-        '[]'::json
-      ) AS json_agg
-      FROM invoice_line_item
-      JOIN unnest(invoice.item_ids) WITH ORDINALITY
-        AS invoice_line_item_ref (id, array_order_index)
-        ON invoice_line_item.id = invoice_line_item_ref.id
-    ) AS items,
-    (
-      SELECT json_build_object(
-        'id', price.id,
-        'amount', price.amount,
-        'currency', price.currency
-      ) AS json_build_object
-      FROM price WHERE price.id = invoice.total_price_id
-    ) AS total_price,
+    invoice.items,
+    invoice.total_price,
     invoice.status
-  FROM view_invoice_current AS invoice
+  FROM view_invoice_hydrated AS invoice
   WHERE 1=1
     AND invoice.external_id = :externalId;
 \`;
@@ -2532,41 +2269,10 @@ export const sql = \`
     invoice.id,
     invoice.uuid,
     invoice.external_id,
-    (
-      SELECT COALESCE(
-        json_agg(
-          json_build_object(
-            'id', invoice_line_item.id,
-            'price', (
-              SELECT json_build_object(
-                'id', price.id,
-                'amount', price.amount,
-                'currency', price.currency
-              ) AS json_build_object
-              FROM price WHERE price.id = invoice_line_item.price_id
-            ),
-            'title', invoice_line_item.title,
-            'explanation', invoice_line_item.explanation
-          )
-          ORDER BY invoice_line_item_ref.array_order_index
-        ),
-        '[]'::json
-      ) AS json_agg
-      FROM invoice_line_item
-      JOIN unnest(invoice.item_ids) WITH ORDINALITY
-        AS invoice_line_item_ref (id, array_order_index)
-        ON invoice_line_item.id = invoice_line_item_ref.id
-    ) AS items,
-    (
-      SELECT json_build_object(
-        'id', price.id,
-        'amount', price.amount,
-        'currency', price.currency
-      ) AS json_build_object
-      FROM price WHERE price.id = invoice.total_price_id
-    ) AS total_price,
+    invoice.items,
+    invoice.total_price,
     invoice.status
-  FROM view_invoice_current AS invoice
+  FROM view_invoice_hydrated AS invoice
   WHERE invoice.uuid = :uuid;
 \`;
 

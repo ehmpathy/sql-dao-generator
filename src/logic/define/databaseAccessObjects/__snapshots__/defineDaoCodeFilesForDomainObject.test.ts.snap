@@ -52,7 +52,7 @@ export const sql = \`
     geocode.uuid,
     geocode.latitude,
     geocode.longitude
-  FROM geocode
+  FROM view_geocode_hydrated AS geocode
   WHERE geocode.id = :id;
 \`;
 
@@ -94,7 +94,7 @@ export const sql = \`
     geocode.uuid,
     geocode.latitude,
     geocode.longitude
-  FROM geocode
+  FROM view_geocode_hydrated AS geocode
   WHERE 1=1
     AND geocode.latitude = :latitude
     AND geocode.longitude = :longitude;
@@ -141,7 +141,7 @@ export const sql = \`
     geocode.uuid,
     geocode.latitude,
     geocode.longitude
-  FROM geocode
+  FROM view_geocode_hydrated AS geocode
   WHERE geocode.uuid = :uuid;
 \`;
 
@@ -257,7 +257,7 @@ export const sql = \`
     geocode.id,
     geocode.latitude,
     geocode.longitude
-  FROM geocode
+  FROM view_geocode_hydrated AS geocode
   WHERE geocode.id = :id;
 \`;
 
@@ -298,7 +298,7 @@ export const sql = \`
     geocode.id,
     geocode.latitude,
     geocode.longitude
-  FROM geocode
+  FROM view_geocode_hydrated AS geocode
   WHERE 1=1
     AND geocode.latitude = :latitude
     AND geocode.longitude = :longitude;

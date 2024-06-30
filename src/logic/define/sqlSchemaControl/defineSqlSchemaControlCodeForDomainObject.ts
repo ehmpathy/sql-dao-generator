@@ -152,6 +152,11 @@ export const defineSqlSchemaControlCodeForDomainObject = ({
       `./views/view_${sqlSchemaRelationship.name.sqlSchema}_current.sql`,
     );
 
+  // define the "hydrated" view, always
+  resourceRelpaths.push(
+    `./views/view_${sqlSchemaRelationship.name.sqlSchema}_hydrated.sql`,
+  );
+
   // define the upsert function
   resourceRelpaths.push(
     `./functions/upsert_${sqlSchemaRelationship.name.sqlSchema}.sql`,

@@ -6,17 +6,23 @@ GeneratedCodeFile {
 - type: resource
   path: ./tables/carriage.sql
 - type: resource
+  path: ./views/view_carriage_hydrated.sql
+- type: resource
   path: ./functions/upsert_carriage.sql
 
 # certificate
 - type: resource
   path: ./tables/certificate.sql
 - type: resource
+  path: ./views/view_certificate_hydrated.sql
+- type: resource
   path: ./functions/upsert_certificate.sql
 
 # geocode
 - type: resource
   path: ./tables/geocode.sql
+- type: resource
+  path: ./views/view_geocode_hydrated.sql
 - type: resource
   path: ./functions/upsert_geocode.sql
 
@@ -30,11 +36,15 @@ GeneratedCodeFile {
 - type: resource
   path: ./views/view_locomotive_current.sql
 - type: resource
+  path: ./views/view_locomotive_hydrated.sql
+- type: resource
   path: ./functions/upsert_locomotive.sql
 
 # price
 - type: resource
   path: ./tables/price.sql
+- type: resource
+  path: ./views/view_price_hydrated.sql
 - type: resource
   path: ./functions/upsert_price.sql
 
@@ -52,6 +62,8 @@ GeneratedCodeFile {
 - type: resource
   path: ./views/view_train_engineer_current.sql
 - type: resource
+  path: ./views/view_train_engineer_hydrated.sql
+- type: resource
   path: ./functions/upsert_train_engineer.sql
 
 # train_station
@@ -64,11 +76,15 @@ GeneratedCodeFile {
 - type: resource
   path: ./views/view_train_station_current.sql
 - type: resource
+  path: ./views/view_train_station_hydrated.sql
+- type: resource
   path: ./functions/upsert_train_station.sql
 
 # invoice_line_item
 - type: resource
   path: ./tables/invoice_line_item.sql
+- type: resource
+  path: ./views/view_invoice_line_item_hydrated.sql
 - type: resource
   path: ./functions/upsert_invoice_line_item.sql
 
@@ -88,11 +104,15 @@ GeneratedCodeFile {
 - type: resource
   path: ./views/view_train_current.sql
 - type: resource
+  path: ./views/view_train_hydrated.sql
+- type: resource
   path: ./functions/upsert_train.sql
 
 # train_located_event
 - type: resource
   path: ./tables/train_located_event.sql
+- type: resource
+  path: ./views/view_train_located_event_hydrated.sql
 - type: resource
   path: ./functions/upsert_train_located_event.sql
 
@@ -105,6 +125,8 @@ GeneratedCodeFile {
   path: ./tables/async_task_predict_station_congestion_cvp.sql
 - type: resource
   path: ./views/view_async_task_predict_station_congestion_current.sql
+- type: resource
+  path: ./views/view_async_task_predict_station_congestion_hydrated.sql
 - type: resource
   path: ./functions/upsert_async_task_predict_station_congestion.sql
 
@@ -119,6 +141,8 @@ GeneratedCodeFile {
   path: ./tables/invoice_cvp.sql
 - type: resource
   path: ./views/view_invoice_current.sql
+- type: resource
+  path: ./views/view_invoice_hydrated.sql
 - type: resource
   path: ./functions/upsert_invoice.sql",
   "relpath": "./domain.control.yml",

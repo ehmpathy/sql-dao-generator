@@ -258,5 +258,245 @@ export const invoice: Entity = new Entity({
 });",
     "relpath": "invoice.ts",
   },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_async_task_predict_station_congestion_hydrated AS
+  SELECT
+    async_task_predict_station_congestion.id,
+    async_task_predict_station_congestion.uuid,
+    async_task_predict_station_congestion.created_at,
+    async_task_predict_station_congestion.updated_at,
+    async_task_predict_station_congestion.status,
+    (
+      SELECT train_station.uuid
+      FROM view_train_station_current AS train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
+    ) AS station_uuid,
+    (
+      SELECT train_located_event.uuid
+      FROM train_located_event WHERE train_located_event.id = async_task_predict_station_congestion.train_located_event_id
+    ) AS train_located_event_uuid
+  FROM view_async_task_predict_station_congestion_current AS async_task_predict_station_congestion;",
+    "relpath": "../sql/views/view_async_task_predict_station_congestion_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_carriage_hydrated AS
+  SELECT
+    carriage.id,
+    carriage.uuid,
+    carriage.cin,
+    carriage.carries,
+    carriage.capacity
+  FROM carriage;",
+    "relpath": "../sql/views/view_carriage_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_certificate_hydrated AS
+  SELECT
+    certificate.id,
+    certificate.type,
+    certificate.industry_id
+  FROM certificate;",
+    "relpath": "../sql/views/view_certificate_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_train_engineer_hydrated AS
+  SELECT
+    train_engineer.id,
+    train_engineer.uuid,
+    train_engineer.social_security_number_hash,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', certificate.id,
+            'type', certificate.type,
+            'industry_id', certificate.industry_id
+          )
+          ORDER BY certificate_ref.array_order_index
+        ),
+        '[]'::json
+      ) AS json_agg
+      FROM certificate
+      JOIN unnest(train_engineer.certificate_ids) WITH ORDINALITY
+        AS certificate_ref (id, array_order_index)
+        ON certificate.id = certificate_ref.id
+    ) AS certificates,
+    train_engineer.license_uuids,
+    train_engineer.name
+  FROM view_train_engineer_current AS train_engineer;",
+    "relpath": "../sql/views/view_train_engineer_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_geocode_hydrated AS
+  SELECT
+    geocode.id,
+    geocode.latitude,
+    geocode.longitude
+  FROM geocode;",
+    "relpath": "../sql/views/view_geocode_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_train_hydrated AS
+  SELECT
+    train.id,
+    train.uuid,
+    (
+      SELECT json_build_object(
+        'id', geocode.id,
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      ) AS json_build_object
+      FROM geocode WHERE geocode.id = train.home_station_geocode_id
+    ) AS home_station_geocode,
+    train.combination_id,
+    (
+      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
+      FROM view_locomotive_current AS locomotive
+      JOIN unnest(train.locomotive_ids) WITH ORDINALITY
+        AS locomotive_ref (id, array_order_index)
+        ON locomotive.id = locomotive_ref.id
+    ) AS locomotive_uuids,
+    (
+      SELECT COALESCE(array_agg(carriage.uuid ORDER BY carriage_ref.array_order_index), array[]::uuid[]) AS array_agg
+      FROM carriage
+      JOIN unnest(train.carriage_ids) WITH ORDINALITY
+        AS carriage_ref (id, array_order_index)
+        ON carriage.id = carriage_ref.id
+    ) AS carriage_uuids,
+    (
+      SELECT COALESCE(array_agg(train_engineer.uuid ORDER BY train_engineer_ref.array_order_index), array[]::uuid[]) AS array_agg
+      FROM view_train_engineer_current AS train_engineer
+      JOIN unnest(train.engineer_ids) WITH ORDINALITY
+        AS train_engineer_ref (id, array_order_index)
+        ON train_engineer.id = train_engineer_ref.id
+    ) AS engineer_uuids,
+    (
+      SELECT train_engineer.uuid
+      FROM view_train_engineer_current AS train_engineer WHERE train_engineer.id = train.lead_engineer_id
+    ) AS lead_engineer_uuid,
+    train.status
+  FROM view_train_current AS train;",
+    "relpath": "../sql/views/view_train_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_locomotive_hydrated AS
+  SELECT
+    locomotive.id,
+    locomotive.uuid,
+    locomotive.created_at,
+    locomotive.effective_at,
+    locomotive.updated_at,
+    locomotive.ein,
+    locomotive.fuel,
+    locomotive.capacity,
+    locomotive.milage
+  FROM view_locomotive_current AS locomotive;",
+    "relpath": "../sql/views/view_locomotive_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_train_located_event_hydrated AS
+  SELECT
+    train_located_event.id,
+    (
+      SELECT train.uuid
+      FROM view_train_current AS train WHERE train.id = train_located_event.train_id
+    ) AS train_uuid,
+    train_located_event.occurred_at,
+    (
+      SELECT json_build_object(
+        'id', geocode.id,
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      ) AS json_build_object
+      FROM geocode WHERE geocode.id = train_located_event.geocode_id
+    ) AS geocode
+  FROM train_located_event;",
+    "relpath": "../sql/views/view_train_located_event_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_train_station_hydrated AS
+  SELECT
+    train_station.id,
+    train_station.uuid,
+    (
+      SELECT json_build_object(
+        'id', geocode.id,
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      ) AS json_build_object
+      FROM geocode WHERE geocode.id = train_station.geocode_id
+    ) AS geocode,
+    train_station.name
+  FROM view_train_station_current AS train_station;",
+    "relpath": "../sql/views/view_train_station_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_price_hydrated AS
+  SELECT
+    price.id,
+    price.amount,
+    price.currency
+  FROM price;",
+    "relpath": "../sql/views/view_price_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_invoice_line_item_hydrated AS
+  SELECT
+    invoice_line_item.id,
+    (
+      SELECT json_build_object(
+        'id', price.id,
+        'amount', price.amount,
+        'currency', price.currency
+      ) AS json_build_object
+      FROM price WHERE price.id = invoice_line_item.price_id
+    ) AS price,
+    invoice_line_item.title,
+    invoice_line_item.explanation
+  FROM invoice_line_item;",
+    "relpath": "../sql/views/view_invoice_line_item_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_invoice_hydrated AS
+  SELECT
+    invoice.id,
+    invoice.uuid,
+    invoice.external_id,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', invoice_line_item.id,
+            'price', (
+              SELECT json_build_object(
+                'id', price.id,
+                'amount', price.amount,
+                'currency', price.currency
+              ) AS json_build_object
+              FROM price WHERE price.id = invoice_line_item.price_id
+            ),
+            'title', invoice_line_item.title,
+            'explanation', invoice_line_item.explanation
+          )
+          ORDER BY invoice_line_item_ref.array_order_index
+        ),
+        '[]'::json
+      ) AS json_agg
+      FROM invoice_line_item
+      JOIN unnest(invoice.item_ids) WITH ORDINALITY
+        AS invoice_line_item_ref (id, array_order_index)
+        ON invoice_line_item.id = invoice_line_item_ref.id
+    ) AS items,
+    (
+      SELECT json_build_object(
+        'id', price.id,
+        'amount', price.amount,
+        'currency', price.currency
+      ) AS json_build_object
+      FROM price WHERE price.id = invoice.total_price_id
+    ) AS total_price,
+    invoice.status
+  FROM view_invoice_current AS invoice;",
+    "relpath": "../sql/views/view_invoice_hydrated.sql",
+  },
 ]
 `;

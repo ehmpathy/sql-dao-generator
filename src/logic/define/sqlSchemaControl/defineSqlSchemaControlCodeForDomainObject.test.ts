@@ -43,7 +43,7 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
     // check that it looks right
     expect(code).toContain('path: ./tables/geocode.sql');
     expect(code).toContain('path: ./functions/upsert_geocode.sql');
-    expect(code.split('\n').length).toEqual(5); // comment (1), static (2), upsert (2)
+    expect(code.split('\n').length).toEqual(7); // comment (1), static (2), upsert (2)
     expect(code).toMatchSnapshot();
   });
   it('should look right for a domain object with updatable properties', () => {
@@ -102,7 +102,7 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
     expect(code).toContain('path: ./tables/carriage_cvp.sql');
     expect(code).toContain('path: ./views/view_carriage_current.sql');
     expect(code).toContain('path: ./functions/upsert_carriage.sql');
-    expect(code.split('\n').length).toEqual(11); // comment (1), resources (5x2)
+    expect(code.split('\n').length).toEqual(13); // comment (1), resources (5x2)
     expect(code).toMatchSnapshot();
   });
   it('should look right for a domain object with static array properties', () => {
@@ -174,7 +174,7 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
       'path: ./views/view_train_located_event_current.sql',
     );
     expect(code).toContain('path: ./functions/upsert_train_located_event.sql');
-    expect(code.split('\n').length).toEqual(11); // comment (1), resources (5x2)
+    expect(code.split('\n').length).toEqual(13); // comment (1), resources (5x2)
     expect(code).toMatchSnapshot();
   });
   it('should look right for a domain object with updatable array properties', () => {
@@ -251,7 +251,7 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
     expect(code).toContain('path: ./tables/train_cvp.sql');
     expect(code).toContain('path: ./views/view_train_current.sql');
     expect(code).toContain('path: ./functions/upsert_train.sql');
-    expect(code.split('\n').length).toEqual(17); // comment (1), resources (8x2)
+    expect(code.split('\n').length).toEqual(19); // comment (1), resources (8x2)
     expect(code).toMatchSnapshot();
   });
 });

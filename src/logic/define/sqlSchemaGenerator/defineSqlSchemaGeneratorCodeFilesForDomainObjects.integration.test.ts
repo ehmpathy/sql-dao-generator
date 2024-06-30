@@ -15,7 +15,7 @@ describe('defineSqlSchemaGeneratorCodeFilesForDomainObjects', () => {
       domainObjects,
       sqlSchemaRelationships,
     });
-    expect(codes.length).toEqual(domainObjects.length + 1); // sanity check; +1 because of index file
+    expect(codes.length).toEqual(domainObjects.length * 2 + 1); // sanity check; +1 because of index file
     expect(codes).toMatchSnapshot(); // and save example
   });
 });

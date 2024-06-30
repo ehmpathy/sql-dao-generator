@@ -15,24 +15,8 @@ export const sql = \`
     train_located_event.id,
     train_located_event.train_uuid,
     train_located_event.occurred_at,
-    (
-      SELECT COALESCE(
-        json_agg(
-          json_build_object(
-            'id', geocode.id,
-            'latitude', geocode.latitude,
-            'longitude', geocode.longitude
-          )
-          ORDER BY geocode_ref.array_order_index
-        ),
-        '[]'::json
-      ) AS json_agg
-      FROM geocode
-      JOIN unnest(train_located_event.geocode_ids) WITH ORDINALITY
-        AS geocode_ref (id, array_order_index)
-        ON geocode.id = geocode_ref.id
-    ) AS geocodes
-  FROM view_train_located_event_current AS train_located_event
+    train_located_event.geocodes
+  FROM view_train_located_event_hydrated AS train_located_event
   WHERE train_located_event.id = :id;
 \`;
 
@@ -73,44 +57,11 @@ export const sql = \`
     train.id,
     train.uuid,
     train.tin,
-    (
-      SELECT json_build_object(
-        'id', geocode.id,
-        'uuid', geocode.uuid,
-        'latitude', geocode.latitude,
-        'longitude', geocode.longitude
-      ) AS json_build_object
-      FROM geocode WHERE geocode.id = train.home_station_geocode_id
-    ) AS home_station_geocode,
-    (
-      SELECT train_engineer.uuid
-      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
-    ) AS lead_engineer_uuid,
-    (
-      SELECT COALESCE(
-        json_agg(
-          json_build_object(
-            'name', train_badge.name,
-            'description', train_badge.description,
-            'rank', train_badge.rank
-          )
-          ORDER BY train_badge_ref.array_order_index
-        ),
-        '[]'::json
-      ) AS json_agg
-      FROM train_badge
-      JOIN unnest(train.badge_ids) WITH ORDINALITY
-        AS train_badge_ref (id, array_order_index)
-        ON train_badge.id = train_badge_ref.id
-    ) AS badges,
-    (
-      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM locomotive
-      JOIN unnest(train.locomotive_ids) WITH ORDINALITY
-        AS locomotive_ref (id, array_order_index)
-        ON locomotive.id = locomotive_ref.id
-    ) AS locomotive_uuids
-  FROM view_train_current AS train
+    train.home_station_geocode,
+    train.lead_engineer_uuid,
+    train.badges,
+    train.locomotive_uuids
+  FROM view_train_hydrated AS train
   WHERE train.id = :id;
 \`;
 
@@ -153,7 +104,7 @@ export const sql = \`
     carriage.cin,
     carriage.carries,
     carriage.capacity
-  FROM view_carriage_current AS carriage
+  FROM view_carriage_hydrated AS carriage
   WHERE carriage.id = :id;
 \`;
 
@@ -195,7 +146,7 @@ export const sql = \`
     geocode.uuid,
     geocode.latitude,
     geocode.longitude
-  FROM geocode
+  FROM view_geocode_hydrated AS geocode
   WHERE geocode.id = :id;
 \`;
 
@@ -236,23 +187,8 @@ export const sql = \`
     train_located_event.id,
     train_located_event.train_uuid,
     train_located_event.occurred_at,
-    (
-      SELECT COALESCE(
-        json_agg(
-          json_build_object(
-            'latitude', geocode.latitude,
-            'longitude', geocode.longitude
-          )
-          ORDER BY geocode_ref.array_order_index
-        ),
-        '[]'::json
-      ) AS json_agg
-      FROM geocode
-      JOIN unnest(train_located_event.geocode_ids) WITH ORDINALITY
-        AS geocode_ref (id, array_order_index)
-        ON geocode.id = geocode_ref.id
-    ) AS geocodes
-  FROM view_train_located_event_current AS train_located_event
+    train_located_event.geocodes
+  FROM view_train_located_event_hydrated AS train_located_event
   WHERE 1=1
     AND train_located_event.train_uuid = :trainUuid
     AND train_located_event.occurred_at = :occurredAt;
@@ -300,56 +236,23 @@ export const sql = \`
     train.id,
     train.uuid,
     train.tin,
-    (
-      SELECT json_build_object(
-        'id', geocode.id,
-        'latitude', geocode.latitude,
-        'longitude', geocode.longitude
-      ) AS json_build_object
-      FROM geocode WHERE geocode.id = train.home_station_geocode_id
-    ) AS home_station_geocode,
-    (
-      SELECT train_engineer.uuid
-      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
-    ) AS lead_engineer_uuid,
-    (
-      SELECT COALESCE(
-        json_agg(
-          json_build_object(
-            'id', train_badge.id,
-            'uuid', train_badge.uuid,
-            'name', train_badge.name,
-            'description', train_badge.description,
-            'rank', train_badge.rank
-          )
-          ORDER BY train_badge_ref.array_order_index
-        ),
-        '[]'::json
-      ) AS json_agg
-      FROM train_badge
-      JOIN unnest(train.badge_ids) WITH ORDINALITY
-        AS train_badge_ref (id, array_order_index)
-        ON train_badge.id = train_badge_ref.id
-    ) AS badges,
-    (
-      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM locomotive
-      JOIN unnest(train.locomotive_ids) WITH ORDINALITY
-        AS locomotive_ref (id, array_order_index)
-        ON locomotive.id = locomotive_ref.id
-    ) AS locomotive_uuids
-  FROM view_train_current AS train
+    train.home_station_geocode,
+    train.lead_engineer_uuid,
+    train.badges,
+    train.locomotive_uuids
+  FROM view_train_hydrated AS train
+  JOIN view_train_current ON train.id = view_train_current.id
   WHERE 1=1
-    AND train.home_station_geocode_id = :homeStationGeocodeId
-    AND train.badge_ids = :badgeIds
-    AND train.locomotive_ids = (
+    AND view_train_current.home_station_geocode_id = :homeStationGeocodeId
+    AND view_train_current.badge_ids = :badgeIds
+    AND view_train_current.locomotive_ids = (
       SELECT COALESCE(array_agg(locomotive.id ORDER BY locomotive_ref.array_order_index), array[]::bigint[]) AS array_agg
       FROM locomotive
       JOIN unnest(:locomotiveUuids::uuid[]) WITH ORDINALITY
         AS locomotive_ref (uuid, array_order_index)
         ON locomotive.uuid = locomotive_ref.uuid
     )
-    AND train.lead_engineer_id = (SELECT id FROM train_engineer WHERE train_engineer.uuid = :leadEngineerUuid);
+    AND view_train_current.lead_engineer_id = (SELECT id FROM train_engineer WHERE train_engineer.uuid = :leadEngineerUuid);
 \`;
 
 export const findByUnique = async (
@@ -398,42 +301,11 @@ export const sql = \`
     train.id,
     train.uuid,
     train.tin,
-    (
-      SELECT json_build_object(
-        'latitude', geocode.latitude,
-        'longitude', geocode.longitude
-      ) AS json_build_object
-      FROM geocode WHERE geocode.id = train.home_station_geocode_id
-    ) AS home_station_geocode,
-    (
-      SELECT train_engineer.uuid
-      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
-    ) AS lead_engineer_uuid,
-    (
-      SELECT COALESCE(
-        json_agg(
-          json_build_object(
-            'name', train_badge.name,
-            'description', train_badge.description,
-            'rank', train_badge.rank
-          )
-          ORDER BY train_badge_ref.array_order_index
-        ),
-        '[]'::json
-      ) AS json_agg
-      FROM train_badge
-      JOIN unnest(train.badge_ids) WITH ORDINALITY
-        AS train_badge_ref (id, array_order_index)
-        ON train_badge.id = train_badge_ref.id
-    ) AS badges,
-    (
-      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM locomotive
-      JOIN unnest(train.locomotive_ids) WITH ORDINALITY
-        AS locomotive_ref (id, array_order_index)
-        ON locomotive.id = locomotive_ref.id
-    ) AS locomotive_uuids
-  FROM view_train_current AS train
+    train.home_station_geocode,
+    train.lead_engineer_uuid,
+    train.badges,
+    train.locomotive_uuids
+  FROM view_train_hydrated AS train
   WHERE 1=1
     AND train.tin = :tin;
 \`;
@@ -477,7 +349,7 @@ export const sql = \`
     carriage.cin,
     carriage.carries,
     carriage.capacity
-  FROM view_carriage_current AS carriage
+  FROM view_carriage_hydrated AS carriage
   WHERE 1=1
     AND carriage.cin = :cin;
 \`;
@@ -520,7 +392,7 @@ export const sql = \`
     carriage.uuid,
     carriage.carries,
     carriage.capacity
-  FROM view_carriage_current AS carriage
+  FROM view_carriage_hydrated AS carriage
   WHERE 1=1
     AND carriage.uuid = :uuid;
 \`;
@@ -562,7 +434,7 @@ export const sql = \`
     geocode.id,
     geocode.latitude,
     geocode.longitude
-  FROM geocode
+  FROM view_geocode_hydrated AS geocode
   WHERE 1=1
     AND geocode.latitude = :latitude
     AND geocode.longitude = :longitude;
@@ -608,17 +480,11 @@ export const sql = \`
   SELECT
     invoice_line_item.id,
     invoice_line_item.uuid,
-    (
-      SELECT json_build_object(
-        'id', price.id,
-        'amount', price.amount,
-        'currency', price.currency
-      ) AS json_build_object
-      FROM price WHERE price.id = invoice_line_item.price_id
-    ) AS price
-  FROM invoice_line_item
+    invoice_line_item.price
+  FROM view_invoice_line_item_hydrated AS invoice_line_item
+  JOIN invoice_line_item as view_invoice_line_item_current ON invoice_line_item.id = view_invoice_line_item_current.id
   WHERE 1=1
-    AND invoice_line_item.price_id = :priceId;
+    AND view_invoice_line_item_current.price_id = :priceId;
 \`;
 
 export const findByUnique = async (
@@ -658,17 +524,12 @@ export const sql = \`
   SELECT
     station.id,
     station.uuid,
-    (
-      SELECT json_build_object(
-        'latitude', geocode.latitude,
-        'longitude', geocode.longitude
-      ) AS json_build_object
-      FROM geocode WHERE geocode.id = station.geocode_id
-    ) AS geocode,
+    station.geocode,
     station.name
-  FROM view_station_current AS station
+  FROM view_station_hydrated AS station
+  JOIN view_station_current ON station.id = view_station_current.id
   WHERE 1=1
-    AND station.geocode_id = :geocodeId;
+    AND view_station_current.geocode_id = :geocodeId;
 \`;
 
 export const findByUnique = async (
@@ -708,23 +569,8 @@ export const sql = \`
     train_located_event.id,
     train_located_event.train_uuid,
     train_located_event.occurred_at,
-    (
-      SELECT COALESCE(
-        json_agg(
-          json_build_object(
-            'latitude', geocode.latitude,
-            'longitude', geocode.longitude
-          )
-          ORDER BY geocode_ref.array_order_index
-        ),
-        '[]'::json
-      ) AS json_agg
-      FROM geocode
-      JOIN unnest(train_located_event.geocode_ids) WITH ORDINALITY
-        AS geocode_ref (id, array_order_index)
-        ON geocode.id = geocode_ref.id
-    ) AS geocodes
-  FROM view_train_located_event_current AS train_located_event
+    train_located_event.geocodes
+  FROM view_train_located_event_hydrated AS train_located_event
   WHERE train_located_event.uuid = :uuid;
 \`;
 
@@ -765,42 +611,11 @@ export const sql = \`
     train.id,
     train.uuid,
     train.tin,
-    (
-      SELECT json_build_object(
-        'latitude', geocode.latitude,
-        'longitude', geocode.longitude
-      ) AS json_build_object
-      FROM geocode WHERE geocode.id = train.home_station_geocode_id
-    ) AS home_station_geocode,
-    (
-      SELECT train_engineer.uuid
-      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
-    ) AS lead_engineer_uuid,
-    (
-      SELECT COALESCE(
-        json_agg(
-          json_build_object(
-            'name', train_badge.name,
-            'description', train_badge.description,
-            'rank', train_badge.rank
-          )
-          ORDER BY train_badge_ref.array_order_index
-        ),
-        '[]'::json
-      ) AS json_agg
-      FROM train_badge
-      JOIN unnest(train.badge_ids) WITH ORDINALITY
-        AS train_badge_ref (id, array_order_index)
-        ON train_badge.id = train_badge_ref.id
-    ) AS badges,
-    (
-      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
-      FROM locomotive
-      JOIN unnest(train.locomotive_ids) WITH ORDINALITY
-        AS locomotive_ref (id, array_order_index)
-        ON locomotive.id = locomotive_ref.id
-    ) AS locomotive_uuids
-  FROM view_train_current AS train
+    train.home_station_geocode,
+    train.lead_engineer_uuid,
+    train.badges,
+    train.locomotive_uuids
+  FROM view_train_hydrated AS train
   WHERE train.uuid = :uuid;
 \`;
 
@@ -843,7 +658,7 @@ export const sql = \`
     carriage.cin,
     carriage.carries,
     carriage.capacity
-  FROM view_carriage_current AS carriage
+  FROM view_carriage_hydrated AS carriage
   WHERE carriage.uuid = :uuid;
 \`;
 
@@ -884,7 +699,7 @@ export const sql = \`
     geocode.id,
     geocode.latitude,
     geocode.longitude
-  FROM geocode
+  FROM view_geocode_hydrated AS geocode
   WHERE geocode.uuid = :uuid;
 \`;
 

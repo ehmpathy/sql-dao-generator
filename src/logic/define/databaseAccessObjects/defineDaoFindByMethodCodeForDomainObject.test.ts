@@ -52,7 +52,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       expect(code).toContain('geocode.uuid,');
       expect(code).toContain('geocode.latitude,');
       expect(code).toContain('geocode.longitude'); // last select expression does not have comma
-      expect(code).toContain('FROM geocode'); // table to query
+      expect(code).toContain('FROM view_geocode_hydrated AS geocode'); // table to query
       expect(code).toContain('WHERE geocode.id = :id'); // condition
       expect(code).toContain('await sqlQueryFindGeocodeById({');
       expect(code).toMatchSnapshot();
@@ -117,7 +117,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       expect(code).toContain('carriage.cin,');
       expect(code).toContain('carriage.carries,');
       expect(code).toContain('carriage.capacity');
-      expect(code).toContain('FROM view_carriage_current AS carriage'); // table to query (view, in this case)
+      expect(code).toContain('FROM view_carriage_hydrated AS carriage'); // table to query (view, in this case)
       expect(code).toContain('WHERE carriage.id = :id'); // condition
       expect(code).toContain('await sqlQueryFindCarriageById({');
       expect(code).toMatchSnapshot();
@@ -215,9 +215,9 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       expect(code).toContain('train_located_event.id,'); // select expressions
       expect(code).toContain('train_located_event.train_uuid,');
       expect(code).toContain('train_located_event.occurred_at,');
-      expect(code).toContain(') AS geocodes'); // its a complicated select expression (already has test coverage elsewhere)
+      expect(code).toContain('geocodes');
       expect(code).toContain(
-        'FROM view_train_located_event_current AS train_located_event',
+        'FROM view_train_located_event_hydrated AS train_located_event',
       ); // table to query (view, in this case)
       expect(code).toContain('WHERE train_located_event.id = :id'); // condition
       expect(code).toContain('await sqlQueryFindTrainLocatedEventById(');
@@ -406,11 +406,11 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       expect(code).toContain('train.id,'); // select expressions
       expect(code).toContain('train.uuid,');
       expect(code).toContain('train.tin,');
-      expect(code).toContain(') AS home_station_geocode,'); // complicated select expression (already has test coverage)
-      expect(code).toContain(') AS lead_engineer_uuid,'); // complicated select expression (already has test coverage)
-      expect(code).toContain(') AS badges,'); // complicated select expression (already has test coverage)
-      expect(code).toContain(') AS locomotive_uuids'); // complicated select expression (already has test coverage)
-      expect(code).toContain('FROM view_train_current AS train'); // table to query (view, in this case)
+      expect(code).toContain('home_station_geocode,');
+      expect(code).toContain('lead_engineer_uuid,');
+      expect(code).toContain('badges,');
+      expect(code).toContain('locomotive_uuids');
+      expect(code).toContain('FROM view_train_hydrated AS train'); // table to query (view, in this case)
       expect(code).toContain('WHERE train.id = :id'); // condition
       expect(code).toContain('await sqlQueryFindTrainById(');
       expect(code).toMatchSnapshot();
@@ -455,7 +455,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       expect(code).toContain('geocode.id,'); // select expressions
       expect(code).toContain('geocode.latitude,');
       expect(code).toContain('geocode.longitude'); // last select expression does not have comma
-      expect(code).toContain('FROM geocode'); // table to query
+      expect(code).toContain('FROM view_geocode_hydrated AS geocode'); // table to query
       expect(code).toContain('WHERE geocode.uuid = :uuid'); // condition
       expect(code).toContain('await sqlQueryFindGeocodeByUuid({');
       expect(code).toMatchSnapshot();
@@ -520,7 +520,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       expect(code).toContain('carriage.cin,');
       expect(code).toContain('carriage.carries,');
       expect(code).toContain('carriage.capacity');
-      expect(code).toContain('FROM view_carriage_current AS carriage'); // table to query (view, in this case)
+      expect(code).toContain('FROM view_carriage_hydrated AS carriage'); // table to query (view, in this case)
       expect(code).toContain('WHERE carriage.uuid = :uuid'); // condition
       expect(code).toContain('await sqlQueryFindCarriageByUuid({');
       expect(code).toMatchSnapshot();
@@ -615,9 +615,9 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       expect(code).toContain('train_located_event.id,'); // select expressions
       expect(code).toContain('train_located_event.train_uuid,');
       expect(code).toContain('train_located_event.occurred_at,');
-      expect(code).toContain(') AS geocodes'); // its a complicated select expression (already has test coverage elsewhere)
+      expect(code).toContain('geocodes');
       expect(code).toContain(
-        'FROM view_train_located_event_current AS train_located_event',
+        'FROM view_train_located_event_hydrated AS train_located_event',
       ); // table to query (view, in this case)
       expect(code).toContain('WHERE train_located_event.uuid = :uuid'); // condition
       expect(code).toContain('await sqlQueryFindTrainLocatedEventByUuid(');
@@ -804,11 +804,11 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       expect(code).toContain('train.id,'); // select expressions
       expect(code).toContain('train.uuid,');
       expect(code).toContain('train.tin,');
-      expect(code).toContain(') AS home_station_geocode,'); // complicated select expression (already has test coverage)
-      expect(code).toContain(') AS lead_engineer_uuid,'); // complicated select expression (already has test coverage)
-      expect(code).toContain(') AS badges,'); // complicated select expression (already has test coverage)
-      expect(code).toContain(') AS locomotive_uuids'); // complicated select expression (already has test coverage)
-      expect(code).toContain('FROM view_train_current AS train'); // table to query (view, in this case)
+      expect(code).toContain('home_station_geocode,');
+      expect(code).toContain('lead_engineer_uuid,');
+      expect(code).toContain('badges,');
+      expect(code).toContain('locomotive_uuids');
+      expect(code).toContain('FROM view_train_hydrated AS train'); // table to query (view, in this case)
       expect(code).toContain('WHERE train.uuid = :uuid'); // condition
       expect(code).toContain('await sqlQueryFindTrainByUuid(');
       expect(code).toMatchSnapshot();
@@ -853,7 +853,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
       expect(code).toContain('geocode.id,'); // select expressions
       expect(code).toContain('geocode.latitude,');
       expect(code).toContain('geocode.longitude'); // last select expression does not have comma
-      expect(code).toContain('FROM geocode'); // table to query
+      expect(code).toContain('FROM view_geocode_hydrated AS geocode'); // table to query
       expect(code).toContain('WHERE 1=1'); // condition
       expect(code).toContain('  AND geocode.latitude = :latitude'); // condition
       expect(code).toContain('  AND geocode.longitude = :longitude'); // condition
@@ -1008,7 +1008,7 @@ async (
       expect(code).toContain('carriage.cin,');
       expect(code).toContain('carriage.carries,');
       expect(code).toContain('carriage.capacity');
-      expect(code).toContain('FROM view_carriage_current AS carriage'); // table to query (view, in this case)
+      expect(code).toContain('FROM view_carriage_hydrated AS carriage'); // table to query (view, in this case)
       expect(code).toContain('WHERE 1=1'); // condition
       expect(code).toContain('  AND carriage.cin = :cin'); // condition
       expect(code).toContain(
@@ -1079,7 +1079,7 @@ async (
       expect(code).toContain('carriage.uuid,');
       expect(code).toContain('carriage.carries,');
       expect(code).toContain('carriage.capacity');
-      expect(code).toContain('FROM view_carriage_current AS carriage'); // table to query (view, in this case)
+      expect(code).toContain('FROM view_carriage_hydrated AS carriage'); // table to query (view, in this case)
       expect(code).toContain('WHERE 1=1'); // condition
       expect(code).toContain('  AND carriage.uuid = :uuid'); // condition
       expect(code).toContain(
@@ -1179,11 +1179,13 @@ async (
       expect(code).toContain('-- query_name = find_station_by_unique'); // name of query
       expect(code).toContain('station.id,'); // select expressions
       expect(code).toContain('station.uuid,');
-      expect(code).toContain(') AS geocode,'); // should select the hydratable literal
+      expect(code).toContain('geocode,'); // should select the hydratable literal
       expect(code).toContain('station.name');
-      expect(code).toContain('FROM view_station_current AS station'); // table to query (view, in this case)
+      expect(code).toContain('FROM view_station_hydrated AS station'); // table to query (view, in this case)
       expect(code).toContain('WHERE 1=1'); // condition
-      expect(code).toContain('  AND station.geocode_id = :geocodeId'); // condition
+      expect(code).toContain(
+        '  AND view_station_current.geocode_id = :geocodeId',
+      ); // condition
       expect(code).toContain(
         `
 async (
@@ -1288,9 +1290,9 @@ async (
       expect(code).toContain('train_located_event.id,'); // select expressions
       expect(code).toContain('train_located_event.train_uuid,');
       expect(code).toContain('train_located_event.occurred_at,');
-      expect(code).toContain(') AS geocodes'); // its a complicated select expression (already has test coverage elsewhere)
+      expect(code).toContain('geocodes');
       expect(code).toContain(
-        'FROM view_train_located_event_current AS train_located_event',
+        'FROM view_train_located_event_hydrated AS train_located_event',
       ); // table to query (view, in this case)
       expect(code).toContain('WHERE 1=1'); // condition
       expect(code).toContain(
@@ -1497,11 +1499,11 @@ async (
       expect(code).toContain('train.id,'); // select expressions
       expect(code).toContain('train.uuid,');
       expect(code).toContain('train.tin,');
-      expect(code).toContain(') AS home_station_geocode,'); // complicated select expression (already has test coverage)
-      expect(code).toContain(') AS lead_engineer_uuid,'); // complicated select expression (already has test coverage)
-      expect(code).toContain(') AS badges,'); // complicated select expression (already has test coverage)
-      expect(code).toContain(') AS locomotive_uuids'); // complicated select expression (already has test coverage)
-      expect(code).toContain('FROM view_train_current AS train'); // table to query (view, in this case)
+      expect(code).toContain('home_station_geocode,');
+      expect(code).toContain('lead_engineer_uuid,');
+      expect(code).toContain('badges,');
+      expect(code).toContain('locomotive_uuids');
+      expect(code).toContain('FROM view_train_hydrated AS train'); // table to query (view, in this case)
       expect(code).toContain(
         `
   WHERE 1=1
@@ -1692,24 +1694,24 @@ async (
       expect(code).toContain('train.id,'); // select expressions
       expect(code).toContain('train.uuid,');
       expect(code).toContain('train.tin,');
-      expect(code).toContain(') AS home_station_geocode,'); // complicated select expression (already has test coverage)
-      expect(code).toContain(') AS lead_engineer_uuid,'); // complicated select expression (already has test coverage)
-      expect(code).toContain(') AS badges,'); // complicated select expression (already has test coverage)
-      expect(code).toContain(') AS locomotive_uuids'); // complicated select expression (already has test coverage)
-      expect(code).toContain('FROM view_train_current AS train'); // table to query (view, in this case)
+      expect(code).toContain('home_station_geocode,');
+      expect(code).toContain('lead_engineer_uuid,');
+      expect(code).toContain('badges,');
+      expect(code).toContain('locomotive_uuids');
+      expect(code).toContain('FROM view_train_hydrated AS train'); // table to query (view, in this case)
       expect(code).toContain(
         `
   WHERE 1=1
-    AND train.home_station_geocode_id = :homeStationGeocodeId
-    AND train.badge_ids = :badgeIds
-    AND train.locomotive_ids = (
+    AND view_train_current.home_station_geocode_id = :homeStationGeocodeId
+    AND view_train_current.badge_ids = :badgeIds
+    AND view_train_current.locomotive_ids = (
       SELECT COALESCE(array_agg(locomotive.id ORDER BY locomotive_ref.array_order_index), array[]::bigint[]) AS array_agg
       FROM locomotive
       JOIN unnest(:locomotiveUuids::uuid[]) WITH ORDINALITY
         AS locomotive_ref (uuid, array_order_index)
         ON locomotive.uuid = locomotive_ref.uuid
     )
-    AND train.lead_engineer_id = (SELECT id FROM train_engineer WHERE train_engineer.uuid = :leadEngineerUuid);
+    AND view_train_current.lead_engineer_id = (SELECT id FROM train_engineer WHERE train_engineer.uuid = :leadEngineerUuid);
         `.trim(),
       ); // condition
       expect(code).toContain(

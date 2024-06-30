@@ -1,10 +1,11 @@
-import { camelCase } from 'change-case';
+import { camelCase, snakeCase } from 'change-case';
 import { DomainObjectMetadata } from 'domain-objects-metadata';
 
 import { GeneratedCodeFile } from '../../../domain/objects/GeneratedCodeFile';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
 import { UnexpectedCodePathDetectedError } from '../../UnexpectedCodePathDetectedError';
 import { defineSqlSchemaGeneratorCodeForDomainObject } from './defineSqlSchemaGeneratorCodeForDomainObject';
+import { defineSqlSchemaViewDomainObjectHydrated } from './defineSqlSchemaViewDomainObjectHydrated';
 
 /**
  * returns GeneratedCode[] of definitions for sql-schema-control, per domain object
@@ -37,6 +38,28 @@ export const defineSqlSchemaGeneratorCodeFilesForDomainObjects = ({
     });
   });
 
+  // for each metadata, define a hydrated view file
+  const objectsHydratedViewFiles = domainObjects.map((domainObject) => {
+    const sqlSchemaRelationship = sqlSchemaRelationships.find(
+      (relationship) => relationship.name.domainObject === domainObject.name,
+    );
+    if (!sqlSchemaRelationship)
+      throw new UnexpectedCodePathDetectedError({
+        reason:
+          'could not find sql-schema-relationship, for defining sql-schema-generator code files',
+        domainObjectName: domainObject.name,
+      });
+    const content = defineSqlSchemaViewDomainObjectHydrated({
+      domainObject,
+      sqlSchemaRelationship,
+      allSqlSchemaRelationships: sqlSchemaRelationships,
+    });
+    return new GeneratedCodeFile({
+      content,
+      relpath: `../sql/views/view_${snakeCase(domainObject.name)}_hydrated.sql`, // todo: define relpath against output dir
+    });
+  });
+
   // and define a root "index" file for the entities, to be used as an entry point
   const imports = domainObjects
     .map(
@@ -62,5 +85,5 @@ export const generateSqlSchemasFor = [
   });
 
   // return all of the files
-  return [indexCodeFile, ...objectsCodeFiles];
+  return [indexCodeFile, ...objectsCodeFiles, ...objectsHydratedViewFiles];
 };
