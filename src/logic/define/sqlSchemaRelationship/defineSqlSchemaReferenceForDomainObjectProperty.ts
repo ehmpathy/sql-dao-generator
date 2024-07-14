@@ -1,4 +1,5 @@
 // tslint:disable: max-classes-per-file
+import { isPropertyNameAReferenceIntuitively } from 'domain-objects';
 import {
   DomainObjectMetadata,
   DomainObjectPropertyMetadata,
@@ -26,11 +27,14 @@ export class PropertyReferencingDomainObjectNotNamedCorrectlyError extends Error
   }: {
     domainObject: DomainObjectMetadata;
     property: DomainObjectPropertyMetadata;
-    referencedDomainObject: DomainObjectReferenceMetadata;
+    referencedDomainObject: {
+      expected: string;
+      inferred: string | null;
+    };
   }) {
     super(
       `
-Properties that reference a domain-object must be named after the domain-object they reference. '${domainObject.name}.${property.name}: ${referencedDomainObject.name}' does not meet this criteria.
+Properties that reference a domain-object must be named after the domain-object they reference. '${domainObject.name}.${property.name}: ${referencedDomainObject.expected}' does not meet this criteria.
 
 For example:
 - allowed:
@@ -38,11 +42,15 @@ For example:
   - 'homeAddress: Address'
   - 'address: HomeAddress'
   - 'homeAddress: HomeAddress'
+  - 'home: HomeAddress'
 - not allowed:
   - 'home: Address'
-  - 'home: HomeAddress'
 
-Tip: the endings should unambiguously match
+Ambiguity:
+- expected: ${referencedDomainObject.expected}
+- inferred: ${referencedDomainObject.inferred}
+
+Tip: the prefixes or suffixes should unambiguously match
 `.trim(),
     );
   }
@@ -148,7 +156,10 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
       throw new PropertyReferencingDomainObjectNotNamedCorrectlyError({
         property,
         domainObject,
-        referencedDomainObject,
+        referencedDomainObject: {
+          expected: referencedDomainObject.name,
+          inferred: domainObjectNamePropertyIsNamedAfter,
+        },
       });
 
     // check that the domain object referenced by direct nesting is not a domain entity or a domain event

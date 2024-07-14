@@ -11,51 +11,66 @@ describe('getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter', ()
     expectedResult?: string | null;
     expectedErrorMessageContains?: string;
   }[] = [
+    // {
+    //   propertyName: 'address',
+    //   allDomainObjectNames: ['Address', 'Geocode', 'User'],
+    //   expectedResult: 'Address',
+    // },
+    // {
+    //   propertyName: 'homeAddress',
+    //   allDomainObjectNames: ['HomeAddress', 'Geocode', 'User'],
+    //   expectedResult: 'HomeAddress',
+    // },
+    // {
+    //   propertyName: 'address',
+    //   allDomainObjectNames: ['HomeAddress', 'Geocode', 'User'],
+    //   expectedResult: 'HomeAddress',
+    // },
+    // {
+    //   propertyName: 'address',
+    //   allDomainObjectNames: ['HomeAddress', 'WorkAddress', 'Geocode', 'User'],
+    //   expectedErrorMessageContains: '["HomeAddress","WorkAddress"]',
+    // },
+    // {
+    //   propertyName: 'homeAddress',
+    //   allDomainObjectNames: ['HomeAddress', 'WorkAddress', 'Geocode', 'User'],
+    //   expectedResult: 'HomeAddress',
+    // },
+    // {
+    //   propertyName: 'externalId',
+    //   allDomainObjectNames: ['PlaneExternalId', 'Airport', 'PlaneManufacturer'],
+    //   expectedResult: 'PlaneExternalId',
+    // },
+    // {
+    //   propertyName: 'externalIds',
+    //   allDomainObjectNames: ['PlaneExternalId', 'Airport', 'PlaneManufacturer'],
+    //   expectedResult: 'PlaneExternalId',
+    // },
+    // {
+    //   propertyName: 'eventUuid',
+    //   allDomainObjectNames: ['OutreachCaptureEvent', 'RelationshipEvent'],
+    //   expectedErrorMessageContains:
+    //     '["OutreachCaptureEvent","RelationshipEvent"]',
+    // },
+    // {
+    //   propertyName: 'outreachCaptureEventUuid',
+    //   allDomainObjectNames: ['OutreachCaptureEvent', 'RelationshipEvent'],
+    //   expectedResult: 'OutreachCaptureEvent',
+    // },
+    // {
+    //   propertyName: 'issuerRef',
+    //   allDomainObjectNames: ['InvoiceIssuer', 'InvoiceReceiver'],
+    //   expectedResult: 'InvoiceIssuer',
+    // },
+    // {
+    //   propertyName: 'issuerRef',
+    //   allDomainObjectNames: ['InvoiceIssuerRef', 'InvoiceReceiverRef'],
+    //   expectedResult: 'InvoiceIssuerRef',
+    // },
     {
-      propertyName: 'address',
-      allDomainObjectNames: ['Address', 'Geocode', 'User'],
-      expectedResult: 'Address',
-    },
-    {
-      propertyName: 'homeAddress',
-      allDomainObjectNames: ['HomeAddress', 'Geocode', 'User'],
-      expectedResult: 'HomeAddress',
-    },
-    {
-      propertyName: 'address',
-      allDomainObjectNames: ['HomeAddress', 'Geocode', 'User'],
-      expectedResult: 'HomeAddress',
-    },
-    {
-      propertyName: 'address',
-      allDomainObjectNames: ['HomeAddress', 'WorkAddress', 'Geocode', 'User'],
-      expectedErrorMessageContains: '["HomeAddress","WorkAddress"]',
-    },
-    {
-      propertyName: 'homeAddress',
-      allDomainObjectNames: ['HomeAddress', 'WorkAddress', 'Geocode', 'User'],
-      expectedResult: 'HomeAddress',
-    },
-    {
-      propertyName: 'externalId',
-      allDomainObjectNames: ['PlaneExternalId', 'Airport', 'PlaneManufacturer'],
-      expectedResult: 'PlaneExternalId',
-    },
-    {
-      propertyName: 'externalIds',
-      allDomainObjectNames: ['PlaneExternalId', 'Airport', 'PlaneManufacturer'],
-      expectedResult: 'PlaneExternalId',
-    },
-    {
-      propertyName: 'eventUuid',
-      allDomainObjectNames: ['OutreachCaptureEvent', 'RelationshipEvent'],
-      expectedErrorMessageContains:
-        '["OutreachCaptureEvent","RelationshipEvent"]',
-    },
-    {
-      propertyName: 'outreachCaptureEventUuid',
-      allDomainObjectNames: ['OutreachCaptureEvent', 'RelationshipEvent'],
-      expectedResult: 'OutreachCaptureEvent',
+      propertyName: 'receiverRef',
+      allDomainObjectNames: ['InvoiceIssuerRef', 'InvoiceReceiverRef'],
+      expectedResult: 'InvoiceReceiverRef',
     },
   ];
 

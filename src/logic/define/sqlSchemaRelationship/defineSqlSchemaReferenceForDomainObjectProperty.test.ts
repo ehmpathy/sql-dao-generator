@@ -1,3 +1,4 @@
+import { getError } from '@ehmpathy/error-fns';
 import {
   DomainObjectMetadata,
   DomainObjectPropertyType,
@@ -60,7 +61,7 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
       });
     });
     it('should throw an error if the property is not named after the referenced domain object', () => {
-      try {
+      const error = getError(() =>
         defineSqlSchemaReferenceForDomainObjectProperty({
           property: {
             name: 'warDogs',
@@ -75,15 +76,14 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
           },
           domainObject: { name: 'ExampleThing' } as DomainObjectMetadata,
           allDomainObjects: [],
-        });
-      } catch (error) {
-        expect(error).toBeInstanceOf(
-          PropertyReferencingDomainObjectNotNamedCorrectlyError,
-        );
-      }
+        }),
+      );
+      expect(error).toBeInstanceOf(
+        PropertyReferencingDomainObjectNotNamedCorrectlyError,
+      );
     });
     it('should throw an error if the property is ambiguously referenced domain object', () => {
-      try {
+      const error = getError(() =>
         defineSqlSchemaReferenceForDomainObjectProperty({
           property: {
             name: 'externalId',
@@ -107,15 +107,14 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
               extends: DomainObjectVariant.DOMAIN_LITERAL,
             },
           ] as DomainObjectMetadata[],
-        });
-      } catch (error) {
-        expect(error).toBeInstanceOf(
-          AmbiguouslyNamedDomainObjectReferencePropertyError,
-        );
-      }
+        }),
+      );
+      expect(error).toBeInstanceOf(
+        AmbiguouslyNamedDomainObjectReferencePropertyError,
+      );
     });
     it('should throw an error if a domain-entity was directly referenced', () => {
-      try {
+      const error = getError(() =>
         defineSqlSchemaReferenceForDomainObjectProperty({
           property: {
             name: 'externalId',
@@ -130,15 +129,14 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
           },
           domainObject: { name: 'ExampleThing' } as DomainObjectMetadata,
           allDomainObjects: [] as DomainObjectMetadata[],
-        });
-      } catch (error) {
-        expect(error).toBeInstanceOf(
-          DirectlyNestedNonDomainObjectReferenceForbiddenError,
-        );
-      }
+        }),
+      );
+      expect(error).toBeInstanceOf(
+        DirectlyNestedNonDomainObjectReferenceForbiddenError,
+      );
     });
     it('should throw an error if a domain-event was directly referenced', () => {
-      try {
+      const error = getError(() =>
         defineSqlSchemaReferenceForDomainObjectProperty({
           property: {
             name: 'externalId',
@@ -153,12 +151,56 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
           },
           domainObject: { name: 'ExampleThing' } as DomainObjectMetadata,
           allDomainObjects: [] as DomainObjectMetadata[],
-        });
-      } catch (error) {
-        expect(error).toBeInstanceOf(
-          DirectlyNestedNonDomainObjectReferenceForbiddenError,
-        );
-      }
+        }),
+      );
+      expect(error).toBeInstanceOf(
+        DirectlyNestedNonDomainObjectReferenceForbiddenError,
+      );
+    });
+    it('should get domain object reference from a direct nested reference, with prefix name', () => {
+      const reference = defineSqlSchemaReferenceForDomainObjectProperty({
+        property: {
+          name: 'priceCharged',
+          type: DomainObjectPropertyType.REFERENCE,
+          of: {
+            name: 'Price',
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
+          },
+        },
+        domainObject: { name: 'ExampleThing' } as DomainObjectMetadata,
+        allDomainObjects: [{ name: 'Price' } as DomainObjectMetadata],
+      });
+      expect(reference).toEqual({
+        method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
+        of: {
+          name: 'Price',
+          extends: DomainObjectVariant.DOMAIN_LITERAL,
+        },
+      });
+    });
+    it('should get domain object reference from a direct nested reference, with a couple of similar options, but exactly one most specific', () => {
+      const reference = defineSqlSchemaReferenceForDomainObjectProperty({
+        property: {
+          name: 'issuerRef',
+          type: DomainObjectPropertyType.REFERENCE,
+          of: {
+            name: 'InvoiceIssuerRef',
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
+          },
+        },
+        domainObject: { name: 'InvoiceIssuerRef' } as DomainObjectMetadata,
+        allDomainObjects: [
+          { name: 'InvoiceIssuerRef' } as DomainObjectMetadata,
+          { name: 'InvoiceReceiverRef' } as DomainObjectMetadata,
+        ],
+      });
+      expect(reference).toEqual({
+        method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
+        of: {
+          name: 'InvoiceIssuerRef',
+          extends: DomainObjectVariant.DOMAIN_LITERAL,
+        },
+      });
     });
   });
   describe('implicit by uuid reference', () => {

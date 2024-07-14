@@ -1,5 +1,6 @@
 import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
 import { isPropertyNameAReferenceIntuitively } from 'domain-objects';
+import { isPresent } from 'type-fns';
 
 export class AmbiguouslyNamedDomainObjectReferencePropertyError extends Error {
   constructor({
@@ -73,19 +74,58 @@ export const getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter =
       return domainObjectWithExactSameName[0]!;
 
     // determine all of the domain objects that are intuitively referenced by this property name
-    const intuitivelyReferencedDomainObjectNames = allDomainObjectNames.filter(
-      (domainObjectName) =>
-        isPropertyNameAReferenceIntuitively({ propertyName, domainObjectName }),
-    );
+    const intuitivelyReferencedDomainObjectNames = allDomainObjectNames
+      .map((domainObjectName) => {
+        const reference = isPropertyNameAReferenceIntuitively({
+          propertyName,
+          domainObjectName,
+        });
+        if (!reference) return null;
+        return {
+          domainObjectName,
+          referenceVia: reference.via,
+        };
+      })
+      .filter(isPresent);
 
-    // if more than one, then its ambiguously specified
-    if (intuitivelyReferencedDomainObjectNames.length > 1)
-      throw new AmbiguouslyNamedDomainObjectReferencePropertyError({
-        parentDomainObjectName,
-        propertyName,
-        ambiguousOptions: intuitivelyReferencedDomainObjectNames,
-      });
+    // if there's either exactly one or none, then we can use it
+    if (intuitivelyReferencedDomainObjectNames.length <= 1)
+      return (
+        intuitivelyReferencedDomainObjectNames[0]?.domainObjectName ?? null
+      );
 
-    // otherwise, there's either exactly one or none
-    return intuitivelyReferencedDomainObjectNames[0] ?? null;
+    // if more than one, then see if one of them has a more distinct reference (i.e., a longer reference match)
+    const referenceViaLengthMax = intuitivelyReferencedDomainObjectNames
+      .map(({ referenceVia }) => referenceVia.length)
+      .sort((a, b) => (a < b ? -1 : 1)) // sort ascending
+      .slice(-1)[0]; // get the max
+    const referencesViaLengthMax =
+      intuitivelyReferencedDomainObjectNames.filter(
+        ({ referenceVia }) => referenceVia.length === referenceViaLengthMax,
+      );
+    if (referencesViaLengthMax.length === 0)
+      throw new UnexpectedCodePathError(
+        'should have found atleast one reference with same max length',
+        {
+          referenceViaLengthMax,
+          referencesViaLengthMax,
+          intuitivelyReferencedDomainObjectNames,
+        },
+      );
+    if (referencesViaLengthMax.length === 1)
+      return (
+        referencesViaLengthMax[0]?.domainObjectName ??
+        UnexpectedCodePathError.throw(
+          'array w/ length === 1 should have first element defined',
+        )
+      );
+
+    // otherwise, its ambiguous
+    throw new AmbiguouslyNamedDomainObjectReferencePropertyError({
+      parentDomainObjectName,
+      propertyName,
+      ambiguousOptions: intuitivelyReferencedDomainObjectNames.map(
+        (option) => option.domainObjectName,
+      ),
+    });
   };
