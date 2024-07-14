@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/ehmpathy/sql-dao-generator/compare/v0.8.0...v0.8.1) (2024-07-14)
+
+
+### Bug Fixes
+
+* **refs:** better disambiguate dobj reference names ([3ef9df4](https://github.com/ehmpathy/sql-dao-generator/commit/3ef9df4435e84f4985d1732a755bd37deb4acb98))
+
 ## [0.8.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.7.4...v0.8.0) (2024-06-30)
 
 
