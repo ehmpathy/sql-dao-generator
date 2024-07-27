@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.2](https://github.com/ehmpathy/sql-dao-generator/compare/v0.8.1...v0.8.2) (2024-07-27)
+
+
+### Bug Fixes
+
+* **practs:** bump practs to latest best ([18937d9](https://github.com/ehmpathy/sql-dao-generator/commit/18937d9f65325e1e562c8b9582caed8c509c10f9))
+
 ## [0.8.1](https://github.com/ehmpathy/sql-dao-generator/compare/v0.8.0...v0.8.1) (2024-07-14)
 
 
