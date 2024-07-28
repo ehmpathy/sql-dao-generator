@@ -3,17 +3,19 @@
 exports[`defineSqlSchemaControlCodeFilesForDomainObjects should work on the example project 1`] = `
 [
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const asyncTaskPredictStationCongestionDao = {
-  findById,
-  findByUnique,
-  findByUuid,
-  findByRef,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
   upsert,
 };
 
@@ -246,15 +248,17 @@ export const upsert = async (
     "relpath": "asyncTaskPredictStationCongestionDao/upsert.ts",
   },
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { upsert } from './upsert';
 
 export const carriageDao = {
-  findById,
-  findByUnique,
-  findByUuid,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
   upsert,
 };
 
@@ -454,13 +458,15 @@ export const upsert = async (
     "relpath": "carriageDao/upsert.ts",
   },
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { upsert } from './upsert';
 
 export const certificateDao = {
-  findById,
-  findByUnique,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
   upsert,
 };
 
@@ -611,17 +617,19 @@ export const upsert = async (
     "relpath": "certificateDao/upsert.ts",
   },
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const trainEngineerDao = {
-  findById,
-  findByUnique,
-  findByUuid,
-  findByRef,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
   upsert,
 };
 
@@ -849,13 +857,15 @@ export const upsert = async (
     "relpath": "trainEngineerDao/upsert.ts",
   },
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { upsert } from './upsert';
 
 export const geocodeDao = {
-  findById,
-  findByUnique,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
   upsert,
 };
 
@@ -1006,17 +1016,19 @@ export const upsert = async (
     "relpath": "geocodeDao/upsert.ts",
   },
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const trainDao = {
-  findById,
-  findByUnique,
-  findByUuid,
-  findByRef,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
   upsert,
 };
 
@@ -1280,17 +1292,19 @@ export const upsert = async (
     "relpath": "trainDao/upsert.ts",
   },
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const locomotiveDao = {
-  findById,
-  findByUnique,
-  findByUuid,
-  findByRef,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
   upsert,
 };
 
@@ -1528,15 +1542,17 @@ export const upsert = async (
     "relpath": "locomotiveDao/upsert.ts",
   },
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const trainLocatedEventDao = {
-  findById,
-  findByUnique,
-  findByRef,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByRef: withExpectOutput(findByRef),
   upsert,
 };
 
@@ -1717,17 +1733,19 @@ export const upsert = async (
     "relpath": "trainLocatedEventDao/upsert.ts",
   },
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const trainStationDao = {
-  findById,
-  findByUnique,
-  findByUuid,
-  findByRef,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
   upsert,
 };
 
@@ -1945,13 +1963,15 @@ export const upsert = async (
     "relpath": "trainStationDao/upsert.ts",
   },
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { upsert } from './upsert';
 
 export const priceDao = {
-  findById,
-  findByUnique,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
   upsert,
 };
 
@@ -2102,13 +2122,15 @@ export const upsert = async (
     "relpath": "priceDao/upsert.ts",
   },
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { upsert } from './upsert';
 
 export const invoiceLineItemDao = {
-  findById,
-  findByUnique,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
   upsert,
 };
 
@@ -2272,17 +2294,19 @@ export const upsert = async (
     "relpath": "invoiceLineItemDao/upsert.ts",
   },
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const invoiceDao = {
-  findById,
-  findByUnique,
-  findByUuid,
-  findByRef,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
   upsert,
 };
 

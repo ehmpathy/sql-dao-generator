@@ -58,16 +58,34 @@ export const defineDaoCodeFilesForDomainObject = ({
     hasRefCapacity ? 'findByRef' : null,
     'upsert',
   ].filter(isPresent);
-  const indexImports = daoMethodNames.map(
-    (daoMethodName) => `import { ${daoMethodName} } from './${daoMethodName}';`,
-  );
+  const indexImports = [
+    `import { withExpectOutput } from 'procedure-fns';`,
+    '',
+    ...daoMethodNames.map(
+      (daoMethodName) =>
+        `import { ${daoMethodName} } from './${daoMethodName}';`,
+    ),
+  ];
+  const daoMethodNamesWithExpectOutput = [
+    'findByUnique',
+    'findByUuid',
+    'findById',
+    'findByRef',
+  ];
   const indexFile = new GeneratedCodeFile({
     relpath: `${castDomainObjectNameToDaoName(domainObject.name)}/index.ts`,
     content: `
 ${indexImports.join('\n')}
 
 export const ${castDomainObjectNameToDaoName(domainObject.name)} = {
-  ${daoMethodNames.join(',\n  ')},
+  ${daoMethodNames
+    .map((daoMethodName) => {
+      const shouldExpectOutput =
+        daoMethodNamesWithExpectOutput.includes(daoMethodName);
+      if (!shouldExpectOutput) return daoMethodName;
+      return `${daoMethodName}: withExpectOutput(${daoMethodName})`;
+    })
+    .join(',\n  ')},
 };
 
 // include an alias, for improved ease of access via autocomplete

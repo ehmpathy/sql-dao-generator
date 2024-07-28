@@ -3,15 +3,17 @@
 exports[`defineDaoCodeFilesForDomainObject should have the findByUuid file if property has uuid 1`] = `
 [
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
 import { upsert } from './upsert';
 
 export const geocodeDao = {
-  findById,
-  findByUnique,
-  findByUuid,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
   upsert,
 };
 
@@ -212,13 +214,15 @@ export const upsert = async (
 exports[`defineDaoCodeFilesForDomainObject should not have the findByUuid file if property has uuid 1`] = `
 [
   GeneratedCodeFile {
-    "content": "import { findById } from './findById';
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { upsert } from './upsert';
 
 export const geocodeDao = {
-  findById,
-  findByUnique,
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
   upsert,
 };
 
