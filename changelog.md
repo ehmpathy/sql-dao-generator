@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.8.2...v0.9.0) (2024-07-28)
+
+
+### Features
+
+* **refs:** expose a findByRef dao method ([3c41f53](https://github.com/ehmpathy/sql-dao-generator/commit/3c41f539077e2e03ca75f112c5b2c328fb08c4ef))
+
 ## [0.8.2](https://github.com/ehmpathy/sql-dao-generator/compare/v0.8.1...v0.8.2) (2024-07-27)
 
 
