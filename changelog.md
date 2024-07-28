@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.9.0...v0.10.0) (2024-07-28)
+
+
+### Features
+
+* **expect:** add with-expect-output to findBy queries ([75c1516](https://github.com/ehmpathy/sql-dao-generator/commit/75c15160c5bc21c5c0536a04fffca500db98558b))
+
 ## [0.9.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.8.2...v0.9.0) (2024-07-28)
 
 
