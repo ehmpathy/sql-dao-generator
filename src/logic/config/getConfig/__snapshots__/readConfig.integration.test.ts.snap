@@ -8,7 +8,9 @@ exports[`readConfig should be able to read the example config provisioned in __t
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
-          "primary": null,
+          "primary": [
+            "uuid",
+          ],
           "unique": [
             "stationUuid",
             "trainLocatedEventUuid",
@@ -76,7 +78,9 @@ exports[`readConfig should be able to read the example config provisioned in __t
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
-          "primary": null,
+          "primary": [
+            "uuid",
+          ],
           "unique": [
             "uuid",
           ],
@@ -189,7 +193,9 @@ exports[`readConfig should be able to read the example config provisioned in __t
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
-          "primary": null,
+          "primary": [
+            "uuid",
+          ],
           "unique": [
             "externalId",
           ],
@@ -304,7 +310,9 @@ exports[`readConfig should be able to read the example config provisioned in __t
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
-          "primary": null,
+          "primary": [
+            "uuid",
+          ],
           "unique": [
             "ein",
           ],
@@ -414,7 +422,9 @@ exports[`readConfig should be able to read the example config provisioned in __t
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
-          "primary": null,
+          "primary": [
+            "uuid",
+          ],
           "unique": [
             "combinationId",
           ],
@@ -508,7 +518,9 @@ exports[`readConfig should be able to read the example config provisioned in __t
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
-          "primary": null,
+          "primary": [
+            "uuid",
+          ],
           "unique": [
             "socialSecurityNumberHash",
           ],
@@ -576,7 +588,9 @@ exports[`readConfig should be able to read the example config provisioned in __t
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
-          "primary": null,
+          "primary": [
+            "uuid",
+          ],
           "unique": [
             "geocode",
           ],
@@ -631,6 +645,7 @@ exports[`readConfig should be able to read the example config provisioned in __t
             "src/data/dao/**/*.ts",
             "!src/data/dao/**/index.ts",
             "!src/data/dao/**/castFromDatabaseObject.ts",
+            "!src/data/dao/**/findByRef.ts",
             "!src/**/*.test.ts",
           ],
           "resources": [

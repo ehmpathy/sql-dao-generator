@@ -12,6 +12,7 @@ export class TrainStation
   extends DomainEntity<TrainStation>
   implements TrainStation
 {
-  public static unique = ['geocode']; // identified by where it is in the world (note; identified by a ref to a literal)
+  public static primary = ['uuid'] as const;
+  public static unique = ['geocode'] as const; // identified by where it is in the world (note; identified by a ref to a literal)
   public static updatable = ['name']; // name can be updated
 }

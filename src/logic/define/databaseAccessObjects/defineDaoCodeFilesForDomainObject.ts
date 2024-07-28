@@ -1,5 +1,8 @@
 import { pascalCase } from 'change-case';
-import { DomainObjectMetadata } from 'domain-objects-metadata';
+import {
+  DomainObjectMetadata,
+  DomainObjectVariant,
+} from 'domain-objects-metadata';
 import { isPresent } from 'type-fns';
 
 import { GeneratedCodeFile } from '../../../domain/objects/GeneratedCodeFile';
@@ -9,6 +12,7 @@ import {
   defineDaoFindByMethodCodeForDomainObject,
   FindByQueryType,
 } from './defineDaoFindByMethodCodeForDomainObject';
+import { defineDaoFindByRefMethodCodeForDomainObject } from './defineDaoFindByRefMethodCodeForDomainObject';
 import { defineDaoUpsertMethodCodeForDomainObject } from './defineDaoUpsertMethodCodeForDomainObject';
 import { defineDaoUtilCastMethodCodeForDomainObject } from './defineDaoUtilCastMethodCodeForDomainObject';
 
@@ -35,6 +39,10 @@ export const defineDaoCodeFilesForDomainObject = ({
   // define some useful info
   const hasIdProperty = !!domainObject.properties.id;
   const hasUuidProperty = !!domainObject.properties.uuid;
+  const hasRefCapacity =
+    (domainObject.extends === DomainObjectVariant.DOMAIN_ENTITY ||
+      domainObject.extends === DomainObjectVariant.DOMAIN_EVENT) &&
+    domainObject.decorations.unique?.[0] !== 'uuid'; // if unique on .uuid, then dont give it a ref
 
   // check that domain object has id. we dont support not having an id
   if (!hasIdProperty)
@@ -47,6 +55,7 @@ export const defineDaoCodeFilesForDomainObject = ({
     hasIdProperty ? 'findById' : null,
     'findByUnique',
     hasUuidProperty ? 'findByUuid' : null,
+    hasRefCapacity ? 'findByRef' : null,
     'upsert',
   ].filter(isPresent);
   const indexImports = daoMethodNames.map(
@@ -113,6 +122,16 @@ export const dao${pascalCase(
         }),
       })
     : null;
+  const findByRefMethodFile = hasRefCapacity
+    ? new GeneratedCodeFile({
+        relpath: `${castDomainObjectNameToDaoName(
+          domainObject.name,
+        )}/findByRef.ts`,
+        content: defineDaoFindByRefMethodCodeForDomainObject({
+          domainObject,
+        }),
+      })
+    : null;
 
   // define the upsert method
   const upsertMethodFile = new GeneratedCodeFile({
@@ -131,6 +150,7 @@ export const dao${pascalCase(
     findByIdMethodFile,
     findByUniqueMethodFile,
     findByUuidMethodFile,
+    findByRefMethodFile,
     upsertMethodFile,
   ].filter(isPresent);
 };

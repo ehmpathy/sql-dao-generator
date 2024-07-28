@@ -19,6 +19,7 @@ export interface Train {
   status: TrainStatus;
 }
 export class Train extends DomainEntity<Train> implements Train {
-  public static unique = ['combinationId'];
+  public static primary = ['uuid'] as const;
+  public static unique = ['combinationId'] as const;
   public static updatable = ['engineers', 'status'];
 }

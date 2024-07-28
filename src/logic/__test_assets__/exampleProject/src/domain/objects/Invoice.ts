@@ -21,6 +21,7 @@ export interface Invoice {
   status: InvoiceStatus;
 }
 export class Invoice extends DomainEntity<Invoice> implements Invoice {
-  public static unique = ['externalId'];
+  public static primary = ['uuid'] as const;
+  public static unique = ['externalId'] as const;
   public static updatable = ['items', 'totalPrice', 'status'];
 }

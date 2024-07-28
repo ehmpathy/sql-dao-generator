@@ -17,6 +17,7 @@ export class TrainEngineer
   extends DomainEntity<TrainEngineer>
   implements TrainEngineer
 {
-  public static unique = ['socialSecurityNumberHash'];
+  public static primary = ['uuid'] as const;
+  public static unique = ['socialSecurityNumberHash'] as const;
   public static updatable = ['name', 'certificates', 'licenseUuids'];
 }

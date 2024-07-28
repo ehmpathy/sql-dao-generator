@@ -26,6 +26,7 @@ export interface Locomotive {
   milage: number; // updated at the end of each day
 }
 export class Locomotive extends DomainEntity<Locomotive> implements Locomotive {
-  public static unique = ['ein'];
+  public static primary = ['uuid'] as const;
+  public static unique = ['ein'] as const;
   public static updatable = ['milage'];
 }

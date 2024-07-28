@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`defineDaoFindByRefMethodCodeForDomainObject should look correct for a domain event with a static referenced array 1`] = `
+"import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof TrainLocatedEvent> },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainLocatedEvent> | null> => {
+  if (isPrimaryKeyRef({ of: TrainLocatedEvent })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isUniqueKeyRef({ of: TrainLocatedEvent })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for TrainLocatedEvent', { input });
+};"
+`;
+
+exports[`defineDaoFindByRefMethodCodeForDomainObject should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
+"import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof Train> },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Train> | null> => {
+  if (isPrimaryKeyRef({ of: Train })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isUniqueKeyRef({ of: Train })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for Train', { input });
+};"
+`;
+
+exports[`defineDaoFindByRefMethodCodeForDomainObject should look correct for simple domain entity 1`] = `
+"import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof Carriage> },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Carriage> | null> => {
+  if (isPrimaryKeyRef({ of: Carriage })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isUniqueKeyRef({ of: Carriage })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for Carriage', { input });
+};"
+`;
+
+exports[`defineDaoFindByRefMethodCodeForDomainObject should look correct for simple literal 1`] = `
+"import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof Geocode> },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Geocode> | null> => {
+  if (isPrimaryKeyRef({ of: Geocode })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isUniqueKeyRef({ of: Geocode })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for Geocode', { input });
+};"
+`;

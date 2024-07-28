@@ -28,6 +28,7 @@ export class AsyncTaskPredictStationCongestion
   extends DomainEntity<AsyncTaskPredictStationCongestion>
   implements AsyncTaskPredictStationCongestion
 {
-  public static unique = ['stationUuid', 'trainLocatedEventUuid'];
+  public static primary = ['uuid'] as const;
+  public static unique = ['stationUuid', 'trainLocatedEventUuid'] as const;
   public static updatable = ['status'];
 }

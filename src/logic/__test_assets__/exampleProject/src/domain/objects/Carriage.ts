@@ -16,6 +16,7 @@ export interface Carriage {
   capacity: number; // for passenger carriages, number of passengers; for freight, the volume
 }
 export class Carriage extends DomainEntity<Carriage> implements Carriage {
-  public static unique = ['uuid']; // there is nothing that naturally identifies a carriage -> it is unique only on the unique identifier tracked in our db
+  public static primary = ['uuid'] as const; // there is nothing that naturally identifies a carriage -> it is unique only on the unique identifier tracked in our db
+  public static unique = ['uuid'] as const; // there is nothing that naturally identifies a carriage -> it is unique only on the unique identifier tracked in our db
   public static updatable = [];
 }

@@ -6,12 +6,14 @@ exports[`defineSqlSchemaControlCodeFilesForDomainObjects should work on the exam
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const asyncTaskPredictStationCongestionDao = {
   findById,
   findByUnique,
   findByUuid,
+  findByRef,
   upsert,
 };
 
@@ -179,6 +181,28 @@ export const findByUuid = async (
   return castFromDatabaseObject(dbObject);
 };",
     "relpath": "asyncTaskPredictStationCongestionDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof AsyncTaskPredictStationCongestion> },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<AsyncTaskPredictStationCongestion> | null> => {
+  if (isPrimaryKeyRef({ of: AsyncTaskPredictStationCongestion })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isUniqueKeyRef({ of: AsyncTaskPredictStationCongestion })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for AsyncTaskPredictStationCongestion', { input });
+};",
+    "relpath": "asyncTaskPredictStationCongestionDao/findByRef.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -590,12 +614,14 @@ export const upsert = async (
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const trainEngineerDao = {
   findById,
   findByUnique,
   findByUuid,
+  findByRef,
   upsert,
 };
 
@@ -755,6 +781,28 @@ export const findByUuid = async (
   return castFromDatabaseObject(dbObject);
 };",
     "relpath": "trainEngineerDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof TrainEngineer> },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainEngineer> | null> => {
+  if (isPrimaryKeyRef({ of: TrainEngineer })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isUniqueKeyRef({ of: TrainEngineer })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for TrainEngineer', { input });
+};",
+    "relpath": "trainEngineerDao/findByRef.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -961,12 +1009,14 @@ export const upsert = async (
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const trainDao = {
   findById,
   findByUnique,
   findByUuid,
+  findByRef,
   upsert,
 };
 
@@ -1140,6 +1190,28 @@ export const findByUuid = async (
     "relpath": "trainDao/findByUuid.ts",
   },
   GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof Train> },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Train> | null> => {
+  if (isPrimaryKeyRef({ of: Train })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isUniqueKeyRef({ of: Train })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for Train', { input });
+};",
+    "relpath": "trainDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
@@ -1211,12 +1283,14 @@ export const upsert = async (
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const locomotiveDao = {
   findById,
   findByUnique,
   findByUuid,
+  findByRef,
   upsert,
 };
 
@@ -1389,6 +1463,28 @@ export const findByUuid = async (
     "relpath": "locomotiveDao/findByUuid.ts",
   },
   GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof Locomotive> },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Locomotive> | null> => {
+  if (isPrimaryKeyRef({ of: Locomotive })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isUniqueKeyRef({ of: Locomotive })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for Locomotive', { input });
+};",
+    "relpath": "locomotiveDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
@@ -1434,11 +1530,13 @@ export const upsert = async (
   GeneratedCodeFile {
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
+import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const trainLocatedEventDao = {
   findById,
   findByUnique,
+  findByRef,
   upsert,
 };
 
@@ -1555,6 +1653,28 @@ export const findByUnique = async (
     "relpath": "trainLocatedEventDao/findByUnique.ts",
   },
   GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof TrainLocatedEvent> },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainLocatedEvent> | null> => {
+  if (isPrimaryKeyRef({ of: TrainLocatedEvent })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isUniqueKeyRef({ of: TrainLocatedEvent })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for TrainLocatedEvent', { input });
+};",
+    "relpath": "trainLocatedEventDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
@@ -1600,12 +1720,14 @@ export const upsert = async (
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const trainStationDao = {
   findById,
   findByUnique,
   findByUuid,
+  findByRef,
   upsert,
 };
 
@@ -1759,6 +1881,28 @@ export const findByUuid = async (
   return castFromDatabaseObject(dbObject);
 };",
     "relpath": "trainStationDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof TrainStation> },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<TrainStation> | null> => {
+  if (isPrimaryKeyRef({ of: TrainStation })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isUniqueKeyRef({ of: TrainStation })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for TrainStation', { input });
+};",
+    "relpath": "trainStationDao/findByRef.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
@@ -2131,12 +2275,14 @@ export const upsert = async (
     "content": "import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const invoiceDao = {
   findById,
   findByUnique,
   findByUuid,
+  findByRef,
   upsert,
 };
 
@@ -2297,6 +2443,28 @@ export const findByUuid = async (
   return castFromDatabaseObject(dbObject);
 };",
     "relpath": "invoiceDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof Invoice> },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Invoice> | null> => {
+  if (isPrimaryKeyRef({ of: Invoice })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isUniqueKeyRef({ of: Invoice })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for Invoice', { input });
+};",
+    "relpath": "invoiceDao/findByRef.ts",
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';

@@ -15,5 +15,6 @@ export class TrainLocatedEvent
   extends DomainEvent<TrainLocatedEvent>
   implements TrainLocatedEvent
 {
-  public static unique = ['trainUuid', 'occurredAt'];
+  public static primary = ['uuid'] as const;
+  public static unique = ['trainUuid', 'occurredAt'] as const;
 }
