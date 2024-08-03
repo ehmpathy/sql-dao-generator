@@ -274,7 +274,7 @@ export const invoice: Entity = new Entity({
       SELECT train_located_event.uuid
       FROM train_located_event WHERE train_located_event.id = async_task_predict_station_congestion.train_located_event_id
     ) AS train_located_event_uuid
-  FROM view_async_task_predict_station_congestion_current AS async_task_predict_station_congestion;",
+  FROM view_async_task_predict_station_congestion_current async_task_predict_station_congestion;",
     "relpath": "../sql/views/view_async_task_predict_station_congestion_hydrated.sql",
   },
   GeneratedCodeFile {
@@ -322,7 +322,7 @@ export const invoice: Entity = new Entity({
     ) AS certificates,
     train_engineer.license_uuids,
     train_engineer.name
-  FROM view_train_engineer_current AS train_engineer;",
+  FROM view_train_engineer_current train_engineer;",
     "relpath": "../sql/views/view_train_engineer_hydrated.sql",
   },
   GeneratedCodeFile {
@@ -374,7 +374,7 @@ export const invoice: Entity = new Entity({
       FROM view_train_engineer_current AS train_engineer WHERE train_engineer.id = train.lead_engineer_id
     ) AS lead_engineer_uuid,
     train.status
-  FROM view_train_current AS train;",
+  FROM view_train_current train;",
     "relpath": "../sql/views/view_train_hydrated.sql",
   },
   GeneratedCodeFile {
@@ -389,7 +389,7 @@ export const invoice: Entity = new Entity({
     locomotive.fuel,
     locomotive.capacity,
     locomotive.milage
-  FROM view_locomotive_current AS locomotive;",
+  FROM view_locomotive_current locomotive;",
     "relpath": "../sql/views/view_locomotive_hydrated.sql",
   },
   GeneratedCodeFile {
@@ -426,7 +426,7 @@ export const invoice: Entity = new Entity({
       FROM geocode WHERE geocode.id = train_station.geocode_id
     ) AS geocode,
     train_station.name
-  FROM view_train_station_current AS train_station;",
+  FROM view_train_station_current train_station;",
     "relpath": "../sql/views/view_train_station_hydrated.sql",
   },
   GeneratedCodeFile {
@@ -495,7 +495,7 @@ export const invoice: Entity = new Entity({
       FROM price WHERE price.id = invoice.total_price_id
     ) AS total_price,
     invoice.status
-  FROM view_invoice_current AS invoice;",
+  FROM view_invoice_current invoice;",
     "relpath": "../sql/views/view_invoice_hydrated.sql",
   },
 ]

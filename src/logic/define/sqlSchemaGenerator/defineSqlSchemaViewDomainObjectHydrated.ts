@@ -42,7 +42,7 @@ CREATE OR REPLACE VIEW view_${sqlSchemaName}_hydrated AS
       .join(',\n    ')}
   FROM ${
     hasCurrentView
-      ? `view_${sqlSchemaName}_current AS ${sqlSchemaName}`
+      ? `view_${sqlSchemaName}_current ${sqlSchemaName}`
       : sqlSchemaName
   };
   `.trim();
