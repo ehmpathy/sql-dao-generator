@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://github.com/ehmpathy/sql-dao-generator/compare/v0.10.0...v0.10.1) (2024-08-03)
+
+
+### Bug Fixes
+
+* **views:** gen hydrated view without "as" label to prevent infidiff ([f4307d2](https://github.com/ehmpathy/sql-dao-generator/commit/f4307d2cda05b650726b0c46b0478f27feb07d19))
+
 ## [0.10.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.9.0...v0.10.0) (2024-07-28)
 
 
