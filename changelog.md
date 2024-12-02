@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.10.1...v0.11.0) (2024-12-02)
+
+
+### Features
+
+* **refs:** support direct declarations of Refs ([9de3ca8](https://github.com/ehmpathy/sql-dao-generator/commit/9de3ca85a4c974305dc606806e1ea225799366da))
+
 ## [0.10.1](https://github.com/ehmpathy/sql-dao-generator/compare/v0.10.0...v0.10.1) (2024-08-03)
 
 
