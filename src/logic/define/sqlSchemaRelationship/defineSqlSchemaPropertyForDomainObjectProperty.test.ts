@@ -3,6 +3,7 @@ import {
   DomainObjectVariant,
 } from 'domain-objects-metadata';
 
+import { SqlSchemaReferenceMethod } from '../../../domain';
 import { createExampleDomainObjectMetadata } from '../../__test_assets__/createExampleDomainObject';
 import { defineSqlSchemaPropertyForDomainObjectProperty } from './defineSqlSchemaPropertyForDomainObjectProperty';
 
@@ -52,6 +53,21 @@ describe('defineSqlSchemaPropertyForDomainObjectProperty', () => {
         allDomainObjects: [],
       });
       expect(sqlSchemaProperty.name).toEqual('steam_engine_certificate_id');
+    });
+    it('should add the _id suffix to directly declared reference property names', () => {
+      const sqlSchemaProperty = defineSqlSchemaPropertyForDomainObjectProperty({
+        property: {
+          name: 'carriageRef',
+          type: DomainObjectPropertyType.REFERENCE,
+          of: {
+            name: 'Carriage',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+          },
+        },
+        domainObject: createExampleDomainObjectMetadata(),
+        allDomainObjects: [],
+      });
+      expect(sqlSchemaProperty.name).toEqual('carriage_id');
     });
     it('should add the _ids suffix and strip plurality to directly nested reference array property names', () => {
       const sqlSchemaProperty = defineSqlSchemaPropertyForDomainObjectProperty({
@@ -137,6 +153,26 @@ describe('defineSqlSchemaPropertyForDomainObjectProperty', () => {
       });
       expect(sqlSchemaProperty.reference).toBeDefined();
       expect(sqlSchemaProperty.reference!.of.name).toEqual('Certificate');
+    });
+    it('should define the reference correctly when there is a to a DomainEntity via Ref', () => {
+      const sqlSchemaProperty = defineSqlSchemaPropertyForDomainObjectProperty({
+        property: {
+          name: 'carriageRef',
+          type: DomainObjectPropertyType.REFERENCE,
+          of: {
+            name: 'Carriage',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+          },
+        },
+        domainObject: createExampleDomainObjectMetadata(),
+        allDomainObjects: [],
+      });
+      expect(sqlSchemaProperty.reference).toBeDefined();
+      expect(sqlSchemaProperty.name).toEqual('carriage_id');
+      expect(sqlSchemaProperty.reference!.of.name).toEqual('Carriage');
+      expect(sqlSchemaProperty.reference!.method).toEqual(
+        SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION,
+      );
     });
   });
   describe('modifiers', () => {

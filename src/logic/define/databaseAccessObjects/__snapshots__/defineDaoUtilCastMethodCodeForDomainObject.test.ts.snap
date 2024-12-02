@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for a domain entity which directly declares a reference to another 1`] = `
+"import { HasMetadata } from 'type-fns';
+
+import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindCarriageByIdOutput, SqlQueryFindCarriageCargoByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castCarriageFromDatabaseObject } from '../carriageDao/castFromDatabaseObject';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindCarriageCargoByIdOutput,
+): HasMetadata<CarriageCargo> =>
+  new CarriageCargo({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    carriageRef: { uuid: dbObject.carriage_uuid },
+  }) as HasMetadata<CarriageCargo>;"
+`;
+
 exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for a domain event with a static referenced array 1`] = `
 "import { HasMetadata } from 'type-fns';
 

@@ -10,6 +10,20 @@ GeneratedCodeFile {
 - type: resource
   path: ./functions/upsert_carriage.sql
 
+# carriage_cargo
+- type: resource
+  path: ./tables/carriage_cargo.sql
+- type: resource
+  path: ./tables/carriage_cargo_version.sql
+- type: resource
+  path: ./tables/carriage_cargo_cvp.sql
+- type: resource
+  path: ./views/view_carriage_cargo_current.sql
+- type: resource
+  path: ./views/view_carriage_cargo_hydrated.sql
+- type: resource
+  path: ./functions/upsert_carriage_cargo.sql
+
 # certificate
 - type: resource
   path: ./tables/certificate.sql

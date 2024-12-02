@@ -69,7 +69,7 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
     return `${domainObjectProperty.name}`;
   }
 
-  // for direct references, we need to map to the "id"
+  // for direct nested references, we need to map to the "id"
   if (
     sqlSchemaProperty.reference.method ===
     SqlSchemaReferenceMethod.DIRECT_BY_NESTING
@@ -120,6 +120,42 @@ export const defineQueryFunctionInputExpressionForDomainObjectProperty = ({
         referencedDomainObjectName,
       )}.findByUnique(${referencedDomainObjectAttributeName}, context))?.id ?? -1) ))`;
     }
+  }
+
+  // for direct declaration references, we need to map to the "uuid"
+  /**
+   * invoiceUuid: isPrimaryKeyRef({ of: ProviderAdsInvoice })(item.invoiceRef)
+        ? item.invoiceRef.uuid
+        : (
+            await daoProviderAdsInvoice
+              .findByRef({ ref: item.invoiceRef }, context)
+              .expect('isPresent')
+          ).uuid,
+   */
+  if (
+    sqlSchemaProperty.reference.method ===
+    SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION
+  ) {
+    // handle solo reference
+    if (!sqlSchemaProperty.isArray) {
+      const domainObjectPropertyVariableName =
+        context === GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY
+          ? `${dobjInputVarName}.${domainObjectProperty.name}`
+          : domainObjectProperty.name;
+
+      const nullabilityPrefix = sqlSchemaProperty.isNullable
+        ? `${domainObjectPropertyVariableName} === null ? null : `
+        : '';
+
+      return `${camelCase(
+        domainObjectProperty.name.replace(/Ref$/, 'Uuid'),
+      )}: ${nullabilityPrefix}isPrimaryKeyRef({ of: ${referencedDomainObjectName} })(${domainObjectPropertyVariableName}) ? ${domainObjectPropertyVariableName}.uuid : (await ${castDomainObjectNameToDaoName(
+        referencedDomainObjectName,
+      )}.findByRef({ ref: ${domainObjectPropertyVariableName} }, context).expect('isPresent')).uuid`;
+    }
+
+    // handle array of references
+    if (sqlSchemaProperty.isArray) throw new Error('todo'); // todo: ran out of time allocated for this upgrade; lets fix when we have the usecase
   }
 
   // fail fast if we reach here, not expected

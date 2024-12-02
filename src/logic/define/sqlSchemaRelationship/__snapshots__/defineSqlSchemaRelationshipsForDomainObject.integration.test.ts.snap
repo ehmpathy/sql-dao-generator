@@ -176,10 +176,10 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
       },
       "unique": {
         "domainObject": [
-          "uuid",
+          "cin",
         ],
         "sqlSchema": [
-          "uuid",
+          "cin",
         ],
       },
     },
@@ -205,17 +205,6 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
         },
       },
       {
-        "domainObject": null,
-        "sqlSchema": SqlSchemaPropertyMetadata {
-          "isArray": false,
-          "isDatabaseGenerated": true,
-          "isNullable": false,
-          "isUpdatable": false,
-          "name": "created_at",
-          "reference": null,
-        },
-      },
-      {
         "domainObject": DomainObjectPropertyMetadata {
           "name": "uuid",
           "nullable": false,
@@ -224,10 +213,21 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
         },
         "sqlSchema": SqlSchemaPropertyMetadata {
           "isArray": false,
-          "isDatabaseGenerated": false,
+          "isDatabaseGenerated": true,
           "isNullable": false,
           "isUpdatable": false,
           "name": "uuid",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "created_at",
           "reference": null,
         },
       },
@@ -280,6 +280,170 @@ exports[`defineSqlSchemaRelationshipsForDomainObjects should work on the example
           "isNullable": false,
           "isUpdatable": false,
           "name": "capacity",
+          "reference": null,
+        },
+      },
+    ],
+  },
+  SqlSchemaToDomainObjectRelationship {
+    "decorations": {
+      "alias": {
+        "domainObject": null,
+      },
+      "unique": {
+        "domainObject": [
+          "itineraryUuid",
+          "carriageRef",
+          "slot",
+        ],
+        "sqlSchema": [
+          "itinerary_uuid",
+          "carriage_id",
+          "slot",
+        ],
+      },
+    },
+    "name": {
+      "domainObject": "CarriageCargo",
+      "sqlSchema": "carriage_cargo",
+    },
+    "properties": [
+      {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "id",
+          "nullable": false,
+          "required": false,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "id",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "uuid",
+          "nullable": false,
+          "required": false,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "uuid",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "created_at",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "effective_at",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": null,
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": true,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "updated_at",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "itineraryUuid",
+          "nullable": false,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "itinerary_uuid",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "carriageRef",
+          "nullable": false,
+          "of": DomainObjectReferenceMetadata {
+            "extends": "DomainEntity",
+            "name": "Carriage",
+          },
+          "required": true,
+          "type": "REFERENCE",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "carriage_id",
+          "reference": SqlSchemaReferenceMetadata {
+            "method": "DIRECT_BY_DECLARATION",
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainEntity",
+              "name": "Carriage",
+            },
+          },
+        },
+      },
+      {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "slot",
+          "nullable": false,
+          "required": true,
+          "type": "NUMBER",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": false,
+          "isUpdatable": false,
+          "name": "slot",
+          "reference": null,
+        },
+      },
+      {
+        "domainObject": DomainObjectPropertyMetadata {
+          "name": "cargoExid",
+          "nullable": true,
+          "required": true,
+          "type": "STRING",
+        },
+        "sqlSchema": SqlSchemaPropertyMetadata {
+          "isArray": false,
+          "isDatabaseGenerated": false,
+          "isNullable": true,
+          "isUpdatable": true,
+          "name": "cargo_exid",
           "reference": null,
         },
       },

@@ -5,6 +5,7 @@ exports[`defineSqlSchemaGeneratorCodeFilesForDomainObjects should work on the ex
   GeneratedCodeFile {
     "content": "import { asyncTaskPredictStationCongestion } from './asyncTaskPredictStationCongestion';
 import { carriage } from './carriage';
+import { carriageCargo } from './carriageCargo';
 import { certificate } from './certificate';
 import { geocode } from './geocode';
 import { invoice } from './invoice';
@@ -22,6 +23,7 @@ import { trainStation } from './trainStation';
 export const generateSqlSchemasFor = [
   asyncTaskPredictStationCongestion,
   carriage,
+  carriageCargo,
   certificate,
   trainEngineer,
   geocode,
@@ -68,9 +70,29 @@ export const carriage: Entity = new Entity({
     carries: prop.ENUM(['PASSENGER', 'FREIGHT']),
     capacity: prop.NUMERIC(),
   },
-  unique: ['uuid'],
+  unique: ['cin'],
 });",
     "relpath": "carriage.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+import { carriage } from './carriage';
+
+/**
+ * sql-schema for the domain entity 'CarriageCargo'
+ */
+export const carriageCargo: Entity = new Entity({
+  name: 'carriage_cargo',
+  properties: {
+    itinerary_uuid: prop.UUID(),
+    carriage_id: prop.REFERENCES(carriage),
+    slot: prop.NUMERIC(),
+    cargo_exid: { ...prop.VARCHAR(), updatable: true, nullable: true },
+  },
+  unique: ['itinerary_uuid', 'carriage_id', 'slot'],
+});",
+    "relpath": "carriageCargo.ts",
   },
   GeneratedCodeFile {
     "content": "import { Literal, prop } from 'sql-schema-generator';
@@ -287,6 +309,21 @@ export const invoice: Entity = new Entity({
     carriage.capacity
   FROM carriage;",
     "relpath": "../sql/views/view_carriage_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_carriage_cargo_hydrated AS
+  SELECT
+    carriage_cargo.id,
+    carriage_cargo.uuid,
+    carriage_cargo.itinerary_uuid,
+    (
+      SELECT carriage.uuid
+      FROM carriage WHERE carriage.id = carriage_cargo.carriage_id
+    ) AS carriage_uuid,
+    carriage_cargo.slot,
+    carriage_cargo.cargo_exid
+  FROM view_carriage_cargo_current carriage_cargo;",
+    "relpath": "../sql/views/view_carriage_cargo_hydrated.sql",
   },
   GeneratedCodeFile {
     "content": "CREATE OR REPLACE VIEW view_certificate_hydrated AS

@@ -264,7 +264,6 @@ describe('generate', () => {
     describe('carriageDao', () => {
       it('it should be able to upsert', async () => {
         const carriage = new Carriage({
-          uuid: uuid(),
           cin: 'carriage-to-test',
           carries: CarriagePurpose.FREIGHT,
           capacity: 821,
@@ -359,7 +358,7 @@ describe('generate', () => {
         );
         const foundCarriage = await carriageDao.findByUnique(
           {
-            uuid: carriage.uuid,
+            cin: carriage.cin,
           },
           { dbConnection },
         );

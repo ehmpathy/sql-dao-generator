@@ -1,4 +1,5 @@
 export * from './AsyncTaskPredictStationCongestion'
+export * from './CarriageCargo';
 export * from './Carriage';
 export * from './Certificate';
 export * from './Engineer';

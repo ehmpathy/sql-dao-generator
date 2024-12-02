@@ -281,4 +281,60 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
   it.todo(
     'should look correct when the same dobj is referenced more than once in a dobj',
   );
+  it('should look correct for a domain entity which directly declares a reference to another', () => {
+    // define what we're testing on
+    const domainObject = new DomainObjectMetadata({
+      name: 'CarriageCargo',
+      extends: DomainObjectVariant.DOMAIN_ENTITY,
+      properties: {
+        id: {
+          name: 'id',
+          type: DomainObjectPropertyType.NUMBER,
+          required: false,
+        },
+        uuid: {
+          name: 'uuid',
+          type: DomainObjectPropertyType.STRING,
+          required: false,
+        },
+        carriageRef: {
+          name: 'carriageRef',
+          type: DomainObjectPropertyType.REFERENCE,
+          required: true,
+          of: {
+            name: 'Carriage',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+          },
+        },
+      },
+      decorations: {
+        alias: null,
+        primary: null,
+        unique: ['carriageRef'],
+        updatable: [],
+      },
+    });
+    const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+      domainObject,
+      allDomainObjects: [domainObject],
+    });
+
+    // run it
+    const code = defineDaoUtilCastMethodCodeForDomainObject({
+      domainObject,
+      sqlSchemaRelationship,
+    });
+
+    // log an example
+    expect(code).toContain(
+      "import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT'",
+    );
+    expect(code).toContain(
+      "import { SqlQueryFindCarriageByIdOutput, SqlQueryFindCarriageCargoByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';", // todo: should `SqlQueryFindCarriageByIdOutput` really be included?
+    );
+    expect(code).toContain('dbObject: SqlQueryFindCarriageCargoByIdOutput');
+    expect(code).toContain('new CarriageCargo({');
+    expect(code).toContain('carriageRef: { uuid: dbObject.carriage_uuid }');
+    expect(code).toMatchSnapshot();
+  });
 });

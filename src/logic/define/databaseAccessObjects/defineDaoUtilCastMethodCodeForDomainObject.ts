@@ -138,6 +138,31 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
           }FromDatabaseObject)`;
         }
 
+        // directly declared case
+        if (
+          sqlSchemaProperty.reference.method ===
+          SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION
+        ) {
+          const nullabilityPrefix = sqlSchemaProperty.isNullable
+            ? `dbObject.${snakeCase(
+                domainObjectProperty.name,
+              )} === null ? null : `
+            : '';
+
+          // solo reference case
+          if (!sqlSchemaProperty.isArray)
+            return `${
+              domainObjectProperty.name
+            }: ${nullabilityPrefix}{ uuid: dbObject.${
+              snakeCase(domainObjectProperty.name).replace(/_ref$/, '_uuid') // todo: get a ref-by-unique json object back, instead of just the uuid
+            } }`;
+
+          // array reference case
+          return `${domainObjectProperty.name}: (dbObject.${
+            snakeCase(domainObjectProperty.name).replace(/_refs$/, '_uuids') // todo: get a ref-by-unique json object back, instead of just the uuid
+          } as string[]).map(uuid => ({ uuid }))`; // as string array since we have an array of uuids - but the type defs generated from sql will complain that it could be string[] or number[] or null (not smart enough to look all the way through fn defs yet)
+        }
+
         // handle unexpected case (each case should have been handled above)
         throw new UnexpectedCodePathDetectedError({
           reason:

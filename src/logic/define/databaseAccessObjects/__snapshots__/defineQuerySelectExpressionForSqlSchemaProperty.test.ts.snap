@@ -1,5 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_declaration should define the select expression correctly for a solo DIRECT_BY_DECLARATION reference 1`] = `
+"(
+      SELECT carriage.uuid
+      FROM carriage WHERE carriage.id = carriage_cargo.carriage_id
+    ) AS carriage_uuid"
+`;
+
 exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for a solo DIRECT_BY_NESTING reference 1`] = `
 "(
       SELECT json_build_object(

@@ -64,11 +64,15 @@ export const defineSqlSchemaPropertyForDomainObjectProperty = ({
       if (isArray) {
         if (reference.method === SqlSchemaReferenceMethod.DIRECT_BY_NESTING)
           return `${baseSchemaPropertyName.replace(/s$/, '')}_ids`; // suffix w/ ids, since its an array of fks
+        if (reference.method === SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION)
+          return `${baseSchemaPropertyName.replace(/_refs$/, '')}_ids`; // suffix w/ ids, since its an array of fks
         if (reference.method === SqlSchemaReferenceMethod.IMPLICIT_BY_UUID)
           return `${baseSchemaPropertyName.replace(/_uuids$/, '')}_ids`; // suffix w/ ids, since its an array of fks
       }
       if (reference.method === SqlSchemaReferenceMethod.DIRECT_BY_NESTING)
         return `${baseSchemaPropertyName}_id`; // suffix w/ id, since its a fk
+      if (reference.method === SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION)
+        return `${baseSchemaPropertyName.replace(/_ref$/, '')}_id`; // suffix w/ id, since its a fk
       if (reference.method === SqlSchemaReferenceMethod.IMPLICIT_BY_UUID)
         return `${baseSchemaPropertyName.replace(/_uuid$/, '')}_id`; // suffix w/ id, since its a fk
     }

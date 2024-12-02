@@ -292,6 +292,65 @@ describe('defineQueryFunctionInputExpressionForDomainObjectProperty', () => {
         'geocodeId: trainLocatedEvent.geocode === null ? null : trainLocatedEvent.geocode.id ? trainLocatedEvent.geocode.id : (await geocodeDao.upsert({ geocode: trainLocatedEvent.geocode }, context)).id',
       );
     });
+    it('should define the input expression correctly for a solo, nullable, DIRECT_BY_DECLARATION reference', () => {
+      const expression =
+        defineQueryFunctionInputExpressionForDomainObjectProperty({
+          domainObjectName: 'CarriageCargo',
+          dobjInputVarName: 'carriageCargo',
+          sqlSchemaProperty: {
+            name: 'carriage_id',
+            isArray: false,
+            isNullable: true,
+            isUpdatable: false,
+            isDatabaseGenerated: false,
+            reference: {
+              method: SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION,
+              of: {
+                name: 'Carriage',
+                extends: DomainObjectVariant.DOMAIN_ENTITY,
+              },
+            },
+          },
+          domainObjectProperty: {
+            name: 'carriageRef',
+            type: DomainObjectPropertyType.REFERENCE,
+            of: {
+              name: 'Carriage',
+              extends: DomainObjectVariant.DOMAIN_ENTITY,
+            },
+          },
+          allSqlSchemaRelationships: [
+            new SqlSchemaToDomainObjectRelationship({
+              name: { domainObject: 'Carriage', sqlSchema: 'carriage' },
+              properties: [
+                {
+                  domainObject: {
+                    name: 'uuid',
+                    type: DomainObjectPropertyType.STRING,
+                  },
+                  sqlSchema: {
+                    name: 'uuid',
+                    isArray: false,
+                    isNullable: false,
+                    isUpdatable: false,
+                    isDatabaseGenerated: true,
+                    reference: null,
+                  },
+                },
+                // todo: do we need other properties here?
+              ],
+              decorations: {
+                alias: { domainObject: null },
+                unique: { sqlSchema: null, domainObject: null },
+              },
+            }),
+          ],
+          context: GetTypescriptCodeForPropertyContext.FOR_UPSERT_QUERY,
+        });
+      expect(expression).toEqual(
+        `carriageUuid: carriageCargo.carriageRef === null ? null : isPrimaryKeyRef({ of: Carriage })(carriageCargo.carriageRef) ? carriageCargo.carriageRef.uuid : (await carriageDao.findByRef({ ref: carriageCargo.carriageRef }, context).expect('isPresent')).uuid`,
+      );
+    });
     it('should define the input expression correctly for an array of IMPLICIT_BY_UUID references', () => {
       const expression =
         defineQueryFunctionInputExpressionForDomainObjectProperty({

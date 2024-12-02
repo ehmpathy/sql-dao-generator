@@ -10,7 +10,7 @@ describe('extractDomainObjectMetadatasFromConfigCriteria', () => {
       exclude: null,
     });
     // console.log(JSON.stringify(metadatas, null, 2));
-    expect(metadatas.length).toEqual(12);
+    expect(metadatas.length).toEqual(13);
   });
   it('should find all of the domain objects findable by all search paths in a directory, with no dupes', async () => {
     const metadatas = await extractDomainObjectMetadatasFromConfigCriteria({
@@ -27,7 +27,7 @@ describe('extractDomainObjectMetadatasFromConfigCriteria', () => {
       exclude: null,
     });
     // console.log(JSON.stringify(metadatas, null, 2));
-    expect(metadatas.length).toEqual(12);
+    expect(metadatas.length).toEqual(13);
   });
   it('should only find the domain objects imported from the files in the search paths', async () => {
     const metadatas = await extractDomainObjectMetadatasFromConfigCriteria({
@@ -55,7 +55,7 @@ describe('extractDomainObjectMetadatasFromConfigCriteria', () => {
       exclude: ['TrainLocatedEvent'],
     });
     // console.log(JSON.stringify(metadatas, null, 2));
-    expect(metadatas.length).toEqual(11);
+    expect(metadatas.length).toEqual(12);
   });
   it('should only keep the one named in the `include` list, if provided', async () => {
     const metadatas = await extractDomainObjectMetadatasFromConfigCriteria({

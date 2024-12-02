@@ -253,12 +253,14 @@ export const upsert = async (
 import { findById } from './findById';
 import { findByUnique } from './findByUnique';
 import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
 import { upsert } from './upsert';
 
 export const carriageDao = {
   findById: withExpectOutput(findById),
   findByUnique: withExpectOutput(findByUnique),
   findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
   upsert,
 };
 
@@ -346,14 +348,14 @@ export const sql = \`
     carriage.capacity
   FROM view_carriage_hydrated AS carriage
   WHERE 1=1
-    AND carriage.uuid = :uuid;
+    AND carriage.cin = :cin;
 \`;
 
 export const findByUnique = async (
   {
-    uuid,
+    cin,
   }: {
-    uuid: string;
+    cin: string;
   },
   context: { dbConnection: DatabaseConnection },
 ): Promise<HasMetadata<Carriage> | null> => {
@@ -361,7 +363,7 @@ export const findByUnique = async (
     dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
-      uuid,
+      cin,
     },
   });
   const [dbObject, ...moreDbObjects] = results;
@@ -415,7 +417,29 @@ export const findByUuid = async (
     "relpath": "carriageDao/findByUuid.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata, HasUuid } from 'type-fns';
+    "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof Carriage> },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<Carriage> | null> => {
+  if (isPrimaryKeyRef({ of: Carriage })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isUniqueKeyRef({ of: Carriage })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for Carriage', { input });
+};",
+    "relpath": "carriageDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
@@ -425,9 +449,8 @@ import { sqlQueryUpsertCarriage } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 export const sql = \`
   -- query_name = upsert_carriage
   SELECT
-    dgv.id
+    dgv.id, dgv.uuid
   FROM upsert_carriage(
-    :uuid,
     :cin,
     :carries,
     :capacity
@@ -438,7 +461,7 @@ export const upsert = async (
   {
     carriage,
   }: {
-    carriage: HasUuid<Carriage>;
+    carriage: Carriage;
   },
   context: { dbConnection: DatabaseConnection },
 ): Promise<HasMetadata<Carriage>> => {
@@ -446,16 +469,269 @@ export const upsert = async (
     dbExecute: context.dbConnection.query,
     logDebug: log.debug,
     input: {
-      uuid: carriage.uuid,
       cin: carriage.cin,
       carries: carriage.carries,
       capacity: carriage.capacity,
     },
   });
-  const { id } = results[0]!; // grab the db generated values
-  return new Carriage({ ...carriage, id }) as HasMetadata<Carriage>;
+  const { id, uuid } = results[0]!; // grab the db generated values
+  return new Carriage({ ...carriage, id, uuid }) as HasMetadata<Carriage>;
 };",
     "relpath": "carriageDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
+import { upsert } from './upsert';
+
+export const carriageCargoDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoCarriageCargo = carriageCargoDao;",
+    "relpath": "carriageCargoDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindCarriageByIdOutput, SqlQueryFindCarriageCargoByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castCarriageFromDatabaseObject } from '../carriageDao/castFromDatabaseObject';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindCarriageCargoByIdOutput,
+): HasMetadata<CarriageCargo> =>
+  new CarriageCargo({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    itineraryUuid: dbObject.itinerary_uuid,
+    carriageRef: { uuid: dbObject.carriage_uuid },
+    slot: dbObject.slot,
+    cargoExid: dbObject.cargo_exid,
+  }) as HasMetadata<CarriageCargo>;",
+    "relpath": "carriageCargoDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { isPrimaryKeyRef } from 'domain-objects';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCarriageCargoById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_carriage_cargo_by_id
+  SELECT
+    carriage_cargo.id,
+    carriage_cargo.uuid,
+    carriage_cargo.itinerary_uuid,
+    carriage_cargo.carriage_uuid,
+    carriage_cargo.slot,
+    carriage_cargo.cargo_exid
+  FROM view_carriage_cargo_hydrated AS carriage_cargo
+  WHERE carriage_cargo.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<CarriageCargo> | null> => {
+  const results = await sqlQueryFindCarriageCargoById({
+    dbExecute: context.dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "carriageCargoDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { isPrimaryKeyRef } from 'domain-objects';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { Carriage, CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCarriageCargoByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+import { carriageDao } from '../carriageDao';
+
+export const sql = \`
+  -- query_name = find_carriage_cargo_by_unique
+  SELECT
+    carriage_cargo.id,
+    carriage_cargo.uuid,
+    carriage_cargo.itinerary_uuid,
+    carriage_cargo.carriage_uuid,
+    carriage_cargo.slot,
+    carriage_cargo.cargo_exid
+  FROM view_carriage_cargo_hydrated AS carriage_cargo
+  JOIN view_carriage_cargo_current ON carriage_cargo.id = view_carriage_cargo_current.id
+  WHERE 1=1
+    AND carriage_cargo.itinerary_uuid = :itineraryUuid
+    AND view_carriage_cargo_current.carriage_id = (SELECT id FROM carriage WHERE carriage.uuid = :carriageUuid)
+    AND carriage_cargo.slot = :slot;
+\`;
+
+export const findByUnique = async (
+  {
+    itineraryUuid,
+    carriageRef,
+    slot,
+  }: {
+    itineraryUuid: string;
+    carriageRef: Carriage;
+    slot: number;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<CarriageCargo> | null> => {
+  const results = await sqlQueryFindCarriageCargoByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      itineraryUuid,
+      carriageUuid: isPrimaryKeyRef({ of: Carriage })(carriageRef) ? carriageRef.uuid : (await carriageDao.findByRef({ ref: carriageRef }, context).expect('isPresent')).uuid,
+      slot,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "carriageCargoDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { isPrimaryKeyRef } from 'domain-objects';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCarriageCargoByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_carriage_cargo_by_uuid
+  SELECT
+    carriage_cargo.id,
+    carriage_cargo.uuid,
+    carriage_cargo.itinerary_uuid,
+    carriage_cargo.carriage_uuid,
+    carriage_cargo.slot,
+    carriage_cargo.cargo_exid
+  FROM view_carriage_cargo_hydrated AS carriage_cargo
+  WHERE carriage_cargo.uuid = :uuid;
+\`;
+
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<CarriageCargo> | null> => {
+  const results = await sqlQueryFindCarriageCargoByUuid({
+    dbExecute: context.dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      uuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "carriageCargoDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof CarriageCargo> },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<CarriageCargo> | null> => {
+  if (isPrimaryKeyRef({ of: CarriageCargo })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isUniqueKeyRef({ of: CarriageCargo })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for CarriageCargo', { input });
+};",
+    "relpath": "carriageCargoDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { isPrimaryKeyRef } from 'domain-objects';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { CarriageCargo, Carriage } from '$PATH_TO_DOMAIN_OBJECT';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { sqlQueryUpsertCarriageCargo } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { carriageDao } from '../carriageDao';
+
+export const sql = \`
+  -- query_name = upsert_carriage_cargo
+  SELECT
+    dgv.id, dgv.uuid
+  FROM upsert_carriage_cargo(
+    :itineraryUuid,
+    (SELECT id FROM carriage WHERE carriage.uuid = :carriageUuid),
+    :slot,
+    :cargoExid
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    carriageCargo,
+  }: {
+    carriageCargo: CarriageCargo;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<CarriageCargo>> => {
+  const results = await sqlQueryUpsertCarriageCargo({
+    dbExecute: context.dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      itineraryUuid: carriageCargo.itineraryUuid,
+      carriageUuid: isPrimaryKeyRef({ of: Carriage })(carriageCargo.carriageRef) ? carriageCargo.carriageRef.uuid : (await carriageDao.findByRef({ ref: carriageCargo.carriageRef }, context).expect('isPresent')).uuid,
+      slot: carriageCargo.slot,
+      cargoExid: carriageCargo.cargoExid,
+    },
+  });
+  const { id, uuid } = results[0]!; // grab the db generated values
+  return new CarriageCargo({ ...carriageCargo, id, uuid }) as HasMetadata<CarriageCargo>;
+};",
+    "relpath": "carriageCargoDao/upsert.ts",
   },
   GeneratedCodeFile {
     "content": "import { withExpectOutput } from 'procedure-fns';
@@ -1926,7 +2202,7 @@ export const findByRef = async (
     "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
+import { TrainStation, Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrainStation } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { geocodeDao } from '../geocodeDao';
@@ -2255,7 +2531,7 @@ export const findByUnique = async (
     "content": "import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { InvoiceLineItem } from '$PATH_TO_DOMAIN_OBJECT';
+import { InvoiceLineItem, Price } from '$PATH_TO_DOMAIN_OBJECT';
 import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertInvoiceLineItem } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { priceDao } from '../priceDao';

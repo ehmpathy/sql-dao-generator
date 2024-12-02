@@ -82,7 +82,7 @@ exports[`readConfig should be able to read the example config provisioned in __t
             "uuid",
           ],
           "unique": [
-            "uuid",
+            "cin",
           ],
           "updatable": [],
         },
@@ -115,6 +115,66 @@ exports[`readConfig should be able to read the example config provisioned in __t
             "name": "id",
             "nullable": false,
             "required": false,
+            "type": "NUMBER",
+          },
+          "uuid": DomainObjectPropertyMetadata {
+            "name": "uuid",
+            "nullable": false,
+            "required": false,
+            "type": "STRING",
+          },
+        },
+      },
+      DomainObjectMetadata {
+        "decorations": {
+          "alias": null,
+          "primary": [
+            "uuid",
+          ],
+          "unique": [
+            "itineraryUuid",
+            "carriageRef",
+            "slot",
+          ],
+          "updatable": [
+            "cargoExid",
+          ],
+        },
+        "extends": "DomainEntity",
+        "name": "CarriageCargo",
+        "properties": {
+          "cargoExid": DomainObjectPropertyMetadata {
+            "name": "cargoExid",
+            "nullable": true,
+            "required": true,
+            "type": "STRING",
+          },
+          "carriageRef": DomainObjectPropertyMetadata {
+            "name": "carriageRef",
+            "nullable": false,
+            "of": DomainObjectReferenceMetadata {
+              "extends": "DomainEntity",
+              "name": "Carriage",
+            },
+            "required": true,
+            "type": "REFERENCE",
+          },
+          "id": DomainObjectPropertyMetadata {
+            "name": "id",
+            "nullable": false,
+            "required": false,
+            "type": "NUMBER",
+          },
+          "itineraryUuid": DomainObjectPropertyMetadata {
+            "name": "itineraryUuid",
+            "nullable": false,
+            "required": true,
+            "type": "STRING",
+          },
+          "slot": DomainObjectPropertyMetadata {
+            "name": "slot",
+            "nullable": false,
+            "required": true,
             "type": "NUMBER",
           },
           "uuid": DomainObjectPropertyMetadata {

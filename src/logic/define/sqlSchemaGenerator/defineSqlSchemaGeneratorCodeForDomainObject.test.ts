@@ -1,3 +1,4 @@
+import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
 import {
   DomainObjectMetadata,
   DomainObjectPropertyType,
@@ -6,6 +7,45 @@ import {
 
 import { defineSqlSchemaRelationshipForDomainObject } from '../sqlSchemaRelationship/defineSqlSchemaRelationshipForDomainObject';
 import { defineSqlSchemaGeneratorCodeForDomainObject } from './defineSqlSchemaGeneratorCodeForDomainObject';
+
+const exampleCarriageDomainEntityMetadata = new DomainObjectMetadata({
+  name: 'Carriage',
+  extends: DomainObjectVariant.DOMAIN_ENTITY,
+  properties: {
+    id: {
+      name: 'id',
+      type: DomainObjectPropertyType.NUMBER,
+      required: false,
+    },
+    uuid: {
+      name: 'uuid',
+      type: DomainObjectPropertyType.STRING,
+      required: false,
+    },
+    cin: {
+      name: 'cin',
+      type: DomainObjectPropertyType.STRING,
+      required: true,
+    },
+    carries: {
+      name: 'carries',
+      type: DomainObjectPropertyType.ENUM,
+      of: ['PASSENGER', 'FREIGHT'],
+      required: true,
+    },
+    capacity: {
+      name: 'capacity',
+      type: DomainObjectPropertyType.NUMBER,
+      nullable: true,
+    },
+  },
+  decorations: {
+    alias: null,
+    primary: null,
+    unique: ['cin'],
+    updatable: [],
+  },
+});
 
 describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
   describe('imports', () => {
@@ -213,44 +253,7 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
 
     it('should create a correct looking sql-schema-generator object for a domain-entity', () => {
       // define what we're testing on
-      const domainObject = new DomainObjectMetadata({
-        name: 'Carriage',
-        extends: DomainObjectVariant.DOMAIN_ENTITY,
-        properties: {
-          id: {
-            name: 'id',
-            type: DomainObjectPropertyType.NUMBER,
-            required: false,
-          },
-          uuid: {
-            name: 'uuid',
-            type: DomainObjectPropertyType.STRING,
-            required: false,
-          },
-          cin: {
-            name: 'cin',
-            type: DomainObjectPropertyType.STRING,
-            required: true,
-          },
-          carries: {
-            name: 'carries',
-            type: DomainObjectPropertyType.ENUM,
-            of: ['PASSENGER', 'FREIGHT'],
-            required: true,
-          },
-          capacity: {
-            name: 'capacity',
-            type: DomainObjectPropertyType.NUMBER,
-            nullable: true,
-          },
-        },
-        decorations: {
-          alias: null,
-          primary: null,
-          unique: ['cin'],
-          updatable: [],
-        },
-      });
+      const domainObject = exampleCarriageDomainEntityMetadata;
       const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
         domainObject,
         allDomainObjects: [domainObject],
@@ -340,6 +343,64 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
       expect(code).toContain('occurred_at: prop.TIMESTAMPTZ(),');
       expect(code).toContain('geocode_id: prop.REFERENCES(geocode),');
       expect(code).toContain("unique: ['train_id', 'occurred_at'],");
+      expect(code).toMatchSnapshot();
+    });
+  });
+
+  describe('domain object references', () => {
+    it('should create a correct looking sql-schema-generator object for a domain-entity which references another domain-entity via Ref', () => {
+      // define what we're testing on
+      const domainObject = new DomainObjectMetadata({
+        name: 'CarriageCargo',
+        extends: DomainObjectVariant.DOMAIN_ENTITY,
+        properties: {
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
+          carriageRef: {
+            name: 'carriageRef',
+            type: DomainObjectPropertyType.REFERENCE,
+            required: true,
+            of: {
+              name: 'Carriage',
+              extends: DomainObjectVariant.DOMAIN_ENTITY,
+            },
+          },
+        },
+        decorations: {
+          alias: null,
+          primary: null,
+          unique: ['carriageRef'],
+          updatable: [],
+        },
+      });
+      const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+        domainObject,
+        allDomainObjects: [domainObject],
+        // allDomainObjects: [domainObject, exampleCarriageDomainEntityMetadata],
+      });
+
+      // run it
+      const code = defineSqlSchemaGeneratorCodeForDomainObject({
+        domainObject,
+        sqlSchemaRelationship,
+      });
+      expect(code).toContain(
+        "import { Entity, prop } from 'sql-schema-generator'",
+      );
+      expect(code).toContain(
+        'export const carriageCargo: Entity = new Entity({',
+      );
+      expect(code).toContain("name: 'carriage_cargo'");
+      expect(code).toContain('carriage_id: prop.REFERENCES(carriage),');
+      expect(code).toContain("unique: ['carriage_id'],");
       expect(code).toMatchSnapshot();
     });
   });

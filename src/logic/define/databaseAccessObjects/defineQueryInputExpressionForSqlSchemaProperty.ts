@@ -50,6 +50,17 @@ export const defineQueryInputExpressionForSqlSchemaProperty = ({
     )
       return `(SELECT id FROM ${referencedSqlSchemaName} WHERE ${referencedSqlSchemaName}.uuid = :${domainObjectProperty.name})`;
 
+    // if its a solo direct declaration reference, then lookup the id by uuid as the input expression
+    if (
+      sqlSchemaProperty.reference.method ===
+      SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION
+    )
+      // todo: prefer refByUnique instead
+      return `(SELECT id FROM ${referencedSqlSchemaName} WHERE ${referencedSqlSchemaName}.uuid = :${domainObjectProperty.name.replace(
+        /Ref$/,
+        'Uuid',
+      )})`;
+
     // if its a nested reference, then it will have the id on it already
     if (
       sqlSchemaProperty.reference.method ===
@@ -60,7 +71,7 @@ export const defineQueryInputExpressionForSqlSchemaProperty = ({
 
   // handle array of references
   if (sqlSchemaProperty.isArray) {
-    // if its a solo implicit uuid reference, then lookup the ids by uuids as the input expression
+    // if its an implicit uuid reference or direct declaration reference, then lookup the ids by uuids as the input expression
     if (
       sqlSchemaProperty.reference.method ===
       SqlSchemaReferenceMethod.IMPLICIT_BY_UUID
@@ -74,8 +85,26 @@ export const defineQueryInputExpressionForSqlSchemaProperty = ({
         ON ${referencedSqlSchemaName}.uuid = ${referencedSqlSchemaName}_ref.uuid
     )
       `.trim();
+    // if its an implicit uuid reference or direct declaration reference, then lookup the ids by uuids as the input expression
+    if (
+      sqlSchemaProperty.reference.method ===
+      SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION
+    )
+      // todo: prefer refByUnique instead
+      return `
+    (
+      SELECT COALESCE(array_agg(${referencedSqlSchemaName}.id ORDER BY ${referencedSqlSchemaName}_ref.array_order_index), array[]::bigint[]) AS array_agg
+      FROM ${referencedSqlSchemaName}
+      JOIN unnest(:${domainObjectProperty.name.replace(
+        /Refs$/,
+        'Uuids',
+      )}::uuid[]) WITH ORDINALITY
+        AS ${referencedSqlSchemaName}_ref (uuid, array_order_index)
+        ON ${referencedSqlSchemaName}.uuid = ${referencedSqlSchemaName}_ref.uuid
+    )
+      `.trim();
 
-    // if its a nested reference, then it will be an array of ids arlready
+    // if its a nested reference, then it will be an array of ids already
     if (
       sqlSchemaProperty.reference.method ===
       SqlSchemaReferenceMethod.DIRECT_BY_NESTING

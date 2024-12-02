@@ -5,6 +5,7 @@ exports[`defineDependentReferenceAvailableProvisionOrder should work on the exam
   "depth": 3,
   "order": [
     "Carriage",
+    "CarriageCargo",
     "Certificate",
     "Geocode",
     "Locomotive",
@@ -23,6 +24,9 @@ exports[`defineDependentReferenceAvailableProvisionOrder should work on the exam
       "TrainLocatedEvent",
     ],
     "Carriage": [],
+    "CarriageCargo": [
+      "Carriage",
+    ],
     "Certificate": [],
     "Geocode": [],
     "Invoice": [

@@ -20,7 +20,6 @@ import {
   GetTypescriptCodeForPropertyContext,
 } from './defineQueryFunctionInputExpressionForDomainObjectProperty';
 import { defineQueryInputExpressionForSqlSchemaProperty } from './defineQueryInputExpressionForSqlSchemaProperty';
-import { defineQuerySelectExpressionForSqlSchemaProperty } from './defineQuerySelectExpressionForSqlSchemaProperty';
 
 export enum FindByQueryType {
   ID = 'Id',
@@ -68,6 +67,45 @@ const getTypescriptTypeForDomainObjectProperty = ({
   }); // fail fast
 };
 
+export const getReferencedDomainObjectNames = (input: {
+  sqlSchemaRelationship: SqlSchemaToDomainObjectRelationship;
+}): string[] => {
+  const referencedDomainObjectNames = input.sqlSchemaRelationship.properties
+    .map(
+      ({
+        domainObject: domainObjectProperty,
+        sqlSchema: sqlSchemaProperty,
+      }) => {
+        // if its not explicitly defined property, then not needed in imports
+        if (!domainObjectProperty) return null;
+
+        // if its not part of the unique key, then its not needed in imports
+        if (
+          !input.sqlSchemaRelationship.decorations.unique.sqlSchema?.includes(
+            sqlSchemaProperty.name,
+          )
+        )
+          return null;
+
+        // if its a solo reference to a domain literal, then its needed
+        if (isDomainObjectReferenceProperty(domainObjectProperty))
+          return domainObjectProperty.of.name;
+
+        // if its a array reference to a domain literal, then its needed
+        if (
+          isDomainObjectArrayProperty(domainObjectProperty) &&
+          isDomainObjectReferenceProperty(domainObjectProperty.of)
+        )
+          return domainObjectProperty.of.of.name;
+
+        // otherwise, we dont care about it
+        return null;
+      },
+    )
+    .filter(isPresent);
+  return referencedDomainObjectNames;
+};
+
 export const defineDaoFindByMethodCodeForDomainObject = ({
   domainObject,
   sqlSchemaRelationship,
@@ -95,54 +133,27 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
     ...new Set([
       domainObject.name, // the domain object itself is always referenced
       ...(findByQueryType === FindByQueryType.UNIQUE
-        ? sqlSchemaRelationship.properties
-            .map(
-              ({
-                domainObject: domainObjectProperty,
-                sqlSchema: sqlSchemaProperty,
-              }) => {
-                // if its not explicitly defined property, then not needed in imports
-                if (!domainObjectProperty) return null;
-
-                // if its not part of the unique key, then its not needed in imports
-                if (
-                  !sqlSchemaRelationship.decorations.unique.sqlSchema?.includes(
-                    sqlSchemaProperty.name,
-                  )
-                )
-                  return null;
-
-                // if its a solo reference to a domain literal, then its needed
-                if (
-                  isDomainObjectReferenceProperty(domainObjectProperty) &&
-                  domainObjectProperty.of.extends ===
-                    DomainObjectVariant.DOMAIN_LITERAL
-                )
-                  return domainObjectProperty.of.name;
-
-                // if its a array reference to a domain literal, then its needed
-                if (
-                  isDomainObjectArrayProperty(domainObjectProperty) &&
-                  isDomainObjectReferenceProperty(domainObjectProperty.of) &&
-                  domainObjectProperty.of.of.extends ===
-                    DomainObjectVariant.DOMAIN_LITERAL
-                )
-                  return domainObjectProperty.of.of.name;
-
-                // otherwise, we dont care about it
-                return null;
-              },
-            )
-            .filter(isPresent)
+        ? getReferencedDomainObjectNames({ sqlSchemaRelationship })
         : []),
     ]),
   ];
 
   // define the imports
+  const hasSomeDirectDeclarationReference =
+    sqlSchemaRelationship.properties.some(
+      (property) =>
+        property.sqlSchema.reference &&
+        [SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION].includes(
+          property.sqlSchema.reference.method,
+        ),
+    );
   const imports = [
     ...new Set([
       // always present imports
       `import { HasMetadata } from 'type-fns';`,
+      hasSomeDirectDeclarationReference
+        ? `import { isPrimaryKeyRef } from 'domain-objects';`
+        : '',
       '', // split module from relative imports
       "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
       "import { log } from '$PATH_TO_LOG_OBJECT';",
@@ -153,8 +164,11 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
       "import { castFromDatabaseObject } from './castFromDatabaseObject';",
       ...sqlSchemaRelationship.properties
         .map((property) =>
-          property.sqlSchema.reference?.method ===
-          SqlSchemaReferenceMethod.DIRECT_BY_NESTING
+          property.sqlSchema.reference &&
+          [
+            SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
+            SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION,
+          ].includes(property.sqlSchema.reference.method)
             ? property.sqlSchema.reference.of.name
             : null,
         )
@@ -368,7 +382,15 @@ export const sql = \`
       .map(({ domainObject: domainObjectProperty }) =>
         !domainObjectProperty
           ? null
-          : `${sqlSchemaName}.${snakeCase(domainObjectProperty.name)}`,
+          : `${sqlSchemaName}.${
+              isDomainObjectReferenceProperty(domainObjectProperty) &&
+              domainObjectProperty.of.extends ===
+                DomainObjectVariant.DOMAIN_ENTITY // if its a DIRECT_BY_DECLARATION reference, then replace the name; // todo: upgrade to selecting the full ref-by-unique instead and leverage that to stop renaming adhoc to _uuid
+                ? snakeCase(domainObjectProperty.name)
+                    .replace(/_refs$/, '_uuids')
+                    .replace(/_ref$/, '_uuid')
+                : snakeCase(domainObjectProperty.name)
+            }`,
       )
       .filter(isPresent)
       .join(',\n    ')}

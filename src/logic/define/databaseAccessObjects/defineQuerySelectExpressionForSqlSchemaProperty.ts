@@ -58,8 +58,8 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
     referencedSqlSchemaRelationship.name.sqlSchema;
   const referencedSqlSchemaHasCurrentView =
     referencedSqlSchemaRelationship.properties.some(
-      ({ sqlSchema: sqlSchemaProperty }) =>
-        sqlSchemaProperty.isUpdatable || sqlSchemaProperty.isArray,
+      ({ sqlSchema: thisSqlSchemaProperty }) =>
+        thisSqlSchemaProperty.isUpdatable || thisSqlSchemaProperty.isArray,
     );
   const fromSqlSchemaExpression = referencedSqlSchemaHasCurrentView
     ? `view_${referencedSqlSchemaName}_current AS ${referencedSqlSchemaName}` // todo: make the `current` view take the default namespace, so that we dont have to do this check anymore; e.g., the static table should always have `_static` suffix and the view should always be the interface, for backwards compat and evolvability
@@ -90,6 +90,38 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
         AS ${referencedSqlSchemaName}_ref (id, array_order_index)
         ON ${referencedSqlSchemaName}.id = ${referencedSqlSchemaName}_ref.id
     )${selectExpressionAlias}
+      `.trim();
+  }
+
+  // directly declared reference
+  if (
+    sqlSchemaProperty.reference.method ===
+    SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION
+  ) {
+    // solo case;
+    if (!sqlSchemaProperty.isArray)
+      return `
+    (
+      SELECT ${referencedSqlSchemaName}.uuid
+      FROM ${fromSqlSchemaExpression} WHERE ${referencedSqlSchemaName}.id = ${sqlSchemaName}.${
+        sqlSchemaProperty.name
+      }
+    )${
+      selectExpressionAlias.replace(/_ref$/, '_uuid') // todo: return a json object of the ref, preferably in ref-by-unique shape
+    }
+          `.trim();
+
+    // array case
+    return `
+    (
+      SELECT COALESCE(array_agg(${referencedSqlSchemaName}.uuid ORDER BY ${referencedSqlSchemaName}_ref.array_order_index), array[]::uuid[]) AS array_agg
+      FROM ${fromSqlSchemaExpression}
+      JOIN unnest(${sqlSchemaName}.${sqlSchemaProperty.name}) WITH ORDINALITY
+        AS ${referencedSqlSchemaName}_ref (id, array_order_index)
+        ON ${referencedSqlSchemaName}.id = ${referencedSqlSchemaName}_ref.id
+    )${
+      selectExpressionAlias.replace(/_refs$/, '_uuids') // todo: return a json object of the ref, preferably in ref-by-unique shape
+    }
       `.trim();
   }
 

@@ -889,4 +889,51 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
       expect(expression).toMatchSnapshot();
     });
   });
+
+  describe('reference: direct_by_declaration', () => {
+    it('should define the select expression correctly for a solo DIRECT_BY_DECLARATION reference', () => {
+      const expression = defineQuerySelectExpressionForSqlSchemaProperty({
+        sqlSchemaName: 'carriage_cargo',
+        sqlSchemaProperty: {
+          name: 'carriage_id',
+          isArray: false,
+          isNullable: false,
+          isUpdatable: false,
+          isDatabaseGenerated: false,
+          reference: {
+            method: SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION,
+            of: {
+              name: 'Carriage',
+              extends: DomainObjectVariant.DOMAIN_ENTITY,
+            },
+          },
+        },
+        domainObjectProperty: {
+          name: 'carriageRef',
+          type: DomainObjectPropertyType.REFERENCE,
+        },
+        allSqlSchemaRelationships: [
+          new SqlSchemaToDomainObjectRelationship({
+            name: { domainObject: 'Carriage', sqlSchema: 'carriage' },
+            properties: [],
+            decorations: {
+              alias: { domainObject: null },
+              unique: {
+                sqlSchema: null,
+                domainObject: null,
+              },
+            },
+          }),
+        ], // not needed for this one
+      });
+      console.log(expression);
+      expect(expression).toContain('SELECT carriage.uuid'); // should select the uuid
+      expect(expression).toContain('FROM carriage'); // from the right table
+      expect(expression).toContain(
+        'WHERE carriage.id = carriage_cargo.carriage_id',
+      ); // filtered on the right id
+      expect(expression).toContain('AS carriage_uuid'); // with the correct output name
+      expect(expression).toMatchSnapshot();
+    });
+  });
 });

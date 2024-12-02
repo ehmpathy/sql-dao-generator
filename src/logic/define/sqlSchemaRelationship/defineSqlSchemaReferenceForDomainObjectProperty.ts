@@ -1,5 +1,4 @@
 // tslint:disable: max-classes-per-file
-import { isPropertyNameAReferenceIntuitively } from 'domain-objects';
 import {
   DomainObjectMetadata,
   DomainObjectPropertyMetadata,
@@ -70,9 +69,9 @@ export class DirectlyNestedNonDomainObjectReferenceForbiddenError extends Error 
       `
 ${referencedDomainObject.extends} found directly nested inside of another domain object. '${domainObject.name}.${property.name}' reference '${referencedDomainObject.name}'
 
-This is not allowed, as this is bad practice when persisting domain-objects due to maintainability problems with this pattern in backend code. See the readme for more details.
+This is not allowed, as this is bad practice when persisting domain-objects due to maintainability problems with this pattern. See the readme for more details.
 
-Instead, reference the entity by 'uuid' in the backend. For example:
+Instead, reference the entity by 'ref' and ensure that the name ends with the 'Ref' suffix. For example:
 
 \`\`\`ts
 -- say you're referencing this domain-entity
@@ -86,12 +85,12 @@ interface Profile {
 
 -- do this
 interface Profile {
-  userUuid: string; -- suggested: reference it by uuid
+  userRef: Ref<typeof User>; -- suggested: reference it by ref
   ...
 }
 \`\`\`
 
-Note: the generated sql-schema will be the same as if it was a nested reference, but the domain-object referencing by uuid will make your backend code easier to maintain.
+Note: the generated sql-schema will be the same as if it was a nested reference, but the domain-object referencing by ref will make your code easier to maintain.
   `.trim(),
     );
   }
@@ -107,11 +106,13 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
   allDomainObjects: DomainObjectMetadata[];
 }): SqlSchemaReferenceMetadata | null => {
   // determine what kind of reference it can be
-  const isDirectNestedReferenceCandidate =
-    isDomainObjectReferenceProperty(property);
-  const isDirectNestedReferenceArrayCandidate =
+  const isDirectReferenceCandidate = isDomainObjectReferenceProperty(property);
+  const isDirectReferenceArrayCandidate =
     isDomainObjectArrayProperty(property) &&
     isDomainObjectReferenceProperty(property.of);
+  const isDirectDeclarationReferenceCandidate =
+    property.type === DomainObjectPropertyType.REFERENCE &&
+    new RegExp(/Ref$/).test(property.name);
   const isImplicitUuidReferenceCandidate =
     property.type === DomainObjectPropertyType.STRING &&
     new RegExp(/Uuid/).test(property.name);
@@ -121,15 +122,12 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
     new RegExp(/Uuids/).test(property.name);
 
   // handle direct nested references
-  if (
-    isDirectNestedReferenceCandidate ||
-    isDirectNestedReferenceArrayCandidate
-  ) {
+  if (isDirectReferenceCandidate || isDirectReferenceArrayCandidate) {
     // grab the referenced object
     const referencedDomainObject = (() => {
-      if (isDirectNestedReferenceCandidate)
+      if (isDirectReferenceCandidate)
         return property.of as DomainObjectReferenceMetadata;
-      if (isDirectNestedReferenceArrayCandidate)
+      if (isDirectReferenceArrayCandidate)
         return (property.of as DomainObjectPropertyMetadata)
           .of as DomainObjectReferenceMetadata;
       throw new UnexpectedCodePathDetectedError({
@@ -162,17 +160,22 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
         },
       });
 
-    // check that the domain object referenced by direct nesting is not a domain entity or a domain event
-    if (referencedDomainObject.extends !== DomainObjectVariant.DOMAIN_LITERAL)
+    // if its a domain literal, then we allow a directly nested reference
+    if (referencedDomainObject.extends === DomainObjectVariant.DOMAIN_LITERAL)
+      return new SqlSchemaReferenceMetadata({
+        method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
+        of: new DomainObjectReferenceMetadata(referencedDomainObject),
+      });
+
+    // otherwise, it must be a directly referenced reference and the name should represent that too // todo: trace that the dobj was defined with `Ref<>` explicitly; today, the metadata calls both `: Dobj` and `: Ref<typeof Dobj>` as a "REFERENCE"
+    if (!isDirectDeclarationReferenceCandidate)
       throw new DirectlyNestedNonDomainObjectReferenceForbiddenError({
         domainObject,
         property,
         referencedDomainObject,
       });
-
-    // if the above passes, then we're good to move forward
     return new SqlSchemaReferenceMetadata({
-      method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
+      method: SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION,
       of: new DomainObjectReferenceMetadata(referencedDomainObject),
     });
   }
@@ -191,7 +194,8 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
         allDomainObjectNames: allDomainObjects.map(({ name }) => name),
       });
     const foundReferencedDomainObjectMetadata = allDomainObjects.find(
-      (domainObject) => domainObject.name === foundReferencedDomainObjectName,
+      (thisDomainObject) =>
+        thisDomainObject.name === foundReferencedDomainObjectName,
     );
     if (!foundReferencedDomainObjectMetadata) return null;
     if (

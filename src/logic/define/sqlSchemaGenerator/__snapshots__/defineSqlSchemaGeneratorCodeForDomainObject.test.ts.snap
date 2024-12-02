@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object references should create a correct looking sql-schema-generator object for a domain-entity which references another domain-entity via Ref 1`] = `
+"import { Entity, prop } from 'sql-schema-generator';
+
+import { carriage } from './carriage';
+
+/**
+ * sql-schema for the domain entity 'CarriageCargo'
+ */
+export const carriageCargo: Entity = new Entity({
+  name: 'carriage_cargo',
+  properties: {
+    carriage_id: prop.REFERENCES(carriage),
+  },
+  unique: ['carriage_id'],
+});"
+`;
+
 exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants should create a correct looking sql-schema-generator object for a domain-entity 1`] = `
 "import { Entity, prop } from 'sql-schema-generator';
 

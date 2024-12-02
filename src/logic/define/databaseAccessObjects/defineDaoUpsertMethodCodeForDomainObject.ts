@@ -1,10 +1,12 @@
 import { camelCase } from 'change-case';
 import { DomainObjectMetadata } from 'domain-objects-metadata';
+import { isPresent } from 'type-fns';
 
 import { SqlSchemaReferenceMethod } from '../../../domain/objects/SqlSchemaReferenceMetadata';
 import { SqlSchemaToDomainObjectRelationship } from '../../../domain/objects/SqlSchemaToDomainObjectRelationship';
 import { isNotADatabaseGeneratedProperty } from '../sqlSchemaRelationship/isNotADatabaseGeneratedProperty';
 import { castDomainObjectNameToDaoName } from './castDomainObjectNameToDaoName';
+import { getReferencedDomainObjectNames } from './defineDaoFindByMethodCodeForDomainObject';
 import { defineOutputTypeOfFoundDomainObject } from './defineOutputTypeOfFoundDomainObject';
 import {
   defineQueryFunctionInputExpressionForDomainObjectProperty,
@@ -30,23 +32,42 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
     domainObject.decorations.alias ?? camelCase(domainObject.name);
 
   // define the imports
+  const hasSomeDirectDeclarationReference =
+    sqlSchemaRelationship.properties.some(
+      (property) =>
+        property.sqlSchema.reference &&
+        [SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION].includes(
+          property.sqlSchema.reference.method,
+        ),
+    );
   const imports = [
     ...new Set([
       // always present imports
       `import { HasMetadata${
         isUniqueOnUuid ? ', HasUuid' : ''
       } } from 'type-fns';`,
+      hasSomeDirectDeclarationReference
+        ? `import { isPrimaryKeyRef } from 'domain-objects';`
+        : '',
       '', // split module from relative imports
       "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
-      `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`,
+      `import { ${[
+        domainObject.name,
+        ...getReferencedDomainObjectNames({ sqlSchemaRelationship }),
+      ].join(', ')} } from '$PATH_TO_DOMAIN_OBJECT';`,
       "import { log } from '$PATH_TO_LOG_OBJECT';",
       `import { sqlQueryUpsert${domainObject.name} } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';`,
       ...sqlSchemaRelationship.properties
-        .filter(
-          (propertyRelationship) =>
-            propertyRelationship.sqlSchema.reference?.method ===
-            SqlSchemaReferenceMethod.DIRECT_BY_NESTING, // this property is nested directly
+        .filter((property) =>
+          property.sqlSchema.reference &&
+          [
+            SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
+            SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION,
+          ].includes(property.sqlSchema.reference.method)
+            ? property.sqlSchema.reference.of.name
+            : null,
         )
+        .filter(isPresent)
         .map((propertyRelationship) => {
           const nameOfDaoToImport = castDomainObjectNameToDaoName(
             propertyRelationship.sqlSchema.reference!.of.name,

@@ -1200,6 +1200,88 @@ async (
       expect(code).toContain('await sqlQueryFindStationByUnique({');
       expect(code).toMatchSnapshot();
     });
+
+    it('should look correct for a domain entity unique on a directly declared reference to another domain object', () => {
+      // define what we're testing on
+      const domainObject = new DomainObjectMetadata({
+        name: 'CarriageCargo',
+        extends: DomainObjectVariant.DOMAIN_ENTITY,
+        properties: {
+          id: {
+            name: 'id',
+            type: DomainObjectPropertyType.NUMBER,
+            required: false,
+          },
+          uuid: {
+            name: 'uuid',
+            type: DomainObjectPropertyType.STRING,
+            required: false,
+          },
+          carriageRef: {
+            name: 'carriageRef',
+            type: DomainObjectPropertyType.REFERENCE,
+            required: true,
+            of: {
+              name: 'Carriage',
+              extends: DomainObjectVariant.DOMAIN_ENTITY,
+            },
+          },
+        },
+        decorations: {
+          alias: null,
+          primary: null,
+          unique: ['carriageRef'],
+          updatable: [],
+        },
+      });
+      const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+        domainObject,
+        allDomainObjects: [domainObject],
+      });
+
+      // define property that gets referenced
+      const geocodeSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Carriage',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+            properties: {
+              uuid: {
+                name: 'uuid',
+                type: DomainObjectPropertyType.STRING,
+              },
+            },
+            decorations: {
+              alias: null,
+              primary: ['uuid'],
+              unique: ['uuid'],
+              updatable: [],
+            },
+          }),
+          allDomainObjects: [domainObject],
+        });
+
+      // run it
+      const code = defineDaoFindByMethodCodeForDomainObject({
+        domainObject,
+        sqlSchemaRelationship,
+        allSqlSchemaRelationships: [
+          sqlSchemaRelationship,
+          geocodeSqlSchemaRelationship,
+        ],
+        findByQueryType: FindByQueryType.UNIQUE,
+      });
+
+      // log an example
+      expect(code).toContain('import { Carriage, '); // should include the directly declared referenced dobj
+      expect(code).toContain('import { carriageDao '); // should include the referenced dao too
+      expect(code).toContain('import { isPrimaryKeyRef }'); // should include the utility too
+      expect(code).toContain('-- query_name = find_carriage_cargo_by_unique'); // name of query
+      expect(code).toContain('carriage_cargo.id,'); // select expressions
+      expect(code).toContain('carriage_cargo.uuid,');
+      expect(code).toContain('carriage_cargo.carriage_uuid');
+      expect(code).toMatchSnapshot();
+    });
     it('should look correct for a domain event with a static referenced array', () => {
       // define what we're testing on
       const domainObject = new DomainObjectMetadata({

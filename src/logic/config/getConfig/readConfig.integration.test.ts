@@ -37,7 +37,7 @@ describe('readConfig', () => {
         },
       },
     });
-    expect(config.for.objects.length).toEqual(11);
+    expect(config.for.objects.length).toEqual(12);
     expect(config).toMatchSnapshot({ rootDir: expect.anything() }); // to log an example of the output; ignore the rootDir, to make it machine independent
   });
 });

@@ -172,6 +172,51 @@ export const findById = async (
 };"
 `;
 
+exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for a domain entity unique on a directly declared reference to another domain object 1`] = `
+"import { HasMetadata } from 'type-fns';
+import { isPrimaryKeyRef } from 'domain-objects';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { log } from '$PATH_TO_LOG_OBJECT';
+import { Carriage, CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCarriageCargoByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+import { carriageDao } from '../carriageDao';
+
+export const sql = \`
+  -- query_name = find_carriage_cargo_by_unique
+  SELECT
+    carriage_cargo.id,
+    carriage_cargo.uuid,
+    carriage_cargo.carriage_uuid
+  FROM view_carriage_cargo_hydrated AS carriage_cargo
+  JOIN carriage_cargo as view_carriage_cargo_current ON carriage_cargo.id = view_carriage_cargo_current.id
+  WHERE 1=1
+    AND view_carriage_cargo_current.carriage_id = (SELECT id FROM carriage WHERE carriage.uuid = :carriageUuid);
+\`;
+
+export const findByUnique = async (
+  {
+    carriageRef,
+  }: {
+    carriageRef: Carriage;
+  },
+  context: { dbConnection: DatabaseConnection },
+): Promise<HasMetadata<CarriageCargo> | null> => {
+  const results = await sqlQueryFindCarriageCargoByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: log.debug,
+    input: {
+      carriageUuid: isPrimaryKeyRef({ of: Carriage })(carriageRef) ? carriageRef.uuid : (await carriageDao.findByRef({ ref: carriageRef }, context).expect('isPresent')).uuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};"
+`;
+
 exports[`defineDaoFindByMethodCodeForDomainObject findByUnique should look correct for a domain event with a static referenced array 1`] = `
 "import { HasMetadata } from 'type-fns';
 

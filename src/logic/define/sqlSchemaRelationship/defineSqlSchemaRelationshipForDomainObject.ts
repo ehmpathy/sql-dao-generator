@@ -19,7 +19,7 @@ export const defineSqlSchemaRelationshipForDomainObject = ({
 }: {
   domainObject: DomainObjectMetadata;
   allDomainObjects: DomainObjectMetadata[];
-}) => {
+}): SqlSchemaToDomainObjectRelationship => {
   // figure out some relevant info
   const sqlSchemaName = snakeCase(domainObject.name); // names are in snake case
 

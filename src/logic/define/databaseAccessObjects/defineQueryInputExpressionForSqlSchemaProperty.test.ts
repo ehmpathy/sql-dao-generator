@@ -66,6 +66,45 @@ describe('defineQueryInputExpressionForSqlSchemaProperty', () => {
       '(SELECT id FROM train_engineer WHERE train_engineer.uuid = :leadEngineerUuid)',
     );
   });
+  it('should define the input expression correctly for a solo DIRECT_BY_DECLARATION reference', () => {
+    const expression = defineQueryInputExpressionForSqlSchemaProperty({
+      sqlSchemaName: 'carriage_cargo',
+      sqlSchemaProperty: {
+        name: 'carriage_id',
+        isArray: false,
+        isNullable: false,
+        isUpdatable: false,
+        isDatabaseGenerated: false,
+        reference: {
+          method: SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION,
+          of: {
+            name: 'Carriage',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+          },
+        },
+      },
+      domainObjectProperty: {
+        name: 'carriageRef',
+        type: DomainObjectPropertyType.REFERENCE,
+      },
+      allSqlSchemaRelationships: [
+        new SqlSchemaToDomainObjectRelationship({
+          name: { domainObject: 'Carriage', sqlSchema: 'carriage' },
+          properties: [],
+          decorations: {
+            alias: { domainObject: null },
+            unique: {
+              sqlSchema: null,
+              domainObject: null,
+            },
+          },
+        }),
+      ], // not needed for this one
+    });
+    expect(expression).toEqual(
+      '(SELECT id FROM carriage WHERE carriage.uuid = :carriageUuid)',
+    );
+  });
   it('should define the input expression correctly for a solo DIRECT_BY_NESTING reference', () => {
     const expression = defineQueryInputExpressionForSqlSchemaProperty({
       sqlSchemaName: 'train_located_event',
