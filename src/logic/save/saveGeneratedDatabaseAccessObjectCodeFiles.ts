@@ -40,17 +40,6 @@ export const saveGeneratedDatabaseAccessObjectCodeFiles = async ({
             }),
           )
           .replace(
-            '$PATH_TO_LOG_OBJECT',
-            getRelativePath({
-              from: getAbsolutePathOfDaoFile(file),
-              to: getNormalizedPath(
-                `${projectRootDir}/${
-                  config.generates.daos.using.log.split('#')[0]
-                }`,
-              ),
-            }).replace(/\.ts$/, ''),
-          )
-          .replace(
             '$PATH_TO_DOMAIN_OBJECT',
             getRelativePath({
               from: getAbsolutePathOfDaoFile(file),

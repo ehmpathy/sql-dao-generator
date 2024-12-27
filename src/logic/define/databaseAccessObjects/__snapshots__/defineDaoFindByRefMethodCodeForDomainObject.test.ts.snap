@@ -2,6 +2,7 @@
 
 exports[`defineDaoFindByRefMethodCodeForDomainObject should look correct for a domain event with a static referenced array 1`] = `
 "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { VisualogicContext } from 'visualogic';
 import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
 import { HasMetadata } from 'type-fns';
 
@@ -12,7 +13,7 @@ import { findByUuid } from './findByUuid';
 
 export const findByRef = async (
   input: { ref: Ref<typeof TrainLocatedEvent> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainLocatedEvent> | null> => {
   if (isPrimaryKeyRef({ of: TrainLocatedEvent })(input.ref))
     return await findByUuid(input.ref, context);
@@ -24,6 +25,7 @@ export const findByRef = async (
 
 exports[`defineDaoFindByRefMethodCodeForDomainObject should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
 "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { VisualogicContext } from 'visualogic';
 import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
 import { HasMetadata } from 'type-fns';
 
@@ -34,7 +36,7 @@ import { findByUuid } from './findByUuid';
 
 export const findByRef = async (
   input: { ref: Ref<typeof Train> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Train> | null> => {
   if (isPrimaryKeyRef({ of: Train })(input.ref))
     return await findByUuid(input.ref, context);
@@ -46,6 +48,7 @@ export const findByRef = async (
 
 exports[`defineDaoFindByRefMethodCodeForDomainObject should look correct for simple domain entity 1`] = `
 "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { VisualogicContext } from 'visualogic';
 import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
 import { HasMetadata } from 'type-fns';
 
@@ -56,7 +59,7 @@ import { findByUuid } from './findByUuid';
 
 export const findByRef = async (
   input: { ref: Ref<typeof Carriage> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Carriage> | null> => {
   if (isPrimaryKeyRef({ of: Carriage })(input.ref))
     return await findByUuid(input.ref, context);
@@ -68,6 +71,7 @@ export const findByRef = async (
 
 exports[`defineDaoFindByRefMethodCodeForDomainObject should look correct for simple literal 1`] = `
 "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { VisualogicContext } from 'visualogic';
 import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
 import { HasMetadata } from 'type-fns';
 
@@ -78,7 +82,7 @@ import { findByUuid } from './findByUuid';
 
 export const findByRef = async (
   input: { ref: Ref<typeof Geocode> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode> | null> => {
   if (isPrimaryKeyRef({ of: Geocode })(input.ref))
     return await findByUuid(input.ref, context);

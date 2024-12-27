@@ -151,12 +151,12 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
     ...new Set([
       // always present imports
       `import { HasMetadata } from 'type-fns';`,
+      `import { VisualogicContext } from 'visualogic';`,
       hasSomeDirectDeclarationReference
         ? `import { isPrimaryKeyRef } from 'domain-objects';`
         : '',
       '', // split module from relative imports
       "import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';",
-      "import { log } from '$PATH_TO_LOG_OBJECT';",
       `import { ${referencedDomainObjectNames
         .sort()
         .join(', ')} } from '$PATH_TO_DOMAIN_OBJECT';`,
@@ -415,11 +415,11 @@ export const findBy${findByQueryType} = async (
       .map((entry) => `${entry[0]}: ${entry[1]}`)
       .join(';\n    ')};
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<${outputType} | null> => {
   const results = await sqlQueryFind${domainObject.name}By${findByQueryType}({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       ${queryFunctionInputExpressions.join(',\n      ')},
     },

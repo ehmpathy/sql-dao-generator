@@ -1,5 +1,6 @@
 import shell from 'shelljs';
 import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { uuid } from '../../deps';
 import { SvcPaymentsPaymentTransactionCurrency } from '../__test_assets__/exampleProject/src/data/clients/svcPayments';
@@ -49,8 +50,13 @@ jest.setTimeout(60 * 1000);
 describe('generate', () => {
   describe('use the generated daos', () => {
     let dbConnection: DatabaseConnection;
+    let context: { dbConnection: DatabaseConnection } & VisualogicContext;
     beforeAll(async () => {
       dbConnection = await getDatabaseConnection();
+      context = {
+        dbConnection,
+        log: console,
+      };
     });
     afterAll(async () => {
       await dbConnection.end();
@@ -79,7 +85,7 @@ describe('generate', () => {
           {
             geocode,
           },
-          { dbConnection },
+          context,
         );
         // console.log(upsertedGeocode);
         expect(upsertedGeocode).toMatchObject(geocode);
@@ -93,7 +99,7 @@ describe('generate', () => {
               longitude: 21,
             }),
           },
-          { dbConnection },
+          context,
         );
         const geocodeB = await geocodeDao.upsert(
           {
@@ -102,7 +108,7 @@ describe('generate', () => {
               longitude: 21,
             }),
           },
-          { dbConnection },
+          context,
         );
         expect(geocodeB).toEqual(geocodeA); // should be the same exact one
       });
@@ -114,13 +120,13 @@ describe('generate', () => {
               longitude: 21,
             }),
           },
-          { dbConnection },
+          context,
         );
         const foundGeocode = await geocodeDao.findById(
           {
             id: geocode.id,
           },
-          { dbConnection },
+          context,
         );
         expect(foundGeocode).toEqual(geocode); // should find the same one
       });
@@ -132,14 +138,14 @@ describe('generate', () => {
               longitude: 21,
             }),
           },
-          { dbConnection },
+          context,
         );
         const foundGeocode = await geocodeDao.findByUnique(
           {
             latitude: geocode.latitude,
             longitude: geocode.longitude,
           },
-          { dbConnection },
+          context,
         );
         expect(foundGeocode).toEqual(geocode); // should find the same one
       });
@@ -156,7 +162,7 @@ describe('generate', () => {
           {
             locomotive,
           },
-          { dbConnection },
+          context,
         );
         // console.log(upsertedGeocode);
         expect(upsertedLocomotive).toMatchObject(locomotive);
@@ -185,7 +191,7 @@ describe('generate', () => {
               milage: 1_700_000,
             }),
           },
-          { dbConnection },
+          context,
         );
         const locomotiveNow = await locomotiveDao.upsert(
           {
@@ -194,7 +200,7 @@ describe('generate', () => {
               milage: 1_900_000,
             }),
           },
-          { dbConnection },
+          context,
         );
 
         // check that its the same locomotive
@@ -210,13 +216,13 @@ describe('generate', () => {
               milage: 1_700_000,
             }),
           },
-          { dbConnection },
+          context,
         );
         const foundLocomotive = await locomotiveDao.findById(
           {
             id: locomotive.id,
           },
-          { dbConnection },
+          context,
         );
         expect(foundLocomotive).toMatchObject(locomotive);
       });
@@ -230,13 +236,13 @@ describe('generate', () => {
               milage: 1_700_000,
             }),
           },
-          { dbConnection },
+          context,
         );
         const foundLocomotive = await locomotiveDao.findByUuid(
           {
             uuid: locomotive.uuid,
           },
-          { dbConnection },
+          context,
         );
         expect(foundLocomotive).toMatchObject(locomotive);
       });
@@ -250,13 +256,13 @@ describe('generate', () => {
               milage: 1_700_000,
             }),
           },
-          { dbConnection },
+          context,
         );
         const foundLocomotive = await locomotiveDao.findByUnique(
           {
             ein: locomotive.ein,
           },
-          { dbConnection },
+          context,
         );
         expect(foundLocomotive).toMatchObject(locomotive);
       });
@@ -272,7 +278,7 @@ describe('generate', () => {
           {
             carriage,
           },
-          { dbConnection },
+          context,
         );
         // console.log(upsertedGeocode);
         expect(upsertedCarriage).toMatchObject(carriage);
@@ -289,7 +295,7 @@ describe('generate', () => {
               capacity: 821,
             }) as HasMetadata<Carriage>,
           },
-          { dbConnection },
+          context,
         );
         const carriageNow = await carriageDao.upsert(
           {
@@ -298,7 +304,7 @@ describe('generate', () => {
               capacity: 721,
             }) as HasMetadata<Carriage>,
           },
-          { dbConnection },
+          context,
         );
 
         // check that its the same locomotive
@@ -314,13 +320,13 @@ describe('generate', () => {
               capacity: 821,
             }) as HasMetadata<Carriage>,
           },
-          { dbConnection },
+          context,
         );
         const foundCarriage = await carriageDao.findById(
           {
             id: carriage.id,
           },
-          { dbConnection },
+          context,
         );
         expect(foundCarriage).toEqual(carriage);
       });
@@ -334,13 +340,13 @@ describe('generate', () => {
               capacity: 821,
             }) as HasMetadata<Carriage>,
           },
-          { dbConnection },
+          context,
         );
         const foundCarriage = await carriageDao.findByUuid(
           {
             uuid: carriage.uuid,
           },
-          { dbConnection },
+          context,
         );
         expect(foundCarriage).toEqual(carriage);
       });
@@ -354,13 +360,13 @@ describe('generate', () => {
               capacity: 821,
             }) as HasMetadata<Carriage>,
           },
-          { dbConnection },
+          context,
         );
         const foundCarriage = await carriageDao.findByUnique(
           {
             cin: carriage.cin,
           },
-          { dbConnection },
+          context,
         );
         expect(foundCarriage).toEqual(carriage);
       });
@@ -381,7 +387,7 @@ describe('generate', () => {
               milage: 1_700_000,
             }),
           },
-          { dbConnection },
+          context,
         );
         boosterCarriage = await carriageDao.upsert(
           {
@@ -392,7 +398,7 @@ describe('generate', () => {
               capacity: 9001,
             }) as HasMetadata<Carriage>,
           },
-          { dbConnection },
+          context,
         );
         crewCarriage = await carriageDao.upsert(
           {
@@ -403,7 +409,7 @@ describe('generate', () => {
               capacity: 19,
             }) as HasMetadata<Carriage>,
           },
-          { dbConnection },
+          context,
         );
         leadEngineer = await trainEngineerDao.upsert(
           {
@@ -419,7 +425,7 @@ describe('generate', () => {
               name: 'Burt',
             }),
           },
-          { dbConnection },
+          context,
         );
       });
       it('should be able to upsert', async () => {
@@ -435,10 +441,7 @@ describe('generate', () => {
         });
 
         // upsert it
-        const upsertedTrain = await trainDao.upsert(
-          { train },
-          { dbConnection },
-        );
+        const upsertedTrain = await trainDao.upsert({ train }, context);
         expect(upsertedTrain).toMatchObject(train);
         expect(upsertedTrain).toHaveProperty('id', expect.any(Number));
         expect(upsertedTrain).toHaveProperty('uuid', expect.any(String));
@@ -473,7 +476,7 @@ describe('generate', () => {
               status: TrainStatus.ASSEMBLED,
             }),
           },
-          { dbConnection },
+          context,
         );
 
         // now find it
@@ -481,7 +484,7 @@ describe('generate', () => {
           {
             id: train.id,
           },
-          { dbConnection },
+          context,
         );
         expect(foundTrain).toMatchObject(train);
       });
@@ -502,7 +505,7 @@ describe('generate', () => {
               status: TrainStatus.ASSEMBLED,
             }),
           },
-          { dbConnection },
+          context,
         );
 
         // now find it
@@ -510,7 +513,7 @@ describe('generate', () => {
           {
             uuid: train.uuid,
           },
-          { dbConnection },
+          context,
         );
         expect(foundTrain).toMatchObject(train);
       });
@@ -531,7 +534,7 @@ describe('generate', () => {
               status: TrainStatus.ASSEMBLED,
             }),
           },
-          { dbConnection },
+          context,
         );
 
         // now find it
@@ -539,7 +542,7 @@ describe('generate', () => {
           {
             combinationId: train.combinationId,
           },
-          { dbConnection },
+          context,
         );
         expect(foundTrain).toMatchObject(train);
       });
@@ -580,7 +583,7 @@ describe('generate', () => {
           {
             invoice,
           },
-          { dbConnection },
+          context,
         );
         expect(upsertedInvoice).toMatchObject(invoice);
         expect(upsertedInvoice).toHaveProperty('id', expect.any(Number));
@@ -618,7 +621,7 @@ describe('generate', () => {
               status: InvoiceStatus.PROPOSED,
             }),
           },
-          { dbConnection },
+          context,
         );
 
         // now find it
@@ -626,7 +629,7 @@ describe('generate', () => {
           {
             id: invoice.id,
           },
-          { dbConnection },
+          context,
         );
         expect(foundInvoice).toMatchObject(invoice);
       });
@@ -662,7 +665,7 @@ describe('generate', () => {
               status: InvoiceStatus.PROPOSED,
             }),
           },
-          { dbConnection },
+          context,
         );
 
         // now find it
@@ -670,7 +673,7 @@ describe('generate', () => {
           {
             uuid: invoice.uuid,
           },
-          { dbConnection },
+          context,
         );
         expect(foundInvoice).toMatchObject(invoice);
       });
@@ -706,7 +709,7 @@ describe('generate', () => {
               status: InvoiceStatus.PROPOSED,
             }),
           },
-          { dbConnection },
+          context,
         );
 
         // now find it
@@ -714,7 +717,7 @@ describe('generate', () => {
           {
             externalId: invoice.externalId,
           },
-          { dbConnection },
+          context,
         );
         expect(foundInvoice).toMatchObject(invoice);
       });

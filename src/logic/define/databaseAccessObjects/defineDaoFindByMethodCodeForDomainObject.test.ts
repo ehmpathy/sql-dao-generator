@@ -867,7 +867,7 @@ async (
     latitude: number;
     longitude: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode> | null> =>
         `.trim(),
       );
@@ -1393,7 +1393,7 @@ async (
     trainUuid: string;
     occurredAt: Date;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 )
         `.trim(),
       );
@@ -1810,7 +1810,7 @@ async (
     locomotiveUuids: string[];
     leadEngineerUuid: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Train> | null> =>
       `.trim(),
       );

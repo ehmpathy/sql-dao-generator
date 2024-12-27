@@ -12,6 +12,7 @@ export const defineDaoFindByRefMethodCodeForDomainObject = ({
     ...new Set([
       // always present imports
       `import { UnexpectedCodePathError } from '@ehmpathy/error-fns';`,
+      `import { VisualogicContext } from 'visualogic';`,
       `import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';`,
       `import { HasMetadata } from 'type-fns';`,
 
@@ -32,7 +33,7 @@ ${imports.join('\n')}
 
 export const findByRef = async (
   input: { ref: Ref<typeof ${domainObject.name}> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<${outputType} | null> => {
   if (isPrimaryKeyRef({ of: ${domainObject.name} })(input.ref))
     return await findByUuid(input.ref, context);

@@ -40,9 +40,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -64,11 +64,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -82,9 +82,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -110,11 +110,11 @@ export const findByUnique = async (
     latitude: number;
     longitude: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       latitude,
       longitude,
@@ -129,9 +129,9 @@ export const findByUnique = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -153,11 +153,11 @@ export const findByUuid = async (
   }: {
     uuid: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUuid({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       uuid,
     },
@@ -170,11 +170,11 @@ export const findByUuid = async (
     "relpath": "geocodeDao/findByUuid.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 
 export const sql = \`
@@ -193,11 +193,11 @@ export const upsert = async (
   }: {
     geocode: Geocode;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode>> => {
   const results = await sqlQueryUpsertGeocode({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       latitude: geocode.latitude,
       longitude: geocode.longitude,
@@ -248,9 +248,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -271,11 +271,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -289,9 +289,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -316,11 +316,11 @@ export const findByUnique = async (
     latitude: number;
     longitude: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       latitude,
       longitude,
@@ -334,11 +334,11 @@ export const findByUnique = async (
     "relpath": "geocodeDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 
 export const sql = \`
@@ -357,11 +357,11 @@ export const upsert = async (
   }: {
     geocode: Geocode;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode>> => {
   const results = await sqlQueryUpsertGeocode({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       latitude: geocode.latitude,
       longitude: geocode.longitude,

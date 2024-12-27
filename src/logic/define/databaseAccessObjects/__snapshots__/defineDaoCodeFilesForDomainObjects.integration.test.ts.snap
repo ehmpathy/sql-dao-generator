@@ -45,9 +45,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindAsyncTaskPredictStationCongestionById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -72,11 +72,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<AsyncTaskPredictStationCongestion> | null> => {
   const results = await sqlQueryFindAsyncTaskPredictStationCongestionById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -90,9 +90,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindAsyncTaskPredictStationCongestionByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -122,11 +122,11 @@ export const findByUnique = async (
     stationUuid: string;
     trainLocatedEventUuid: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<AsyncTaskPredictStationCongestion> | null> => {
   const results = await sqlQueryFindAsyncTaskPredictStationCongestionByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       stationUuid,
       trainLocatedEventUuid,
@@ -141,9 +141,9 @@ export const findByUnique = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindAsyncTaskPredictStationCongestionByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -168,11 +168,11 @@ export const findByUuid = async (
   }: {
     uuid: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<AsyncTaskPredictStationCongestion> | null> => {
   const results = await sqlQueryFindAsyncTaskPredictStationCongestionByUuid({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       uuid,
     },
@@ -186,6 +186,7 @@ export const findByUuid = async (
   },
   GeneratedCodeFile {
     "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { VisualogicContext } from 'visualogic';
 import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
 import { HasMetadata } from 'type-fns';
 
@@ -196,7 +197,7 @@ import { findByUuid } from './findByUuid';
 
 export const findByRef = async (
   input: { ref: Ref<typeof AsyncTaskPredictStationCongestion> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<AsyncTaskPredictStationCongestion> | null> => {
   if (isPrimaryKeyRef({ of: AsyncTaskPredictStationCongestion })(input.ref))
     return await findByUuid(input.ref, context);
@@ -207,11 +208,11 @@ export const findByRef = async (
     "relpath": "asyncTaskPredictStationCongestionDao/findByRef.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertAsyncTaskPredictStationCongestion } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 
 export const sql = \`
@@ -231,11 +232,11 @@ export const upsert = async (
   }: {
     asyncTaskPredictStationCongestion: AsyncTaskPredictStationCongestion;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<AsyncTaskPredictStationCongestion>> => {
   const results = await sqlQueryUpsertAsyncTaskPredictStationCongestion({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       status: asyncTaskPredictStationCongestion.status,
       stationUuid: asyncTaskPredictStationCongestion.stationUuid,
@@ -288,9 +289,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCarriageById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -313,11 +314,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Carriage> | null> => {
   const results = await sqlQueryFindCarriageById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -331,9 +332,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCarriageByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -357,11 +358,11 @@ export const findByUnique = async (
   }: {
     cin: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Carriage> | null> => {
   const results = await sqlQueryFindCarriageByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       cin,
     },
@@ -375,9 +376,9 @@ export const findByUnique = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCarriageByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -400,11 +401,11 @@ export const findByUuid = async (
   }: {
     uuid: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Carriage> | null> => {
   const results = await sqlQueryFindCarriageByUuid({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       uuid,
     },
@@ -418,6 +419,7 @@ export const findByUuid = async (
   },
   GeneratedCodeFile {
     "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { VisualogicContext } from 'visualogic';
 import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
 import { HasMetadata } from 'type-fns';
 
@@ -428,7 +430,7 @@ import { findByUuid } from './findByUuid';
 
 export const findByRef = async (
   input: { ref: Ref<typeof Carriage> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Carriage> | null> => {
   if (isPrimaryKeyRef({ of: Carriage })(input.ref))
     return await findByUuid(input.ref, context);
@@ -439,11 +441,11 @@ export const findByRef = async (
     "relpath": "carriageDao/findByRef.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertCarriage } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 
 export const sql = \`
@@ -463,11 +465,11 @@ export const upsert = async (
   }: {
     carriage: Carriage;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Carriage>> => {
   const results = await sqlQueryUpsertCarriage({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       cin: carriage.cin,
       carries: carriage.carries,
@@ -522,10 +524,10 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 import { isPrimaryKeyRef } from 'domain-objects';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCarriageCargoById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -549,11 +551,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<CarriageCargo> | null> => {
   const results = await sqlQueryFindCarriageCargoById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -567,10 +569,10 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 import { isPrimaryKeyRef } from 'domain-objects';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Carriage, CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCarriageCargoByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -603,11 +605,11 @@ export const findByUnique = async (
     carriageRef: Carriage;
     slot: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<CarriageCargo> | null> => {
   const results = await sqlQueryFindCarriageCargoByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       itineraryUuid,
       carriageUuid: isPrimaryKeyRef({ of: Carriage })(carriageRef) ? carriageRef.uuid : (await carriageDao.findByRef({ ref: carriageRef }, context).expect('isPresent')).uuid,
@@ -623,10 +625,10 @@ export const findByUnique = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 import { isPrimaryKeyRef } from 'domain-objects';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCarriageCargoByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -650,11 +652,11 @@ export const findByUuid = async (
   }: {
     uuid: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<CarriageCargo> | null> => {
   const results = await sqlQueryFindCarriageCargoByUuid({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       uuid,
     },
@@ -668,6 +670,7 @@ export const findByUuid = async (
   },
   GeneratedCodeFile {
     "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { VisualogicContext } from 'visualogic';
 import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
 import { HasMetadata } from 'type-fns';
 
@@ -678,7 +681,7 @@ import { findByUuid } from './findByUuid';
 
 export const findByRef = async (
   input: { ref: Ref<typeof CarriageCargo> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<CarriageCargo> | null> => {
   if (isPrimaryKeyRef({ of: CarriageCargo })(input.ref))
     return await findByUuid(input.ref, context);
@@ -689,12 +692,12 @@ export const findByRef = async (
     "relpath": "carriageCargoDao/findByRef.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 import { isPrimaryKeyRef } from 'domain-objects';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { CarriageCargo, Carriage } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertCarriageCargo } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { carriageDao } from '../carriageDao';
 
@@ -716,11 +719,11 @@ export const upsert = async (
   }: {
     carriageCargo: CarriageCargo;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<CarriageCargo>> => {
   const results = await sqlQueryUpsertCarriageCargo({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       itineraryUuid: carriageCargo.itineraryUuid,
       carriageUuid: isPrimaryKeyRef({ of: Carriage })(carriageCargo.carriageRef) ? carriageCargo.carriageRef.uuid : (await carriageDao.findByRef({ ref: carriageCargo.carriageRef }, context).expect('isPresent')).uuid,
@@ -768,9 +771,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCertificateById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -791,11 +794,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Certificate> | null> => {
   const results = await sqlQueryFindCertificateById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -809,9 +812,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindCertificateByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -836,11 +839,11 @@ export const findByUnique = async (
     type: Certificate['type'];
     industryId: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Certificate> | null> => {
   const results = await sqlQueryFindCertificateByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       type,
       industryId,
@@ -854,11 +857,11 @@ export const findByUnique = async (
     "relpath": "certificateDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertCertificate } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 
 export const sql = \`
@@ -877,11 +880,11 @@ export const upsert = async (
   }: {
     certificate: Certificate;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Certificate>> => {
   const results = await sqlQueryUpsertCertificate({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       type: certificate.type,
       industryId: certificate.industryId,
@@ -935,9 +938,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainEngineerById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -961,11 +964,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainEngineer> | null> => {
   const results = await sqlQueryFindTrainEngineerById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -979,9 +982,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainEngineerByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -1006,11 +1009,11 @@ export const findByUnique = async (
   }: {
     socialSecurityNumberHash: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainEngineer> | null> => {
   const results = await sqlQueryFindTrainEngineerByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       socialSecurityNumberHash,
     },
@@ -1024,9 +1027,9 @@ export const findByUnique = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainEngineerByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -1050,11 +1053,11 @@ export const findByUuid = async (
   }: {
     uuid: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainEngineer> | null> => {
   const results = await sqlQueryFindTrainEngineerByUuid({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       uuid,
     },
@@ -1068,6 +1071,7 @@ export const findByUuid = async (
   },
   GeneratedCodeFile {
     "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { VisualogicContext } from 'visualogic';
 import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
 import { HasMetadata } from 'type-fns';
 
@@ -1078,7 +1082,7 @@ import { findByUuid } from './findByUuid';
 
 export const findByRef = async (
   input: { ref: Ref<typeof TrainEngineer> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainEngineer> | null> => {
   if (isPrimaryKeyRef({ of: TrainEngineer })(input.ref))
     return await findByUuid(input.ref, context);
@@ -1089,11 +1093,11 @@ export const findByRef = async (
     "relpath": "trainEngineerDao/findByRef.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrainEngineer } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { certificateDao } from '../certificateDao';
 
@@ -1115,11 +1119,11 @@ export const upsert = async (
   }: {
     trainEngineer: TrainEngineer;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainEngineer>> => {
   const results = await sqlQueryUpsertTrainEngineer({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       socialSecurityNumberHash: trainEngineer.socialSecurityNumberHash,
       certificateIds: await Promise.all(trainEngineer.certificates.map(async (certificate) => certificate.id ? certificate.id : (await certificateDao.upsert({ certificate }, context)).id)),
@@ -1167,9 +1171,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -1190,11 +1194,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -1208,9 +1212,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindGeocodeByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -1235,11 +1239,11 @@ export const findByUnique = async (
     latitude: number;
     longitude: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode> | null> => {
   const results = await sqlQueryFindGeocodeByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       latitude,
       longitude,
@@ -1253,11 +1257,11 @@ export const findByUnique = async (
     "relpath": "geocodeDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 
 export const sql = \`
@@ -1276,11 +1280,11 @@ export const upsert = async (
   }: {
     geocode: Geocode;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode>> => {
   const results = await sqlQueryUpsertGeocode({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       latitude: geocode.latitude,
       longitude: geocode.longitude,
@@ -1337,9 +1341,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -1366,11 +1370,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Train> | null> => {
   const results = await sqlQueryFindTrainById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -1384,9 +1388,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -1414,11 +1418,11 @@ export const findByUnique = async (
   }: {
     combinationId: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Train> | null> => {
   const results = await sqlQueryFindTrainByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       combinationId,
     },
@@ -1432,9 +1436,9 @@ export const findByUnique = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -1461,11 +1465,11 @@ export const findByUuid = async (
   }: {
     uuid: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Train> | null> => {
   const results = await sqlQueryFindTrainByUuid({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       uuid,
     },
@@ -1479,6 +1483,7 @@ export const findByUuid = async (
   },
   GeneratedCodeFile {
     "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { VisualogicContext } from 'visualogic';
 import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
 import { HasMetadata } from 'type-fns';
 
@@ -1489,7 +1494,7 @@ import { findByUuid } from './findByUuid';
 
 export const findByRef = async (
   input: { ref: Ref<typeof Train> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Train> | null> => {
   if (isPrimaryKeyRef({ of: Train })(input.ref))
     return await findByUuid(input.ref, context);
@@ -1500,11 +1505,11 @@ export const findByRef = async (
     "relpath": "trainDao/findByRef.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrain } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { geocodeDao } from '../geocodeDao';
 
@@ -1547,11 +1552,11 @@ export const upsert = async (
   }: {
     train: Train;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Train>> => {
   const results = await sqlQueryUpsertTrain({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await geocodeDao.upsert({ geocode: train.homeStationGeocode }, context)).id,
       combinationId: train.combinationId,
@@ -1612,9 +1617,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindLocomotiveById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -1641,11 +1646,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Locomotive> | null> => {
   const results = await sqlQueryFindLocomotiveById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -1659,9 +1664,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindLocomotiveByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -1689,11 +1694,11 @@ export const findByUnique = async (
   }: {
     ein: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Locomotive> | null> => {
   const results = await sqlQueryFindLocomotiveByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       ein,
     },
@@ -1707,9 +1712,9 @@ export const findByUnique = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindLocomotiveByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -1736,11 +1741,11 @@ export const findByUuid = async (
   }: {
     uuid: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Locomotive> | null> => {
   const results = await sqlQueryFindLocomotiveByUuid({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       uuid,
     },
@@ -1754,6 +1759,7 @@ export const findByUuid = async (
   },
   GeneratedCodeFile {
     "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { VisualogicContext } from 'visualogic';
 import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
 import { HasMetadata } from 'type-fns';
 
@@ -1764,7 +1770,7 @@ import { findByUuid } from './findByUuid';
 
 export const findByRef = async (
   input: { ref: Ref<typeof Locomotive> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Locomotive> | null> => {
   if (isPrimaryKeyRef({ of: Locomotive })(input.ref))
     return await findByUuid(input.ref, context);
@@ -1775,11 +1781,11 @@ export const findByRef = async (
     "relpath": "locomotiveDao/findByRef.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertLocomotive } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 
 export const sql = \`
@@ -1800,11 +1806,11 @@ export const upsert = async (
   }: {
     locomotive: Locomotive;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Locomotive>> => {
   const results = await sqlQueryUpsertLocomotive({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       ein: locomotive.ein,
       fuel: locomotive.fuel,
@@ -1856,9 +1862,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainLocatedEventById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -1880,11 +1886,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainLocatedEvent> | null> => {
   const results = await sqlQueryFindTrainLocatedEventById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -1898,9 +1904,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainLocatedEventByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -1927,11 +1933,11 @@ export const findByUnique = async (
     trainUuid: string;
     occurredAt: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainLocatedEvent> | null> => {
   const results = await sqlQueryFindTrainLocatedEventByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       trainUuid,
       occurredAt,
@@ -1946,6 +1952,7 @@ export const findByUnique = async (
   },
   GeneratedCodeFile {
     "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { VisualogicContext } from 'visualogic';
 import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
 import { HasMetadata } from 'type-fns';
 
@@ -1956,7 +1963,7 @@ import { findByUuid } from './findByUuid';
 
 export const findByRef = async (
   input: { ref: Ref<typeof TrainLocatedEvent> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainLocatedEvent> | null> => {
   if (isPrimaryKeyRef({ of: TrainLocatedEvent })(input.ref))
     return await findByUuid(input.ref, context);
@@ -1967,11 +1974,11 @@ export const findByRef = async (
     "relpath": "trainLocatedEventDao/findByRef.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrainLocatedEvent } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { geocodeDao } from '../geocodeDao';
 
@@ -1992,11 +1999,11 @@ export const upsert = async (
   }: {
     trainLocatedEvent: TrainLocatedEvent;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainLocatedEvent>> => {
   const results = await sqlQueryUpsertTrainLocatedEvent({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       trainUuid: trainLocatedEvent.trainUuid,
       occurredAt: trainLocatedEvent.occurredAt,
@@ -2049,9 +2056,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainStationById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -2073,11 +2080,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainStation> | null> => {
   const results = await sqlQueryFindTrainStationById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -2091,9 +2098,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Geocode, TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainStationByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -2118,11 +2125,11 @@ export const findByUnique = async (
   }: {
     geocode: Geocode;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainStation> | null> => {
   const results = await sqlQueryFindTrainStationByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       geocodeId: geocode.id ? geocode.id : ((await geocodeDao.findByUnique(geocode, context))?.id ?? -1),
     },
@@ -2136,9 +2143,9 @@ export const findByUnique = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindTrainStationByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -2160,11 +2167,11 @@ export const findByUuid = async (
   }: {
     uuid: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainStation> | null> => {
   const results = await sqlQueryFindTrainStationByUuid({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       uuid,
     },
@@ -2178,6 +2185,7 @@ export const findByUuid = async (
   },
   GeneratedCodeFile {
     "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { VisualogicContext } from 'visualogic';
 import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
 import { HasMetadata } from 'type-fns';
 
@@ -2188,7 +2196,7 @@ import { findByUuid } from './findByUuid';
 
 export const findByRef = async (
   input: { ref: Ref<typeof TrainStation> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainStation> | null> => {
   if (isPrimaryKeyRef({ of: TrainStation })(input.ref))
     return await findByUuid(input.ref, context);
@@ -2199,11 +2207,11 @@ export const findByRef = async (
     "relpath": "trainStationDao/findByRef.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainStation, Geocode } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrainStation } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { geocodeDao } from '../geocodeDao';
 
@@ -2223,11 +2231,11 @@ export const upsert = async (
   }: {
     trainStation: TrainStation;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainStation>> => {
   const results = await sqlQueryUpsertTrainStation({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       geocodeId: trainStation.geocode.id ? trainStation.geocode.id : (await geocodeDao.upsert({ geocode: trainStation.geocode }, context)).id,
       name: trainStation.name,
@@ -2273,9 +2281,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Price } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindPriceById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -2296,11 +2304,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Price> | null> => {
   const results = await sqlQueryFindPriceById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -2314,9 +2322,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Price } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindPriceByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -2341,11 +2349,11 @@ export const findByUnique = async (
     amount: number;
     currency: Price['currency'];
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Price> | null> => {
   const results = await sqlQueryFindPriceByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       amount,
       currency,
@@ -2359,11 +2367,11 @@ export const findByUnique = async (
     "relpath": "priceDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Price } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertPrice } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 
 export const sql = \`
@@ -2382,11 +2390,11 @@ export const upsert = async (
   }: {
     price: Price;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Price>> => {
   const results = await sqlQueryUpsertPrice({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       amount: price.amount,
       currency: price.currency,
@@ -2434,9 +2442,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { InvoiceLineItem } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindInvoiceLineItemById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -2458,11 +2466,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<InvoiceLineItem> | null> => {
   const results = await sqlQueryFindInvoiceLineItemById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -2476,9 +2484,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { InvoiceLineItem, Price } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindInvoiceLineItemByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -2509,11 +2517,11 @@ export const findByUnique = async (
     title: string;
     explanation: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<InvoiceLineItem> | null> => {
   const results = await sqlQueryFindInvoiceLineItemByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       priceId: price.id ? price.id : ((await priceDao.findByUnique(price, context))?.id ?? -1),
       title,
@@ -2528,11 +2536,11 @@ export const findByUnique = async (
     "relpath": "invoiceLineItemDao/findByUnique.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { InvoiceLineItem, Price } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertInvoiceLineItem } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { priceDao } from '../priceDao';
 
@@ -2553,11 +2561,11 @@ export const upsert = async (
   }: {
     invoiceLineItem: InvoiceLineItem;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<InvoiceLineItem>> => {
   const results = await sqlQueryUpsertInvoiceLineItem({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       priceId: invoiceLineItem.price.id ? invoiceLineItem.price.id : (await priceDao.upsert({ price: invoiceLineItem.price }, context)).id,
       title: invoiceLineItem.title,
@@ -2613,9 +2621,9 @@ export const castFromDatabaseObject = (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindInvoiceById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -2639,11 +2647,11 @@ export const findById = async (
   }: {
     id: number;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Invoice> | null> => {
   const results = await sqlQueryFindInvoiceById({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       id,
     },
@@ -2657,9 +2665,9 @@ export const findById = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindInvoiceByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -2684,11 +2692,11 @@ export const findByUnique = async (
   }: {
     externalId: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Invoice> | null> => {
   const results = await sqlQueryFindInvoiceByUnique({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       externalId,
     },
@@ -2702,9 +2710,9 @@ export const findByUnique = async (
   },
   GeneratedCodeFile {
     "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryFindInvoiceByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
@@ -2728,11 +2736,11 @@ export const findByUuid = async (
   }: {
     uuid: string;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Invoice> | null> => {
   const results = await sqlQueryFindInvoiceByUuid({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       uuid,
     },
@@ -2746,6 +2754,7 @@ export const findByUuid = async (
   },
   GeneratedCodeFile {
     "content": "import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
+import { VisualogicContext } from 'visualogic';
 import { Ref, isPrimaryKeyRef, isUniqueKeyRef } from 'domain-objects';
 import { HasMetadata } from 'type-fns';
 
@@ -2756,7 +2765,7 @@ import { findByUuid } from './findByUuid';
 
 export const findByRef = async (
   input: { ref: Ref<typeof Invoice> },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Invoice> | null> => {
   if (isPrimaryKeyRef({ of: Invoice })(input.ref))
     return await findByUuid(input.ref, context);
@@ -2767,11 +2776,11 @@ export const findByRef = async (
     "relpath": "invoiceDao/findByRef.ts",
   },
   GeneratedCodeFile {
-    "content": "import { HasMetadata } from 'type-fns';
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertInvoice } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { invoiceLineItemDao } from '../invoiceLineItemDao';
 import { priceDao } from '../priceDao';
@@ -2794,11 +2803,11 @@ export const upsert = async (
   }: {
     invoice: Invoice;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Invoice>> => {
   const results = await sqlQueryUpsertInvoice({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       externalId: invoice.externalId,
       itemIds: await Promise.all(invoice.items.map(async (invoiceLineItem) => invoiceLineItem.id ? invoiceLineItem.id : (await invoiceLineItemDao.upsert({ invoiceLineItem }, context)).id)),

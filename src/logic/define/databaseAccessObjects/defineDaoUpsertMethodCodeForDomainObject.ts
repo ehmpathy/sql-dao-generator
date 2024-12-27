@@ -43,6 +43,7 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
   const imports = [
     ...new Set([
       // always present imports
+      "import { VisualogicContext } from 'visualogic';",
       `import { HasMetadata${
         isUniqueOnUuid ? ', HasUuid' : ''
       } } from 'type-fns';`,
@@ -55,7 +56,6 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
         domainObject.name,
         ...getReferencedDomainObjectNames({ sqlSchemaRelationship }),
       ].join(', ')} } from '$PATH_TO_DOMAIN_OBJECT';`,
-      "import { log } from '$PATH_TO_LOG_OBJECT';",
       `import { sqlQueryUpsert${domainObject.name} } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';`,
       ...sqlSchemaRelationship.properties
         .filter((property) =>
@@ -146,11 +146,11 @@ export const upsert = async (
     isUniqueOnUuid ? `HasUuid<${domainObject.name}>` : domainObject.name
   };
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<${outputType}> => {
   const results = await sqlQueryUpsert${domainObject.name}({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       ${queryFunctionInputExpressions.join(',\n      ')},
     },

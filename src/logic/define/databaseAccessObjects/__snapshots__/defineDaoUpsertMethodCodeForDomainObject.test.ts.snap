@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for a domain event with a static referenced array 1`] = `
-"import { HasMetadata } from 'type-fns';
+"import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrainLocatedEvent } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { geocodeDao } from '../geocodeDao';
 
@@ -26,11 +26,11 @@ export const upsert = async (
   }: {
     trainLocatedEvent: TrainLocatedEvent;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainLocatedEvent>> => {
   const results = await sqlQueryUpsertTrainLocatedEvent({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       trainUuid: trainLocatedEvent.trainUuid,
       occurredAt: trainLocatedEvent.occurredAt,
@@ -43,11 +43,11 @@ export const upsert = async (
 `;
 
 exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for a simple domain entity with a custom alias 1`] = `
-"import { HasMetadata } from 'type-fns';
+"import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { AsyncTaskGrantWish } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertAsyncTaskGrantWish } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 
 export const sql = \`
@@ -65,11 +65,11 @@ export const upsert = async (
   }: {
     task: AsyncTaskGrantWish;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<AsyncTaskGrantWish>> => {
   const results = await sqlQueryUpsertAsyncTaskGrantWish({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       exid: task.exid,
     },
@@ -80,11 +80,11 @@ export const upsert = async (
 `;
 
 exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for domain entity with references, array and solo, implicit and direct 1`] = `
-"import { HasMetadata } from 'type-fns';
+"import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertTrain } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 import { geocodeDao } from '../geocodeDao';
 import { trainBadgeDao } from '../trainBadgeDao';
@@ -114,11 +114,11 @@ export const upsert = async (
   }: {
     train: Train;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Train>> => {
   const results = await sqlQueryUpsertTrain({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       tin: train.tin,
       homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await geocodeDao.upsert({ geocode: train.homeStationGeocode }, context)).id,
@@ -133,11 +133,11 @@ export const upsert = async (
 `;
 
 exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for simple domain entity 1`] = `
-"import { HasMetadata } from 'type-fns';
+"import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertCarriage } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 
 export const sql = \`
@@ -157,11 +157,11 @@ export const upsert = async (
   }: {
     carriage: Carriage;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Carriage>> => {
   const results = await sqlQueryUpsertCarriage({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       cin: carriage.cin,
       carries: carriage.carries,
@@ -174,11 +174,11 @@ export const upsert = async (
 `;
 
 exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for simple literal 1`] = `
-"import { HasMetadata } from 'type-fns';
+"import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 
 export const sql = \`
@@ -197,11 +197,11 @@ export const upsert = async (
   }: {
     geocode: Geocode;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode>> => {
   const results = await sqlQueryUpsertGeocode({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       latitude: geocode.latitude,
       longitude: geocode.longitude,
@@ -213,11 +213,11 @@ export const upsert = async (
 `;
 
 exports[`defineDaoUpsertMethodCodeForDomainObject should return the exact autogenerated values that were defined on the domain entity 1`] = `
-"import { HasMetadata } from 'type-fns';
+"import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
-import { log } from '$PATH_TO_LOG_OBJECT';
 import { sqlQueryUpsertCarriage } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
 
 export const sql = \`
@@ -237,11 +237,11 @@ export const upsert = async (
   }: {
     carriage: Carriage;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Carriage>> => {
   const results = await sqlQueryUpsertCarriage({
     dbExecute: context.dbConnection.query,
-    logDebug: log.debug,
+    logDebug: context.log.debug,
     input: {
       cin: carriage.cin,
       carries: carriage.carries,

@@ -60,7 +60,7 @@ export const upsert = async (
   }: {
     geocode: Geocode;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Geocode>>
       `.trim(),
     ); // defines fn correctly
@@ -146,7 +146,7 @@ async (
   }: {
     carriage: Carriage;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Carriage>>
       `.trim(),
     ); // defines fn correctly
@@ -218,7 +218,7 @@ async (
   }: {
     task: AsyncTaskGrantWish;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<AsyncTaskGrantWish>>
       `.trim(),
     ); // defines fn correctly
@@ -302,7 +302,7 @@ async (
   }: {
     carriage: Carriage;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Carriage>>
       `.trim(),
     ); // defines fn correctly
@@ -423,7 +423,7 @@ async (
   }: {
     trainLocatedEvent: TrainLocatedEvent;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<TrainLocatedEvent>>
       `.trim(),
     ); // defines fn correctly
@@ -641,7 +641,7 @@ async (
   }: {
     train: Train;
   },
-  context: { dbConnection: DatabaseConnection },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
 ): Promise<HasMetadata<Train>>
       `.trim(),
     ); // defines fn correctly
