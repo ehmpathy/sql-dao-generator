@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.11.0...v0.12.0) (2024-12-27)
+
+
+### Features
+
+* **context:** use log from context ([0dea86a](https://github.com/ehmpathy/sql-dao-generator/commit/0dea86a4d4612023a8bb576af691ff7de280e415))
+
 ## [0.11.0](https://github.com/ehmpathy/sql-dao-generator/compare/v0.10.1...v0.11.0) (2024-12-02)
 
 
