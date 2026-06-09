@@ -155,8 +155,11 @@ jobs:
           role-to-assume: ${{ inputs.creds-aws-role-arn }}
           aws-region: ${{ inputs.creds-aws-region }}
 
-      - name: provision:integration-test-db
-        run: npm run provision:integration-test-db --if-present
+      - name: start:testdb
+        run: npm run start:testdb --if-present
+
+      - name: start:livedb:dev
+        run: npm run start:livedb:dev --if-present
 
       - name: test:integration
         run: THOROUGH=true npm run test:integration
@@ -186,8 +189,11 @@ jobs:
           role-to-assume: ${{ inputs.creds-aws-role-arn }}
           aws-region: ${{ inputs.creds-aws-region }}
 
-      - name: provision:integration-test-db
-        run: npm run provision:integration-test-db --if-present
+      - name: start:testdb
+        run: npm run start:testdb --if-present
+
+      - name: start:livedb:dev
+        run: npm run start:livedb:dev --if-present
 
       - name: test:acceptance:locally
         run: THOROUGH=true npm run test:acceptance --if-present
