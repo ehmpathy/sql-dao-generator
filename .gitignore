@@ -16,3 +16,6 @@
 coverage
 dist
 node_modules
+*.local.json
+*.bak.json
+.temp/
