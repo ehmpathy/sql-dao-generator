@@ -1,0 +1,224 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generate command via bin/run given: [case1] the project is built when: [t1] bin/run generate is executed with valid config then: generated file structure matches snapshot 1`] = `
+[
+  ".generated/queryFunctions.ts",
+  ".generated/types.ts",
+  "asyncTaskPredictStationCongestionDao/castFromDatabaseObject.ts",
+  "asyncTaskPredictStationCongestionDao/findById.ts",
+  "asyncTaskPredictStationCongestionDao/findByRef.ts",
+  "asyncTaskPredictStationCongestionDao/findByUnique.ts",
+  "asyncTaskPredictStationCongestionDao/findByUuid.ts",
+  "asyncTaskPredictStationCongestionDao/index.ts",
+  "asyncTaskPredictStationCongestionDao/upsert.ts",
+  "carriageCargoDao/castFromDatabaseObject.ts",
+  "carriageCargoDao/findById.ts",
+  "carriageCargoDao/findByRef.ts",
+  "carriageCargoDao/findByUnique.ts",
+  "carriageCargoDao/findByUuid.ts",
+  "carriageCargoDao/index.ts",
+  "carriageCargoDao/upsert.ts",
+  "carriageDao/castFromDatabaseObject.ts",
+  "carriageDao/findById.ts",
+  "carriageDao/findByRef.ts",
+  "carriageDao/findByUnique.ts",
+  "carriageDao/findByUuid.ts",
+  "carriageDao/index.ts",
+  "carriageDao/upsert.ts",
+  "certificateDao/castFromDatabaseObject.ts",
+  "certificateDao/findById.ts",
+  "certificateDao/findByUnique.ts",
+  "certificateDao/index.ts",
+  "certificateDao/upsert.ts",
+  "geocodeDao/castFromDatabaseObject.ts",
+  "geocodeDao/findById.ts",
+  "geocodeDao/findByUnique.ts",
+  "geocodeDao/index.ts",
+  "geocodeDao/upsert.ts",
+  "invoiceDao/castFromDatabaseObject.ts",
+  "invoiceDao/findById.ts",
+  "invoiceDao/findByRef.ts",
+  "invoiceDao/findByUnique.ts",
+  "invoiceDao/findByUuid.ts",
+  "invoiceDao/index.ts",
+  "invoiceDao/upsert.ts",
+  "invoiceLineItemDao/castFromDatabaseObject.ts",
+  "invoiceLineItemDao/findById.ts",
+  "invoiceLineItemDao/findByUnique.ts",
+  "invoiceLineItemDao/index.ts",
+  "invoiceLineItemDao/upsert.ts",
+  "locomotiveDao/castFromDatabaseObject.ts",
+  "locomotiveDao/findById.ts",
+  "locomotiveDao/findByRef.ts",
+  "locomotiveDao/findByUnique.ts",
+  "locomotiveDao/findByUuid.ts",
+  "locomotiveDao/index.ts",
+  "locomotiveDao/upsert.ts",
+  "priceDao/castFromDatabaseObject.ts",
+  "priceDao/findById.ts",
+  "priceDao/findByUnique.ts",
+  "priceDao/index.ts",
+  "priceDao/upsert.ts",
+  "trainDao/castFromDatabaseObject.ts",
+  "trainDao/findById.ts",
+  "trainDao/findByRef.ts",
+  "trainDao/findByUnique.ts",
+  "trainDao/findByUuid.ts",
+  "trainDao/index.ts",
+  "trainDao/upsert.ts",
+  "trainEngineerDao/castFromDatabaseObject.ts",
+  "trainEngineerDao/findById.ts",
+  "trainEngineerDao/findByRef.ts",
+  "trainEngineerDao/findByUnique.ts",
+  "trainEngineerDao/findByUuid.ts",
+  "trainEngineerDao/index.ts",
+  "trainEngineerDao/upsert.ts",
+  "trainStationDao/castFromDatabaseObject.ts",
+  "trainStationDao/findById.ts",
+  "trainStationDao/findByRef.ts",
+  "trainStationDao/findByUnique.ts",
+  "trainStationDao/findByUuid.ts",
+  "trainStationDao/index.ts",
+  "trainStationDao/upsert.ts",
+]
+`;
+
+exports[`generate command via bin/run given: [case1] the project is built when: [t1] bin/run generate is executed with valid config then: stderr matches snapshot 1`] = `""`;
+
+exports[`generate command via bin/run given: [case1] the project is built when: [t1] bin/run generate is executed with valid config then: stdout matches snapshot 1`] = `
+"
+🔎 Loading domain objects: using domain-objects-metadata...
+
+🧠 Defining sql relationships: conventions, references, modifiers...
+
+🏗️️  Generating the sql schema: using sql-schema-generator...
+
+  ✔ [GENERATED] provision/schema/declarations/index.ts
+  ✔ [GENERATED] provision/schema/declarations/asyncTaskPredictStationCongestion.ts
+  ✔ [GENERATED] provision/schema/declarations/carriage.ts
+  ✔ [GENERATED] provision/schema/declarations/carriageCargo.ts
+  ✔ [GENERATED] provision/schema/declarations/certificate.ts
+  ✔ [GENERATED] provision/schema/declarations/geocode.ts
+  ✔ [GENERATED] provision/schema/declarations/invoice.ts
+  ✔ [GENERATED] provision/schema/declarations/invoiceLineItem.ts
+  ✔ [GENERATED] provision/schema/declarations/locomotive.ts
+  ✔ [GENERATED] provision/schema/declarations/price.ts
+  ✔ [GENERATED] provision/schema/declarations/train.ts
+  ✔ [GENERATED] provision/schema/declarations/trainEngineer.ts
+  ✔ [GENERATED] provision/schema/declarations/trainStation.ts
+  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_async_task_predict_station_congestion_hydrated.sql
+  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_carriage_hydrated.sql
+  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_carriage_cargo_hydrated.sql
+  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_certificate_hydrated.sql
+  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_geocode_hydrated.sql
+  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_invoice_hydrated.sql
+  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_invoice_line_item_hydrated.sql
+  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_locomotive_hydrated.sql
+  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_price_hydrated.sql
+  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_train_hydrated.sql
+  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_train_engineer_hydrated.sql
+  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_train_station_hydrated.sql
+  ✔ [RAN] sql-schema-generator 🏃
+    ✔ [GENERATED] tables, views, and functions for 'async_task_predict_station_congestion'
+    ✔ [GENERATED] tables, views, and functions for 'carriage'
+    ✔ [GENERATED] tables, views, and functions for 'carriage_cargo'
+    ✔ [GENERATED] tables, views, and functions for 'certificate'
+    ✔ [GENERATED] tables, views, and functions for 'geocode'
+    ✔ [GENERATED] tables, views, and functions for 'invoice'
+    ✔ [GENERATED] tables, views, and functions for 'invoice_line_item'
+    ✔ [GENERATED] tables, views, and functions for 'locomotive'
+    ✔ [GENERATED] tables, views, and functions for 'price'
+    ✔ [GENERATED] tables, views, and functions for 'train'
+    ✔ [GENERATED] tables, views, and functions for 'train_engineer'
+    ✔ [GENERATED] tables, views, and functions for 'train_station'
+
+🔧 Generating schema-control config: for use with sql-schema-control...
+
+  ✔ [GENERATED] provision/schema/sql/domain.yml
+️
+🔨 Generating data-access-objects: methods, casters, tests, and named exports...
+
+  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/index.ts
+  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/castFromDatabaseObject.ts
+  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/findById.ts
+  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/findByUnique.ts
+  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/findByUuid.ts
+  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/findByRef.ts
+  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/upsert.ts
+  ✔ [GENERATED] src/data/dao/carriageDao/index.ts
+  ✔ [GENERATED] src/data/dao/carriageDao/castFromDatabaseObject.ts
+  ✔ [GENERATED] src/data/dao/carriageDao/findById.ts
+  ✔ [GENERATED] src/data/dao/carriageDao/findByUnique.ts
+  ✔ [GENERATED] src/data/dao/carriageDao/findByUuid.ts
+  ✔ [GENERATED] src/data/dao/carriageDao/findByRef.ts
+  ✔ [GENERATED] src/data/dao/carriageDao/upsert.ts
+  ✔ [GENERATED] src/data/dao/carriageCargoDao/index.ts
+  ✔ [GENERATED] src/data/dao/carriageCargoDao/castFromDatabaseObject.ts
+  ✔ [GENERATED] src/data/dao/carriageCargoDao/findById.ts
+  ✔ [GENERATED] src/data/dao/carriageCargoDao/findByUnique.ts
+  ✔ [GENERATED] src/data/dao/carriageCargoDao/findByUuid.ts
+  ✔ [GENERATED] src/data/dao/carriageCargoDao/findByRef.ts
+  ✔ [GENERATED] src/data/dao/carriageCargoDao/upsert.ts
+  ✔ [GENERATED] src/data/dao/certificateDao/index.ts
+  ✔ [GENERATED] src/data/dao/certificateDao/castFromDatabaseObject.ts
+  ✔ [GENERATED] src/data/dao/certificateDao/findById.ts
+  ✔ [GENERATED] src/data/dao/certificateDao/findByUnique.ts
+  ✔ [GENERATED] src/data/dao/certificateDao/upsert.ts
+  ✔ [GENERATED] src/data/dao/geocodeDao/index.ts
+  ✔ [GENERATED] src/data/dao/geocodeDao/castFromDatabaseObject.ts
+  ✔ [GENERATED] src/data/dao/geocodeDao/findById.ts
+  ✔ [GENERATED] src/data/dao/geocodeDao/findByUnique.ts
+  ✔ [GENERATED] src/data/dao/geocodeDao/upsert.ts
+  ✔ [GENERATED] src/data/dao/invoiceDao/index.ts
+  ✔ [GENERATED] src/data/dao/invoiceDao/castFromDatabaseObject.ts
+  ✔ [GENERATED] src/data/dao/invoiceDao/findById.ts
+  ✔ [GENERATED] src/data/dao/invoiceDao/findByUnique.ts
+  ✔ [GENERATED] src/data/dao/invoiceDao/findByUuid.ts
+  ✔ [GENERATED] src/data/dao/invoiceDao/findByRef.ts
+  ✔ [GENERATED] src/data/dao/invoiceDao/upsert.ts
+  ✔ [GENERATED] src/data/dao/invoiceLineItemDao/index.ts
+  ✔ [GENERATED] src/data/dao/invoiceLineItemDao/castFromDatabaseObject.ts
+  ✔ [GENERATED] src/data/dao/invoiceLineItemDao/findById.ts
+  ✔ [GENERATED] src/data/dao/invoiceLineItemDao/findByUnique.ts
+  ✔ [GENERATED] src/data/dao/invoiceLineItemDao/upsert.ts
+  ✔ [GENERATED] src/data/dao/locomotiveDao/index.ts
+  ✔ [GENERATED] src/data/dao/locomotiveDao/castFromDatabaseObject.ts
+  ✔ [GENERATED] src/data/dao/locomotiveDao/findById.ts
+  ✔ [GENERATED] src/data/dao/locomotiveDao/findByUnique.ts
+  ✔ [GENERATED] src/data/dao/locomotiveDao/findByUuid.ts
+  ✔ [GENERATED] src/data/dao/locomotiveDao/findByRef.ts
+  ✔ [GENERATED] src/data/dao/locomotiveDao/upsert.ts
+  ✔ [GENERATED] src/data/dao/priceDao/index.ts
+  ✔ [GENERATED] src/data/dao/priceDao/castFromDatabaseObject.ts
+  ✔ [GENERATED] src/data/dao/priceDao/findById.ts
+  ✔ [GENERATED] src/data/dao/priceDao/findByUnique.ts
+  ✔ [GENERATED] src/data/dao/priceDao/upsert.ts
+  ✔ [GENERATED] src/data/dao/trainDao/index.ts
+  ✔ [GENERATED] src/data/dao/trainDao/castFromDatabaseObject.ts
+  ✔ [GENERATED] src/data/dao/trainDao/findById.ts
+  ✔ [GENERATED] src/data/dao/trainDao/findByUnique.ts
+  ✔ [GENERATED] src/data/dao/trainDao/findByUuid.ts
+  ✔ [GENERATED] src/data/dao/trainDao/findByRef.ts
+  ✔ [GENERATED] src/data/dao/trainDao/upsert.ts
+  ✔ [GENERATED] src/data/dao/trainEngineerDao/index.ts
+  ✔ [GENERATED] src/data/dao/trainEngineerDao/castFromDatabaseObject.ts
+  ✔ [GENERATED] src/data/dao/trainEngineerDao/findById.ts
+  ✔ [GENERATED] src/data/dao/trainEngineerDao/findByUnique.ts
+  ✔ [GENERATED] src/data/dao/trainEngineerDao/findByUuid.ts
+  ✔ [GENERATED] src/data/dao/trainEngineerDao/findByRef.ts
+  ✔ [GENERATED] src/data/dao/trainEngineerDao/upsert.ts
+  ✔ [GENERATED] src/data/dao/trainStationDao/index.ts
+  ✔ [GENERATED] src/data/dao/trainStationDao/castFromDatabaseObject.ts
+  ✔ [GENERATED] src/data/dao/trainStationDao/findById.ts
+  ✔ [GENERATED] src/data/dao/trainStationDao/findByUnique.ts
+  ✔ [GENERATED] src/data/dao/trainStationDao/findByUuid.ts
+  ✔ [GENERATED] src/data/dao/trainStationDao/findByRef.ts
+  ✔ [GENERATED] src/data/dao/trainStationDao/upsert.ts
+
+🗜️  Generating typescript from sql: types and funcs using sql-code-generator...
+
+  ✔ [RAN] sql-code-generator 🏃
+    ✔ [GENERATED] src/data/dao/.generated/types.ts
+    ✔ [GENERATED] src/data/dao/.generated/queryFunctions.ts
+"
+`;
