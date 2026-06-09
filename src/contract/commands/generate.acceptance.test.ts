@@ -52,9 +52,9 @@ describe('generate command via bin/run', () => {
       });
 
       then('it generates findById files', () => {
-        const trainDaoFiles = fs.readdirSync(
-          path.join(daosOutputDir, 'trainDao'),
-        ).sort();
+        const trainDaoFiles = fs
+          .readdirSync(path.join(daosOutputDir, 'trainDao'))
+          .sort();
         expect(trainDaoFiles).toContain('findById.ts');
         expect(trainDaoFiles).toContain('upsert.ts');
         expect(trainDaoFiles).toContain('index.ts');
@@ -62,12 +62,21 @@ describe('generate command via bin/run', () => {
 
       then('generated file structure matches snapshot', () => {
         const listFilesRecursively = (dir: string, prefix = ''): string[] => {
-          const entries = fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
+          const entries = fs
+            .readdirSync(dir, { withFileTypes: true })
+            .sort((a, b) => a.name.localeCompare(b.name));
           const files: string[] = [];
           for (const entry of entries) {
-            const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name;
+            const relativePath = prefix
+              ? `${prefix}/${entry.name}`
+              : entry.name;
             if (entry.isDirectory()) {
-              files.push(...listFilesRecursively(path.join(dir, entry.name), relativePath));
+              files.push(
+                ...listFilesRecursively(
+                  path.join(dir, entry.name),
+                  relativePath,
+                ),
+              );
             } else {
               files.push(relativePath);
             }
