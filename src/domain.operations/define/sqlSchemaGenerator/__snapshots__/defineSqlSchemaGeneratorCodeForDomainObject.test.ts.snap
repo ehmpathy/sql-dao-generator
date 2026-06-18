@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object references should create a correct looking sql-schema-generator object for a domain-entity which references another domain-entity via Ref 1`] = `
+"import { Entity, prop } from 'sql-schema-generator';
+
+import { carriage } from './carriage.ts';
+
+/**
+ * sql-schema for the domain entity 'CarriageCargo'
+ */
+export const carriageCargo: Entity = new Entity({
+  name: 'carriage_cargo',
+  properties: {
+    carriage_id: prop.REFERENCES(carriage),
+  },
+  unique: ['carriage_id'],
+});"
+`;
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants should create a correct looking sql-schema-generator object for a domain-entity 1`] = `
+"import { Entity, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain entity 'Carriage'
+ */
+export const carriage: Entity = new Entity({
+  name: 'carriage',
+  properties: {
+    cin: prop.VARCHAR(),
+    carries: prop.ENUM(['PASSENGER', 'FREIGHT']),
+    capacity: { ...prop.NUMERIC(), nullable: true },
+  },
+  unique: ['cin'],
+});"
+`;
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants should create a correct looking sql-schema-generator object for a domain-event 1`] = `
+"import { Event, prop } from 'sql-schema-generator';
+
+import { geocode } from './geocode.ts';
+import { train } from './train.ts';
+
+/**
+ * sql-schema for the domain event 'TrainLocatedEvent'
+ */
+export const trainLocatedEvent: Event = new Event({
+  name: 'train_located_event',
+  properties: {
+    train_id: prop.REFERENCES(train),
+    occurred_at: prop.TIMESTAMPTZ(),
+    geocode_id: prop.REFERENCES(geocode),
+  },
+  unique: ['train_id', 'occurred_at'],
+});"
+`;
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject domain object variants should create a correct looking sql-schema-generator object for a domain-literal 1`] = `
+"import { Literal, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain literal 'Geocode'
+ */
+export const geocode: Literal = new Literal({
+  name: 'geocode',
+  properties: {
+    latitude: prop.NUMERIC(),
+    longitude: prop.NUMERIC(),
+  },
+});"
+`;
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject imports should create an import for each directly nested and uuid inferred reference, sorted 1`] = `
+"import { Entity, prop } from 'sql-schema-generator';
+
+import { badge } from './badge.ts';
+import { engineer } from './engineer.ts';
+import { locomotive } from './locomotive.ts';
+import { station } from './station.ts';
+
+/**
+ * sql-schema for the domain entity 'Train'
+ */
+export const train: Entity = new Entity({
+  name: 'train',
+  properties: {
+    home_station_id: { ...prop.REFERENCES(station), updatable: true },
+    badge_ids: { ...prop.ARRAY_OF(prop.REFERENCES(badge)), updatable: true },
+    locomotive_ids: { ...prop.ARRAY_OF(prop.REFERENCES(locomotive)), updatable: true },
+    lead_engineer_id: { ...prop.REFERENCES(engineer), updatable: true },
+  },
+  unique: ['uuid'],
+});"
+`;
+
+exports[`defineSqlSchemaGeneratorCodeForDomainObject imports should not have extra new lines if there are no imports 1`] = `
+"import { Literal, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain literal 'Geocode'
+ */
+export const geocode: Literal = new Literal({
+  name: 'geocode',
+  properties: {
+    latitude: prop.NUMERIC(),
+    longitude: prop.NUMERIC(),
+  },
+});"
+`;

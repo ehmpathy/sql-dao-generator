@@ -1,8 +1,8 @@
 import { Command, Flags } from '@oclif/core';
 
-import { generate } from '../../logic/commands/generate';
+import { generate } from '@src/domain.operations/commands/generate';
 
-// eslint-disable-next-line import/no-default-export
+// biome-ignore lint/style/noDefaultExport: oclif commands require default exports
 export default class Generate extends Command {
   public static description =
     'generate data-access-objects from domain-objects';

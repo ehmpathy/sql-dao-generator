@@ -1,0 +1,556 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`defineSqlSchemarelationshipForDomainObject should look right for a domain-entity 1`] = `
+SqlSchemaToDomainObjectRelationship {
+  "decorations": {
+    "alias": {
+      "domainObject": null,
+    },
+    "unique": {
+      "domainObject": [
+        "cin",
+      ],
+      "sqlSchema": [
+        "cin",
+      ],
+    },
+  },
+  "name": {
+    "domainObject": "TrainCarriage",
+    "sqlSchema": "train_carriage",
+  },
+  "properties": [
+    {
+      "domainObject": {
+        "name": "id",
+        "required": false,
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "id",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "uuid",
+        "required": false,
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "uuid",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "created_at",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "effective_at",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "updated_at",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "cin",
+        "required": true,
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "cin",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "carries",
+        "of": [
+          "PASSENGER",
+          "FREIGHT",
+        ],
+        "required": true,
+        "type": "ENUM",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "carries",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "capacity",
+        "nullable": true,
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": true,
+        "isUpdatable": true,
+        "name": "capacity",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "manufacturer",
+        "of": {
+          "extends": "DomainLiteral",
+          "name": "TrainManufacturer",
+        },
+        "type": "REFERENCE",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "manufacturer_id",
+        "reference": SqlSchemaReferenceMetadata {
+          "method": "DIRECT_BY_NESTING",
+          "of": DomainObjectReferenceMetadata {
+            "extends": "DomainLiteral",
+            "name": "TrainManufacturer",
+          },
+        },
+      },
+    },
+  ],
+}
+`;
+
+exports[`defineSqlSchemarelationshipForDomainObject should look right for a domain-event 1`] = `
+SqlSchemaToDomainObjectRelationship {
+  "decorations": {
+    "alias": {
+      "domainObject": null,
+    },
+    "unique": {
+      "domainObject": [
+        "trainUuid",
+        "occurredAt",
+      ],
+      "sqlSchema": [
+        "train_id",
+        "occurred_at",
+      ],
+    },
+  },
+  "name": {
+    "domainObject": "TrainLocatedEvent",
+    "sqlSchema": "train_located_event",
+  },
+  "properties": [
+    {
+      "domainObject": {
+        "name": "id",
+        "required": false,
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "id",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "uuid",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "created_at",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "trainUuid",
+        "required": true,
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "train_id",
+        "reference": SqlSchemaReferenceMetadata {
+          "method": "IMPLICIT_BY_UUID",
+          "of": DomainObjectReferenceMetadata {
+            "extends": "DomainEntity",
+            "name": "Train",
+            Symbol($$jest-protect-from-deletion): [],
+          },
+        },
+      },
+    },
+    {
+      "domainObject": {
+        "name": "occurredAt",
+        "required": true,
+        "type": "DATE",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "occurred_at",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "geocode",
+        "of": {
+          "extends": "DomainLiteral",
+          "name": "Geocode",
+        },
+        "required": true,
+        "type": "REFERENCE",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "geocode_id",
+        "reference": SqlSchemaReferenceMetadata {
+          "method": "DIRECT_BY_NESTING",
+          "of": DomainObjectReferenceMetadata {
+            "extends": "DomainLiteral",
+            "name": "Geocode",
+          },
+        },
+      },
+    },
+  ],
+}
+`;
+
+exports[`defineSqlSchemarelationshipForDomainObject should look right for a domain-literal 1`] = `
+SqlSchemaToDomainObjectRelationship {
+  "decorations": {
+    "alias": {
+      "domainObject": null,
+    },
+    "unique": {
+      "domainObject": null,
+      "sqlSchema": [
+        "latitude",
+        "longitude",
+      ],
+    },
+  },
+  "name": {
+    "domainObject": "PreciseGeocode",
+    "sqlSchema": "precise_geocode",
+  },
+  "properties": [
+    {
+      "domainObject": {
+        "name": "id",
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "id",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "uuid",
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "uuid",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "created_at",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "latitude",
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "latitude",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "longitude",
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "longitude",
+        "reference": null,
+      },
+    },
+  ],
+}
+`;
+
+exports[`defineSqlSchemarelationshipForDomainObject should look right for a domain-literal with an alias 1`] = `
+SqlSchemaToDomainObjectRelationship {
+  "decorations": {
+    "alias": {
+      "domainObject": "geocode",
+    },
+    "unique": {
+      "domainObject": null,
+      "sqlSchema": [
+        "latitude",
+        "longitude",
+      ],
+    },
+  },
+  "name": {
+    "domainObject": "PreciseGeocode",
+    "sqlSchema": "precise_geocode",
+  },
+  "properties": [
+    {
+      "domainObject": {
+        "name": "id",
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "id",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "uuid",
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "uuid",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "created_at",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "latitude",
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "latitude",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "longitude",
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "longitude",
+        "reference": null,
+      },
+    },
+  ],
+}
+`;
+
+exports[`defineSqlSchemarelationshipForDomainObject should look right for another domain-literal, one with multi word property names 1`] = `
+SqlSchemaToDomainObjectRelationship {
+  "decorations": {
+    "alias": {
+      "domainObject": null,
+    },
+    "unique": {
+      "domainObject": null,
+      "sqlSchema": [
+        "role",
+        "external_id",
+      ],
+    },
+  },
+  "name": {
+    "domainObject": "ChatParticipant",
+    "sqlSchema": "chat_participant",
+  },
+  "properties": [
+    {
+      "domainObject": {
+        "name": "id",
+        "type": "NUMBER",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "id",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "uuid",
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "uuid",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": null,
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": true,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "created_at",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "role",
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "role",
+        "reference": null,
+      },
+    },
+    {
+      "domainObject": {
+        "name": "externalId",
+        "type": "STRING",
+      },
+      "sqlSchema": SqlSchemaPropertyMetadata {
+        "isArray": false,
+        "isDatabaseGenerated": false,
+        "isNullable": false,
+        "isUpdatable": false,
+        "name": "external_id",
+        "reference": null,
+      },
+    },
+  ],
+}
+`;

@@ -1,0 +1,539 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`defineSqlSchemaGeneratorCodeFilesForDomainObjects should work on the example project 1`] = `
+[
+  GeneratedCodeFile {
+    "content": "import { asyncTaskPredictStationCongestion } from './asyncTaskPredictStationCongestion.ts';
+import { carriage } from './carriage.ts';
+import { carriageCargo } from './carriageCargo.ts';
+import { certificate } from './certificate.ts';
+import { geocode } from './geocode.ts';
+import { invoice } from './invoice.ts';
+import { invoiceLineItem } from './invoiceLineItem.ts';
+import { locomotive } from './locomotive.ts';
+import { price } from './price.ts';
+import { train } from './train.ts';
+import { trainEngineer } from './trainEngineer.ts';
+import { trainLocatedEvent } from './trainLocatedEvent.ts';
+import { trainStation } from './trainStation.ts';
+
+/**
+ * all of the domain objects which we want to create sql-schema-resources for with sql-schema-generator
+ */
+export const generateSqlSchemasFor = [
+  asyncTaskPredictStationCongestion,
+  carriage,
+  carriageCargo,
+  certificate,
+  trainEngineer,
+  geocode,
+  price,
+  invoiceLineItem,
+  invoice,
+  locomotive,
+  trainStation,
+  train,
+  trainLocatedEvent,
+];",
+    "relpath": "index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+import { trainLocatedEvent } from './trainLocatedEvent.ts';
+import { trainStation } from './trainStation.ts';
+
+/**
+ * sql-schema for the domain entity 'AsyncTaskPredictStationCongestion'
+ */
+export const asyncTaskPredictStationCongestion: Entity = new Entity({
+  name: 'async_task_predict_station_congestion',
+  properties: {
+    status: { ...prop.ENUM(['HALTED', 'SCHEDULED', 'QUEUED', 'ATTEMPTED', 'FULFILLED', 'FAILED', 'CANCELED']), updatable: true },
+    station_id: prop.REFERENCES(trainStation),
+    train_located_event_id: prop.REFERENCES(trainLocatedEvent),
+  },
+  unique: ['station_id', 'train_located_event_id'],
+});",
+    "relpath": "asyncTaskPredictStationCongestion.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain entity 'Carriage'
+ */
+export const carriage: Entity = new Entity({
+  name: 'carriage',
+  properties: {
+    cin: prop.VARCHAR(),
+    carries: prop.ENUM(['PASSENGER', 'FREIGHT']),
+    capacity: prop.NUMERIC(),
+  },
+  unique: ['cin'],
+});",
+    "relpath": "carriage.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+import { carriage } from './carriage.ts';
+
+/**
+ * sql-schema for the domain entity 'CarriageCargo'
+ */
+export const carriageCargo: Entity = new Entity({
+  name: 'carriage_cargo',
+  properties: {
+    itinerary_uuid: prop.UUID(),
+    carriage_id: prop.REFERENCES(carriage),
+    slot: prop.NUMERIC(),
+    cargo_exid: { ...prop.VARCHAR(), updatable: true, nullable: true },
+  },
+  unique: ['itinerary_uuid', 'carriage_id', 'slot'],
+});",
+    "relpath": "carriageCargo.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Literal, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain literal 'Certificate'
+ */
+export const certificate: Literal = new Literal({
+  name: 'certificate',
+  properties: {
+    type: prop.ENUM(['LOCOMOTIVE_DRIVING', 'ENGINE_MAINTENANCE', 'CARRIAGE_MAINTENANCE']),
+    industry_id: prop.VARCHAR(),
+  },
+});",
+    "relpath": "certificate.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+import { certificate } from './certificate.ts';
+
+/**
+ * sql-schema for the domain entity 'TrainEngineer'
+ */
+export const trainEngineer: Entity = new Entity({
+  name: 'train_engineer',
+  properties: {
+    social_security_number_hash: prop.VARCHAR(),
+    certificate_ids: { ...prop.ARRAY_OF(prop.REFERENCES(certificate)), updatable: true },
+    license_uuids: { ...prop.ARRAY_OF(prop.UUID()), updatable: true },
+    name: { ...prop.VARCHAR(), updatable: true },
+  },
+  unique: ['social_security_number_hash'],
+});",
+    "relpath": "trainEngineer.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Literal, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain literal 'Geocode'
+ */
+export const geocode: Literal = new Literal({
+  name: 'geocode',
+  properties: {
+    latitude: prop.NUMERIC(),
+    longitude: prop.NUMERIC(),
+  },
+});",
+    "relpath": "geocode.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Literal, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain literal 'Price'
+ */
+export const price: Literal = new Literal({
+  name: 'price',
+  properties: {
+    amount: prop.NUMERIC(),
+    currency: prop.ENUM(['USD']),
+  },
+});",
+    "relpath": "price.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Literal, prop } from 'sql-schema-generator';
+
+import { price } from './price.ts';
+
+/**
+ * sql-schema for the domain literal 'InvoiceLineItem'
+ */
+export const invoiceLineItem: Literal = new Literal({
+  name: 'invoice_line_item',
+  properties: {
+    price_id: prop.REFERENCES(price),
+    title: prop.VARCHAR(),
+    explanation: prop.VARCHAR(),
+  },
+});",
+    "relpath": "invoiceLineItem.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+import { invoiceLineItem } from './invoiceLineItem.ts';
+import { price } from './price.ts';
+
+/**
+ * sql-schema for the domain entity 'Invoice'
+ */
+export const invoice: Entity = new Entity({
+  name: 'invoice',
+  properties: {
+    external_id: prop.VARCHAR(),
+    item_ids: { ...prop.ARRAY_OF(prop.REFERENCES(invoiceLineItem)), updatable: true },
+    total_price_id: { ...prop.REFERENCES(price), updatable: true },
+    status: { ...prop.ENUM(['PROPOSED', 'ISSUED', 'PAID', 'REFUNDED', 'CANCELED', 'FAILED']), updatable: true },
+  },
+  unique: ['external_id'],
+});",
+    "relpath": "invoice.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain entity 'Locomotive'
+ */
+export const locomotive: Entity = new Entity({
+  name: 'locomotive',
+  properties: {
+    ein: prop.VARCHAR(),
+    fuel: prop.ENUM(['STEAM', 'COAL', 'DIESEL', 'BATTERY', 'FISSION']),
+    capacity: prop.NUMERIC(),
+    milage: { ...prop.NUMERIC(), updatable: true },
+  },
+  unique: ['ein'],
+});",
+    "relpath": "locomotive.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+import { geocode } from './geocode.ts';
+
+/**
+ * sql-schema for the domain entity 'TrainStation'
+ */
+export const trainStation: Entity = new Entity({
+  name: 'train_station',
+  properties: {
+    geocode_id: prop.REFERENCES(geocode),
+    name: { ...prop.VARCHAR(), updatable: true },
+  },
+  unique: ['geocode_id'],
+});",
+    "relpath": "trainStation.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+import { carriage } from './carriage.ts';
+import { geocode } from './geocode.ts';
+import { locomotive } from './locomotive.ts';
+import { trainEngineer } from './trainEngineer.ts';
+
+/**
+ * sql-schema for the domain entity 'Train'
+ */
+export const train: Entity = new Entity({
+  name: 'train',
+  properties: {
+    home_station_geocode_id: prop.REFERENCES(geocode),
+    combination_id: prop.VARCHAR(),
+    locomotive_ids: prop.ARRAY_OF(prop.REFERENCES(locomotive)),
+    carriage_ids: prop.ARRAY_OF(prop.REFERENCES(carriage)),
+    engineer_ids: prop.ARRAY_OF(prop.REFERENCES(trainEngineer)),
+    lead_engineer_id: prop.REFERENCES(trainEngineer),
+    status: { ...prop.ENUM(['ASSEMBLED', 'DISASSEMBLED']), updatable: true },
+  },
+  unique: ['combination_id'],
+});",
+    "relpath": "train.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Event, prop } from 'sql-schema-generator';
+
+import { geocode } from './geocode.ts';
+import { train } from './train.ts';
+
+/**
+ * sql-schema for the domain event 'TrainLocatedEvent'
+ */
+export const trainLocatedEvent: Event = new Event({
+  name: 'train_located_event',
+  properties: {
+    train_id: prop.REFERENCES(train),
+    occurred_at: prop.VARCHAR(),
+    geocode_id: prop.REFERENCES(geocode),
+  },
+  unique: ['train_id', 'occurred_at'],
+});",
+    "relpath": "trainLocatedEvent.ts",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_async_task_predict_station_congestion_hydrated AS
+  SELECT
+    async_task_predict_station_congestion.id,
+    async_task_predict_station_congestion.uuid,
+    async_task_predict_station_congestion.created_at,
+    async_task_predict_station_congestion.updated_at,
+    async_task_predict_station_congestion.status,
+    (
+      SELECT train_station.uuid
+      FROM view_train_station_current AS train_station WHERE train_station.id = async_task_predict_station_congestion.station_id
+    ) AS station_uuid,
+    (
+      SELECT train_located_event.uuid
+      FROM train_located_event WHERE train_located_event.id = async_task_predict_station_congestion.train_located_event_id
+    ) AS train_located_event_uuid
+  FROM view_async_task_predict_station_congestion_current async_task_predict_station_congestion;",
+    "relpath": "../sql/views/view_async_task_predict_station_congestion_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_carriage_hydrated AS
+  SELECT
+    carriage.id,
+    carriage.uuid,
+    carriage.cin,
+    carriage.carries,
+    carriage.capacity
+  FROM carriage;",
+    "relpath": "../sql/views/view_carriage_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_carriage_cargo_hydrated AS
+  SELECT
+    carriage_cargo.id,
+    carriage_cargo.uuid,
+    carriage_cargo.itinerary_uuid,
+    (
+      SELECT carriage.uuid
+      FROM carriage WHERE carriage.id = carriage_cargo.carriage_id
+    ) AS carriage_uuid,
+    carriage_cargo.slot,
+    carriage_cargo.cargo_exid
+  FROM view_carriage_cargo_current carriage_cargo;",
+    "relpath": "../sql/views/view_carriage_cargo_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_certificate_hydrated AS
+  SELECT
+    certificate.id,
+    certificate.type,
+    certificate.industry_id
+  FROM certificate;",
+    "relpath": "../sql/views/view_certificate_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_train_engineer_hydrated AS
+  SELECT
+    train_engineer.id,
+    train_engineer.uuid,
+    train_engineer.social_security_number_hash,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', certificate.id,
+            'type', certificate.type,
+            'industry_id', certificate.industry_id
+          )
+          ORDER BY certificate_ref.array_order_index
+        ),
+        '[]'::json
+      ) AS json_agg
+      FROM certificate
+      JOIN unnest(train_engineer.certificate_ids) WITH ORDINALITY
+        AS certificate_ref (id, array_order_index)
+        ON certificate.id = certificate_ref.id
+    ) AS certificates,
+    train_engineer.license_uuids,
+    train_engineer.name
+  FROM view_train_engineer_current train_engineer;",
+    "relpath": "../sql/views/view_train_engineer_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_geocode_hydrated AS
+  SELECT
+    geocode.id,
+    geocode.latitude,
+    geocode.longitude
+  FROM geocode;",
+    "relpath": "../sql/views/view_geocode_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_price_hydrated AS
+  SELECT
+    price.id,
+    price.amount,
+    price.currency
+  FROM price;",
+    "relpath": "../sql/views/view_price_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_invoice_line_item_hydrated AS
+  SELECT
+    invoice_line_item.id,
+    (
+      SELECT json_build_object(
+        'id', price.id,
+        'amount', price.amount,
+        'currency', price.currency
+      ) AS json_build_object
+      FROM price WHERE price.id = invoice_line_item.price_id
+    ) AS price,
+    invoice_line_item.title,
+    invoice_line_item.explanation
+  FROM invoice_line_item;",
+    "relpath": "../sql/views/view_invoice_line_item_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_invoice_hydrated AS
+  SELECT
+    invoice.id,
+    invoice.uuid,
+    invoice.external_id,
+    (
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', invoice_line_item.id,
+            'price', (
+              SELECT json_build_object(
+                'id', price.id,
+                'amount', price.amount,
+                'currency', price.currency
+              ) AS json_build_object
+              FROM price WHERE price.id = invoice_line_item.price_id
+            ),
+            'title', invoice_line_item.title,
+            'explanation', invoice_line_item.explanation
+          )
+          ORDER BY invoice_line_item_ref.array_order_index
+        ),
+        '[]'::json
+      ) AS json_agg
+      FROM invoice_line_item
+      JOIN unnest(invoice.item_ids) WITH ORDINALITY
+        AS invoice_line_item_ref (id, array_order_index)
+        ON invoice_line_item.id = invoice_line_item_ref.id
+    ) AS items,
+    (
+      SELECT json_build_object(
+        'id', price.id,
+        'amount', price.amount,
+        'currency', price.currency
+      ) AS json_build_object
+      FROM price WHERE price.id = invoice.total_price_id
+    ) AS total_price,
+    invoice.status
+  FROM view_invoice_current invoice;",
+    "relpath": "../sql/views/view_invoice_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_locomotive_hydrated AS
+  SELECT
+    locomotive.id,
+    locomotive.uuid,
+    locomotive.created_at,
+    locomotive.effective_at,
+    locomotive.updated_at,
+    locomotive.ein,
+    locomotive.fuel,
+    locomotive.capacity,
+    locomotive.milage
+  FROM view_locomotive_current locomotive;",
+    "relpath": "../sql/views/view_locomotive_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_train_station_hydrated AS
+  SELECT
+    train_station.id,
+    train_station.uuid,
+    (
+      SELECT json_build_object(
+        'id', geocode.id,
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      ) AS json_build_object
+      FROM geocode WHERE geocode.id = train_station.geocode_id
+    ) AS geocode,
+    train_station.name
+  FROM view_train_station_current train_station;",
+    "relpath": "../sql/views/view_train_station_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_train_hydrated AS
+  SELECT
+    train.id,
+    train.uuid,
+    (
+      SELECT json_build_object(
+        'id', geocode.id,
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      ) AS json_build_object
+      FROM geocode WHERE geocode.id = train.home_station_geocode_id
+    ) AS home_station_geocode,
+    train.combination_id,
+    (
+      SELECT COALESCE(array_agg(locomotive.uuid ORDER BY locomotive_ref.array_order_index), array[]::uuid[]) AS array_agg
+      FROM view_locomotive_current AS locomotive
+      JOIN unnest(train.locomotive_ids) WITH ORDINALITY
+        AS locomotive_ref (id, array_order_index)
+        ON locomotive.id = locomotive_ref.id
+    ) AS locomotive_uuids,
+    (
+      SELECT COALESCE(array_agg(carriage.uuid ORDER BY carriage_ref.array_order_index), array[]::uuid[]) AS array_agg
+      FROM carriage
+      JOIN unnest(train.carriage_ids) WITH ORDINALITY
+        AS carriage_ref (id, array_order_index)
+        ON carriage.id = carriage_ref.id
+    ) AS carriage_uuids,
+    (
+      SELECT COALESCE(array_agg(train_engineer.uuid ORDER BY train_engineer_ref.array_order_index), array[]::uuid[]) AS array_agg
+      FROM view_train_engineer_current AS train_engineer
+      JOIN unnest(train.engineer_ids) WITH ORDINALITY
+        AS train_engineer_ref (id, array_order_index)
+        ON train_engineer.id = train_engineer_ref.id
+    ) AS engineer_uuids,
+    (
+      SELECT train_engineer.uuid
+      FROM view_train_engineer_current AS train_engineer WHERE train_engineer.id = train.lead_engineer_id
+    ) AS lead_engineer_uuid,
+    train.status
+  FROM view_train_current train;",
+    "relpath": "../sql/views/view_train_hydrated.sql",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_train_located_event_hydrated AS
+  SELECT
+    train_located_event.id,
+    (
+      SELECT train.uuid
+      FROM view_train_current AS train WHERE train.id = train_located_event.train_id
+    ) AS train_uuid,
+    train_located_event.occurred_at,
+    (
+      SELECT json_build_object(
+        'id', geocode.id,
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      ) AS json_build_object
+      FROM geocode WHERE geocode.id = train_located_event.geocode_id
+    ) AS geocode
+  FROM train_located_event;",
+    "relpath": "../sql/views/view_train_located_event_hydrated.sql",
+  },
+]
+`;

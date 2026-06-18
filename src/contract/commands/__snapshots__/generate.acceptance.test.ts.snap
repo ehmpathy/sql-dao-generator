@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`generate command via bin/run given: [case1] the project is built when: [t1] bin/run generate is executed with valid config then: generated file structure matches snapshot 1`] = `
 [
@@ -83,142 +83,147 @@ exports[`generate command via bin/run given: [case1] the project is built when: 
 ]
 `;
 
-exports[`generate command via bin/run given: [case1] the project is built when: [t1] bin/run generate is executed with valid config then: stderr matches snapshot 1`] = `""`;
+exports[`generate command via bin/run given: [case1] the project is built when: [t1] bin/run generate is executed with valid config then: stderr matches snapshot 1`] = `
+" [33m›[39m   Warning: Could not find source for /home/vlad/git/ehmpathy/_worktrees/sql-
+ [33m›[39m   dao-generator.vlad.fix-tsnode/dist/contract/commands based on tsconfig. 
+ [33m›[39m   Defaulting to compiled source.
+"
+`;
 
 exports[`generate command via bin/run given: [case1] the project is built when: [t1] bin/run generate is executed with valid config then: stdout matches snapshot 1`] = `
-"
-🔎 Loading domain objects: using domain-objects-metadata...
+"[1m[22m
+[1m🔎 Loading domain objects:[22m using domain-objects-metadata...
+[1m[22m
+[1m🧠 Defining sql relationships:[22m conventions, references, modifiers...
+[1m[22m
+[1m🏗️️  Generating the sql schema:[22m using sql-schema-generator...
 
-🧠 Defining sql relationships: conventions, references, modifiers...
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/index.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/asyncTaskPredictStationCongestion.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/carriage.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/carriageCargo.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/certificate.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/geocode.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/invoice.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/invoiceLineItem.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/locomotive.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/price.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/train.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/trainEngineer.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/trainStation.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/../sql/views/view_async_task_predict_station_congestion_hydrated.sql[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/../sql/views/view_carriage_hydrated.sql[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/../sql/views/view_carriage_cargo_hydrated.sql[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/../sql/views/view_certificate_hydrated.sql[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/../sql/views/view_geocode_hydrated.sql[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/../sql/views/view_invoice_hydrated.sql[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/../sql/views/view_invoice_line_item_hydrated.sql[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/../sql/views/view_locomotive_hydrated.sql[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/../sql/views/view_price_hydrated.sql[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/../sql/views/view_train_hydrated.sql[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/../sql/views/view_train_engineer_hydrated.sql[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/declarations/../sql/views/view_train_station_hydrated.sql[22m
+  [32m✔[39m [32m[1m[RAN][22m[39m [1msql-schema-generator 🏃[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1mtables, views, and functions for ''[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1mtables, views, and functions for ''[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1mtables, views, and functions for ''[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1mtables, views, and functions for ''[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1mtables, views, and functions for ''[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1mtables, views, and functions for ''[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1mtables, views, and functions for ''[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1mtables, views, and functions for ''[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1mtables, views, and functions for ''[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1mtables, views, and functions for ''[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1mtables, views, and functions for ''[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1mtables, views, and functions for ''[22m
+[1m[22m
+[1m🔧 Generating schema-control config:[22m for use with sql-schema-control...
 
-🏗️️  Generating the sql schema: using sql-schema-generator...
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1mprovision/schema/sql/domain.yml[22m
+[1m️[22m
+[1m🔨 Generating data-access-objects:[22m methods, casters, tests, and named exports...
 
-  ✔ [GENERATED] provision/schema/declarations/index.ts
-  ✔ [GENERATED] provision/schema/declarations/asyncTaskPredictStationCongestion.ts
-  ✔ [GENERATED] provision/schema/declarations/carriage.ts
-  ✔ [GENERATED] provision/schema/declarations/carriageCargo.ts
-  ✔ [GENERATED] provision/schema/declarations/certificate.ts
-  ✔ [GENERATED] provision/schema/declarations/geocode.ts
-  ✔ [GENERATED] provision/schema/declarations/invoice.ts
-  ✔ [GENERATED] provision/schema/declarations/invoiceLineItem.ts
-  ✔ [GENERATED] provision/schema/declarations/locomotive.ts
-  ✔ [GENERATED] provision/schema/declarations/price.ts
-  ✔ [GENERATED] provision/schema/declarations/train.ts
-  ✔ [GENERATED] provision/schema/declarations/trainEngineer.ts
-  ✔ [GENERATED] provision/schema/declarations/trainStation.ts
-  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_async_task_predict_station_congestion_hydrated.sql
-  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_carriage_hydrated.sql
-  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_carriage_cargo_hydrated.sql
-  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_certificate_hydrated.sql
-  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_geocode_hydrated.sql
-  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_invoice_hydrated.sql
-  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_invoice_line_item_hydrated.sql
-  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_locomotive_hydrated.sql
-  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_price_hydrated.sql
-  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_train_hydrated.sql
-  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_train_engineer_hydrated.sql
-  ✔ [GENERATED] provision/schema/declarations/../sql/views/view_train_station_hydrated.sql
-  ✔ [RAN] sql-schema-generator 🏃
-    ✔ [GENERATED] tables, views, and functions for 'async_task_predict_station_congestion'
-    ✔ [GENERATED] tables, views, and functions for 'carriage'
-    ✔ [GENERATED] tables, views, and functions for 'carriage_cargo'
-    ✔ [GENERATED] tables, views, and functions for 'certificate'
-    ✔ [GENERATED] tables, views, and functions for 'geocode'
-    ✔ [GENERATED] tables, views, and functions for 'invoice'
-    ✔ [GENERATED] tables, views, and functions for 'invoice_line_item'
-    ✔ [GENERATED] tables, views, and functions for 'locomotive'
-    ✔ [GENERATED] tables, views, and functions for 'price'
-    ✔ [GENERATED] tables, views, and functions for 'train'
-    ✔ [GENERATED] tables, views, and functions for 'train_engineer'
-    ✔ [GENERATED] tables, views, and functions for 'train_station'
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/asyncTaskPredictStationCongestionDao/index.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/asyncTaskPredictStationCongestionDao/castFromDatabaseObject.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/asyncTaskPredictStationCongestionDao/findById.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/asyncTaskPredictStationCongestionDao/findByUnique.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/asyncTaskPredictStationCongestionDao/findByUuid.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/asyncTaskPredictStationCongestionDao/findByRef.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/asyncTaskPredictStationCongestionDao/upsert.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageDao/index.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageDao/castFromDatabaseObject.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageDao/findById.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageDao/findByUnique.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageDao/findByUuid.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageDao/findByRef.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageDao/upsert.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageCargoDao/index.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageCargoDao/castFromDatabaseObject.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageCargoDao/findById.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageCargoDao/findByUnique.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageCargoDao/findByUuid.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageCargoDao/findByRef.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/carriageCargoDao/upsert.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/certificateDao/index.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/certificateDao/castFromDatabaseObject.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/certificateDao/findById.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/certificateDao/findByUnique.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/certificateDao/upsert.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/geocodeDao/index.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/geocodeDao/castFromDatabaseObject.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/geocodeDao/findById.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/geocodeDao/findByUnique.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/geocodeDao/upsert.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/invoiceDao/index.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/invoiceDao/castFromDatabaseObject.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/invoiceDao/findById.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/invoiceDao/findByUnique.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/invoiceDao/findByUuid.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/invoiceDao/findByRef.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/invoiceDao/upsert.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/invoiceLineItemDao/index.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/invoiceLineItemDao/castFromDatabaseObject.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/invoiceLineItemDao/findById.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/invoiceLineItemDao/findByUnique.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/invoiceLineItemDao/upsert.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/locomotiveDao/index.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/locomotiveDao/castFromDatabaseObject.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/locomotiveDao/findById.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/locomotiveDao/findByUnique.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/locomotiveDao/findByUuid.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/locomotiveDao/findByRef.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/locomotiveDao/upsert.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/priceDao/index.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/priceDao/castFromDatabaseObject.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/priceDao/findById.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/priceDao/findByUnique.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/priceDao/upsert.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainDao/index.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainDao/castFromDatabaseObject.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainDao/findById.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainDao/findByUnique.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainDao/findByUuid.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainDao/findByRef.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainDao/upsert.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainEngineerDao/index.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainEngineerDao/castFromDatabaseObject.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainEngineerDao/findById.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainEngineerDao/findByUnique.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainEngineerDao/findByUuid.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainEngineerDao/findByRef.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainEngineerDao/upsert.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainStationDao/index.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainStationDao/castFromDatabaseObject.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainStationDao/findById.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainStationDao/findByUnique.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainStationDao/findByUuid.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainStationDao/findByRef.ts[22m
+  [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/trainStationDao/upsert.ts[22m
+[1m[22m
+[1m🗜️  Generating typescript from sql:[22m types and funcs using sql-code-generator...
 
-🔧 Generating schema-control config: for use with sql-schema-control...
-
-  ✔ [GENERATED] provision/schema/sql/domain.yml
-️
-🔨 Generating data-access-objects: methods, casters, tests, and named exports...
-
-  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/index.ts
-  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/castFromDatabaseObject.ts
-  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/findById.ts
-  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/findByUnique.ts
-  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/findByUuid.ts
-  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/findByRef.ts
-  ✔ [GENERATED] src/data/dao/asyncTaskPredictStationCongestionDao/upsert.ts
-  ✔ [GENERATED] src/data/dao/carriageDao/index.ts
-  ✔ [GENERATED] src/data/dao/carriageDao/castFromDatabaseObject.ts
-  ✔ [GENERATED] src/data/dao/carriageDao/findById.ts
-  ✔ [GENERATED] src/data/dao/carriageDao/findByUnique.ts
-  ✔ [GENERATED] src/data/dao/carriageDao/findByUuid.ts
-  ✔ [GENERATED] src/data/dao/carriageDao/findByRef.ts
-  ✔ [GENERATED] src/data/dao/carriageDao/upsert.ts
-  ✔ [GENERATED] src/data/dao/carriageCargoDao/index.ts
-  ✔ [GENERATED] src/data/dao/carriageCargoDao/castFromDatabaseObject.ts
-  ✔ [GENERATED] src/data/dao/carriageCargoDao/findById.ts
-  ✔ [GENERATED] src/data/dao/carriageCargoDao/findByUnique.ts
-  ✔ [GENERATED] src/data/dao/carriageCargoDao/findByUuid.ts
-  ✔ [GENERATED] src/data/dao/carriageCargoDao/findByRef.ts
-  ✔ [GENERATED] src/data/dao/carriageCargoDao/upsert.ts
-  ✔ [GENERATED] src/data/dao/certificateDao/index.ts
-  ✔ [GENERATED] src/data/dao/certificateDao/castFromDatabaseObject.ts
-  ✔ [GENERATED] src/data/dao/certificateDao/findById.ts
-  ✔ [GENERATED] src/data/dao/certificateDao/findByUnique.ts
-  ✔ [GENERATED] src/data/dao/certificateDao/upsert.ts
-  ✔ [GENERATED] src/data/dao/geocodeDao/index.ts
-  ✔ [GENERATED] src/data/dao/geocodeDao/castFromDatabaseObject.ts
-  ✔ [GENERATED] src/data/dao/geocodeDao/findById.ts
-  ✔ [GENERATED] src/data/dao/geocodeDao/findByUnique.ts
-  ✔ [GENERATED] src/data/dao/geocodeDao/upsert.ts
-  ✔ [GENERATED] src/data/dao/invoiceDao/index.ts
-  ✔ [GENERATED] src/data/dao/invoiceDao/castFromDatabaseObject.ts
-  ✔ [GENERATED] src/data/dao/invoiceDao/findById.ts
-  ✔ [GENERATED] src/data/dao/invoiceDao/findByUnique.ts
-  ✔ [GENERATED] src/data/dao/invoiceDao/findByUuid.ts
-  ✔ [GENERATED] src/data/dao/invoiceDao/findByRef.ts
-  ✔ [GENERATED] src/data/dao/invoiceDao/upsert.ts
-  ✔ [GENERATED] src/data/dao/invoiceLineItemDao/index.ts
-  ✔ [GENERATED] src/data/dao/invoiceLineItemDao/castFromDatabaseObject.ts
-  ✔ [GENERATED] src/data/dao/invoiceLineItemDao/findById.ts
-  ✔ [GENERATED] src/data/dao/invoiceLineItemDao/findByUnique.ts
-  ✔ [GENERATED] src/data/dao/invoiceLineItemDao/upsert.ts
-  ✔ [GENERATED] src/data/dao/locomotiveDao/index.ts
-  ✔ [GENERATED] src/data/dao/locomotiveDao/castFromDatabaseObject.ts
-  ✔ [GENERATED] src/data/dao/locomotiveDao/findById.ts
-  ✔ [GENERATED] src/data/dao/locomotiveDao/findByUnique.ts
-  ✔ [GENERATED] src/data/dao/locomotiveDao/findByUuid.ts
-  ✔ [GENERATED] src/data/dao/locomotiveDao/findByRef.ts
-  ✔ [GENERATED] src/data/dao/locomotiveDao/upsert.ts
-  ✔ [GENERATED] src/data/dao/priceDao/index.ts
-  ✔ [GENERATED] src/data/dao/priceDao/castFromDatabaseObject.ts
-  ✔ [GENERATED] src/data/dao/priceDao/findById.ts
-  ✔ [GENERATED] src/data/dao/priceDao/findByUnique.ts
-  ✔ [GENERATED] src/data/dao/priceDao/upsert.ts
-  ✔ [GENERATED] src/data/dao/trainDao/index.ts
-  ✔ [GENERATED] src/data/dao/trainDao/castFromDatabaseObject.ts
-  ✔ [GENERATED] src/data/dao/trainDao/findById.ts
-  ✔ [GENERATED] src/data/dao/trainDao/findByUnique.ts
-  ✔ [GENERATED] src/data/dao/trainDao/findByUuid.ts
-  ✔ [GENERATED] src/data/dao/trainDao/findByRef.ts
-  ✔ [GENERATED] src/data/dao/trainDao/upsert.ts
-  ✔ [GENERATED] src/data/dao/trainEngineerDao/index.ts
-  ✔ [GENERATED] src/data/dao/trainEngineerDao/castFromDatabaseObject.ts
-  ✔ [GENERATED] src/data/dao/trainEngineerDao/findById.ts
-  ✔ [GENERATED] src/data/dao/trainEngineerDao/findByUnique.ts
-  ✔ [GENERATED] src/data/dao/trainEngineerDao/findByUuid.ts
-  ✔ [GENERATED] src/data/dao/trainEngineerDao/findByRef.ts
-  ✔ [GENERATED] src/data/dao/trainEngineerDao/upsert.ts
-  ✔ [GENERATED] src/data/dao/trainStationDao/index.ts
-  ✔ [GENERATED] src/data/dao/trainStationDao/castFromDatabaseObject.ts
-  ✔ [GENERATED] src/data/dao/trainStationDao/findById.ts
-  ✔ [GENERATED] src/data/dao/trainStationDao/findByUnique.ts
-  ✔ [GENERATED] src/data/dao/trainStationDao/findByUuid.ts
-  ✔ [GENERATED] src/data/dao/trainStationDao/findByRef.ts
-  ✔ [GENERATED] src/data/dao/trainStationDao/upsert.ts
-
-🗜️  Generating typescript from sql: types and funcs using sql-code-generator...
-
-  ✔ [RAN] sql-code-generator 🏃
-    ✔ [GENERATED] src/data/dao/.generated/types.ts
-    ✔ [GENERATED] src/data/dao/.generated/queryFunctions.ts
+  [32m✔[39m [32m[1m[RAN][22m[39m [1msql-code-generator 🏃[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/.generated/types.ts[22m
+    [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/.generated/queryFunctions.ts[22m
 "
 `;

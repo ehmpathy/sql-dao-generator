@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_declaration should define the select expression correctly for a solo DIRECT_BY_DECLARATION reference 1`] = `
+"(
+      SELECT carriage.uuid
+      FROM carriage WHERE carriage.id = carriage_cargo.carriage_id
+    ) AS carriage_uuid"
+`;
+
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for a solo DIRECT_BY_NESTING reference 1`] = `
+"(
+      SELECT json_build_object(
+        'latitude', geocode.latitude,
+        'longitude', geocode.longitude
+      ) AS json_build_object
+      FROM geocode WHERE geocode.id = train_located_event.geocode_id
+    ) AS geocode"
+`;
+
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for a solo DIRECT_BY_NESTING reference with its own array DIRECT_BY_NESTING reference 1`] = `
+"(
+      SELECT json_build_object(
+        'id', invoice_line_item.id,
+        'prices', (
+          SELECT COALESCE(
+            json_agg(
+              json_build_object(
+                'amount', price.amount,
+                'currency', price.currency
+              )
+              ORDER BY price_ref.array_order_index
+            ),
+            '[]'::json
+          ) AS json_agg
+          FROM price
+          JOIN unnest(invoice_line_item.price_ids) WITH ORDINALITY
+            AS price_ref (id, array_order_index)
+            ON price.id = price_ref.id
+        ),
+        'title', invoice_line_item.title
+      ) AS json_build_object
+      FROM view_invoice_line_item_current AS invoice_line_item WHERE invoice_line_item.id = invoice.line_item_id
+    ) AS line_item"
+`;
+
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for a solo DIRECT_BY_NESTING reference with its own array IMPLICIT_BY_UUID reference 1`] = `
+"(
+      SELECT json_build_object(
+        'id', lead_capture.id,
+        'lead_capture_event_uuids', (
+          SELECT COALESCE(array_agg(lead_capture_event.uuid ORDER BY lead_capture_event_ref.array_order_index), array[]::uuid[]) AS array_agg
+          FROM lead_capture_event
+          JOIN unnest(lead_capture.lead_capture_event_ids) WITH ORDINALITY
+            AS lead_capture_event_ref (id, array_order_index)
+            ON lead_capture_event.id = lead_capture_event_ref.id
+        )
+      ) AS json_build_object
+      FROM view_lead_capture_current AS lead_capture WHERE lead_capture.id = lead.lead_capture_id
+    ) AS lead_capture"
+`;
+
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for a solo DIRECT_BY_NESTING reference with its own solo DIRECT_BY_NESTING reference 1`] = `
+"(
+      SELECT json_build_object(
+        'id', invoice_line_item.id,
+        'price', (
+          SELECT json_build_object(
+            'amount', price.amount,
+            'currency', price.currency
+          ) AS json_build_object
+          FROM price WHERE price.id = invoice_line_item.price_id
+        ),
+        'title', invoice_line_item.title
+      ) AS json_build_object
+      FROM invoice_line_item WHERE invoice_line_item.id = invoice.line_item_id
+    ) AS line_item"
+`;
+
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for an array DIRECT_BY_NESTING reference with its own solo DIRECT_BY_NESTING reference 1`] = `
+"(
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'id', invoice_line_item.id,
+            'price', (
+              SELECT json_build_object(
+                'amount', price.amount,
+                'currency', price.currency
+              ) AS json_build_object
+              FROM price WHERE price.id = invoice_line_item.price_id
+            ),
+            'title', invoice_line_item.title
+          )
+          ORDER BY invoice_line_item_ref.array_order_index
+        ),
+        '[]'::json
+      ) AS json_agg
+      FROM invoice_line_item
+      JOIN unnest(invoice.line_item_ids) WITH ORDINALITY
+        AS invoice_line_item_ref (id, array_order_index)
+        ON invoice_line_item.id = invoice_line_item_ref.id
+    ) AS line_items"
+`;
+
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: direct_by_nesting should define the select expression correctly for an array of DIRECT_BY_NESTING reference 1`] = `
+"(
+      SELECT COALESCE(
+        json_agg(
+          json_build_object(
+            'latitude', geocode.latitude,
+            'longitude', geocode.longitude
+          )
+          ORDER BY geocode_ref.array_order_index
+        ),
+        '[]'::json
+      ) AS json_agg
+      FROM geocode
+      JOIN unnest(train_located_event.geocode_ids) WITH ORDINALITY
+        AS geocode_ref (id, array_order_index)
+        ON geocode.id = geocode_ref.id
+    ) AS geocodes"
+`;
+
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: implicit_by_uuid should define the select expression correctly for a solo IMPLICIT_BY_UUID reference 1`] = `
+"(
+      SELECT train_engineer.uuid
+      FROM train_engineer WHERE train_engineer.id = train.lead_engineer_id
+    ) AS lead_engineer_uuid"
+`;
+
+exports[`defineQuerySelectExpressionForSqlSchemaProperty reference: implicit_by_uuid should define the select expression correctly for an array of IMPLICIT_BY_UUID references 1`] = `
+"(
+      SELECT COALESCE(array_agg(train_engineer.uuid ORDER BY train_engineer_ref.array_order_index), array[]::uuid[]) AS array_agg
+      FROM train_engineer
+      JOIN unnest(train.assigned_engineer_ids) WITH ORDINALITY
+        AS train_engineer_ref (id, array_order_index)
+        ON train_engineer.id = train_engineer_ref.id
+    ) AS assigned_engineer_uuids"
+`;

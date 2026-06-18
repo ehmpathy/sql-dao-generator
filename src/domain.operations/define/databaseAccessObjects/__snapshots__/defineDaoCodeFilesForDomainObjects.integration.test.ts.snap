@@ -1,0 +1,2824 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`defineSqlSchemaControlCodeFilesForDomainObjects should work on the example project 1`] = `
+[
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
+import { upsert } from './upsert';
+
+export const asyncTaskPredictStationCongestionDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoAsyncTaskPredictStationCongestion = asyncTaskPredictStationCongestionDao;",
+    "relpath": "asyncTaskPredictStationCongestionDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindAsyncTaskPredictStationCongestionByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindAsyncTaskPredictStationCongestionByIdOutput,
+): HasMetadata<AsyncTaskPredictStationCongestion> =>
+  new AsyncTaskPredictStationCongestion({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    createdAt: dbObject.created_at,
+    updatedAt: dbObject.updated_at,
+    status: dbObject.status as AsyncTaskPredictStationCongestion['status'],
+    stationUuid: dbObject.station_uuid,
+    trainLocatedEventUuid: dbObject.train_located_event_uuid,
+  }) as HasMetadata<AsyncTaskPredictStationCongestion>;",
+    "relpath": "asyncTaskPredictStationCongestionDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindAsyncTaskPredictStationCongestionById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_async_task_predict_station_congestion_by_id
+  SELECT
+    async_task_predict_station_congestion.id,
+    async_task_predict_station_congestion.uuid,
+    async_task_predict_station_congestion.created_at,
+    async_task_predict_station_congestion.updated_at,
+    async_task_predict_station_congestion.status,
+    async_task_predict_station_congestion.station_uuid,
+    async_task_predict_station_congestion.train_located_event_uuid
+  FROM view_async_task_predict_station_congestion_hydrated AS async_task_predict_station_congestion
+  WHERE async_task_predict_station_congestion.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<AsyncTaskPredictStationCongestion> | null> => {
+  const results = await sqlQueryFindAsyncTaskPredictStationCongestionById({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "asyncTaskPredictStationCongestionDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindAsyncTaskPredictStationCongestionByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_async_task_predict_station_congestion_by_unique
+  SELECT
+    async_task_predict_station_congestion.id,
+    async_task_predict_station_congestion.uuid,
+    async_task_predict_station_congestion.created_at,
+    async_task_predict_station_congestion.updated_at,
+    async_task_predict_station_congestion.status,
+    async_task_predict_station_congestion.station_uuid,
+    async_task_predict_station_congestion.train_located_event_uuid
+  FROM view_async_task_predict_station_congestion_hydrated AS async_task_predict_station_congestion
+  JOIN view_async_task_predict_station_congestion_current ON async_task_predict_station_congestion.id = view_async_task_predict_station_congestion_current.id
+  WHERE 1=1
+    AND view_async_task_predict_station_congestion_current.station_id = (SELECT id FROM train_station WHERE train_station.uuid = :stationUuid)
+    AND view_async_task_predict_station_congestion_current.train_located_event_id = (SELECT id FROM train_located_event WHERE train_located_event.uuid = :trainLocatedEventUuid);
+\`;
+
+export const findByUnique = async (
+  {
+    stationUuid,
+    trainLocatedEventUuid,
+  }: {
+    stationUuid: string;
+    trainLocatedEventUuid: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<AsyncTaskPredictStationCongestion> | null> => {
+  const results = await sqlQueryFindAsyncTaskPredictStationCongestionByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      stationUuid,
+      trainLocatedEventUuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "asyncTaskPredictStationCongestionDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindAsyncTaskPredictStationCongestionByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_async_task_predict_station_congestion_by_uuid
+  SELECT
+    async_task_predict_station_congestion.id,
+    async_task_predict_station_congestion.uuid,
+    async_task_predict_station_congestion.created_at,
+    async_task_predict_station_congestion.updated_at,
+    async_task_predict_station_congestion.status,
+    async_task_predict_station_congestion.station_uuid,
+    async_task_predict_station_congestion.train_located_event_uuid
+  FROM view_async_task_predict_station_congestion_hydrated AS async_task_predict_station_congestion
+  WHERE async_task_predict_station_congestion.uuid = :uuid;
+\`;
+
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<AsyncTaskPredictStationCongestion> | null> => {
+  const results = await sqlQueryFindAsyncTaskPredictStationCongestionByUuid({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      uuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "asyncTaskPredictStationCongestionDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from 'helpful-errors';
+import { VisualogicContext } from 'visualogic';
+import { Ref, isRefByPrimary, isRefByUnique } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof AsyncTaskPredictStationCongestion> },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<AsyncTaskPredictStationCongestion> | null> => {
+  if (isRefByPrimary({ of: AsyncTaskPredictStationCongestion })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isRefByUnique({ of: AsyncTaskPredictStationCongestion })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for AsyncTaskPredictStationCongestion', { input });
+};",
+    "relpath": "asyncTaskPredictStationCongestionDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertAsyncTaskPredictStationCongestion } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+
+export const sql = \`
+  -- query_name = upsert_async_task_predict_station_congestion
+  SELECT
+    dgv.id, dgv.uuid, dgv.created_at, dgv.updated_at
+  FROM upsert_async_task_predict_station_congestion(
+    :status,
+    (SELECT id FROM train_station WHERE train_station.uuid = :stationUuid),
+    (SELECT id FROM train_located_event WHERE train_located_event.uuid = :trainLocatedEventUuid)
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    asyncTaskPredictStationCongestion,
+  }: {
+    asyncTaskPredictStationCongestion: AsyncTaskPredictStationCongestion;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<AsyncTaskPredictStationCongestion>> => {
+  const results = await sqlQueryUpsertAsyncTaskPredictStationCongestion({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      status: asyncTaskPredictStationCongestion.status,
+      stationUuid: asyncTaskPredictStationCongestion.stationUuid,
+      trainLocatedEventUuid: asyncTaskPredictStationCongestion.trainLocatedEventUuid,
+    },
+  });
+  const { id, uuid, created_at: createdAt, updated_at: updatedAt } = results[0]!; // grab the db generated values
+  return new AsyncTaskPredictStationCongestion({ ...asyncTaskPredictStationCongestion, id, uuid, createdAt, updatedAt }) as HasMetadata<AsyncTaskPredictStationCongestion>;
+};",
+    "relpath": "asyncTaskPredictStationCongestionDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
+import { upsert } from './upsert';
+
+export const carriageDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoCarriage = carriageDao;",
+    "relpath": "carriageDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindCarriageByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindCarriageByIdOutput,
+): HasMetadata<Carriage> =>
+  new Carriage({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    cin: dbObject.cin,
+    carries: dbObject.carries as Carriage['carries'],
+    capacity: dbObject.capacity,
+  }) as HasMetadata<Carriage>;",
+    "relpath": "carriageDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCarriageById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_carriage_by_id
+  SELECT
+    carriage.id,
+    carriage.uuid,
+    carriage.cin,
+    carriage.carries,
+    carriage.capacity
+  FROM view_carriage_hydrated AS carriage
+  WHERE carriage.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Carriage> | null> => {
+  const results = await sqlQueryFindCarriageById({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "carriageDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCarriageByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_carriage_by_unique
+  SELECT
+    carriage.id,
+    carriage.uuid,
+    carriage.cin,
+    carriage.carries,
+    carriage.capacity
+  FROM view_carriage_hydrated AS carriage
+  WHERE 1=1
+    AND carriage.cin = :cin;
+\`;
+
+export const findByUnique = async (
+  {
+    cin,
+  }: {
+    cin: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Carriage> | null> => {
+  const results = await sqlQueryFindCarriageByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      cin,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "carriageDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCarriageByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_carriage_by_uuid
+  SELECT
+    carriage.id,
+    carriage.uuid,
+    carriage.cin,
+    carriage.carries,
+    carriage.capacity
+  FROM view_carriage_hydrated AS carriage
+  WHERE carriage.uuid = :uuid;
+\`;
+
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Carriage> | null> => {
+  const results = await sqlQueryFindCarriageByUuid({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      uuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "carriageDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from 'helpful-errors';
+import { VisualogicContext } from 'visualogic';
+import { Ref, isRefByPrimary, isRefByUnique } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof Carriage> },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Carriage> | null> => {
+  if (isRefByPrimary({ of: Carriage })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isRefByUnique({ of: Carriage })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for Carriage', { input });
+};",
+    "relpath": "carriageDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertCarriage } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+
+export const sql = \`
+  -- query_name = upsert_carriage
+  SELECT
+    dgv.id, dgv.uuid
+  FROM upsert_carriage(
+    :cin,
+    :carries,
+    :capacity
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    carriage,
+  }: {
+    carriage: Carriage;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Carriage>> => {
+  const results = await sqlQueryUpsertCarriage({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      cin: carriage.cin,
+      carries: carriage.carries,
+      capacity: carriage.capacity,
+    },
+  });
+  const { id, uuid } = results[0]!; // grab the db generated values
+  return new Carriage({ ...carriage, id, uuid }) as HasMetadata<Carriage>;
+};",
+    "relpath": "carriageDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
+import { upsert } from './upsert';
+
+export const carriageCargoDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoCarriageCargo = carriageCargoDao;",
+    "relpath": "carriageCargoDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindCarriageByIdOutput, SqlQueryFindCarriageCargoByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castCarriageFromDatabaseObject } from '../carriageDao/castFromDatabaseObject';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindCarriageCargoByIdOutput,
+): HasMetadata<CarriageCargo> =>
+  new CarriageCargo({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    itineraryUuid: dbObject.itinerary_uuid,
+    carriageRef: { uuid: dbObject.carriage_uuid },
+    slot: dbObject.slot,
+    cargoExid: dbObject.cargo_exid,
+  }) as HasMetadata<CarriageCargo>;",
+    "relpath": "carriageCargoDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+import { isRefByPrimary } from 'domain-objects';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCarriageCargoById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_carriage_cargo_by_id
+  SELECT
+    carriage_cargo.id,
+    carriage_cargo.uuid,
+    carriage_cargo.itinerary_uuid,
+    carriage_cargo.carriage_uuid,
+    carriage_cargo.slot,
+    carriage_cargo.cargo_exid
+  FROM view_carriage_cargo_hydrated AS carriage_cargo
+  WHERE carriage_cargo.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<CarriageCargo> | null> => {
+  const results = await sqlQueryFindCarriageCargoById({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "carriageCargoDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+import { Ref, isRefByPrimary } from 'domain-objects';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Carriage, CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCarriageCargoByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+import { carriageDao } from '../carriageDao';
+
+export const sql = \`
+  -- query_name = find_carriage_cargo_by_unique
+  SELECT
+    carriage_cargo.id,
+    carriage_cargo.uuid,
+    carriage_cargo.itinerary_uuid,
+    carriage_cargo.carriage_uuid,
+    carriage_cargo.slot,
+    carriage_cargo.cargo_exid
+  FROM view_carriage_cargo_hydrated AS carriage_cargo
+  JOIN view_carriage_cargo_current ON carriage_cargo.id = view_carriage_cargo_current.id
+  WHERE 1=1
+    AND carriage_cargo.itinerary_uuid = :itineraryUuid
+    AND view_carriage_cargo_current.carriage_id = (SELECT id FROM carriage WHERE carriage.uuid = :carriageUuid)
+    AND carriage_cargo.slot = :slot;
+\`;
+
+export const findByUnique = async (
+  {
+    itineraryUuid,
+    carriageRef,
+    slot,
+  }: {
+    itineraryUuid: string;
+    carriageRef: Ref<typeof Carriage>;
+    slot: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<CarriageCargo> | null> => {
+  const results = await sqlQueryFindCarriageCargoByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      itineraryUuid,
+      carriageUuid: isRefByPrimary({ of: Carriage })(carriageRef) ? carriageRef.uuid : (await carriageDao.findByRef({ ref: carriageRef }, context).expect('isPresent')).uuid,
+      slot,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "carriageCargoDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+import { isRefByPrimary } from 'domain-objects';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCarriageCargoByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_carriage_cargo_by_uuid
+  SELECT
+    carriage_cargo.id,
+    carriage_cargo.uuid,
+    carriage_cargo.itinerary_uuid,
+    carriage_cargo.carriage_uuid,
+    carriage_cargo.slot,
+    carriage_cargo.cargo_exid
+  FROM view_carriage_cargo_hydrated AS carriage_cargo
+  WHERE carriage_cargo.uuid = :uuid;
+\`;
+
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<CarriageCargo> | null> => {
+  const results = await sqlQueryFindCarriageCargoByUuid({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      uuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "carriageCargoDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from 'helpful-errors';
+import { VisualogicContext } from 'visualogic';
+import { Ref, isRefByPrimary, isRefByUnique } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof CarriageCargo> },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<CarriageCargo> | null> => {
+  if (isRefByPrimary({ of: CarriageCargo })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isRefByUnique({ of: CarriageCargo })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for CarriageCargo', { input });
+};",
+    "relpath": "carriageCargoDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+import { isRefByPrimary } from 'domain-objects';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { CarriageCargo, Carriage } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertCarriageCargo } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { carriageDao } from '../carriageDao';
+
+export const sql = \`
+  -- query_name = upsert_carriage_cargo
+  SELECT
+    dgv.id, dgv.uuid
+  FROM upsert_carriage_cargo(
+    :itineraryUuid,
+    (SELECT id FROM carriage WHERE carriage.uuid = :carriageUuid),
+    :slot,
+    :cargoExid
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    carriageCargo,
+  }: {
+    carriageCargo: CarriageCargo;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<CarriageCargo>> => {
+  const results = await sqlQueryUpsertCarriageCargo({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      itineraryUuid: carriageCargo.itineraryUuid,
+      carriageUuid: isRefByPrimary({ of: Carriage })(carriageCargo.carriageRef) ? carriageCargo.carriageRef.uuid : (await carriageDao.findByRef({ ref: carriageCargo.carriageRef }, context).expect('isPresent')).uuid,
+      slot: carriageCargo.slot,
+      cargoExid: carriageCargo.cargoExid,
+    },
+  });
+  const { id, uuid } = results[0]!; // grab the db generated values
+  return new CarriageCargo({ ...carriageCargo, id, uuid }) as HasMetadata<CarriageCargo>;
+};",
+    "relpath": "carriageCargoDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { upsert } from './upsert';
+
+export const certificateDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoCertificate = certificateDao;",
+    "relpath": "certificateDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindCertificateByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindCertificateByIdOutput,
+): HasMetadata<Certificate> =>
+  new Certificate({
+    id: dbObject.id,
+    type: dbObject.type as Certificate['type'],
+    industryId: dbObject.industry_id,
+  }) as HasMetadata<Certificate>;",
+    "relpath": "certificateDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCertificateById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_certificate_by_id
+  SELECT
+    certificate.id,
+    certificate.type,
+    certificate.industry_id
+  FROM view_certificate_hydrated AS certificate
+  WHERE certificate.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Certificate> | null> => {
+  const results = await sqlQueryFindCertificateById({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "certificateDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindCertificateByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_certificate_by_unique
+  SELECT
+    certificate.id,
+    certificate.type,
+    certificate.industry_id
+  FROM view_certificate_hydrated AS certificate
+  WHERE 1=1
+    AND certificate.type = :type
+    AND certificate.industry_id = :industryId;
+\`;
+
+export const findByUnique = async (
+  {
+    type,
+    industryId,
+  }: {
+    type: Certificate['type'];
+    industryId: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Certificate> | null> => {
+  const results = await sqlQueryFindCertificateByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      type,
+      industryId,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "certificateDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertCertificate } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+
+export const sql = \`
+  -- query_name = upsert_certificate
+  SELECT
+    dgv.id
+  FROM upsert_certificate(
+    :type,
+    :industryId
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    certificate,
+  }: {
+    certificate: Certificate;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Certificate>> => {
+  const results = await sqlQueryUpsertCertificate({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      type: certificate.type,
+      industryId: certificate.industryId,
+    },
+  });
+  const { id } = results[0]!; // grab the db generated values
+  return new Certificate({ ...certificate, id }) as HasMetadata<Certificate>;
+};",
+    "relpath": "certificateDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
+import { upsert } from './upsert';
+
+export const trainEngineerDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoTrainEngineer = trainEngineerDao;",
+    "relpath": "trainEngineerDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindCertificateByIdOutput, SqlQueryFindTrainEngineerByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castCertificateFromDatabaseObject } from '../certificateDao/castFromDatabaseObject';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindTrainEngineerByIdOutput,
+): HasMetadata<TrainEngineer> =>
+  new TrainEngineer({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    socialSecurityNumberHash: dbObject.social_security_number_hash,
+    certificates: (dbObject.certificates as SqlQueryFindCertificateByIdOutput[]).map(castCertificateFromDatabaseObject),
+    licenseUuids: dbObject.license_uuids as string[],
+    name: dbObject.name,
+  }) as HasMetadata<TrainEngineer>;",
+    "relpath": "trainEngineerDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainEngineerById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_engineer_by_id
+  SELECT
+    train_engineer.id,
+    train_engineer.uuid,
+    train_engineer.social_security_number_hash,
+    train_engineer.certificates,
+    train_engineer.license_uuids,
+    train_engineer.name
+  FROM view_train_engineer_hydrated AS train_engineer
+  WHERE train_engineer.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainEngineer> | null> => {
+  const results = await sqlQueryFindTrainEngineerById({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "trainEngineerDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainEngineerByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_engineer_by_unique
+  SELECT
+    train_engineer.id,
+    train_engineer.uuid,
+    train_engineer.social_security_number_hash,
+    train_engineer.certificates,
+    train_engineer.license_uuids,
+    train_engineer.name
+  FROM view_train_engineer_hydrated AS train_engineer
+  WHERE 1=1
+    AND train_engineer.social_security_number_hash = :socialSecurityNumberHash;
+\`;
+
+export const findByUnique = async (
+  {
+    socialSecurityNumberHash,
+  }: {
+    socialSecurityNumberHash: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainEngineer> | null> => {
+  const results = await sqlQueryFindTrainEngineerByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      socialSecurityNumberHash,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "trainEngineerDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainEngineerByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_engineer_by_uuid
+  SELECT
+    train_engineer.id,
+    train_engineer.uuid,
+    train_engineer.social_security_number_hash,
+    train_engineer.certificates,
+    train_engineer.license_uuids,
+    train_engineer.name
+  FROM view_train_engineer_hydrated AS train_engineer
+  WHERE train_engineer.uuid = :uuid;
+\`;
+
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainEngineer> | null> => {
+  const results = await sqlQueryFindTrainEngineerByUuid({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      uuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "trainEngineerDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from 'helpful-errors';
+import { VisualogicContext } from 'visualogic';
+import { Ref, isRefByPrimary, isRefByUnique } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof TrainEngineer> },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainEngineer> | null> => {
+  if (isRefByPrimary({ of: TrainEngineer })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isRefByUnique({ of: TrainEngineer })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for TrainEngineer', { input });
+};",
+    "relpath": "trainEngineerDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertTrainEngineer } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { certificateDao } from '../certificateDao';
+
+export const sql = \`
+  -- query_name = upsert_train_engineer
+  SELECT
+    dgv.id, dgv.uuid
+  FROM upsert_train_engineer(
+    :socialSecurityNumberHash,
+    :certificateIds,
+    :licenseUuids,
+    :name
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    trainEngineer,
+  }: {
+    trainEngineer: TrainEngineer;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainEngineer>> => {
+  const results = await sqlQueryUpsertTrainEngineer({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      socialSecurityNumberHash: trainEngineer.socialSecurityNumberHash,
+      certificateIds: await Promise.all(trainEngineer.certificates.map(async (certificate) => certificate.id ? certificate.id : (await certificateDao.upsert({ certificate }, context)).id)),
+      licenseUuids: trainEngineer.licenseUuids,
+      name: trainEngineer.name,
+    },
+  });
+  const { id, uuid } = results[0]!; // grab the db generated values
+  return new TrainEngineer({ ...trainEngineer, id, uuid }) as HasMetadata<TrainEngineer>;
+};",
+    "relpath": "trainEngineerDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { upsert } from './upsert';
+
+export const geocodeDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoGeocode = geocodeDao;",
+    "relpath": "geocodeDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindGeocodeByIdOutput,
+): HasMetadata<Geocode> =>
+  new Geocode({
+    id: dbObject.id,
+    latitude: dbObject.latitude,
+    longitude: dbObject.longitude,
+  }) as HasMetadata<Geocode>;",
+    "relpath": "geocodeDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindGeocodeById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_geocode_by_id
+  SELECT
+    geocode.id,
+    geocode.latitude,
+    geocode.longitude
+  FROM view_geocode_hydrated AS geocode
+  WHERE geocode.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Geocode> | null> => {
+  const results = await sqlQueryFindGeocodeById({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "geocodeDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindGeocodeByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_geocode_by_unique
+  SELECT
+    geocode.id,
+    geocode.latitude,
+    geocode.longitude
+  FROM view_geocode_hydrated AS geocode
+  WHERE 1=1
+    AND geocode.latitude = :latitude
+    AND geocode.longitude = :longitude;
+\`;
+
+export const findByUnique = async (
+  {
+    latitude,
+    longitude,
+  }: {
+    latitude: number;
+    longitude: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Geocode> | null> => {
+  const results = await sqlQueryFindGeocodeByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      latitude,
+      longitude,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "geocodeDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+
+export const sql = \`
+  -- query_name = upsert_geocode
+  SELECT
+    dgv.id
+  FROM upsert_geocode(
+    :latitude,
+    :longitude
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    geocode,
+  }: {
+    geocode: Geocode;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Geocode>> => {
+  const results = await sqlQueryUpsertGeocode({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      latitude: geocode.latitude,
+      longitude: geocode.longitude,
+    },
+  });
+  const { id } = results[0]!; // grab the db generated values
+  return new Geocode({ ...geocode, id }) as HasMetadata<Geocode>;
+};",
+    "relpath": "geocodeDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { upsert } from './upsert';
+
+export const priceDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoPrice = priceDao;",
+    "relpath": "priceDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { Price } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindPriceByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindPriceByIdOutput,
+): HasMetadata<Price> =>
+  new Price({
+    id: dbObject.id,
+    amount: dbObject.amount,
+    currency: dbObject.currency as Price['currency'],
+  }) as HasMetadata<Price>;",
+    "relpath": "priceDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Price } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindPriceById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_price_by_id
+  SELECT
+    price.id,
+    price.amount,
+    price.currency
+  FROM view_price_hydrated AS price
+  WHERE price.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Price> | null> => {
+  const results = await sqlQueryFindPriceById({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "priceDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Price } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindPriceByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_price_by_unique
+  SELECT
+    price.id,
+    price.amount,
+    price.currency
+  FROM view_price_hydrated AS price
+  WHERE 1=1
+    AND price.amount = :amount
+    AND price.currency = :currency;
+\`;
+
+export const findByUnique = async (
+  {
+    amount,
+    currency,
+  }: {
+    amount: number;
+    currency: Price['currency'];
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Price> | null> => {
+  const results = await sqlQueryFindPriceByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      amount,
+      currency,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "priceDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Price } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertPrice } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+
+export const sql = \`
+  -- query_name = upsert_price
+  SELECT
+    dgv.id
+  FROM upsert_price(
+    :amount,
+    :currency
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    price,
+  }: {
+    price: Price;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Price>> => {
+  const results = await sqlQueryUpsertPrice({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      amount: price.amount,
+      currency: price.currency,
+    },
+  });
+  const { id } = results[0]!; // grab the db generated values
+  return new Price({ ...price, id }) as HasMetadata<Price>;
+};",
+    "relpath": "priceDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { upsert } from './upsert';
+
+export const invoiceLineItemDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoInvoiceLineItem = invoiceLineItemDao;",
+    "relpath": "invoiceLineItemDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { InvoiceLineItem } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindInvoiceLineItemByIdOutput, SqlQueryFindPriceByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castPriceFromDatabaseObject } from '../priceDao/castFromDatabaseObject';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindInvoiceLineItemByIdOutput,
+): HasMetadata<InvoiceLineItem> =>
+  new InvoiceLineItem({
+    id: dbObject.id,
+    price: castPriceFromDatabaseObject(dbObject.price as SqlQueryFindPriceByIdOutput),
+    title: dbObject.title,
+    explanation: dbObject.explanation,
+  }) as HasMetadata<InvoiceLineItem>;",
+    "relpath": "invoiceLineItemDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { InvoiceLineItem } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindInvoiceLineItemById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_invoice_line_item_by_id
+  SELECT
+    invoice_line_item.id,
+    invoice_line_item.price,
+    invoice_line_item.title,
+    invoice_line_item.explanation
+  FROM view_invoice_line_item_hydrated AS invoice_line_item
+  WHERE invoice_line_item.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<InvoiceLineItem> | null> => {
+  const results = await sqlQueryFindInvoiceLineItemById({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "invoiceLineItemDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { InvoiceLineItem, Price } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindInvoiceLineItemByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+import { priceDao } from '../priceDao';
+
+export const sql = \`
+  -- query_name = find_invoice_line_item_by_unique
+  SELECT
+    invoice_line_item.id,
+    invoice_line_item.price,
+    invoice_line_item.title,
+    invoice_line_item.explanation
+  FROM view_invoice_line_item_hydrated AS invoice_line_item
+  JOIN invoice_line_item as view_invoice_line_item_current ON invoice_line_item.id = view_invoice_line_item_current.id
+  WHERE 1=1
+    AND view_invoice_line_item_current.price_id = :priceId
+    AND invoice_line_item.title = :title
+    AND invoice_line_item.explanation = :explanation;
+\`;
+
+export const findByUnique = async (
+  {
+    price,
+    title,
+    explanation,
+  }: {
+    price: Price;
+    title: string;
+    explanation: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<InvoiceLineItem> | null> => {
+  const results = await sqlQueryFindInvoiceLineItemByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      priceId: price.id ? price.id : ((await priceDao.findByUnique(price, context))?.id ?? -1),
+      title,
+      explanation,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "invoiceLineItemDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { InvoiceLineItem, Price } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertInvoiceLineItem } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { priceDao } from '../priceDao';
+
+export const sql = \`
+  -- query_name = upsert_invoice_line_item
+  SELECT
+    dgv.id
+  FROM upsert_invoice_line_item(
+    :priceId,
+    :title,
+    :explanation
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    invoiceLineItem,
+  }: {
+    invoiceLineItem: InvoiceLineItem;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<InvoiceLineItem>> => {
+  const results = await sqlQueryUpsertInvoiceLineItem({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      priceId: invoiceLineItem.price.id ? invoiceLineItem.price.id : (await priceDao.upsert({ price: invoiceLineItem.price }, context)).id,
+      title: invoiceLineItem.title,
+      explanation: invoiceLineItem.explanation,
+    },
+  });
+  const { id } = results[0]!; // grab the db generated values
+  return new InvoiceLineItem({ ...invoiceLineItem, id }) as HasMetadata<InvoiceLineItem>;
+};",
+    "relpath": "invoiceLineItemDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
+import { upsert } from './upsert';
+
+export const invoiceDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoInvoice = invoiceDao;",
+    "relpath": "invoiceDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindInvoiceByIdOutput, SqlQueryFindInvoiceLineItemByIdOutput, SqlQueryFindPriceByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castInvoiceLineItemFromDatabaseObject } from '../invoiceLineItemDao/castFromDatabaseObject';
+import { castFromDatabaseObject as castPriceFromDatabaseObject } from '../priceDao/castFromDatabaseObject';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindInvoiceByIdOutput,
+): HasMetadata<Invoice> =>
+  new Invoice({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    externalId: dbObject.external_id,
+    items: (dbObject.items as SqlQueryFindInvoiceLineItemByIdOutput[]).map(castInvoiceLineItemFromDatabaseObject),
+    totalPrice: castPriceFromDatabaseObject(dbObject.total_price as SqlQueryFindPriceByIdOutput),
+    status: dbObject.status as Invoice['status'],
+  }) as HasMetadata<Invoice>;",
+    "relpath": "invoiceDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindInvoiceById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_invoice_by_id
+  SELECT
+    invoice.id,
+    invoice.uuid,
+    invoice.external_id,
+    invoice.items,
+    invoice.total_price,
+    invoice.status
+  FROM view_invoice_hydrated AS invoice
+  WHERE invoice.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Invoice> | null> => {
+  const results = await sqlQueryFindInvoiceById({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "invoiceDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindInvoiceByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_invoice_by_unique
+  SELECT
+    invoice.id,
+    invoice.uuid,
+    invoice.external_id,
+    invoice.items,
+    invoice.total_price,
+    invoice.status
+  FROM view_invoice_hydrated AS invoice
+  WHERE 1=1
+    AND invoice.external_id = :externalId;
+\`;
+
+export const findByUnique = async (
+  {
+    externalId,
+  }: {
+    externalId: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Invoice> | null> => {
+  const results = await sqlQueryFindInvoiceByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      externalId,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "invoiceDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindInvoiceByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_invoice_by_uuid
+  SELECT
+    invoice.id,
+    invoice.uuid,
+    invoice.external_id,
+    invoice.items,
+    invoice.total_price,
+    invoice.status
+  FROM view_invoice_hydrated AS invoice
+  WHERE invoice.uuid = :uuid;
+\`;
+
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Invoice> | null> => {
+  const results = await sqlQueryFindInvoiceByUuid({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      uuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "invoiceDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from 'helpful-errors';
+import { VisualogicContext } from 'visualogic';
+import { Ref, isRefByPrimary, isRefByUnique } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof Invoice> },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Invoice> | null> => {
+  if (isRefByPrimary({ of: Invoice })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isRefByUnique({ of: Invoice })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for Invoice', { input });
+};",
+    "relpath": "invoiceDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertInvoice } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { invoiceLineItemDao } from '../invoiceLineItemDao';
+import { priceDao } from '../priceDao';
+
+export const sql = \`
+  -- query_name = upsert_invoice
+  SELECT
+    dgv.id, dgv.uuid
+  FROM upsert_invoice(
+    :externalId,
+    :itemIds,
+    :totalPriceId,
+    :status
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    invoice,
+  }: {
+    invoice: Invoice;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Invoice>> => {
+  const results = await sqlQueryUpsertInvoice({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      externalId: invoice.externalId,
+      itemIds: await Promise.all(invoice.items.map(async (invoiceLineItem) => invoiceLineItem.id ? invoiceLineItem.id : (await invoiceLineItemDao.upsert({ invoiceLineItem }, context)).id)),
+      totalPriceId: invoice.totalPrice.id ? invoice.totalPrice.id : (await priceDao.upsert({ price: invoice.totalPrice }, context)).id,
+      status: invoice.status,
+    },
+  });
+  const { id, uuid } = results[0]!; // grab the db generated values
+  return new Invoice({ ...invoice, id, uuid }) as HasMetadata<Invoice>;
+};",
+    "relpath": "invoiceDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
+import { upsert } from './upsert';
+
+export const locomotiveDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoLocomotive = locomotiveDao;",
+    "relpath": "locomotiveDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindLocomotiveByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindLocomotiveByIdOutput,
+): HasMetadata<Locomotive> =>
+  new Locomotive({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    createdAt: dbObject.created_at,
+    effectiveAt: dbObject.effective_at,
+    updatedAt: dbObject.updated_at,
+    ein: dbObject.ein,
+    fuel: dbObject.fuel as Locomotive['fuel'],
+    capacity: dbObject.capacity,
+    milage: dbObject.milage,
+  }) as HasMetadata<Locomotive>;",
+    "relpath": "locomotiveDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindLocomotiveById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_locomotive_by_id
+  SELECT
+    locomotive.id,
+    locomotive.uuid,
+    locomotive.created_at,
+    locomotive.effective_at,
+    locomotive.updated_at,
+    locomotive.ein,
+    locomotive.fuel,
+    locomotive.capacity,
+    locomotive.milage
+  FROM view_locomotive_hydrated AS locomotive
+  WHERE locomotive.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Locomotive> | null> => {
+  const results = await sqlQueryFindLocomotiveById({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "locomotiveDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindLocomotiveByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_locomotive_by_unique
+  SELECT
+    locomotive.id,
+    locomotive.uuid,
+    locomotive.created_at,
+    locomotive.effective_at,
+    locomotive.updated_at,
+    locomotive.ein,
+    locomotive.fuel,
+    locomotive.capacity,
+    locomotive.milage
+  FROM view_locomotive_hydrated AS locomotive
+  WHERE 1=1
+    AND locomotive.ein = :ein;
+\`;
+
+export const findByUnique = async (
+  {
+    ein,
+  }: {
+    ein: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Locomotive> | null> => {
+  const results = await sqlQueryFindLocomotiveByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      ein,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "locomotiveDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindLocomotiveByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_locomotive_by_uuid
+  SELECT
+    locomotive.id,
+    locomotive.uuid,
+    locomotive.created_at,
+    locomotive.effective_at,
+    locomotive.updated_at,
+    locomotive.ein,
+    locomotive.fuel,
+    locomotive.capacity,
+    locomotive.milage
+  FROM view_locomotive_hydrated AS locomotive
+  WHERE locomotive.uuid = :uuid;
+\`;
+
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Locomotive> | null> => {
+  const results = await sqlQueryFindLocomotiveByUuid({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      uuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "locomotiveDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from 'helpful-errors';
+import { VisualogicContext } from 'visualogic';
+import { Ref, isRefByPrimary, isRefByUnique } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof Locomotive> },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Locomotive> | null> => {
+  if (isRefByPrimary({ of: Locomotive })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isRefByUnique({ of: Locomotive })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for Locomotive', { input });
+};",
+    "relpath": "locomotiveDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertLocomotive } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+
+export const sql = \`
+  -- query_name = upsert_locomotive
+  SELECT
+    dgv.id, dgv.uuid, dgv.created_at, dgv.effective_at, dgv.updated_at
+  FROM upsert_locomotive(
+    :ein,
+    :fuel,
+    :capacity,
+    :milage
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    locomotive,
+  }: {
+    locomotive: Locomotive;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Locomotive>> => {
+  const results = await sqlQueryUpsertLocomotive({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      ein: locomotive.ein,
+      fuel: locomotive.fuel,
+      capacity: locomotive.capacity,
+      milage: locomotive.milage,
+    },
+  });
+  const { id, uuid, created_at: createdAt, effective_at: effectiveAt, updated_at: updatedAt } = results[0]!; // grab the db generated values
+  return new Locomotive({ ...locomotive, id, uuid, createdAt, effectiveAt, updatedAt }) as HasMetadata<Locomotive>;
+};",
+    "relpath": "locomotiveDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
+import { upsert } from './upsert';
+
+export const trainStationDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoTrainStation = trainStationDao;",
+    "relpath": "trainStationDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainStationByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindTrainStationByIdOutput,
+): HasMetadata<TrainStation> =>
+  new TrainStation({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    geocode: castGeocodeFromDatabaseObject(dbObject.geocode as SqlQueryFindGeocodeByIdOutput),
+    name: dbObject.name,
+  }) as HasMetadata<TrainStation>;",
+    "relpath": "trainStationDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainStationById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_station_by_id
+  SELECT
+    train_station.id,
+    train_station.uuid,
+    train_station.geocode,
+    train_station.name
+  FROM view_train_station_hydrated AS train_station
+  WHERE train_station.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainStation> | null> => {
+  const results = await sqlQueryFindTrainStationById({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "trainStationDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Geocode, TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainStationByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+import { geocodeDao } from '../geocodeDao';
+
+export const sql = \`
+  -- query_name = find_train_station_by_unique
+  SELECT
+    train_station.id,
+    train_station.uuid,
+    train_station.geocode,
+    train_station.name
+  FROM view_train_station_hydrated AS train_station
+  JOIN view_train_station_current ON train_station.id = view_train_station_current.id
+  WHERE 1=1
+    AND view_train_station_current.geocode_id = :geocodeId;
+\`;
+
+export const findByUnique = async (
+  {
+    geocode,
+  }: {
+    geocode: Geocode;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainStation> | null> => {
+  const results = await sqlQueryFindTrainStationByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      geocodeId: geocode.id ? geocode.id : ((await geocodeDao.findByUnique(geocode, context))?.id ?? -1),
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "trainStationDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainStationByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_station_by_uuid
+  SELECT
+    train_station.id,
+    train_station.uuid,
+    train_station.geocode,
+    train_station.name
+  FROM view_train_station_hydrated AS train_station
+  WHERE train_station.uuid = :uuid;
+\`;
+
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainStation> | null> => {
+  const results = await sqlQueryFindTrainStationByUuid({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      uuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "trainStationDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from 'helpful-errors';
+import { VisualogicContext } from 'visualogic';
+import { Ref, isRefByPrimary, isRefByUnique } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof TrainStation> },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainStation> | null> => {
+  if (isRefByPrimary({ of: TrainStation })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isRefByUnique({ of: TrainStation })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for TrainStation', { input });
+};",
+    "relpath": "trainStationDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { TrainStation, Geocode } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertTrainStation } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { geocodeDao } from '../geocodeDao';
+
+export const sql = \`
+  -- query_name = upsert_train_station
+  SELECT
+    dgv.id, dgv.uuid
+  FROM upsert_train_station(
+    :geocodeId,
+    :name
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    trainStation,
+  }: {
+    trainStation: TrainStation;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainStation>> => {
+  const results = await sqlQueryUpsertTrainStation({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      geocodeId: trainStation.geocode.id ? trainStation.geocode.id : (await geocodeDao.upsert({ geocode: trainStation.geocode }, context)).id,
+      name: trainStation.name,
+    },
+  });
+  const { id, uuid } = results[0]!; // grab the db generated values
+  return new TrainStation({ ...trainStation, id, uuid }) as HasMetadata<TrainStation>;
+};",
+    "relpath": "trainStationDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+import { findByRef } from './findByRef';
+import { upsert } from './upsert';
+
+export const trainDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByUuid: withExpectOutput(findByUuid),
+  findByRef: withExpectOutput(findByRef),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoTrain = trainDao;",
+    "relpath": "trainDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindTrainByIdOutput,
+): HasMetadata<Train> =>
+  new Train({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    homeStationGeocode: castGeocodeFromDatabaseObject(dbObject.home_station_geocode as SqlQueryFindGeocodeByIdOutput),
+    combinationId: dbObject.combination_id,
+    locomotiveUuids: dbObject.locomotive_uuids as string[],
+    carriageUuids: dbObject.carriage_uuids as string[],
+    engineerUuids: dbObject.engineer_uuids as string[],
+    leadEngineerUuid: dbObject.lead_engineer_uuid,
+    status: dbObject.status as Train['status'],
+  }) as HasMetadata<Train>;",
+    "relpath": "trainDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_by_id
+  SELECT
+    train.id,
+    train.uuid,
+    train.home_station_geocode,
+    train.combination_id,
+    train.locomotive_uuids,
+    train.carriage_uuids,
+    train.engineer_uuids,
+    train.lead_engineer_uuid,
+    train.status
+  FROM view_train_hydrated AS train
+  WHERE train.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Train> | null> => {
+  const results = await sqlQueryFindTrainById({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "trainDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_by_unique
+  SELECT
+    train.id,
+    train.uuid,
+    train.home_station_geocode,
+    train.combination_id,
+    train.locomotive_uuids,
+    train.carriage_uuids,
+    train.engineer_uuids,
+    train.lead_engineer_uuid,
+    train.status
+  FROM view_train_hydrated AS train
+  WHERE 1=1
+    AND train.combination_id = :combinationId;
+\`;
+
+export const findByUnique = async (
+  {
+    combinationId,
+  }: {
+    combinationId: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Train> | null> => {
+  const results = await sqlQueryFindTrainByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      combinationId,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "trainDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainByUuid } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_by_uuid
+  SELECT
+    train.id,
+    train.uuid,
+    train.home_station_geocode,
+    train.combination_id,
+    train.locomotive_uuids,
+    train.carriage_uuids,
+    train.engineer_uuids,
+    train.lead_engineer_uuid,
+    train.status
+  FROM view_train_hydrated AS train
+  WHERE train.uuid = :uuid;
+\`;
+
+export const findByUuid = async (
+  {
+    uuid,
+  }: {
+    uuid: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Train> | null> => {
+  const results = await sqlQueryFindTrainByUuid({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      uuid,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "trainDao/findByUuid.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from 'helpful-errors';
+import { VisualogicContext } from 'visualogic';
+import { Ref, isRefByPrimary, isRefByUnique } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof Train> },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Train> | null> => {
+  if (isRefByPrimary({ of: Train })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isRefByUnique({ of: Train })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for Train', { input });
+};",
+    "relpath": "trainDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { Train } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertTrain } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { geocodeDao } from '../geocodeDao';
+
+export const sql = \`
+  -- query_name = upsert_train
+  SELECT
+    dgv.id, dgv.uuid
+  FROM upsert_train(
+    :homeStationGeocodeId,
+    :combinationId,
+    (
+      SELECT COALESCE(array_agg(locomotive.id ORDER BY locomotive_ref.array_order_index), array[]::bigint[]) AS array_agg
+      FROM locomotive
+      JOIN unnest(:locomotiveUuids::uuid[]) WITH ORDINALITY
+        AS locomotive_ref (uuid, array_order_index)
+        ON locomotive.uuid = locomotive_ref.uuid
+    ),
+    (
+      SELECT COALESCE(array_agg(carriage.id ORDER BY carriage_ref.array_order_index), array[]::bigint[]) AS array_agg
+      FROM carriage
+      JOIN unnest(:carriageUuids::uuid[]) WITH ORDINALITY
+        AS carriage_ref (uuid, array_order_index)
+        ON carriage.uuid = carriage_ref.uuid
+    ),
+    (
+      SELECT COALESCE(array_agg(train_engineer.id ORDER BY train_engineer_ref.array_order_index), array[]::bigint[]) AS array_agg
+      FROM train_engineer
+      JOIN unnest(:engineerUuids::uuid[]) WITH ORDINALITY
+        AS train_engineer_ref (uuid, array_order_index)
+        ON train_engineer.uuid = train_engineer_ref.uuid
+    ),
+    (SELECT id FROM train_engineer WHERE train_engineer.uuid = :leadEngineerUuid),
+    :status
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    train,
+  }: {
+    train: Train;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<Train>> => {
+  const results = await sqlQueryUpsertTrain({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      homeStationGeocodeId: train.homeStationGeocode.id ? train.homeStationGeocode.id : (await geocodeDao.upsert({ geocode: train.homeStationGeocode }, context)).id,
+      combinationId: train.combinationId,
+      locomotiveUuids: train.locomotiveUuids,
+      carriageUuids: train.carriageUuids,
+      engineerUuids: train.engineerUuids,
+      leadEngineerUuid: train.leadEngineerUuid,
+      status: train.status,
+    },
+  });
+  const { id, uuid } = results[0]!; // grab the db generated values
+  return new Train({ ...train, id, uuid }) as HasMetadata<Train>;
+};",
+    "relpath": "trainDao/upsert.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { withExpectOutput } from 'procedure-fns';
+
+import { findById } from './findById';
+import { findByUnique } from './findByUnique';
+import { findByRef } from './findByRef';
+import { upsert } from './upsert';
+
+export const trainLocatedEventDao = {
+  findById: withExpectOutput(findById),
+  findByUnique: withExpectOutput(findByUnique),
+  findByRef: withExpectOutput(findByRef),
+  upsert,
+};
+
+// include an alias, for improved ease of access via autocomplete
+export const daoTrainLocatedEvent = trainLocatedEventDao;",
+    "relpath": "trainLocatedEventDao/index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+
+import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindTrainLocatedEventByIdOutput,
+): HasMetadata<TrainLocatedEvent> =>
+  new TrainLocatedEvent({
+    id: dbObject.id,
+    trainUuid: dbObject.train_uuid,
+    occurredAt: dbObject.occurred_at,
+    geocode: castGeocodeFromDatabaseObject(dbObject.geocode as SqlQueryFindGeocodeByIdOutput),
+  }) as HasMetadata<TrainLocatedEvent>;",
+    "relpath": "trainLocatedEventDao/castFromDatabaseObject.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainLocatedEventById } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_located_event_by_id
+  SELECT
+    train_located_event.id,
+    train_located_event.train_uuid,
+    train_located_event.occurred_at,
+    train_located_event.geocode
+  FROM view_train_located_event_hydrated AS train_located_event
+  WHERE train_located_event.id = :id;
+\`;
+
+export const findById = async (
+  {
+    id,
+  }: {
+    id: number;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainLocatedEvent> | null> => {
+  const results = await sqlQueryFindTrainLocatedEventById({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      id,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "trainLocatedEventDao/findById.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { HasMetadata } from 'type-fns';
+import { VisualogicContext } from 'visualogic';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryFindTrainLocatedEventByUnique } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { castFromDatabaseObject } from './castFromDatabaseObject';
+
+export const sql = \`
+  -- query_name = find_train_located_event_by_unique
+  SELECT
+    train_located_event.id,
+    train_located_event.train_uuid,
+    train_located_event.occurred_at,
+    train_located_event.geocode
+  FROM view_train_located_event_hydrated AS train_located_event
+  JOIN train_located_event as view_train_located_event_current ON train_located_event.id = view_train_located_event_current.id
+  WHERE 1=1
+    AND view_train_located_event_current.train_id = (SELECT id FROM train WHERE train.uuid = :trainUuid)
+    AND train_located_event.occurred_at = :occurredAt;
+\`;
+
+export const findByUnique = async (
+  {
+    trainUuid,
+    occurredAt,
+  }: {
+    trainUuid: string;
+    occurredAt: string;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainLocatedEvent> | null> => {
+  const results = await sqlQueryFindTrainLocatedEventByUnique({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      trainUuid,
+      occurredAt,
+    },
+  });
+  const [dbObject, ...moreDbObjects] = results;
+  if (moreDbObjects.length) throw new Error('expected only one db object for this query');
+  if (!dbObject) return null;
+  return castFromDatabaseObject(dbObject);
+};",
+    "relpath": "trainLocatedEventDao/findByUnique.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { UnexpectedCodePathError } from 'helpful-errors';
+import { VisualogicContext } from 'visualogic';
+import { Ref, isRefByPrimary, isRefByUnique } from 'domain-objects';
+import { HasMetadata } from 'type-fns';
+
+import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { findByUnique } from './findByUnique';
+import { findByUuid } from './findByUuid';
+
+export const findByRef = async (
+  input: { ref: Ref<typeof TrainLocatedEvent> },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainLocatedEvent> | null> => {
+  if (isRefByPrimary({ of: TrainLocatedEvent })(input.ref))
+    return await findByUuid(input.ref, context);
+  if (isRefByUnique({ of: TrainLocatedEvent })(input.ref))
+    return await findByUnique(input.ref, context);
+  throw new UnexpectedCodePathError('invalid ref for TrainLocatedEvent', { input });
+};",
+    "relpath": "trainLocatedEventDao/findByRef.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertTrainLocatedEvent } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { geocodeDao } from '../geocodeDao';
+
+export const sql = \`
+  -- query_name = upsert_train_located_event
+  SELECT
+    dgv.id
+  FROM upsert_train_located_event(
+    (SELECT id FROM train WHERE train.uuid = :trainUuid),
+    :occurredAt,
+    :geocodeId
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    trainLocatedEvent,
+  }: {
+    trainLocatedEvent: TrainLocatedEvent;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<TrainLocatedEvent>> => {
+  const results = await sqlQueryUpsertTrainLocatedEvent({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      trainUuid: trainLocatedEvent.trainUuid,
+      occurredAt: trainLocatedEvent.occurredAt,
+      geocodeId: trainLocatedEvent.geocode.id ? trainLocatedEvent.geocode.id : (await geocodeDao.upsert({ geocode: trainLocatedEvent.geocode }, context)).id,
+    },
+  });
+  const { id } = results[0]!; // grab the db generated values
+  return new TrainLocatedEvent({ ...trainLocatedEvent, id }) as HasMetadata<TrainLocatedEvent>;
+};",
+    "relpath": "trainLocatedEventDao/upsert.ts",
+  },
+]
+`;
