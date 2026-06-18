@@ -1,9 +1,8 @@
 import { exec } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { promisify } from 'util';
-
 import { genTempDir, given, then, useThen, when } from 'test-fns';
+import { promisify } from 'util';
 
 const execAsync = promisify(exec);
 
@@ -26,11 +25,11 @@ describe('generate command via bin/run', () => {
     when('[t1] bin/run generate is executed with valid config', () => {
       const testDir = genTempDir({
         slug: 'generate-acceptance',
-        clone: './src/logic/__test_assets__/exampleProject',
+        clone: './src/domain.operations/__test_assets__/exampleProject',
         symlink: [{ at: 'node_modules', to: 'node_modules' }],
       });
       const configPath = path.join(testDir, 'codegen.sql.dao.yml');
-      const daosOutputDir = path.join(testDir, 'src/data/dao');
+      const daosOutputDir = path.join(testDir, 'src/access/daos');
 
       const result = useThen('generate command completes', async () => {
         return await execAsync(`./bin/run generate -c ${configPath}`);
@@ -41,7 +40,13 @@ describe('generate command via bin/run', () => {
       });
 
       then('stderr matches snapshot', () => {
-        expect(result.stderr).toMatchSnapshot();
+        // remove path warning since it contains machine-specific absolute paths
+        // the warning spans multiple lines with ANSI codes, so match the full warning text
+        const stderrPortable = result.stderr.replace(
+          /Warning: Could not find source[\s\S]*?compiled source\.\n?/g,
+          '',
+        );
+        expect(stderrPortable).toMatchSnapshot();
       });
 
       then('it generates DAO directories', () => {

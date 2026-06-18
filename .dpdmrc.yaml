@@ -1,0 +1,9 @@
+# dpdm exclude patterns
+# each entry is joined with | to form a single regex for --exclude
+#
+# only exclude devDependencies here
+# if you exclude a prod dependency, you ship cycles to consumers and break their builds
+exclude:
+  - __test_assets__  # test fixtures, not prod code
+  - joi  # devDep transitive: declapract, rhachet (older domain-objects)
+  - domain-objects/dist/instantiation  # devDep transitive: older domain-objects in rhachet deps

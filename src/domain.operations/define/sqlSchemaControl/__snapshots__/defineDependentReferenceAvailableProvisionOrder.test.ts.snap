@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`defineDependentReferenceAvailableProvisionOrder should work on the example project 1`] = `
+{
+  "depth": 3,
+  "order": [
+    "Carriage",
+    "CarriageCargo",
+    "Certificate",
+    "Geocode",
+    "Locomotive",
+    "Price",
+    "TrainEngineer",
+    "TrainStation",
+    "InvoiceLineItem",
+    "Train",
+    "TrainLocatedEvent",
+    "AsyncTaskPredictStationCongestion",
+    "Invoice",
+  ],
+  "reason": {
+    "AsyncTaskPredictStationCongestion": [
+      "TrainStation",
+      "TrainLocatedEvent",
+    ],
+    "Carriage": [],
+    "CarriageCargo": [
+      "Carriage",
+    ],
+    "Certificate": [],
+    "Geocode": [],
+    "Invoice": [
+      "InvoiceLineItem",
+      "Price",
+    ],
+    "InvoiceLineItem": [
+      "Price",
+    ],
+    "Locomotive": [],
+    "Price": [],
+    "Train": [
+      "Geocode",
+      "Locomotive",
+      "Carriage",
+      "TrainEngineer",
+    ],
+    "TrainEngineer": [
+      "Certificate",
+    ],
+    "TrainLocatedEvent": [
+      "Train",
+      "Geocode",
+    ],
+    "TrainStation": [
+      "Geocode",
+    ],
+  },
+}
+`;

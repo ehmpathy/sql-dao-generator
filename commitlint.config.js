@@ -6,19 +6,16 @@ module.exports = {
       2,
       'always',
       [
-        'build',
-        'chore',
-        'ci',
-        'cont',
-        'docs',
+        'break', // use break: instead of feat!: or BREAKING CHANGE footer
         'feat',
         'fix',
-        'perf',
-        'refactor',
+        // 'docs', // prefer fix(docs): instead of docs
+        'chore',
         'revert',
-        'style',
-        'test',
+        'cont', // continue progress within a p
       ],
     ],
+    // forbid ! prefix (use break: instead)
+    'subject-exclamation-mark': [2, 'never'],
   },
 };
