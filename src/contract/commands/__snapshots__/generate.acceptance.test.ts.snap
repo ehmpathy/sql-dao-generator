@@ -83,12 +83,7 @@ exports[`generate command via bin/run given: [case1] the project is built when: 
 ]
 `;
 
-exports[`generate command via bin/run given: [case1] the project is built when: [t1] bin/run generate is executed with valid config then: stderr matches snapshot 1`] = `
-" [33m›[39m   Warning: Could not find source for /home/vlad/git/ehmpathy/_worktrees/sql-
- [33m›[39m   dao-generator.vlad.fix-tsnode/dist/contract/commands based on tsconfig. 
- [33m›[39m   Defaulting to compiled source.
-"
-`;
+exports[`generate command via bin/run given: [case1] the project is built when: [t1] bin/run generate is executed with valid config then: stderr matches snapshot 1`] = `" [33m›[39m   "`;
 
 exports[`generate command via bin/run given: [case1] the project is built when: [t1] bin/run generate is executed with valid config then: stdout matches snapshot 1`] = `
 "[1m[22m

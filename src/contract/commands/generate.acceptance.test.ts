@@ -40,7 +40,13 @@ describe('generate command via bin/run', () => {
       });
 
       then('stderr matches snapshot', () => {
-        expect(result.stderr).toMatchSnapshot();
+        // remove path warning since it contains machine-specific absolute paths
+        // the warning spans multiple lines with ANSI codes, so match the full warning text
+        const stderrPortable = result.stderr.replace(
+          /Warning: Could not find source[\s\S]*?compiled source\.\n?/g,
+          '',
+        );
+        expect(stderrPortable).toMatchSnapshot();
       });
 
       then('it generates DAO directories', () => {
