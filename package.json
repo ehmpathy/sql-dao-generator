@@ -72,7 +72,7 @@
     "test:lint:biome:all": "biome check",
     "test:lint": "npm run test:lint:biome && npm run test:lint:cycles && npm run test:lint:deps",
     "test:unit": "set -eu && jest -c ./jest.unit.config.ts --forceExit --verbose --passWithNoTests $([ -n \"${CI:-}\" ] && echo '--ci') $([ \"${THOROUGH:-}\" != \"true\" ] && echo '--changedSince=main') $([ \"${RESNAP:-}\" = \"true\" ] && echo '--updateSnapshot')",
-    "test:integration": "set -eu && jest -c ./jest.integration.config.ts --forceExit --verbose --passWithNoTests $([ -n \"${CI:-}\" ] && echo '--ci') $([ \"${THOROUGH:-}\" != \"true\" ] && echo '--changedSince=main') $([ \"${RESNAP:-}\" = \"true\" ] && echo '--updateSnapshot')",
+    "test:integration": "set -eu && npm run test:integration:provision-generated-files-to-import && jest -c ./jest.integration.config.ts --forceExit --verbose --passWithNoTests $([ -n \"${CI:-}\" ] && echo '--ci') $([ \"${THOROUGH:-}\" != \"true\" ] && echo '--changedSince=main') $([ \"${RESNAP:-}\" = \"true\" ] && echo '--updateSnapshot')",
     "test:acceptance:locally": "set -eu && npm run build && LOCALLY=true jest -c ./jest.acceptance.config.ts --forceExit --verbose --runInBand --passWithNoTests $([ \"${RESNAP:-}\" = \"true\" ] && echo '--updateSnapshot')",
     "test": "set -eu && npm run test:commits && npm run test:types && npm run test:format && npm run test:lint && npm run test:unit && npm run test:integration && npm run test:acceptance:locally",
     "test:acceptance": "set -eu && npm run build && jest -c ./jest.acceptance.config.ts --forceExit --verbose --runInBand --passWithNoTests $([ -n \"${CI:-}\" ] && echo '--ci') $([ \"${RESNAP:-}\" = \"true\" ] && echo '--updateSnapshot')",
