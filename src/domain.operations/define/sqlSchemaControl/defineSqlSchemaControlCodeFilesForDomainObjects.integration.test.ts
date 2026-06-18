@@ -7,7 +7,7 @@ import { defineSqlSchemaControlCodeFilesForDomainObjects } from './defineSqlSche
 describe('defineSqlSchemaControlCodeFilesForDomainObjects', () => {
   it('should work on the example project', () => {
     const domainObjects = introspect(
-      `${__dirname}/../../__test_assets__/exampleProject/src/domain.objects/index.ts`,
+      `${__dirname}/../../.test.assets/exampleProject/src/domain.objects/index.ts`,
     );
     const sqlSchemaRelationships = defineSqlSchemaRelationshipsForDomainObjects(
       { domainObjects },

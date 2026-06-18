@@ -1,6 +1,6 @@
 import { getAllPathsMatchingGlobs } from './getAllPathsMatchingGlobs';
 
-const root = `${__dirname}/../../__test_assets__/exampleProject`; // i.e., using the example project dir to search on
+const root = `${__dirname}/../../.test.assets/exampleProject`; // i.e., using the example project dir to search on
 
 describe('getAllPathsMatchingGlobs', () => {
   it('should return paths that match a glob', async () => {

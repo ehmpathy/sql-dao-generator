@@ -1,4 +1,5 @@
-provision/schema/declarations/**/*
+provision/schema/declarations/**/*.ts
+!provision/schema/declarations/package.json
 provision/schema/sql/**/*
 provision/schema/sql/**/*
-src/data/dao
+src/access/daos

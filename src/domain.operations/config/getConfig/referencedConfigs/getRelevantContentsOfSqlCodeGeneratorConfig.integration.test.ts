@@ -8,12 +8,12 @@ describe('getRelevantContentsOfSqlCodeGeneratorConfig', () => {
     expect(contents.resources).toContain(
       'provision/schema/sql/tables/**/*.sql',
     );
-    expect(contents.queries).toContain('src/data/dao/**/*.ts');
+    expect(contents.queries).toContain('src/access/daos/**/*.ts');
     expect(contents.generates.types).toEqual(
-      'src/data/dao/.generated/types.ts',
+      'src/access/daos/.generated/types.ts',
     );
     expect(contents.generates.queryFunctions).toEqual(
-      'src/data/dao/.generated/queryFunctions.ts',
+      'src/access/daos/.generated/queryFunctions.ts',
     );
   });
 });

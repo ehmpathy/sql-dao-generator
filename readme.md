@@ -6,9 +6,9 @@ Generates sql-schema, sql-control, type definitions, query functions, tests, and
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/sql-dao-generator.svg)](https://npmjs.org/package/sql-dao-generator)
-[![Codecov](https://codecov.io/gh/uladkasach/sql-dao-generator/branch/master/graph/badge.svg)](https://codecov.io/gh/uladkasach/sql-dao-generator)
+[![Codecov](https://codecov.io/gh/ehmpathy/sql-dao-generator/branch/main/graph/badge.svg)](https://codecov.io/gh/ehmpathy/sql-dao-generator)
 [![Downloads/week](https://img.shields.io/npm/dw/sql-dao-generator.svg)](https://npmjs.org/package/sql-dao-generator)
-[![License](https://img.shields.io/npm/l/sql-dao-generator.svg)](https://github.com/uladkasach/sql-dao-generator/blob/master/package.json)
+[![License](https://img.shields.io/npm/l/sql-dao-generator.svg)](https://github.com/ehmpathy/sql-dao-generator/blob/main/package.json)
 
 # Table of Contents
 <!-- toc -->
@@ -28,7 +28,7 @@ The goal of `sql-dao-generator` is to use the `domain-objects` you've already de
 This includes:
 - generating sql schema resources with [`sql-schema-generator`](https://github.com/uladkasach/sql-schema-generator)
 - generating sql control config for use with [`sql-schema-control`](https://github.com/uladkasach/sql-schema-control)
-- generating standard queries for each domain object (e.g., `upsert`, `findById`, `findByUnique`) and leaving an easily extensible pattern
+- generating standard queries for each domain object (e.g., `upsert`, `findById`, `findByUuid`, `findByUnique`, `findByRef`) and leaving an easily extensible pattern
 - generating typescript type definitions for each sql resource and query with [`sql-code-generator`](https://github.com/uladkasach/sql-code-generator)
 
 Powered by:
@@ -61,12 +61,12 @@ dialect: 10.7
 for:
   objects:
     search:
-      - 'src/domain/objects/*.ts'
+      - 'src/domain.objects/*.ts'
     exclude:
       - 'TrainLocatedEvent' # we track this one in dynamodb, so no sql dao needed
 generates:
   daos:
-    to: src/data/dao
+    to: src/access/daos
     using:
       log: src/util/log#log
       DatabaseConnection: src/util/database/getDbConnection#DatabaseConnection
@@ -129,16 +129,19 @@ export class Geocode extends DomainLiteral<Geocode> implements Geocode {}
 4. generate the dao files
     1. `geocodeDao/index.ts`
         ```ts
+        import { castFromDatabaseObject } from './castFromDatabaseObject';
         import { findById } from './findById';
         import { findByUnique } from './findByUnique'
         import { upsert } from './upsert';
 
         export const geocodeDao = {
+          castFromDatabaseObject,
           findById,
           findByUnique,
           upsert,
         }
         ```
+        note: for `DomainEntity` objects with a `uuid`, `findByUuid` and `findByRef` are also generated
     2. `geocodeDao/findById.query.ts`
         ```ts
         export const sql = `
@@ -165,7 +168,7 @@ export class Geocode extends DomainLiteral<Geocode> implements Geocode {}
           });
           if (results.length > 1) throw new Error('should only be one');
           if (!results.length) return null;
-          return fromDatabaseObject({ dbObject: results[0] });
+          return castFromDatabaseObject({ dbObject: results[0] });
         };
         ```
     3. `geocodeDao/findByUnique.query.ts`
@@ -198,7 +201,7 @@ export class Geocode extends DomainLiteral<Geocode> implements Geocode {}
           });
           if (results.length > 1) throw new Error('should only be one');
           if (!results.length) return null;
-          return fromDatabaseObject({ dbObject: results[0] });
+          return castFromDatabaseObject({ dbObject: results[0] });
         };
        ```
     4. `geocodeDao/upsert.query.ts`
@@ -222,13 +225,11 @@ export class Geocode extends DomainLiteral<Geocode> implements Geocode {}
           return new Geocode({ ...geocode, id }) as HasId<Geocode>;
         };
        ```
-    5. `geocodeDao/utils/fromDatabaseObject.ts`
+    5. `geocodeDao/castFromDatabaseObject.ts`
        ```ts
-       export const fromDatabaseObject = async ({
-          dbConnection,
+       export const castFromDatabaseObject = ({
           dbObject,
         }: {
-          dbConnection: DatabaseConnection;
           dbObject: SqlQueryFindGeocodeByIdOutput;
         }) => {
           return new Geocode({
@@ -243,6 +244,32 @@ export class Geocode extends DomainLiteral<Geocode> implements Geocode {}
 
 
 # Features
+
+### AsyncTask Support
+
+The sql-dao-generator has first-class support for [simple-async-tasks](https://github.com/ehmpathy/simple-async-tasks). Simply extend the `AsyncTask` interface in your domain entity:
+
+```ts
+import { DomainEntity } from 'domain-objects';
+import type { AsyncTask, AsyncTaskStatus } from 'simple-async-tasks';
+
+export interface AsyncTaskPredictStationCongestion extends AsyncTask {
+  id?: number;
+  uuid?: string;
+  status: AsyncTaskStatus;
+  stationUuid: string;
+}
+export class AsyncTaskPredictStationCongestion
+  extends DomainEntity<AsyncTaskPredictStationCongestion>
+  implements AsyncTaskPredictStationCongestion
+{
+  public static primary = ['uuid'] as const;
+  public static unique = ['stationUuid'] as const;
+  public static updatable = ['status'];
+}
+```
+
+The generator will produce DAOs with the standard `AsyncTask` lifecycle queries.
 
 ### Guard Rails
 
@@ -293,7 +320,7 @@ OPTIONS
   -h, --help           show CLI help
 ```
 
-_See code: [dist/contract/commands/generate.ts](https://github.com/uladkasach/sql-dao-generator/blob/v0.0.0/dist/contract/commands/generate.ts)_
+_See code: [src/contract/commands/generate.ts](https://github.com/ehmpathy/sql-dao-generator/blob/main/src/contract/commands/generate.ts)_
 
 ## `sql-dao-generator help [COMMAND]`
 

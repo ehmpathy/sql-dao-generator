@@ -4,7 +4,7 @@ describe('extractDomainObjectMetadatasFromConfigCriteria', () => {
   it('should follow all imports to resolve all references', async () => {
     const metadatas = await extractDomainObjectMetadatasFromConfigCriteria({
       searchPaths: [
-        `${__dirname}/../../__test_assets__/exampleProject/src/domain.objects/index.ts`,
+        `${__dirname}/../../.test.assets/exampleProject/src/domain.objects/index.ts`,
       ],
       include: null,
       exclude: null,
@@ -15,13 +15,13 @@ describe('extractDomainObjectMetadatasFromConfigCriteria', () => {
   it('should find all of the domain objects findable by all search paths in a directory, with no dupes', async () => {
     const metadatas = await extractDomainObjectMetadatasFromConfigCriteria({
       searchPaths: [
-        `${__dirname}/../../__test_assets__/exampleProject/src/domain.objects/Carriage.ts`,
-        `${__dirname}/../../__test_assets__/exampleProject/src/domain.objects/Engineer.ts`,
-        `${__dirname}/../../__test_assets__/exampleProject/src/domain.objects/Geocode.ts`,
-        `${__dirname}/../../__test_assets__/exampleProject/src/domain.objects/index.ts`,
-        `${__dirname}/../../__test_assets__/exampleProject/src/domain.objects/Locomotive.ts`,
-        `${__dirname}/../../__test_assets__/exampleProject/src/domain.objects/Train.ts`,
-        `${__dirname}/../../__test_assets__/exampleProject/src/domain.objects/TrainLocatedEvent.ts`,
+        `${__dirname}/../../.test.assets/exampleProject/src/domain.objects/Carriage.ts`,
+        `${__dirname}/../../.test.assets/exampleProject/src/domain.objects/Engineer.ts`,
+        `${__dirname}/../../.test.assets/exampleProject/src/domain.objects/Geocode.ts`,
+        `${__dirname}/../../.test.assets/exampleProject/src/domain.objects/index.ts`,
+        `${__dirname}/../../.test.assets/exampleProject/src/domain.objects/Locomotive.ts`,
+        `${__dirname}/../../.test.assets/exampleProject/src/domain.objects/Train.ts`,
+        `${__dirname}/../../.test.assets/exampleProject/src/domain.objects/TrainLocatedEvent.ts`,
       ],
       include: null,
       exclude: null,
@@ -32,7 +32,7 @@ describe('extractDomainObjectMetadatasFromConfigCriteria', () => {
   it('should only find the domain objects imported from the files in the search paths', async () => {
     const metadatas = await extractDomainObjectMetadatasFromConfigCriteria({
       searchPaths: [
-        `${__dirname}/../../__test_assets__/exampleProject/src/domain.objects/Train.ts`,
+        `${__dirname}/../../.test.assets/exampleProject/src/domain.objects/Train.ts`,
       ],
       include: null,
       exclude: null,
@@ -49,7 +49,7 @@ describe('extractDomainObjectMetadatasFromConfigCriteria', () => {
   it('should filter out the ones named in the `exclude` list', async () => {
     const metadatas = await extractDomainObjectMetadatasFromConfigCriteria({
       searchPaths: [
-        `${__dirname}/../../__test_assets__/exampleProject/src/domain.objects/index.ts`,
+        `${__dirname}/../../.test.assets/exampleProject/src/domain.objects/index.ts`,
       ],
       include: null,
       exclude: ['TrainLocatedEvent'],
@@ -60,7 +60,7 @@ describe('extractDomainObjectMetadatasFromConfigCriteria', () => {
   it('should only keep the one named in the `include` list, if provided', async () => {
     const metadatas = await extractDomainObjectMetadatasFromConfigCriteria({
       searchPaths: [
-        `${__dirname}/../../__test_assets__/exampleProject/src/domain.objects/index.ts`,
+        `${__dirname}/../../.test.assets/exampleProject/src/domain.objects/index.ts`,
       ],
       include: ['Geocode', 'TrainLocatedEvent', 'Carriage'],
       exclude: null,
@@ -78,7 +78,7 @@ describe('extractDomainObjectMetadatasFromConfigCriteria', () => {
   it('should filter on include and exclude if both are defined', async () => {
     const metadatas = await extractDomainObjectMetadatasFromConfigCriteria({
       searchPaths: [
-        `${__dirname}/../../__test_assets__/exampleProject/src/domain.objects/index.ts`,
+        `${__dirname}/../../.test.assets/exampleProject/src/domain.objects/index.ts`,
       ],
       include: ['Geocode', 'TrainLocatedEvent', 'Carriage'],
       exclude: ['TrainLocatedEvent'],

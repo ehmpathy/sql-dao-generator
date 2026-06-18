@@ -30,3 +30,5 @@ ignores:
   - tsx
   - tsc-alias
   - yalc
+  - pg # used in test assets example project for database connection
+  - "@types/pg"

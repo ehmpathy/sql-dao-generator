@@ -25,7 +25,7 @@ describe('generate command via bin/run', () => {
     when('[t1] bin/run generate is executed with valid config', () => {
       const testDir = genTempDir({
         slug: 'generate-acceptance',
-        clone: './src/domain.operations/__test_assets__/exampleProject',
+        clone: './src/domain.operations/.test.assets/exampleProject',
         symlink: [{ at: 'node_modules', to: 'node_modules' }],
       });
       const configPath = path.join(testDir, 'codegen.sql.dao.yml');

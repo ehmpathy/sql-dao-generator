@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`readConfig should be able to read the example config provisioned in __test_assets__ 1`] = `
+exports[`readConfig should be able to read the example config provisioned in .test.assets 1`] = `
 {
   "dialect": "10.7",
   "for": {
