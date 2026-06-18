@@ -60,6 +60,7 @@
     "provision:docker:up": "docker compose -f ./provision/docker/integration_test_db/docker-compose.yml up -d --force-recreate --build --renew-anon-volumes",
     "provision:docker:await": "docker compose -f ./provision/docker/integration_test_db/docker-compose.yml exec -T postgres /root/wait-for-postgres.sh",
     "provision:integration-test-db": "npm run provision:docker:clear && npm run provision:docker:up && npm run provision:docker:await && npm run provision:docker:extensions",
+    "start:testdb": "npm run provision:integration-test-db",
     "test:commits": "LAST_TAG=$(git describe --tags --abbrev=0 @^ 2> /dev/null || git rev-list --max-parents=0 HEAD) && npx commitlint --from $LAST_TAG --to HEAD --verbose",
     "test:types": "tsc -p ./tsconfig.json --noEmit",
     "test:format:terraform": "echo 'no terraform'",
