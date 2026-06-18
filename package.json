@@ -64,7 +64,7 @@
     "test:commits": "LAST_TAG=$(git describe --tags --abbrev=0 @^ 2> /dev/null || git rev-list --max-parents=0 HEAD) && npx commitlint --from $LAST_TAG --to HEAD --verbose",
     "test:types": "tsc -p ./tsconfig.json --noEmit",
     "test:format:terraform": "echo 'no terraform'",
-    "test:integration:provision-generated-files-to-import": "npx jest src/logic/commands/generate.test.ts",
+    "test:integration:provision-generated-files-to-import": "npx jest src/domain.operations/commands/generate.test.ts",
     "test:format:biome": "biome format",
     "test:format": "npm run test:format:biome",
     "test:lint:deps": "npx depcheck -c ./.depcheckrc.yml",
