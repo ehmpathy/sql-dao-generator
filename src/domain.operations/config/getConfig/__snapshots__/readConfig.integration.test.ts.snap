@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`readConfig should be able to read the example config provisioned in __test_assets__ 1`] = `
+exports[`readConfig should be able to read the example config provisioned in .test.assets 1`] = `
 {
   "dialect": "10.7",
   "for": {
@@ -698,14 +698,14 @@ exports[`readConfig should be able to read the example config provisioned in __t
       "config": {
         "content": {
           "generates": {
-            "queryFunctions": "src/access/daos/.generated/queryFunctions.ts",
-            "types": "src/access/daos/.generated/types.ts",
+            "queryFunctions": "src/data/dao/.generated/queryFunctions.ts",
+            "types": "src/data/dao/.generated/types.ts",
           },
           "queries": [
-            "src/access/daos/**/*.ts",
-            "!src/access/daos/**/index.ts",
-            "!src/access/daos/**/castFromDatabaseObject.ts",
-            "!src/access/daos/**/findByRef.ts",
+            "src/data/dao/**/*.ts",
+            "!src/data/dao/**/index.ts",
+            "!src/data/dao/**/castFromDatabaseObject.ts",
+            "!src/data/dao/**/findByRef.ts",
             "!src/**/*.test.ts",
           ],
           "resources": [

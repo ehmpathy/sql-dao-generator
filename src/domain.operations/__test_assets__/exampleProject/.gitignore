@@ -1,5 +1,0 @@
-provision/schema/declarations/**/*
-!provision/schema/declarations/package.json
-provision/schema/sql/**/*
-provision/schema/sql/**/*
-src/access/daos

@@ -3,13 +3,13 @@ import type { HasMetadata } from 'type-fns';
 import type { VisualogicContext } from 'visualogic';
 
 import { uuid } from '@src/deps';
-import { carriageDao } from '@src/domain.operations/__test_assets__/exampleProject/src/access/daos/carriageDao';
-import { geocodeDao } from '@src/domain.operations/__test_assets__/exampleProject/src/access/daos/geocodeDao';
-import { invoiceDao } from '@src/domain.operations/__test_assets__/exampleProject/src/access/daos/invoiceDao';
-import { locomotiveDao } from '@src/domain.operations/__test_assets__/exampleProject/src/access/daos/locomotiveDao';
-import { trainDao } from '@src/domain.operations/__test_assets__/exampleProject/src/access/daos/trainDao';
-import { trainEngineerDao } from '@src/domain.operations/__test_assets__/exampleProject/src/access/daos/trainEngineerDao';
-import { SvcPaymentsPaymentTransactionCurrency } from '@src/domain.operations/__test_assets__/exampleProject/src/access/sdks/svcPayments';
+import { carriageDao } from '@src/domain.operations/.test.assets/exampleProject/src/access/daos/carriageDao';
+import { geocodeDao } from '@src/domain.operations/.test.assets/exampleProject/src/access/daos/geocodeDao';
+import { invoiceDao } from '@src/domain.operations/.test.assets/exampleProject/src/access/daos/invoiceDao';
+import { locomotiveDao } from '@src/domain.operations/.test.assets/exampleProject/src/access/daos/locomotiveDao';
+import { trainDao } from '@src/domain.operations/.test.assets/exampleProject/src/access/daos/trainDao';
+import { trainEngineerDao } from '@src/domain.operations/.test.assets/exampleProject/src/access/daos/trainEngineerDao';
+import { SvcPaymentsPaymentTransactionCurrency } from '@src/domain.operations/.test.assets/exampleProject/src/access/sdks/svcPayments';
 import {
   Carriage,
   CarriagePurpose,
@@ -25,11 +25,11 @@ import {
   Train,
   TrainEngineer,
   TrainStatus,
-} from '@src/domain.operations/__test_assets__/exampleProject/src/domain';
+} from '@src/domain.operations/.test.assets/exampleProject/src/domain';
 import {
   type DatabaseConnection,
   getDatabaseConnection,
-} from '@src/domain.operations/__test_assets__/exampleProject/src/util/database/getDbConnection';
+} from '@src/domain.operations/.test.assets/exampleProject/src/util/database/getDbConnection';
 
 jest.setTimeout(60 * 1000);
 
@@ -58,7 +58,7 @@ describe('generate', () => {
     it('should be able to apply the schema', async () => {
       // apply resources with schema control
       const applyResult = await shell.exec(
-        `npx sql-schema-control apply -c ${__dirname}/../__test_assets__/exampleProject/provision/schema/control.yml`,
+        `npx sql-schema-control apply -c ${__dirname}/../.test.assets/exampleProject/provision/schema/control.yml`,
       );
 
       // filter out node deprecation warnings from stderr (they're warnings, not errors)
