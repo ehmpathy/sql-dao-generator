@@ -1,7 +1,7 @@
 import { HasMetadata } from 'type-fns';
 
 import { TrainEngineer } from '../../../domain';
-import { SqlQueryFindCertificateByIdOutput, SqlQueryFindTrainEngineerByIdOutput } from '../../../data/dao/.generated/types';
+import { SqlQueryFindCertificateByIdOutput, SqlQueryFindTrainEngineerByIdOutput } from '../.generated/types';
 import { castFromDatabaseObject as castCertificateFromDatabaseObject } from '../certificateDao/castFromDatabaseObject';
 
 export const castFromDatabaseObject = (

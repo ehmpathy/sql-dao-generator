@@ -3,7 +3,7 @@ import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Price } from '../../../domain';
-import { sqlQueryUpsertPrice } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryUpsertPrice } from '../.generated/queryFunctions';
 
 export const sql = `
   -- query_name = upsert_price

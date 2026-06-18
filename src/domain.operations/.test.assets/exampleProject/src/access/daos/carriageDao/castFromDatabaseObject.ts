@@ -1,7 +1,7 @@
 import { HasMetadata } from 'type-fns';
 
 import { Carriage } from '../../../domain';
-import { SqlQueryFindCarriageByIdOutput } from '../../../data/dao/.generated/types';
+import { SqlQueryFindCarriageByIdOutput } from '../.generated/types';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindCarriageByIdOutput,

@@ -3,7 +3,7 @@ import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Carriage } from '../../../domain';
-import { sqlQueryFindCarriageByUuid } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryFindCarriageByUuid } from '../.generated/queryFunctions';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = `

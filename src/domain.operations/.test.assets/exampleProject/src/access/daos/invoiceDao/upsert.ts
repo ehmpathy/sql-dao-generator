@@ -3,7 +3,7 @@ import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Invoice } from '../../../domain';
-import { sqlQueryUpsertInvoice } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryUpsertInvoice } from '../.generated/queryFunctions';
 import { invoiceLineItemDao } from '../invoiceLineItemDao';
 import { priceDao } from '../priceDao';
 

@@ -3,7 +3,7 @@ import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Geocode, TrainStation } from '../../../domain';
-import { sqlQueryFindTrainStationByUnique } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryFindTrainStationByUnique } from '../.generated/queryFunctions';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
 import { geocodeDao } from '../geocodeDao';
 

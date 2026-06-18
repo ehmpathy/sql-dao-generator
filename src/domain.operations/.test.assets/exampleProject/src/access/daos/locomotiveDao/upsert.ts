@@ -3,7 +3,7 @@ import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Locomotive } from '../../../domain';
-import { sqlQueryUpsertLocomotive } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryUpsertLocomotive } from '../.generated/queryFunctions';
 
 export const sql = `
   -- query_name = upsert_locomotive

@@ -3,7 +3,7 @@ import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Train } from '../../../domain';
-import { sqlQueryUpsertTrain } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryUpsertTrain } from '../.generated/queryFunctions';
 import { geocodeDao } from '../geocodeDao';
 
 export const sql = `

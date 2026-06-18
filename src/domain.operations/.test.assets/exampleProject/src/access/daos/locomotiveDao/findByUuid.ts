@@ -3,7 +3,7 @@ import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Locomotive } from '../../../domain';
-import { sqlQueryFindLocomotiveByUuid } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryFindLocomotiveByUuid } from '../.generated/queryFunctions';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = `

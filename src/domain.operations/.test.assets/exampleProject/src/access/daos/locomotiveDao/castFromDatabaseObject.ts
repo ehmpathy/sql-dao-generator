@@ -1,7 +1,7 @@
 import { HasMetadata } from 'type-fns';
 
 import { Locomotive } from '../../../domain';
-import { SqlQueryFindLocomotiveByIdOutput } from '../../../data/dao/.generated/types';
+import { SqlQueryFindLocomotiveByIdOutput } from '../.generated/types';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindLocomotiveByIdOutput,

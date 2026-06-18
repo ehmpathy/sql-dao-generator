@@ -1,7 +1,7 @@
 import { HasMetadata } from 'type-fns';
 
 import { TrainStation } from '../../../domain';
-import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainStationByIdOutput } from '../../../data/dao/.generated/types';
+import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainStationByIdOutput } from '../.generated/types';
 import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
 
 export const castFromDatabaseObject = (

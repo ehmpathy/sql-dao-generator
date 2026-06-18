@@ -3,7 +3,7 @@ import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Certificate } from '../../../domain';
-import { sqlQueryUpsertCertificate } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryUpsertCertificate } from '../.generated/queryFunctions';
 
 export const sql = `
   -- query_name = upsert_certificate

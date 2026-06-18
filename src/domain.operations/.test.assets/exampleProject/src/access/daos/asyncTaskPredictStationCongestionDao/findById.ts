@@ -3,7 +3,7 @@ import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { AsyncTaskPredictStationCongestion } from '../../../domain';
-import { sqlQueryFindAsyncTaskPredictStationCongestionById } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryFindAsyncTaskPredictStationCongestionById } from '../.generated/queryFunctions';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = `

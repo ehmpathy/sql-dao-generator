@@ -3,7 +3,7 @@ import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Carriage } from '../../../domain';
-import { sqlQueryUpsertCarriage } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryUpsertCarriage } from '../.generated/queryFunctions';
 
 export const sql = `
   -- query_name = upsert_carriage

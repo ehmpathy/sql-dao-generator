@@ -3,7 +3,7 @@ import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { TrainEngineer } from '../../../domain';
-import { sqlQueryUpsertTrainEngineer } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryUpsertTrainEngineer } from '../.generated/queryFunctions';
 import { certificateDao } from '../certificateDao';
 
 export const sql = `

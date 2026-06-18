@@ -4,7 +4,7 @@ import { isRefByPrimary } from 'domain-objects';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { CarriageCargo } from '../../../domain';
-import { sqlQueryFindCarriageCargoByUuid } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryFindCarriageCargoByUuid } from '../.generated/queryFunctions';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = `

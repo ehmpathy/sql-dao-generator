@@ -1,7 +1,7 @@
 import { HasMetadata } from 'type-fns';
 
 import { Price } from '../../../domain';
-import { SqlQueryFindPriceByIdOutput } from '../../../data/dao/.generated/types';
+import { SqlQueryFindPriceByIdOutput } from '../.generated/types';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindPriceByIdOutput,

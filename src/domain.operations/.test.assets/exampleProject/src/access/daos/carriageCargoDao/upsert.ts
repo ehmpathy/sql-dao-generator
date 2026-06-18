@@ -4,7 +4,7 @@ import { isRefByPrimary } from 'domain-objects';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { CarriageCargo, Carriage } from '../../../domain';
-import { sqlQueryUpsertCarriageCargo } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryUpsertCarriageCargo } from '../.generated/queryFunctions';
 import { carriageDao } from '../carriageDao';
 
 export const sql = `

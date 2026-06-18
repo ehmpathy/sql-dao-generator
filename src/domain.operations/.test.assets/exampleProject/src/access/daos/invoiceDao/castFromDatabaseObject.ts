@@ -1,7 +1,7 @@
 import { HasMetadata } from 'type-fns';
 
 import { Invoice } from '../../../domain';
-import { SqlQueryFindInvoiceByIdOutput, SqlQueryFindInvoiceLineItemByIdOutput, SqlQueryFindPriceByIdOutput } from '../../../data/dao/.generated/types';
+import { SqlQueryFindInvoiceByIdOutput, SqlQueryFindInvoiceLineItemByIdOutput, SqlQueryFindPriceByIdOutput } from '../.generated/types';
 import { castFromDatabaseObject as castInvoiceLineItemFromDatabaseObject } from '../invoiceLineItemDao/castFromDatabaseObject';
 import { castFromDatabaseObject as castPriceFromDatabaseObject } from '../priceDao/castFromDatabaseObject';
 

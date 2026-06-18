@@ -4,7 +4,7 @@ import { Ref, isRefByPrimary } from 'domain-objects';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Carriage, CarriageCargo } from '../../../domain';
-import { sqlQueryFindCarriageCargoByUnique } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryFindCarriageCargoByUnique } from '../.generated/queryFunctions';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
 import { carriageDao } from '../carriageDao';
 

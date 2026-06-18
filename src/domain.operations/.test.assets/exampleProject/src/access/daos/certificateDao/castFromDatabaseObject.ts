@@ -1,7 +1,7 @@
 import { HasMetadata } from 'type-fns';
 
 import { Certificate } from '../../../domain';
-import { SqlQueryFindCertificateByIdOutput } from '../../../data/dao/.generated/types';
+import { SqlQueryFindCertificateByIdOutput } from '../.generated/types';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindCertificateByIdOutput,

@@ -3,7 +3,7 @@ import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Price } from '../../../domain';
-import { sqlQueryFindPriceByUnique } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryFindPriceByUnique } from '../.generated/queryFunctions';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
 
 export const sql = `

@@ -3,7 +3,7 @@ import { HasMetadata } from 'type-fns';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { AsyncTaskPredictStationCongestion } from '../../../domain';
-import { sqlQueryUpsertAsyncTaskPredictStationCongestion } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryUpsertAsyncTaskPredictStationCongestion } from '../.generated/queryFunctions';
 
 export const sql = `
   -- query_name = upsert_async_task_predict_station_congestion

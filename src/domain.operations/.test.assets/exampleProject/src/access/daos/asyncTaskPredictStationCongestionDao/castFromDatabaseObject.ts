@@ -1,7 +1,7 @@
 import { HasMetadata } from 'type-fns';
 
 import { AsyncTaskPredictStationCongestion } from '../../../domain';
-import { SqlQueryFindAsyncTaskPredictStationCongestionByIdOutput } from '../../../data/dao/.generated/types';
+import { SqlQueryFindAsyncTaskPredictStationCongestionByIdOutput } from '../.generated/types';
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindAsyncTaskPredictStationCongestionByIdOutput,

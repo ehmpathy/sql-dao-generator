@@ -3,7 +3,7 @@ import { VisualogicContext } from 'visualogic';
 
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { InvoiceLineItem, Price } from '../../../domain';
-import { sqlQueryFindInvoiceLineItemByUnique } from '../../../data/dao/.generated/queryFunctions';
+import { sqlQueryFindInvoiceLineItemByUnique } from '../.generated/queryFunctions';
 import { castFromDatabaseObject } from './castFromDatabaseObject';
 import { priceDao } from '../priceDao';
 
