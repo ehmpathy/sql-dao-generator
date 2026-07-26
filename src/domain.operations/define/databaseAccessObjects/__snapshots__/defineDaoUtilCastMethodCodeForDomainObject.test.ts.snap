@@ -90,3 +90,21 @@ export const castFromDatabaseObject = (
     longitude: dbObject.longitude,
   }) as HasMetadata<Geocode>;"
 `;
+
+exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct when the same dobj is referenced more than once in a dobj 1`] = `
+"import { HasMetadata } from 'type-fns';
+
+import { TravelRoute } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTravelRouteByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindTravelRouteByIdOutput,
+): HasMetadata<TravelRoute> =>
+  new TravelRoute({
+    id: dbObject.id,
+    uuid: dbObject.uuid,
+    originGeocode: castGeocodeFromDatabaseObject(dbObject.origin_geocode as SqlQueryFindGeocodeByIdOutput),
+    destinationGeocode: castGeocodeFromDatabaseObject(dbObject.destination_geocode as SqlQueryFindGeocodeByIdOutput),
+  }) as HasMetadata<TravelRoute>;"
+`;

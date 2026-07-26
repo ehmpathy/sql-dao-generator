@@ -28,6 +28,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: null,
@@ -92,6 +93,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['cin'],
@@ -158,6 +160,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['trainUuid', 'occurredAt'],
@@ -191,6 +194,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: null,
@@ -277,6 +281,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['tin'],
@@ -316,6 +321,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: null,
@@ -345,6 +351,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: null,
@@ -362,6 +369,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: ['uuid'],
@@ -379,6 +387,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: ['uuid'],
@@ -432,6 +441,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: null,
@@ -495,6 +505,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['cin'],
@@ -561,6 +572,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['trainUuid', 'occurredAt'],
@@ -589,6 +601,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: null,
@@ -677,6 +690,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['tin'],
@@ -714,6 +728,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: null,
@@ -743,6 +758,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: null,
@@ -760,6 +776,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: ['uuid'],
@@ -777,6 +794,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: ['uuid'],
@@ -830,6 +848,7 @@ describe('defineDaoFindByMethodCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: null,
@@ -893,6 +912,7 @@ async (
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: null,
@@ -923,6 +943,7 @@ async (
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: null,
@@ -983,6 +1004,7 @@ async (
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['cin'],
@@ -1055,6 +1077,7 @@ async (
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['uuid'],
@@ -1128,6 +1151,7 @@ async (
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['geocode'],
@@ -1156,6 +1180,7 @@ async (
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: null,
@@ -1229,6 +1254,7 @@ async (
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['carriageRef'],
@@ -1253,6 +1279,7 @@ async (
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: ['uuid'],
               unique: ['uuid'],
@@ -1318,6 +1345,7 @@ async (
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['trainUuid', 'occurredAt'],
@@ -1346,6 +1374,7 @@ async (
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: null,
@@ -1454,6 +1483,7 @@ async (
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['tin'],
@@ -1491,6 +1521,7 @@ async (
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: null,
@@ -1520,6 +1551,7 @@ async (
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: null,
@@ -1537,6 +1569,7 @@ async (
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: ['uuid'],
@@ -1554,6 +1587,7 @@ async (
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: ['uuid'],
@@ -1649,6 +1683,7 @@ async (
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: [
@@ -1687,6 +1722,7 @@ async (
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: null,
@@ -1715,6 +1751,7 @@ async (
               },
             },
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: null,
@@ -1732,6 +1769,7 @@ async (
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: ['uuid'],
@@ -1749,6 +1787,7 @@ async (
               uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
             }, // domain entity reference, so we dont need to look at properties
             decorations: {
+              origin: null,
               alias: null,
               primary: null,
               unique: ['uuid'],

@@ -2,9 +2,11 @@ import {
   DomainObjectPropertyType,
   DomainObjectVariant,
 } from 'domain-objects-metadata';
+import { getError } from 'helpful-errors';
 
 import { SqlSchemaReferenceMethod } from '@src/domain.objects/SqlSchemaReferenceMetadata';
 import { createExampleDomainObjectMetadata } from '@src/domain.operations/.test.assets/createExampleDomainObject';
+import { UserInputError } from '@src/domain.operations/UserInputError';
 
 import { defineSqlSchemaGeneratorCodeForProperty } from './defineSqlSchemaGeneratorCodeForProperty';
 
@@ -260,6 +262,179 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
       ); // note the camel case inside prop.REFERENCES
     });
   });
+  describe('primitive and enum arrays', () => {
+    it('should generate a native varchar[] column for a string[] primitive array', () => {
+      const property = defineSqlSchemaGeneratorCodeForProperty({
+        domainObject: createExampleDomainObjectMetadata(),
+        domainObjectProperty: {
+          name: 'tags',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.STRING },
+        },
+        sqlSchemaProperty: {
+          name: 'tags',
+          isArray: true,
+          isNullable: false,
+          isUpdatable: false,
+          isDatabaseGenerated: false,
+          reference: null,
+        },
+      });
+      expect(property).toEqual('tags: prop.ARRAY_OF(prop.VARCHAR()),');
+    });
+    it('should generate a native numeric[] column for a number[] primitive array', () => {
+      const property = defineSqlSchemaGeneratorCodeForProperty({
+        domainObject: createExampleDomainObjectMetadata(),
+        domainObjectProperty: {
+          name: 'scores',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.NUMBER },
+        },
+        sqlSchemaProperty: {
+          name: 'scores',
+          isArray: true,
+          isNullable: false,
+          isUpdatable: false,
+          isDatabaseGenerated: false,
+          reference: null,
+        },
+      });
+      expect(property).toEqual('scores: prop.ARRAY_OF(prop.NUMERIC()),');
+    });
+    it('should generate a native boolean[] column for a boolean[] primitive array', () => {
+      const property = defineSqlSchemaGeneratorCodeForProperty({
+        domainObject: createExampleDomainObjectMetadata(),
+        domainObjectProperty: {
+          name: 'flags',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.BOOLEAN },
+        },
+        sqlSchemaProperty: {
+          name: 'flags',
+          isArray: true,
+          isNullable: false,
+          isUpdatable: false,
+          isDatabaseGenerated: false,
+          reference: null,
+        },
+      });
+      expect(property).toEqual('flags: prop.ARRAY_OF(prop.BOOLEAN()),');
+    });
+    it('should generate a native timestamptz[] column for a Date[] primitive array', () => {
+      const property = defineSqlSchemaGeneratorCodeForProperty({
+        domainObject: createExampleDomainObjectMetadata(),
+        domainObjectProperty: {
+          name: 'occurredAts',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.DATE },
+        },
+        sqlSchemaProperty: {
+          name: 'occurred_ats',
+          isArray: true,
+          isNullable: false,
+          isUpdatable: false,
+          isDatabaseGenerated: false,
+          reference: null,
+        },
+      });
+      expect(property).toEqual(
+        'occurred_ats: prop.ARRAY_OF(prop.TIMESTAMPTZ()),',
+      );
+    });
+    it('should generate a native enum[] column for an enum array', () => {
+      const property = defineSqlSchemaGeneratorCodeForProperty({
+        domainObject: createExampleDomainObjectMetadata(),
+        domainObjectProperty: {
+          name: 'statuses',
+          type: DomainObjectPropertyType.ARRAY,
+          of: {
+            type: DomainObjectPropertyType.ENUM,
+            of: ['ACTIVE', 'PAUSED'],
+          },
+        },
+        sqlSchemaProperty: {
+          name: 'statuses',
+          isArray: true,
+          isNullable: false,
+          isUpdatable: false,
+          isDatabaseGenerated: false,
+          reference: null,
+        },
+      });
+      expect(property).toEqual(
+        "statuses: prop.ARRAY_OF(prop.ENUM(['ACTIVE', 'PAUSED'])),",
+      );
+    });
+    it('should still generate a uuid[] column for a _uuids-suffix string[] with no matched domain object', () => {
+      const property = defineSqlSchemaGeneratorCodeForProperty({
+        domainObject: createExampleDomainObjectMetadata(),
+        domainObjectProperty: {
+          name: 'favoriteFruitUuids',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.STRING },
+        },
+        sqlSchemaProperty: {
+          name: 'favorite_fruit_uuids',
+          isArray: true,
+          isNullable: false,
+          isUpdatable: false,
+          isDatabaseGenerated: false,
+          reference: null,
+        },
+      });
+      expect(property).toEqual(
+        'favorite_fruit_uuids: prop.ARRAY_OF(prop.UUID()),',
+      );
+    });
+    it('should generate a native numeric[] column (not a uuid[]) for a _uuids-suffix number[]', () => {
+      // a _uuids suffix on a non-string array is NOT a uuid reference — it is a native primitive
+      // array. the shared isUuidReferenceArrayProperty predicate gates on a string element, so this
+      // number[] falls through to the native branch, in agreement with schema-control (which declares
+      // no join table for it) — the two layers can not drift on this fork
+      const property = defineSqlSchemaGeneratorCodeForProperty({
+        domainObject: createExampleDomainObjectMetadata(),
+        domainObjectProperty: {
+          name: 'scoreUuids',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.NUMBER },
+        },
+        sqlSchemaProperty: {
+          name: 'score_uuids',
+          isArray: true,
+          isNullable: false,
+          isUpdatable: false,
+          isDatabaseGenerated: false,
+          reference: null,
+        },
+      });
+      expect(property).toEqual('score_uuids: prop.ARRAY_OF(prop.NUMERIC()),');
+    });
+    it('should fail loud for a nested array shape (string[][])', () => {
+      const error = getError(() =>
+        defineSqlSchemaGeneratorCodeForProperty({
+          domainObject: createExampleDomainObjectMetadata(),
+          domainObjectProperty: {
+            name: 'matrix',
+            type: DomainObjectPropertyType.ARRAY,
+            of: {
+              type: DomainObjectPropertyType.ARRAY,
+              of: { type: DomainObjectPropertyType.STRING },
+            },
+          },
+          sqlSchemaProperty: {
+            name: 'matrix',
+            isArray: true,
+            isNullable: false,
+            isUpdatable: false,
+            isDatabaseGenerated: false,
+            reference: null,
+          },
+        }),
+      );
+      expect(error).toBeInstanceOf(UserInputError);
+      expect(error.message).toContain('Unsupported array shape');
+    });
+  });
   describe('modifiers', () => {
     it('should generate properties with updatable modifier correctly', () => {
       const property = defineSqlSchemaGeneratorCodeForProperty({
@@ -331,6 +506,72 @@ describe('defineSqlSchemaGeneratorCodeForProperty', () => {
       });
       expect(property).toEqual(
         "status: { ...prop.ENUM(['QUEUED', 'ATTEMPTED', 'FULFILLED', 'FAILED', 'CANCELED']), updatable: true, nullable: true },",
+      );
+    });
+    it('should preserve the nullable modifier on a primitive array column', () => {
+      const property = defineSqlSchemaGeneratorCodeForProperty({
+        domainObject: createExampleDomainObjectMetadata(),
+        domainObjectProperty: {
+          name: 'tags',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.STRING },
+        },
+        sqlSchemaProperty: {
+          name: 'tags',
+          isArray: true,
+          isNullable: true,
+          isUpdatable: false,
+          isDatabaseGenerated: false,
+          reference: null,
+        },
+      });
+      expect(property).toEqual(
+        'tags: { ...prop.ARRAY_OF(prop.VARCHAR()), nullable: true },',
+      );
+    });
+    it('should preserve the updatable modifier on a primitive array column', () => {
+      const property = defineSqlSchemaGeneratorCodeForProperty({
+        domainObject: createExampleDomainObjectMetadata(),
+        domainObjectProperty: {
+          name: 'tags',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.STRING },
+        },
+        sqlSchemaProperty: {
+          name: 'tags',
+          isArray: true,
+          isNullable: false,
+          isUpdatable: true,
+          isDatabaseGenerated: false,
+          reference: null,
+        },
+      });
+      expect(property).toEqual(
+        'tags: { ...prop.ARRAY_OF(prop.VARCHAR()), updatable: true },',
+      );
+    });
+    it('should preserve the updatable modifier on an enum array column', () => {
+      const property = defineSqlSchemaGeneratorCodeForProperty({
+        domainObject: createExampleDomainObjectMetadata(),
+        domainObjectProperty: {
+          name: 'statuses',
+          type: DomainObjectPropertyType.ARRAY,
+          of: {
+            type: DomainObjectPropertyType.ENUM,
+            of: ['ACTIVE', 'PAUSED'],
+          },
+        },
+        sqlSchemaProperty: {
+          name: 'statuses',
+          isArray: true,
+          isNullable: false,
+          isUpdatable: true,
+          isDatabaseGenerated: false,
+          reference: null,
+        },
+      });
+      expect(property).toEqual(
+        "statuses: { ...prop.ARRAY_OF(prop.ENUM(['ACTIVE', 'PAUSED'])), updatable: true },",
       );
     });
   });

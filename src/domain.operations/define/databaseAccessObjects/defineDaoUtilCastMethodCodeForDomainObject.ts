@@ -2,8 +2,10 @@ import { camelCase, snakeCase } from 'change-case';
 import {
   type DomainObjectMetadata,
   DomainObjectPropertyType,
-  isDomainObjectArrayProperty,
-  isDomainObjectReferenceProperty,
+  isEnumArrayProperty,
+  isPrimitiveArrayProperty,
+  isReferenceArrayProperty,
+  isReferenceProperty,
 } from 'domain-objects-metadata';
 import { isPresent } from 'type-fns';
 
@@ -25,11 +27,10 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
     ...new Set(
       Object.values(domainObject.properties)
         .map((property) => {
-          if (isDomainObjectReferenceProperty(property))
-            return property.of.name;
+          if (isReferenceProperty(property)) return property.of.name;
           if (
-            isDomainObjectArrayProperty(property) &&
-            isDomainObjectReferenceProperty(property.of)
+            isReferenceArrayProperty(property) &&
+            isReferenceProperty(property.of)
           )
             return property.of.of.name;
           return null;
@@ -78,13 +79,22 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
         if (domainObjectProperty.type === DomainObjectPropertyType.ENUM)
           return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name} as ${domainObject.name}['${domainObjectProperty.name}']`;
 
-        // array of non-reference uuids case
+        // enum array case: assure typescript of the domain enum[] type (the sql-generated element type is a loose string, not the enum union)
         if (
-          isDomainObjectArrayProperty(domainObjectProperty) &&
+          isEnumArrayProperty(domainObjectProperty) &&
+          !sqlSchemaProperty.reference
+        )
+          return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name} as ${domainObject.name}['${domainObjectProperty.name}']`;
+
+        // non-reference primitive string array case (e.g. a native varchar[] column, or a _uuids array of non-fk uuids)
+        if (
+          isPrimitiveArrayProperty(domainObjectProperty) &&
           domainObjectProperty.of.type === DomainObjectPropertyType.STRING &&
           !sqlSchemaProperty.reference // only for cases where its not an fk based implicit-uuid-reference
         )
           return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name} as string[]`; // assure typescript that we _know_ its a string array (not null, or number[])
+
+        // note: NUMBER/BOOLEAN/DATE primitive arrays deliberately fall through to the generic no-assertion branch below. whether they need an `as <type>[]` narrow — and whether such an assertion is even a legal one — depends on the exact sql-generated element type, which is unknowable until sql-schema-generator can emit these native array columns (its ARRAY_OF accepts only REFERENCES/UUID today; see handoff.sql-schema-generator.md). added with the downstream round-trip rather than guessed here.
 
         // non-reference case
         if (!sqlSchemaProperty.reference) {

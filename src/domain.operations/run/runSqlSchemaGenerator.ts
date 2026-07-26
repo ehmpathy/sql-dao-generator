@@ -3,18 +3,35 @@ import shell from 'shelljs';
 
 import type { GeneratorConfig } from '@src/domain';
 
-export const runSqlSchemaGenerator = async ({
-  config,
-}: {
-  config: GeneratorConfig;
-}) => {
+import { asHelpfulSqlSchemaGeneratorError } from './asHelpfulSqlSchemaGeneratorError';
+
+// the shell boundary this communicator drives, injected so it can be swapped for a fake in tests (real shelljs by default)
+export interface SqlSchemaGeneratorShell {
+  cd: (dir: string) => void;
+  exec: (
+    command: string,
+    options: { silent: boolean },
+  ) =>
+    | Promise<{ stderr: string; stdout: string }>
+    | { stderr: string; stdout: string };
+}
+
+export const runSqlSchemaGenerator = async (
+  {
+    config,
+  }: {
+    config: GeneratorConfig;
+  },
+  context: { shell: SqlSchemaGeneratorShell } = { shell },
+) => {
   // run the generator to actually generate the files
-  shell.cd(config.rootDir);
-  const result = await shell.exec(
+  context.shell.cd(config.rootDir);
+  const result = await context.shell.exec(
     `npx sql-schema-generator generate --config=${config.generates.schema.config.path}`,
     { silent: true },
   );
-  if (result.stderr) throw new Error(result.stderr);
+  if (result.stderr)
+    throw asHelpfulSqlSchemaGeneratorError({ stderr: result.stderr });
 
   // log that we've successfully run
   const successMessage = `  ${chalk.green('✔')} ${chalk.green(

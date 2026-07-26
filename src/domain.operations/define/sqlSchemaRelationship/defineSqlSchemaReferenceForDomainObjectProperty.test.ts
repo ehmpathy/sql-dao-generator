@@ -393,6 +393,52 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
         },
       });
     });
+    it('should NOT infer a uuid array reference when `Uuids` is not the name suffix (agrees with the shared isUuidReferenceArrayProperty predicate the generator consumes)', () => {
+      // `imageUuidsAtCapture` (sql `image_uuids_at_capture`) contains `Uuids` but does not END in it,
+      // so the shared `_uuids$` predicate the generator + schema-control consume emits a NATIVE array
+      // column for it. this classifier must agree — an unanchored `/Uuids/` here would build an FK/join
+      // decoration the generator never emits, the exact manifest/generator mismatch the shared predicate
+      // exists to prevent. so this must return null (no implicit uuid reference).
+      const reference = defineSqlSchemaReferenceForDomainObjectProperty({
+        property: {
+          name: 'imageUuidsAtCapture',
+          type: DomainObjectPropertyType.ARRAY,
+          of: {
+            type: DomainObjectPropertyType.STRING,
+          },
+        },
+        domainObject: { name: 'ExampleThing' } as DomainObjectMetadata,
+        allDomainObjects: [
+          {
+            name: 'Image',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+          },
+        ] as DomainObjectMetadata[],
+      });
+      expect(reference).toEqual(null);
+    });
+    it('should NOT infer a uuid array reference for a non-string `_uuids` array (element-type gate mirrors the shared predicate)', () => {
+      // `scoreUuids: number[]` ends in `Uuids` but its element is NUMBER, not STRING, so it is a native
+      // numeric array — not a uuid reference. the element-type gate (isPrimitiveArrayProperty + STRING)
+      // matches the shared predicate, so both layers agree it falls through to the native-array branch.
+      const reference = defineSqlSchemaReferenceForDomainObjectProperty({
+        property: {
+          name: 'scoreUuids',
+          type: DomainObjectPropertyType.ARRAY,
+          of: {
+            type: DomainObjectPropertyType.NUMBER,
+          },
+        },
+        domainObject: { name: 'ExampleThing' } as DomainObjectMetadata,
+        allDomainObjects: [
+          {
+            name: 'Score',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+          },
+        ] as DomainObjectMetadata[],
+      });
+      expect(reference).toEqual(null);
+    });
   });
   it('should return null for a non-reference which _could_ be a reference, had the other domain object been part of the metadatas', () => {
     const reference = defineSqlSchemaReferenceForDomainObjectProperty({

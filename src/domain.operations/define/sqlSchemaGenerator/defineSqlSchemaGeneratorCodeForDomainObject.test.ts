@@ -40,6 +40,7 @@ const exampleCarriageDomainEntityMetadata = new DomainObjectMetadata({
     },
   },
   decorations: {
+    origin: null,
     alias: null,
     primary: null,
     unique: ['cin'],
@@ -65,6 +66,7 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: null,
@@ -146,6 +148,7 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['uuid'],
@@ -222,6 +225,7 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: null,
@@ -311,6 +315,7 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['trainUuid', 'occurredAt'],
@@ -375,6 +380,7 @@ describe('defineSqlSchemaGeneratorCodeForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['carriageRef'],

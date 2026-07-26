@@ -222,3 +222,5 @@ exports[`generate command via bin/run given: [case1] the project is built when: 
     [32m✔[39m [32m[1m[GENERATED][22m[39m [1msrc/access/daos/.generated/queryFunctions.ts[22m
 "
 `;
+
+exports[`generate command via bin/run given: [case1] the project is built when: [t3] bin/run generate is executed against a primitive-array fixture (the wish day-in-the-life) then: the helpful error message matches snapshot 1`] = `"ConstraintError: sql-schema-generator can not yet build a native primitive or enum array column (e.g. text[] / numeric[] / boolean[] / timestamptz[] / enum[]). sql-dao-generator emits prop.ARRAY_OF(prop.<primitive>()) for these, but the installed sql-schema-generator ARRAY_OF accepts only REFERENCEs or UUIDs. fix: upgrade sql-schema-generator to a version that supports native primitive/enum array columns, or model this property as an array of domain-object references (a relation) until then. see handoff.sql-schema-generator.md for the tracked follow-up."`;

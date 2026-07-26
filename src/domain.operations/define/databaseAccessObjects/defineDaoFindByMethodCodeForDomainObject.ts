@@ -4,8 +4,7 @@ import {
   type DomainObjectPropertyMetadata,
   DomainObjectPropertyType,
   DomainObjectVariant,
-  isDomainObjectArrayProperty,
-  isDomainObjectReferenceProperty,
+  isReferenceProperty,
 } from 'domain-objects-metadata';
 import { isPresent } from 'type-fns';
 
@@ -21,6 +20,7 @@ import {
   GetTypescriptCodeForPropertyContext,
 } from './defineQueryFunctionInputExpressionForDomainObjectProperty';
 import { defineQueryInputExpressionForSqlSchemaProperty } from './defineQueryInputExpressionForSqlSchemaProperty';
+import { getReferencedDomainObjectNames } from './getReferencedDomainObjectNames';
 
 export enum FindByQueryType {
   ID = 'Id',
@@ -51,7 +51,7 @@ const getTypescriptTypeForDomainObjectProperty = ({
     const referencedDomainObjectName = sqlSchemaProperty.reference!.of.name;
     // only use Ref<typeof ...> for domain entities; domain literals use the type directly
     if (
-      isDomainObjectReferenceProperty(domainObjectProperty) &&
+      isReferenceProperty(domainObjectProperty) &&
       domainObjectProperty.of.extends === DomainObjectVariant.DOMAIN_ENTITY
     ) {
       return `Ref<typeof ${referencedDomainObjectName}>`;
@@ -59,12 +59,21 @@ const getTypescriptTypeForDomainObjectProperty = ({
     return referencedDomainObjectName;
   }
   if (domainObjectProperty.type === DomainObjectPropertyType.ARRAY) {
+    // reference is guaranteed present here: a non-reference array in a unique key is rejected upstream at relationship construction (defineSqlSchemaRelationshipForDomainObject). this guards the invariant and narrows the nullable type
+    if (!sqlSchemaProperty.reference)
+      throw new UnexpectedCodePathDetectedError({
+        reason:
+          'unexpected non-reference array in a unique key; this should have been rejected at relationship construction',
+        domainObjectName,
+        domainObjectPropertyName: domainObjectProperty.name,
+      });
+
     if (
-      sqlSchemaProperty.reference!.method ===
+      sqlSchemaProperty.reference.method ===
       SqlSchemaReferenceMethod.IMPLICIT_BY_UUID
     )
       return 'string[]';
-    const referencedDomainObjectName = sqlSchemaProperty.reference!.of.name;
+    const referencedDomainObjectName = sqlSchemaProperty.reference.of.name;
     return `${referencedDomainObjectName}[]`;
   }
   throw new UnexpectedCodePathDetectedError({
@@ -73,45 +82,6 @@ const getTypescriptTypeForDomainObjectProperty = ({
     domainObjectName,
     domainObjectPropertyName: domainObjectProperty.name,
   }); // fail fast
-};
-
-export const getReferencedDomainObjectNames = (input: {
-  sqlSchemaRelationship: SqlSchemaToDomainObjectRelationship;
-}): string[] => {
-  const referencedDomainObjectNames = input.sqlSchemaRelationship.properties
-    .map(
-      ({
-        domainObject: domainObjectProperty,
-        sqlSchema: sqlSchemaProperty,
-      }) => {
-        // if its not explicitly defined property, then not needed in imports
-        if (!domainObjectProperty) return null;
-
-        // if its not part of the unique key, then its not needed in imports
-        if (
-          !input.sqlSchemaRelationship.decorations.unique.sqlSchema?.includes(
-            sqlSchemaProperty.name,
-          )
-        )
-          return null;
-
-        // if its a solo reference to a domain literal, then its needed
-        if (isDomainObjectReferenceProperty(domainObjectProperty))
-          return domainObjectProperty.of.name;
-
-        // if its a array reference to a domain literal, then its needed
-        if (
-          isDomainObjectArrayProperty(domainObjectProperty) &&
-          isDomainObjectReferenceProperty(domainObjectProperty.of)
-        )
-          return domainObjectProperty.of.of.name;
-
-        // otherwise, we dont care about it
-        return null;
-      },
-    )
-    .filter(isPresent);
-  return referencedDomainObjectNames;
 };
 
 export const defineDaoFindByMethodCodeForDomainObject = ({
@@ -160,7 +130,7 @@ export const defineDaoFindByMethodCodeForDomainObject = ({
     sqlSchemaRelationship.properties.some(
       (property) =>
         property.domainObject &&
-        isDomainObjectReferenceProperty(property.domainObject) &&
+        isReferenceProperty(property.domainObject) &&
         property.domainObject.of.extends ===
           DomainObjectVariant.DOMAIN_ENTITY &&
         sqlSchemaRelationship.decorations.unique.sqlSchema?.includes(
@@ -407,7 +377,7 @@ export const sql = \`
         !domainObjectProperty
           ? null
           : `${sqlSchemaName}.${
-              isDomainObjectReferenceProperty(domainObjectProperty) &&
+              isReferenceProperty(domainObjectProperty) &&
               domainObjectProperty.of.extends ===
                 DomainObjectVariant.DOMAIN_ENTITY // if its a DIRECT_BY_DECLARATION reference, then replace the name; // todo: upgrade to selecting the full ref-by-unique instead and leverage that to stop renaming adhoc to _uuid
                 ? snakeCase(domainObjectProperty.name)
