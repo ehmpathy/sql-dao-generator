@@ -8,6 +8,7 @@ exports[`readConfig should be able to read the example config provisioned in .te
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
+          "origin": null,
           "primary": [
             "uuid",
           ],
@@ -78,6 +79,7 @@ exports[`readConfig should be able to read the example config provisioned in .te
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
+          "origin": null,
           "primary": [
             "uuid",
           ],
@@ -128,6 +130,7 @@ exports[`readConfig should be able to read the example config provisioned in .te
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
+          "origin": null,
           "primary": [
             "uuid",
           ],
@@ -188,6 +191,7 @@ exports[`readConfig should be able to read the example config provisioned in .te
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
+          "origin": null,
           "primary": null,
           "unique": null,
           "updatable": null,
@@ -223,6 +227,7 @@ exports[`readConfig should be able to read the example config provisioned in .te
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
+          "origin": null,
           "primary": null,
           "unique": null,
           "updatable": null,
@@ -253,6 +258,7 @@ exports[`readConfig should be able to read the example config provisioned in .te
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
+          "origin": null,
           "primary": [
             "uuid",
           ],
@@ -330,6 +336,7 @@ exports[`readConfig should be able to read the example config provisioned in .te
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
+          "origin": null,
           "primary": null,
           "unique": null,
           "updatable": null,
@@ -370,6 +377,7 @@ exports[`readConfig should be able to read the example config provisioned in .te
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
+          "origin": null,
           "primary": [
             "uuid",
           ],
@@ -449,6 +457,7 @@ exports[`readConfig should be able to read the example config provisioned in .te
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
+          "origin": null,
           "primary": null,
           "unique": null,
           "updatable": null,
@@ -482,6 +491,7 @@ exports[`readConfig should be able to read the example config provisioned in .te
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
+          "origin": null,
           "primary": [
             "uuid",
           ],
@@ -578,6 +588,7 @@ exports[`readConfig should be able to read the example config provisioned in .te
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
+          "origin": null,
           "primary": [
             "uuid",
           ],
@@ -648,6 +659,7 @@ exports[`readConfig should be able to read the example config provisioned in .te
       DomainObjectMetadata {
         "decorations": {
           "alias": null,
+          "origin": null,
           "primary": [
             "uuid",
           ],
