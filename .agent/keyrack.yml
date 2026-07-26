@@ -5,4 +5,8 @@ extends:
   - .agent/repo=ehmpathy/role=mechanic/keyrack.yml
 env.prod: null
 env.prep: null
-env.test: null
+env.test:
+  # this codegen repo uses no aws; the extended framework roles declare AWS_PROFILE,
+  # so waive it whenever CI is set (github always sets CI=true) to unblock acceptance
+  - key: AWS_PROFILE
+    is-optional-if-has: CI
