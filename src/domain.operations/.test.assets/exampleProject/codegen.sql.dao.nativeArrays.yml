@@ -1,0 +1,21 @@
+language: postgres
+dialect: 10.7
+# sweeps the nativeArrays subfolder (SurfSpot: aliases string[], bestSwellPeriodsSec number[], swellWindows enum[]).
+# used only by the acceptance test that proves the cli surfaces a helpful ConstraintError when the
+# installed sql-schema-generator's ARRAY_OF rejects a native primitive/enum array column today.
+for:
+  objects:
+    search:
+      - 'src/domain.objects/nativeArrays/*.ts'
+generates:
+  daos:
+    to: src/access/daos
+    using:
+      log: src/util/log#log
+      DatabaseConnection: src/util/database/getDbConnection#DatabaseConnection
+  schema:
+    config: codegen.sql.schema.yml
+  control:
+    config: provision/schema/control.yml
+  code:
+    config: codegen.sql.types.yml

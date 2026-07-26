@@ -3,13 +3,31 @@ import {
   type DomainObjectMetadata,
   type DomainObjectPropertyMetadata,
   DomainObjectPropertyType,
-  isDomainObjectArrayProperty,
+  isEnumArrayProperty,
+  isPrimitiveArrayProperty,
 } from 'domain-objects-metadata';
 import { UnexpectedCodePathError } from 'helpful-errors';
 import { isPresent } from 'type-fns';
 
 import type { SqlSchemaPropertyMetadata } from '@src/domain.objects/SqlSchemaPropertyMetadata';
 import { UserInputError } from '@src/domain.operations/UserInputError';
+
+import { isUuidReferenceArrayProperty } from '../isUuidReferenceArrayProperty';
+
+// define the prop.* expression for a scalar primitive type; shared by the solo-property and array-element branches so the two can not drift apart. returns null for non-primitive types (e.g. ENUM), so the caller can continue its branch ladder
+const definePropExpressionForPrimitiveType = (
+  primitiveType: DomainObjectPropertyType,
+): string | null => {
+  if (primitiveType === DomainObjectPropertyType.STRING)
+    return 'prop.VARCHAR()'; // note: varchar without precision is what postgres defines as best practice (precision does not affect size)
+  if (primitiveType === DomainObjectPropertyType.NUMBER)
+    return 'prop.NUMERIC()'; // note: numeric without precision is a good choice for 90%+ of use cases, since precision of numeric does not affect size. if user needs more fine tuning, they can mod the generated entity directly; for long term: https://github.com/uladkasach/sql-dao-generator/issues/1
+  if (primitiveType === DomainObjectPropertyType.BOOLEAN)
+    return 'prop.BOOLEAN()';
+  if (primitiveType === DomainObjectPropertyType.DATE)
+    return 'prop.TIMESTAMPTZ()'; // note: timestamptz is the canonical timestamp, same as the system created_at/updated_at columns
+  return null;
+};
 
 export const defineSqlSchemaGeneratorCodeForProperty = ({
   domainObject,
@@ -30,31 +48,54 @@ export const defineSqlSchemaGeneratorCodeForProperty = ({
         sqlSchemaProperty.reference.of.name,
       )})`;
     }
-    if (isDomainObjectArrayProperty(domainObjectProperty)) {
+    if (domainObjectProperty.type === DomainObjectPropertyType.ARRAY) {
       // handle case where its an array reference to a domain object persisted within the database
       if (sqlSchemaProperty.reference)
         return `prop.ARRAY_OF(prop.REFERENCES(${
           isSelfReference ? '() => ' : ''
         }${camelCase(sqlSchemaProperty.reference.of.name)}))`;
 
-      // handle case where its potentially an array reference to a domain object persisted in another database (referenced by uuid)
-      const propertyNameLooksLikeUuidReferenceArray = new RegExp(
-        /_uuids$/,
-      ).test(sqlSchemaProperty.name); // i.e., does it end with _uuids?
+      // handle case where its an implicit by-uuid reference array (a _uuids-suffixed string[]); the
+      // shared predicate is consumed here AND by schema-control's join-table decision, so the column
+      // and the manifest resource can not disagree on which arrays are uuid references
       if (
-        propertyNameLooksLikeUuidReferenceArray &&
-        domainObjectProperty.of.type === DomainObjectPropertyType.STRING
+        isUuidReferenceArrayProperty({
+          name: sqlSchemaProperty.name,
+          domainObjectProperty,
+        })
       )
         return 'prop.ARRAY_OF(prop.UUID())';
 
-      // otherwise, its not a handled case
+      // handle enum arrays as a native enum[] column
+      if (isEnumArrayProperty(domainObjectProperty))
+        return `prop.ARRAY_OF(prop.ENUM([${(
+          domainObjectProperty.of.of as string[]
+        )
+          .map((option) => `'${option}'`)
+          .join(', ')}]))`;
+
+      // handle primitive arrays as a native <primitive>[] column
+      if (isPrimitiveArrayProperty(domainObjectProperty)) {
+        const elementProp = definePropExpressionForPrimitiveType(
+          domainObjectProperty.of.type,
+        );
+        if (!elementProp)
+          throw new UnexpectedCodePathError(
+            'unsupported primitive array element type',
+            { domainObjectProperty },
+          );
+        return `prop.ARRAY_OF(${elementProp})`;
+      }
+
+      // otherwise, its an unsupported array shape (e.g. a nested array)
       throw new UserInputError({
         reason:
-          'According to relational database best practices, properties of persisted domain objects should only be arrays of other domain objects. Therefore, only arrays of directly nested references and implicit by uuid references can be properties of domain objects persisted in relational databases.',
+          'Unsupported array shape. Arrays of domain-object references (stored as relations), primitives (stored as a native array column), and enums (stored as a native enum[] column) are supported. Nested arrays and other shapes are not.',
         domainObjectName: domainObject.name,
         domainObjectPropertyName: domainObjectProperty.name,
         potentialSolution: `
-If you'd like to store an array of data, try one of the following:
+If you'd like to store this array, try one of these options:
+- if it is a nested array, flatten it or model the inner array as a domain literal
 - make a literal out of the data and store an array of those literals instead
   - for example: \`User.favorite_fruits = ['Banana', 'Grapefruit']\` => \`User.favorite_fruits = [new Fruit({ name: 'Banana }), new Fruit({ name: 'Grapefruit' })]\`
 - make an entity out of the data and store an array of uuids to the entity instead
@@ -75,14 +116,10 @@ If you'd like to store an array of data, try one of the following:
       return 'prop.UUID()';
 
     // handle primitives
-    if (domainObjectProperty.type === DomainObjectPropertyType.STRING)
-      return 'prop.VARCHAR()'; // note: varchar without precision is what postgres defines as best practice (precision does not affect size)
-    if (domainObjectProperty.type === DomainObjectPropertyType.NUMBER)
-      return 'prop.NUMERIC()'; // note: numeric without precision is a good choice for 90%+ of use cases, since precision of numeric does not affect size. if user needs more fine tuning, they can mod the generated entity directly; for long term: https://github.com/uladkasach/sql-dao-generator/issues/1
-    if (domainObjectProperty.type === DomainObjectPropertyType.BOOLEAN)
-      return 'prop.BOOLEAN()';
-    if (domainObjectProperty.type === DomainObjectPropertyType.DATE)
-      return 'prop.TIMESTAMPTZ()'; // note: timestamptz is what postgres recommends
+    const soloPrimitiveProp = definePropExpressionForPrimitiveType(
+      domainObjectProperty.type,
+    );
+    if (soloPrimitiveProp) return soloPrimitiveProp;
     if (domainObjectProperty.type === DomainObjectPropertyType.ENUM)
       return `prop.ENUM([${(domainObjectProperty.of as string[])
         .map((option) => `'${option}'`)

@@ -3,8 +3,10 @@ import {
   DomainObjectPropertyType,
   DomainObjectVariant,
 } from 'domain-objects-metadata';
+import { getError } from 'test-fns';
 
 import { createExampleDomainObjectMetadata } from '@src/domain.operations/.test.assets/createExampleDomainObject';
+import { UserInputError } from '@src/domain.operations/UserInputError';
 
 import { defineSqlSchemaRelationshipForDomainObject } from './defineSqlSchemaRelationshipForDomainObject';
 
@@ -24,6 +26,7 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: null,
@@ -56,6 +59,7 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: 'geocode',
           primary: null,
           unique: null,
@@ -89,6 +93,7 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: null,
@@ -148,6 +153,7 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['cin'],
@@ -193,6 +199,7 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
           },
         },
         decorations: {
+          origin: null,
           alias: null,
           primary: null,
           unique: ['trainUuid', 'occurredAt'],
@@ -214,5 +221,121 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
       'occurred_at',
     ]); // notice that `trainUuid` was converted to `train_id`! (since the sql column is called `train_id`, since it references a `train`)
     expect(relationship).toMatchSnapshot();
+  });
+  describe('fail loud for unsupported unique keys', () => {
+    it('should throw a clear UserInputError (not a bare TypeError) for a primitive array in a unique key', () => {
+      // define an entity that (invalidly) declares a primitive array as part of its unique key
+      const domainObject = new DomainObjectMetadata({
+        name: 'Post',
+        extends: DomainObjectVariant.DOMAIN_ENTITY,
+        properties: {
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+          tags: {
+            name: 'tags',
+            type: DomainObjectPropertyType.ARRAY,
+            of: { type: DomainObjectPropertyType.STRING },
+          },
+        },
+        decorations: {
+          origin: null,
+          alias: null,
+          primary: null,
+          unique: ['tags'],
+          updatable: [],
+        },
+      });
+
+      // build the relationship and capture the error; the guard lives here, at the one construction site all consumers funnel through
+      const error = getError(() =>
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject,
+          allDomainObjects: [domainObject],
+        }),
+      );
+
+      // it must fail loud with a contextualized UserInputError, not a bare null-deref TypeError deeper in a consumer
+      expect(error).toBeInstanceOf(UserInputError);
+      expect(error.message).toContain('can not be part of a unique key');
+      expect(error.message).toContain('Post');
+      expect(error.message).toContain('tags');
+    });
+    it('should throw for a domain-literal with a primitive array (implicitly part of its all-property unique key)', () => {
+      // a domain literal is unique on ALL of its properties, so a primitive array property lands in the implicit unique key
+      const domainObject = new DomainObjectMetadata({
+        name: 'Waypoint',
+        extends: DomainObjectVariant.DOMAIN_LITERAL,
+        properties: {
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+          labels: {
+            name: 'labels',
+            type: DomainObjectPropertyType.ARRAY,
+            of: { type: DomainObjectPropertyType.STRING },
+          },
+        },
+        decorations: {
+          origin: null,
+          alias: null,
+          primary: null,
+          unique: null,
+          updatable: null,
+        },
+      });
+
+      // build the relationship and capture the error
+      const error = getError(() =>
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject,
+          allDomainObjects: [domainObject],
+        }),
+      );
+
+      // it must fail loud with a contextualized UserInputError that explains the literal case
+      expect(error).toBeInstanceOf(UserInputError);
+      expect(error.message).toContain('can not be part of a unique key');
+      expect(error.message).toContain('Waypoint');
+      expect(error.message).toContain('labels');
+      expect(error.message).toContain('domain-literals are unique on all');
+    });
+    it('should allow a matched _uuids reference array in a unique key (the complementary allowed branch)', () => {
+      // the guard rejects only NON-reference arrays. a _uuids array that matches a known domain
+      // object is an implicit by-uuid reference (it carries a .reference), so it is legitimately
+      // allowed in a unique key and must build without a throw — the positive counterpart to the
+      // two fail-loud cases above
+      const domainObject = new DomainObjectMetadata({
+        name: 'Playlist',
+        extends: DomainObjectVariant.DOMAIN_ENTITY,
+        properties: {
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+          trackUuids: {
+            name: 'trackUuids',
+            type: DomainObjectPropertyType.ARRAY,
+            of: { type: DomainObjectPropertyType.STRING },
+          },
+        },
+        decorations: {
+          origin: null,
+          alias: null,
+          primary: null,
+          unique: ['trackUuids'],
+          updatable: [],
+        },
+      });
+      const track = {
+        ...createExampleDomainObjectMetadata(),
+        name: 'Track',
+        extends: DomainObjectVariant.DOMAIN_ENTITY,
+      } as DomainObjectMetadata;
+
+      // build it directly — a throw here would fail the test
+      const relationship = defineSqlSchemaRelationshipForDomainObject({
+        domainObject,
+        allDomainObjects: [domainObject, track],
+      });
+      expect(relationship).toBeDefined();
+      expect(relationship.name.sqlSchema).toEqual('playlist');
+    });
   });
 });

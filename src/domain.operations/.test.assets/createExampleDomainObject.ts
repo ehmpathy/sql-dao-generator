@@ -2,6 +2,7 @@ import {
   DomainObjectMetadata,
   DomainObjectVariant,
 } from 'domain-objects-metadata';
+import { UnexpectedCodePathError } from 'helpful-errors';
 
 export const createExampleDomainObjectMetadata = ({
   extend = DomainObjectVariant.DOMAIN_LITERAL,
@@ -14,6 +15,7 @@ export const createExampleDomainObjectMetadata = ({
       extends: DomainObjectVariant.DOMAIN_LITERAL,
       properties: {},
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: null,
@@ -27,6 +29,7 @@ export const createExampleDomainObjectMetadata = ({
       extends: DomainObjectVariant.DOMAIN_LITERAL,
       properties: {},
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['uuid'],
@@ -39,13 +42,15 @@ export const createExampleDomainObjectMetadata = ({
       extends: extend,
       properties: {},
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['uuid'],
         updatable: null,
       },
     });
-  throw new Error(
+  throw new UnexpectedCodePathError(
     'unsupported domain object variant to create example object for',
+    { extend },
   );
 };

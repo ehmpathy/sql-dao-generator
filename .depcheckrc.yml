@@ -13,10 +13,13 @@ ignores:
   - procedure-fns # used in generated code templates (generator outputs code that imports this)
   - visualogic
   - rhachet-brains-anthropic
+  - rhachet-brains-fireworksai
   - rhachet-brains-xai
   - rhachet-roles-bhrain
+  - rhachet-roles-bhrowser
   - rhachet-roles-bhuild
   - rhachet-roles-ehmpathy
+  - rhachet-roles-ghlitch
   - rhachet-roles-rhachet
   - "@src/*"
   - "@src/.*"

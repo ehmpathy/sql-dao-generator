@@ -12,6 +12,7 @@ import { UserInputError } from '@src/domain.operations/UserInputError';
 import { assertDomainObjectIsSafeToHaveSqlSchema } from './assertDomainObjectIsSafeToHaveSqlSchema';
 import { defineDatabaseGeneratedSqlSchemaPropertiesForDomainObject } from './defineDatabaseGeneratedPropertiesForDomainObject';
 import { defineSqlSchemaPropertyForDomainObjectProperty } from './defineSqlSchemaPropertyForDomainObjectProperty';
+import { isNonReferenceArrayColumn } from './isNonReferenceArrayColumn';
 import { isNotADatabaseGeneratedProperty } from './isNotADatabaseGeneratedProperty';
 
 export const defineSqlSchemaRelationshipForDomainObject = ({
@@ -109,11 +110,13 @@ export const defineSqlSchemaRelationshipForDomainObject = ({
     // convert the domain object prop names into sql schema prop names
     return (
       domainObjectPropertyNamesInUniqueKey?.map((domainObjectPropertyName) => {
-        const sqlSchemaPropertyName = propertiesRelationship.find(
+        const propertyRelationshipInUniqueKey = propertiesRelationship.find(
           (propertyRelationship) =>
             propertyRelationship.domainObject?.name ===
             domainObjectPropertyName,
-        )?.sqlSchema.name;
+        );
+        const sqlSchemaPropertyName =
+          propertyRelationshipInUniqueKey?.sqlSchema.name;
         if (!sqlSchemaPropertyName)
           throw new UserInputError({
             reason: 'Unique keys must be properties of the domain object.',
@@ -124,6 +127,22 @@ export const defineSqlSchemaRelationshipForDomainObject = ({
               Object.keys(domainObject.properties),
             )}?)`,
           });
+
+        // fail loud if a non-reference array (e.g. a primitive or enum array) is part of the unique key; only reference arrays carry a .reference, and arrays-in-unique-keys are otherwise out of scope. guard here, at the one construction site all downstream consumers funnel through, rather than at each consumer. note: for a domain-literal, EVERY property is part of the implicit unique key (literals are unique on all their properties), so a literal with a primitive/enum array lands here too
+        if (
+          isNonReferenceArrayColumn(propertyRelationshipInUniqueKey.sqlSchema)
+        )
+          throw new UserInputError({
+            reason:
+              'a non-reference array (e.g. a primitive or enum array) can not be part of a unique key',
+            domainObjectName: domainObject.name,
+            domainObjectPropertyName,
+            potentialSolution:
+              domainObject.extends === DomainObjectVariant.DOMAIN_LITERAL
+                ? 'domain-literals are unique on all of their properties, so a primitive/enum array property is implicitly part of the unique key. model this on a domain-entity (with a separate unique key that excludes the array) instead, or model the array as an array of domain-object references.'
+                : 'remove this array from the unique key, or model it as an array of domain-object references (which are stored as a relation and can be part of a unique key)',
+          });
+
         return sqlSchemaPropertyName;
       }) ?? null
     );

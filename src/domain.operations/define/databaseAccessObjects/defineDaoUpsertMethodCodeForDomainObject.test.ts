@@ -25,6 +25,7 @@ describe('defineDaoUpsertMethodCodeForDomainObject', () => {
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: null,
@@ -110,6 +111,7 @@ export const upsert = async (
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['cin'],
@@ -186,6 +188,7 @@ async (
         },
       },
       decorations: {
+        origin: null,
         alias: 'task',
         primary: null,
         unique: ['exid'],
@@ -265,6 +268,7 @@ async (
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['cin'],
@@ -358,6 +362,7 @@ async (
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['trainUuid', 'occurredAt'],
@@ -386,6 +391,7 @@ async (
             },
           },
           decorations: {
+            origin: null,
             alias: null,
             primary: null,
             unique: null,
@@ -493,6 +499,7 @@ async (
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['tin'],
@@ -530,6 +537,7 @@ async (
             },
           },
           decorations: {
+            origin: null,
             alias: null,
             primary: null,
             unique: null,
@@ -559,6 +567,7 @@ async (
             },
           },
           decorations: {
+            origin: null,
             alias: null,
             primary: null,
             unique: null,
@@ -576,6 +585,7 @@ async (
             uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
           },
           decorations: {
+            origin: null,
             alias: null,
             primary: null,
             unique: ['uuid'],
@@ -593,6 +603,7 @@ async (
             uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
           }, // domain entity reference, so we dont need to look at properties
           decorations: {
+            origin: null,
             alias: null,
             primary: null,
             unique: ['uuid'],
@@ -658,6 +669,90 @@ async (
     }
       `.trim(),
     ); // defines inputs correctly
+    expect(code).toMatchSnapshot();
+  });
+  it('should look correct for a domain entity with native primitive and enum array columns', () => {
+    // the wish's day-in-the-life upsert path: a SurfSpot whose aliases (string[]) and swellWindows
+    // (enum[]) are native array columns must pass straight through as bind params — no join-table id
+    // lookup, no Promise.all/.map, unlike a reference array
+    const domainObject = new DomainObjectMetadata({
+      name: 'SurfSpot',
+      extends: DomainObjectVariant.DOMAIN_ENTITY,
+      properties: {
+        id: {
+          name: 'id',
+          type: DomainObjectPropertyType.NUMBER,
+          required: false,
+        },
+        uuid: {
+          name: 'uuid',
+          type: DomainObjectPropertyType.STRING,
+          required: false,
+        },
+        slug: {
+          name: 'slug',
+          type: DomainObjectPropertyType.STRING,
+          required: true,
+        },
+        aliases: {
+          name: 'aliases',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.STRING },
+          required: true,
+        },
+        swellWindows: {
+          name: 'swellWindows',
+          type: DomainObjectPropertyType.ARRAY,
+          of: {
+            type: DomainObjectPropertyType.ENUM,
+            of: ['N', 'NW', 'W', 'SW', 'S'],
+          },
+          required: true,
+        },
+      },
+      decorations: {
+        origin: null,
+        alias: null,
+        primary: null,
+        unique: ['slug'],
+        updatable: [],
+      },
+    });
+    const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+      domainObject,
+      allDomainObjects: [domainObject],
+    });
+
+    // run it
+    const code = defineDaoUpsertMethodCodeForDomainObject({
+      domainObject,
+      sqlSchemaRelationship,
+      allSqlSchemaRelationships: [sqlSchemaRelationship],
+    });
+
+    // the native arrays bind directly (no id lookup), just like scalar columns
+    expect(code).toContain('-- query_name = upsert_surf_spot');
+    expect(code).toContain(
+      `
+  FROM upsert_surf_spot(
+    :slug,
+    :aliases,
+    :swellWindows
+  )
+    `.trim(),
+    );
+    expect(code).toContain(
+      `
+    input: {
+      slug: surfSpot.slug,
+      aliases: surfSpot.aliases,
+      swellWindows: surfSpot.swellWindows,
+    }
+      `.trim(),
+    );
+    // a native array is NOT a reference array — it must not be mapped to ids
+    expect(code).not.toContain('aliasesIds');
+    expect(code).not.toContain('swellWindowsIds');
     expect(code).toMatchSnapshot();
   });
 });

@@ -20,6 +20,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
         longitude: { name: 'longitude', type: DomainObjectPropertyType.NUMBER },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: null,
@@ -80,6 +81,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['cin'],
@@ -141,6 +143,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['trainUuid', 'occurredAt'],
@@ -228,6 +231,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['tin'],
@@ -279,9 +283,80 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
     );
     expect(code).toMatchSnapshot();
   });
-  it.todo(
-    'should look correct when the same dobj is referenced more than once in a dobj',
-  );
+  it('should look correct when the same dobj is referenced more than once in a dobj', () => {
+    // define an entity that references the SAME domain object (Geocode) twice — once as origin,
+    // once as destination. the cast method must import castGeocodeFromDatabaseObject exactly once
+    // (deduped, not twice) and reuse it for both properties.
+    const domainObject = new DomainObjectMetadata({
+      name: 'TravelRoute',
+      extends: DomainObjectVariant.DOMAIN_ENTITY,
+      properties: {
+        id: {
+          name: 'id',
+          type: DomainObjectPropertyType.NUMBER,
+          required: false,
+        },
+        uuid: {
+          name: 'uuid',
+          type: DomainObjectPropertyType.STRING,
+          required: false,
+        },
+        originGeocode: {
+          name: 'originGeocode',
+          type: DomainObjectPropertyType.REFERENCE,
+          required: true,
+          of: {
+            name: 'Geocode',
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
+          },
+        },
+        destinationGeocode: {
+          name: 'destinationGeocode',
+          type: DomainObjectPropertyType.REFERENCE,
+          required: true,
+          of: {
+            name: 'Geocode',
+            extends: DomainObjectVariant.DOMAIN_LITERAL,
+          },
+        },
+      },
+      decorations: {
+        origin: null,
+        alias: null,
+        primary: null,
+        unique: ['originGeocode', 'destinationGeocode'],
+        updatable: [],
+      },
+    });
+    const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+      domainObject,
+      allDomainObjects: [domainObject],
+    });
+
+    // run it
+    const code = defineDaoUtilCastMethodCodeForDomainObject({
+      domainObject,
+      sqlSchemaRelationship,
+    });
+
+    // the geocode cast is imported exactly once, even though it is referenced twice
+    const geocodeCastImportCount = (
+      code.match(
+        /import { castFromDatabaseObject as castGeocodeFromDatabaseObject }/g,
+      ) ?? []
+    ).length;
+    expect(geocodeCastImportCount).toEqual(1);
+
+    // and both references cast through that single imported caster
+    expect(code).toContain(
+      'originGeocode: castGeocodeFromDatabaseObject(dbObject.origin_geocode as SqlQueryFindGeocodeByIdOutput)',
+    );
+    expect(code).toContain(
+      'destinationGeocode: castGeocodeFromDatabaseObject(dbObject.destination_geocode as SqlQueryFindGeocodeByIdOutput)',
+    );
+    expect(code).toContain('new TravelRoute({');
+    expect(code).toMatchSnapshot();
+  });
   it('should look correct for a domain entity which directly declares a reference to another', () => {
     // define what we're testing on
     const domainObject = new DomainObjectMetadata({
@@ -309,6 +384,7 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['carriageRef'],
@@ -337,5 +413,119 @@ describe('defineDaoUtilCastMethodCodeForDomainObject', () => {
     expect(code).toContain('new CarriageCargo({');
     expect(code).toContain('carriageRef: { uuid: dbObject.carriage_uuid }');
     expect(code).toMatchSnapshot();
+  });
+  describe('primitive and enum arrays', () => {
+    it('should cast a non-_uuids primitive string[] array with an "as string[]" assertion', () => {
+      // define an entity with a genuine (non-_uuids) primitive string array
+      const domainObject = new DomainObjectMetadata({
+        name: 'Post',
+        extends: DomainObjectVariant.DOMAIN_ENTITY,
+        properties: {
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+          tags: {
+            name: 'tags',
+            type: DomainObjectPropertyType.ARRAY,
+            of: { type: DomainObjectPropertyType.STRING },
+          },
+        },
+        decorations: {
+          origin: null,
+          alias: null,
+          primary: null,
+          unique: ['uuid'],
+          updatable: [],
+        },
+      });
+      const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+        domainObject,
+        allDomainObjects: [domainObject],
+      });
+
+      // run it
+      const code = defineDaoUtilCastMethodCodeForDomainObject({
+        domainObject,
+        sqlSchemaRelationship,
+      });
+
+      // it should assert the domain string[] type on the loose sql-generated element type
+      expect(code).toContain('tags: dbObject.tags as string[]');
+    });
+    it('should cast an enum[] array with an "as DomainObject[prop]" assertion', () => {
+      // define an entity with an enum array
+      const domainObject = new DomainObjectMetadata({
+        name: 'Post',
+        extends: DomainObjectVariant.DOMAIN_ENTITY,
+        properties: {
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+          statuses: {
+            name: 'statuses',
+            type: DomainObjectPropertyType.ARRAY,
+            of: {
+              type: DomainObjectPropertyType.ENUM,
+              of: ['ACTIVE', 'PAUSED'],
+            },
+          },
+        },
+        decorations: {
+          origin: null,
+          alias: null,
+          primary: null,
+          unique: ['uuid'],
+          updatable: [],
+        },
+      });
+      const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+        domainObject,
+        allDomainObjects: [domainObject],
+      });
+
+      // run it
+      const code = defineDaoUtilCastMethodCodeForDomainObject({
+        domainObject,
+        sqlSchemaRelationship,
+      });
+
+      // it should assert the domain enum-array type on the loose sql-generated element type
+      expect(code).toContain("statuses: dbObject.statuses as Post['statuses']");
+    });
+    it('should cast a number[] array with no assertion (fall-through until downstream native-array support lands)', () => {
+      // number/boolean/date primitive arrays deliberately fall through with no `as` assertion; this locks that behavior
+      const domainObject = new DomainObjectMetadata({
+        name: 'Post',
+        extends: DomainObjectVariant.DOMAIN_ENTITY,
+        properties: {
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+          scores: {
+            name: 'scores',
+            type: DomainObjectPropertyType.ARRAY,
+            of: { type: DomainObjectPropertyType.NUMBER },
+          },
+        },
+        decorations: {
+          origin: null,
+          alias: null,
+          primary: null,
+          unique: ['uuid'],
+          updatable: [],
+        },
+      });
+      const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+        domainObject,
+        allDomainObjects: [domainObject],
+      });
+
+      // run it
+      const code = defineDaoUtilCastMethodCodeForDomainObject({
+        domainObject,
+        sqlSchemaRelationship,
+      });
+
+      // it should emit the value with no `as` assertion (the string-array/enum-array special-cases do not apply)
+      expect(code).toContain('scores: dbObject.scores');
+      expect(code).not.toContain('scores: dbObject.scores as');
+    });
   });
 });

@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`defineSqlSchemaGeneratorCodeFilesForDomainObjects should emit native array columns for primitive, enum, and _uuids arrays from real introspect 1`] = `
+[
+  GeneratedCodeFile {
+    "content": "import { surfSpot } from './surfSpot.ts';
+
+/**
+ * all of the domain objects which we want to create sql-schema-resources for with sql-schema-generator
+ */
+export const generateSqlSchemasFor = [
+  surfSpot,
+];",
+    "relpath": "index.ts",
+  },
+  GeneratedCodeFile {
+    "content": "import { Entity, prop } from 'sql-schema-generator';
+
+/**
+ * sql-schema for the domain entity 'SurfSpot'
+ */
+export const surfSpot: Entity = new Entity({
+  name: 'surf_spot',
+  properties: {
+    slug: prop.VARCHAR(),
+    aliases: prop.ARRAY_OF(prop.VARCHAR()),
+    best_swell_periods_sec: prop.ARRAY_OF(prop.NUMERIC()),
+    swell_windows: prop.ARRAY_OF(prop.ENUM(['N', 'NW', 'W', 'SW', 'S'])),
+    lineup_photo_uuids: prop.ARRAY_OF(prop.UUID()),
+  },
+  unique: ['slug'],
+});",
+    "relpath": "surfSpot.ts",
+  },
+  GeneratedCodeFile {
+    "content": "CREATE OR REPLACE VIEW view_surf_spot_hydrated AS
+  SELECT
+    surf_spot.id,
+    surf_spot.uuid,
+    surf_spot.slug,
+    surf_spot.aliases,
+    surf_spot.best_swell_periods_sec,
+    surf_spot.swell_windows,
+    surf_spot.lineup_photo_uuids
+  FROM view_surf_spot_current surf_spot;",
+    "relpath": "../sql/views/view_surf_spot_hydrated.sql",
+  },
+]
+`;

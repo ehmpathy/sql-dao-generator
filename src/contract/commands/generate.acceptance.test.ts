@@ -104,5 +104,70 @@ describe('generate command via bin/run', () => {
         expect(result.stdout).toContain('USAGE');
       });
     });
+
+    when(
+      '[t3] bin/run generate is executed against a primitive-array fixture (the wish day-in-the-life)',
+      () => {
+        // the headline feature: a consumer models `aliases: string[]` and runs codegen. the generator
+        // now emits prop.ARRAY_OF(prop.VARCHAR()), but the installed sql-schema-generator's ARRAY_OF
+        // still rejects native primitive/enum arrays — so the current user experience is a helpful,
+        // actionable ConstraintError (not a raw subprocess crash). this locks that UX at the cli
+        // contract boundary, where a real consumer meets it. see handoff.sql-schema-generator.md
+        const testDir = genTempDir({
+          slug: 'generate-acceptance-native-arrays',
+          clone: './src/domain.operations/.test.assets/exampleProject',
+          symlink: [{ at: 'node_modules', to: 'node_modules' }],
+        });
+        const configPath = path.join(
+          testDir,
+          'codegen.sql.dao.nativeArrays.yml',
+        );
+
+        const outcome = useThen('the generate command fails loud', async () => {
+          return await execAsync(`./bin/run generate -c ${configPath}`)
+            .then(() => ({ failed: false, output: '' }))
+            .catch((error) => ({
+              failed: true,
+              // collapse whitespace: the cli word-wraps the error across lines, so a phrase reassembles here
+              output: `${error.stderr ?? ''}\n${error.stdout ?? ''}\n${
+                error.message ?? ''
+              }`.replace(/\s+/g, ' '),
+            }));
+        });
+
+        then(
+          'it surfaces the helpful native-array ConstraintError, not a raw crash',
+          () => {
+            expect(outcome.failed).toBe(true);
+            expect(outcome.output).toContain(
+              'can not yet build a native primitive or enum array column',
+            );
+          },
+        );
+
+        then(
+          'the error names the fix — upgrade or model as a reference',
+          () => {
+            expect(outcome.output).toContain('upgrade sql-schema-generator');
+          },
+        );
+
+        then('the helpful error message matches snapshot', () => {
+          // snapshot the portable helpful prose only. two non-portable envelopes wrap it:
+          // - a front oclif "could not find source ... /abs/path/dist ... compiled source." warn,
+          //   which embeds this machine's absolute worktree path
+          // - a tail `{ "stderr": ... }` node crash dump with abs paths, temp dirs, node version,
+          //   and stack line:col
+          // drop the front warn at the `ConstraintError:` marker and cut the tail metadata at its
+          // boundary. what remains — the cli-formatted ConstraintError message — is fully
+          // deterministic and is exactly the UX a real consumer meets.
+          const helpfulMessage = outcome.output
+            .replace(/^[\s\S]*?(ConstraintError:)/, '$1')
+            .split(/[,{]\s*"?stderr"?/)[0]!
+            .trim();
+          expect(helpfulMessage).toMatchSnapshot();
+        });
+      },
+    );
   });
 });

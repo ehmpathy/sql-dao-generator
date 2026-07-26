@@ -22,6 +22,7 @@ describe('defineDaoFindByRefMethodCodeForDomainObject', () => {
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: null,
@@ -72,6 +73,7 @@ describe('defineDaoFindByRefMethodCodeForDomainObject', () => {
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['cin'],
@@ -123,6 +125,7 @@ describe('defineDaoFindByRefMethodCodeForDomainObject', () => {
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['trainUuid', 'occurredAt'],
@@ -192,6 +195,7 @@ describe('defineDaoFindByRefMethodCodeForDomainObject', () => {
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['tin'],

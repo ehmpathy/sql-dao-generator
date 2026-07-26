@@ -1,12 +1,13 @@
 // tslint:disable: max-classes-per-file
+import { snakeCase } from 'change-case';
 import {
   type DomainObjectMetadata,
   type DomainObjectPropertyMetadata,
   DomainObjectPropertyType,
   DomainObjectReferenceMetadata,
   DomainObjectVariant,
-  isDomainObjectArrayProperty,
-  isDomainObjectReferenceProperty,
+  isReferenceArrayProperty,
+  isReferenceProperty,
 } from 'domain-objects-metadata';
 import omit from 'lodash.omit';
 
@@ -17,6 +18,7 @@ import {
 import { UnexpectedCodePathDetectedError } from '@src/domain.operations/UnexpectedCodePathDetectedError';
 import { UserInputError } from '@src/domain.operations/UserInputError';
 
+import { isUuidReferenceArrayProperty } from '../isUuidReferenceArrayProperty';
 import { getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter } from './getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter/getDomainObjectNameThatPropertyIsUnambigiouslyNaturallyNamedAfter';
 
 export class PropertyReferencingDomainObjectNotNamedCorrectlyError extends Error {
@@ -107,20 +109,25 @@ export const defineSqlSchemaReferenceForDomainObjectProperty = ({
   allDomainObjects: DomainObjectMetadata[];
 }): SqlSchemaReferenceMetadata | null => {
   // determine what kind of reference it can be
-  const isDirectReferenceCandidate = isDomainObjectReferenceProperty(property);
+  const isDirectReferenceCandidate = isReferenceProperty(property);
   const isDirectReferenceArrayCandidate =
-    isDomainObjectArrayProperty(property) &&
-    isDomainObjectReferenceProperty(property.of);
+    isReferenceArrayProperty(property) && isReferenceProperty(property.of);
   const isDirectDeclarationReferenceCandidate =
     property.type === DomainObjectPropertyType.REFERENCE &&
     new RegExp(/Ref$/).test(property.name);
   const isImplicitUuidReferenceCandidate =
     property.type === DomainObjectPropertyType.STRING &&
     new RegExp(/Uuid/).test(property.name);
-  const isImplicitUuidReferenceArrayCandidate =
-    isDomainObjectArrayProperty(property) &&
-    property.of.type === DomainObjectPropertyType.STRING &&
-    new RegExp(/Uuids/).test(property.name);
+  // consume the one shared predicate the generator + schema-control also consume, so this third
+  // classification site can not drift from them. it anchors `_uuids$` on the snake_case sql name, so
+  // pass the snake_case form of the camelCase domain-object property name (e.g. `imageUuids` ->
+  // `image_uuids`). the predicate also gates on a string element, so a non-string `_uuids` array
+  // (e.g. `scoreUuids: number[]`) falls through to the native-array branch, in agreement with the
+  // generator — no phantom join table the generator never builds
+  const isImplicitUuidReferenceArrayCandidate = isUuidReferenceArrayProperty({
+    name: snakeCase(property.name),
+    domainObjectProperty: property,
+  });
 
   // handle direct nested references
   if (isDirectReferenceCandidate || isDirectReferenceArrayCandidate) {

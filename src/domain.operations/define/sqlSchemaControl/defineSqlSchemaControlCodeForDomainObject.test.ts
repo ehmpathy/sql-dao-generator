@@ -25,6 +25,7 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: null,
@@ -81,6 +82,7 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['cin'],
@@ -146,6 +148,7 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['trainUuid', 'occurredAt'],
@@ -223,6 +226,7 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
         },
       },
       decorations: {
+        origin: null,
         alias: null,
         primary: null,
         unique: ['uuid'],
@@ -253,6 +257,154 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
     expect(code).toContain('path: ./views/view_train_current.sql');
     expect(code).toContain('path: ./functions/upsert_train.sql');
     expect(code.split('\n').length).toEqual(19); // comment (1), resources (8x2)
+    expect(code).toMatchSnapshot();
+  });
+  it('should not emit a join table (and not crash) for native primitive and enum arrays', () => {
+    // a domain entity with native primitive + enum array columns (the wish's headline case)
+    const domainObject = new DomainObjectMetadata({
+      name: 'Post',
+      extends: DomainObjectVariant.DOMAIN_ENTITY,
+      properties: {
+        id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+        uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+        tags: {
+          name: 'tags',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.STRING },
+        },
+        scores: {
+          name: 'scores',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.NUMBER },
+        },
+        statuses: {
+          name: 'statuses',
+          type: DomainObjectPropertyType.ARRAY,
+          of: {
+            type: DomainObjectPropertyType.ENUM,
+            of: ['ACTIVE', 'PAUSED'],
+          },
+        },
+      },
+      decorations: {
+        origin: null,
+        alias: null,
+        primary: null,
+        unique: ['uuid'],
+        updatable: [],
+      },
+    });
+    const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+      domainObject,
+      allDomainObjects: [domainObject],
+    });
+
+    // run it — must not throw for the native array columns
+    const code = defineSqlSchemaControlCodeForDomainObject({
+      sqlSchemaRelationship,
+    });
+
+    // the base table + hydrated view are emitted, but NO join table for any native array
+    expect(code).toContain('path: ./tables/post.sql');
+    expect(code).toContain('path: ./views/view_post_hydrated.sql');
+    expect(code).not.toContain('_to_tags');
+    expect(code).not.toContain('_to_scores');
+    expect(code).not.toContain('_to_statuses');
+    expect(code).toMatchSnapshot();
+  });
+  it('should not emit a join table (and not crash) for updatable native primitive and enum arrays on the version table', () => {
+    // a domain entity whose native primitive/enum arrays are UPDATABLE, so they route
+    // through the version-table array loop (the exact branch that crashed pre-fix). the
+    // presence of an updatable scalar guarantees a version table exists to route them to.
+    const domainObject = new DomainObjectMetadata({
+      name: 'Post',
+      extends: DomainObjectVariant.DOMAIN_ENTITY,
+      properties: {
+        id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+        uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+        title: { name: 'title', type: DomainObjectPropertyType.STRING },
+        tags: {
+          name: 'tags',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.STRING },
+        },
+        statuses: {
+          name: 'statuses',
+          type: DomainObjectPropertyType.ARRAY,
+          of: {
+            type: DomainObjectPropertyType.ENUM,
+            of: ['ACTIVE', 'PAUSED'],
+          },
+        },
+      },
+      decorations: {
+        origin: null,
+        alias: null,
+        primary: null,
+        unique: ['uuid'],
+        updatable: ['title', 'tags', 'statuses'],
+      },
+    });
+    const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+      domainObject,
+      allDomainObjects: [domainObject],
+    });
+
+    // run it — the updatable native arrays must route through the version-table loop without a throw
+    const code = defineSqlSchemaControlCodeForDomainObject({
+      sqlSchemaRelationship,
+    });
+
+    // the version table (and its cvp + current view) are emitted, since there are updatable props
+    expect(code).toContain('path: ./tables/post.sql');
+    expect(code).toContain('path: ./tables/post_version.sql');
+    expect(code).toContain('path: ./tables/post_cvp.sql');
+    expect(code).toContain('path: ./views/view_post_current.sql');
+    expect(code).toContain('path: ./views/view_post_hydrated.sql');
+
+    // but NO join table for the updatable native arrays — neither on the base nor the version table
+    expect(code).not.toContain('_to_tags');
+    expect(code).not.toContain('_to_statuses');
+    expect(code).toMatchSnapshot();
+  });
+  it('should not declare a uuid join table for a _uuids-suffix number[] (it is a native array, not a uuid reference)', () => {
+    // a _uuids suffix on a non-string array is a native primitive array, not a uuid reference. the
+    // shared predicate gates on a string element, so schema-control declares no join table for it —
+    // in agreement with the schema-generator, which emits a native numeric[] column. this locks the
+    // two layers together so the manifest can not declare a join table the generator never builds
+    const domainObject = new DomainObjectMetadata({
+      name: 'Post',
+      extends: DomainObjectVariant.DOMAIN_ENTITY,
+      properties: {
+        id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+        uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+        scoreUuids: {
+          name: 'scoreUuids',
+          type: DomainObjectPropertyType.ARRAY,
+          of: { type: DomainObjectPropertyType.NUMBER },
+        },
+      },
+      decorations: {
+        origin: null,
+        alias: null,
+        primary: null,
+        unique: ['uuid'],
+        updatable: [],
+      },
+    });
+    const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+      domainObject,
+      allDomainObjects: [domainObject],
+    });
+
+    // run it — the non-string _uuids array must route through the native branch without a throw
+    const code = defineSqlSchemaControlCodeForDomainObject({
+      sqlSchemaRelationship,
+    });
+
+    // the base table is emitted, but NO uuid join table for the number[] named *_uuids
+    expect(code).toContain('path: ./tables/post.sql');
+    expect(code).not.toContain('_to_score_uuid');
     expect(code).toMatchSnapshot();
   });
 });

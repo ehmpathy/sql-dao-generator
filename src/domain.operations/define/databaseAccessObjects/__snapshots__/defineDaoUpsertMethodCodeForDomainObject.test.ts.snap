@@ -1,5 +1,46 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for a domain entity with native primitive and enum array columns 1`] = `
+"import { VisualogicContext } from 'visualogic';
+import { HasMetadata } from 'type-fns';
+
+import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
+import { SurfSpot } from '$PATH_TO_DOMAIN_OBJECT';
+import { sqlQueryUpsertSurfSpot } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+
+export const sql = \`
+  -- query_name = upsert_surf_spot
+  SELECT
+    dgv.id, dgv.uuid
+  FROM upsert_surf_spot(
+    :slug,
+    :aliases,
+    :swellWindows
+  ) as dgv;
+\`;
+
+export const upsert = async (
+  {
+    surfSpot,
+  }: {
+    surfSpot: SurfSpot;
+  },
+  context: { dbConnection: DatabaseConnection } & VisualogicContext,
+): Promise<HasMetadata<SurfSpot>> => {
+  const results = await sqlQueryUpsertSurfSpot({
+    dbExecute: context.dbConnection.query,
+    logDebug: context.log.debug,
+    input: {
+      slug: surfSpot.slug,
+      aliases: surfSpot.aliases,
+      swellWindows: surfSpot.swellWindows,
+    },
+  });
+  const { id, uuid } = results[0]!; // grab the db generated values
+  return new SurfSpot({ ...surfSpot, id, uuid }) as HasMetadata<SurfSpot>;
+};"
+`;
+
 exports[`defineDaoUpsertMethodCodeForDomainObject should look correct for a domain event with a static referenced array 1`] = `
 "import { VisualogicContext } from 'visualogic';
 import { HasMetadata } from 'type-fns';

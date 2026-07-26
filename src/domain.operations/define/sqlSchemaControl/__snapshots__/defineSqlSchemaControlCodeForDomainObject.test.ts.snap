@@ -63,3 +63,43 @@ exports[`defineSqlSchemaControlCodeForDomainObject should look right for a simpl
 - type: resource
   path: ./functions/upsert_geocode.sql"
 `;
+
+exports[`defineSqlSchemaControlCodeForDomainObject should not declare a uuid join table for a _uuids-suffix number[] (it is a native array, not a uuid reference) 1`] = `
+"# post
+- type: resource
+  path: ./tables/post.sql
+- type: resource
+  path: ./views/view_post_current.sql
+- type: resource
+  path: ./views/view_post_hydrated.sql
+- type: resource
+  path: ./functions/upsert_post.sql"
+`;
+
+exports[`defineSqlSchemaControlCodeForDomainObject should not emit a join table (and not crash) for native primitive and enum arrays 1`] = `
+"# post
+- type: resource
+  path: ./tables/post.sql
+- type: resource
+  path: ./views/view_post_current.sql
+- type: resource
+  path: ./views/view_post_hydrated.sql
+- type: resource
+  path: ./functions/upsert_post.sql"
+`;
+
+exports[`defineSqlSchemaControlCodeForDomainObject should not emit a join table (and not crash) for updatable native primitive and enum arrays on the version table 1`] = `
+"# post
+- type: resource
+  path: ./tables/post.sql
+- type: resource
+  path: ./tables/post_version.sql
+- type: resource
+  path: ./tables/post_cvp.sql
+- type: resource
+  path: ./views/view_post_current.sql
+- type: resource
+  path: ./views/view_post_hydrated.sql
+- type: resource
+  path: ./functions/upsert_post.sql"
+`;

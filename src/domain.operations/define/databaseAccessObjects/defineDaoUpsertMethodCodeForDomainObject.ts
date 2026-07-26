@@ -7,13 +7,13 @@ import type { SqlSchemaToDomainObjectRelationship } from '@src/domain.objects/Sq
 import { isNotADatabaseGeneratedProperty } from '@src/domain.operations/define/sqlSchemaRelationship/isNotADatabaseGeneratedProperty';
 
 import { castDomainObjectNameToDaoName } from './castDomainObjectNameToDaoName';
-import { getReferencedDomainObjectNames } from './defineDaoFindByMethodCodeForDomainObject';
 import { defineOutputTypeOfFoundDomainObject } from './defineOutputTypeOfFoundDomainObject';
 import {
   defineQueryFunctionInputExpressionForDomainObjectProperty,
   GetTypescriptCodeForPropertyContext,
 } from './defineQueryFunctionInputExpressionForDomainObjectProperty';
 import { defineQueryInputExpressionForSqlSchemaProperty } from './defineQueryInputExpressionForSqlSchemaProperty';
+import { getReferencedDomainObjectNames } from './getReferencedDomainObjectNames';
 
 export const defineDaoUpsertMethodCodeForDomainObject = ({
   domainObject,
