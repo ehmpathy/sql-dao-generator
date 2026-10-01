@@ -1,19 +1,22 @@
 import { HasMetadata } from 'type-fns';
 
 import { Locomotive } from '../../../domain';
-import { SqlQueryFindLocomotiveByIdOutput } from '../.generated/types';
+import { SqlQueryFindLocomotiveByIdOutput as SqlQueryFindLocomotiveByIdOutputStrict } from '../.generated/types';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindLocomotiveByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindLocomotiveByIdOutput,
+  dbObject: SqlQueryFindLocomotiveByIdOutputStrict,
 ): HasMetadata<Locomotive> =>
   new Locomotive({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
-    createdAt: dbObject.created_at,
-    effectiveAt: dbObject.effective_at,
-    updatedAt: dbObject.updated_at,
+    createdAt: asFromDatabase.date(dbObject.created_at),
+    effectiveAt: asFromDatabase.date(dbObject.effective_at),
+    updatedAt: asFromDatabase.date(dbObject.updated_at),
     ein: dbObject.ein,
     fuel: dbObject.fuel as Locomotive['fuel'],
-    capacity: dbObject.capacity,
-    milage: dbObject.milage,
+    capacity: asFromDatabase.number(dbObject.capacity),
+    milage: asFromDatabase.number(dbObject.milage),
   }) as HasMetadata<Locomotive>;

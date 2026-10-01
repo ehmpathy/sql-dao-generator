@@ -7,12 +7,14 @@ import type { SqlSchemaToDomainObjectRelationship } from '@src/domain.objects/Sq
 import { isNotADatabaseGeneratedProperty } from '@src/domain.operations/define/sqlSchemaRelationship/isNotADatabaseGeneratedProperty';
 
 import { castDomainObjectNameToDaoName } from './castDomainObjectNameToDaoName';
+import { DAO_CASTS_IMPORT_PATH, DAO_CASTS_NAMESPACE } from './constants';
 import { defineOutputTypeOfFoundDomainObject } from './defineOutputTypeOfFoundDomainObject';
 import {
   defineQueryFunctionInputExpressionForDomainObjectProperty,
   GetTypescriptCodeForPropertyContext,
 } from './defineQueryFunctionInputExpressionForDomainObjectProperty';
 import { defineQueryInputExpressionForSqlSchemaProperty } from './defineQueryInputExpressionForSqlSchemaProperty';
+import { getAllDbGeneratedPropertiesForUpsert } from './getAllDbGeneratedPropertiesForUpsert';
 import { getReferencedDomainObjectNames } from './getReferencedDomainObjectNames';
 
 export const defineDaoUpsertMethodCodeForDomainObject = ({
@@ -31,6 +33,15 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
   // define the dobj name to use in the input
   const dobjInputVarName =
     domainObject.decorations.alias ?? camelCase(domainObject.name);
+
+  // define the db generated properties that the user has defined on their domain object
+  const dbGeneratedPropertiesOnDomainObject =
+    getAllDbGeneratedPropertiesForUpsert({ sqlSchemaRelationship });
+
+  // define whether this upsert calls any shared cast, so we import the namespace only then
+  const hasSomeCast = dbGeneratedPropertiesOnDomainObject.some(
+    (property) => property.castName,
+  );
 
   // define the imports
   const hasSomeDirectDeclarationReference =
@@ -58,6 +69,11 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
         ...getReferencedDomainObjectNames({ sqlSchemaRelationship }),
       ].join(', ')} } from '$PATH_TO_DOMAIN_OBJECT';`,
       `import { sqlQueryUpsert${domainObject.name} } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';`,
+      // note: ONE symbol, however many casts — they are members of one namespace, so the import
+      //   line is the same whether this upsert calls one cast or both
+      ...(hasSomeCast
+        ? [`import { ${DAO_CASTS_NAMESPACE} } from '${DAO_CASTS_IMPORT_PATH}';`]
+        : []),
       ...sqlSchemaRelationship.properties
         .filter((property) =>
           property.sqlSchema.reference &&
@@ -79,27 +95,29 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
     ]),
   ];
 
-  // define the query input expressions
-  const queryInputExpressions: string[] = Object.values(
+  /**
+   * .what = the properties the CALLER supplies to an upsert
+   * .why  = the database generates the rest (`id`, `uuid`, `created_at`). the sql and the
+   *         query-function expressions both render this one set, so they agree on what is written
+   */
+  const propertiesSuppliedByCaller = Object.values(
     sqlSchemaRelationship.properties,
-  )
-    .filter(isNotADatabaseGeneratedProperty)
-    .map(
-      ({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
-        defineQueryInputExpressionForSqlSchemaProperty({
-          sqlSchemaName,
-          sqlSchemaProperty,
-          domainObjectProperty,
-          allSqlSchemaRelationships,
-        }),
-    );
+  ).filter(isNotADatabaseGeneratedProperty);
 
-  // define the queryFunctionInputExpressions
-  const queryFunctionInputExpressions: string[] = Object.values(
-    sqlSchemaRelationship.properties,
-  )
-    .filter(isNotADatabaseGeneratedProperty)
-    .map(
+  // define the sql expression each supplied property takes inside the upsert's own query
+  const queryInputExpressions: string[] = propertiesSuppliedByCaller.map(
+    ({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
+      defineQueryInputExpressionForSqlSchemaProperty({
+        sqlSchemaName,
+        sqlSchemaProperty,
+        domainObjectProperty,
+        allSqlSchemaRelationships,
+      }),
+  );
+
+  // define the typescript expression each supplied property takes at the query function call
+  const queryFunctionInputExpressions: string[] =
+    propertiesSuppliedByCaller.map(
       ({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
         defineQueryFunctionInputExpressionForDomainObjectProperty({
           domainObjectName: domainObject.name,
@@ -114,16 +132,6 @@ export const defineDaoUpsertMethodCodeForDomainObject = ({
   // define the output type
   const outputType = defineOutputTypeOfFoundDomainObject(domainObject);
 
-  // define the db generated properties that the user has defined on their domain object
-  const dbGeneratedPropertiesOnDomainObject = Object.values(
-    sqlSchemaRelationship.properties,
-  )
-    .filter(
-      ({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
-        sqlSchemaProperty.isDatabaseGenerated && !!domainObjectProperty, // pick the properties that are db generated and defined on the domain object
-    )
-    .map(({ sqlSchema: sqlSchemaProperty }) => sqlSchemaProperty.name);
-
   // define the content
   const code = `
 ${imports.join('\n')}
@@ -132,7 +140,7 @@ export const sql = \`
   -- query_name = upsert_${sqlSchemaName}
   SELECT
     ${dbGeneratedPropertiesOnDomainObject
-      .map((name) => `dgv.${name}`)
+      .map((property) => `dgv.${property.sqlSchemaName}`)
       .join(', ')}
   FROM upsert_${sqlSchemaName}(
     ${queryInputExpressions.join(',\n    ')}
@@ -157,17 +165,22 @@ export const upsert = async (
     },
   });
   const { ${dbGeneratedPropertiesOnDomainObject
-    .map((sqlSchemaPropertyName) => {
-      const domainObjectPropertyName = camelCase(sqlSchemaPropertyName);
-      if (domainObjectPropertyName === sqlSchemaPropertyName)
-        return `${domainObjectPropertyName}`;
-      return `${sqlSchemaPropertyName}: ${domainObjectPropertyName}`;
+    .map((property) => {
+      if (property.domainObjectName === property.sqlSchemaName)
+        return `${property.domainObjectName}`;
+      return `${property.sqlSchemaName}: ${property.domainObjectName}`;
     })
     .join(', ')} } = results[0]!; // grab the db generated values
   return new ${
     domainObject.name
   }({ ...${dobjInputVarName}, ${dbGeneratedPropertiesOnDomainObject
-    .map((sqlSchemaPropertyName) => camelCase(sqlSchemaPropertyName))
+    .map((property) => {
+      // no divergence for this type, so read it directly
+      if (!property.castName) return property.domainObjectName;
+
+      // otherwise, cast at the boundary, so the declared domain type is true on this path too
+      return `${property.domainObjectName}: ${property.castName}(${property.domainObjectName})`;
+    })
     .join(', ')} }) as ${outputType};
 };
 `.trim();

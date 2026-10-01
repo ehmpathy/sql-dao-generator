@@ -3,7 +3,7 @@ import {
   DomainObjectPropertyType,
   DomainObjectVariant,
 } from 'domain-objects-metadata';
-import { getError } from 'test-fns';
+import { getError, given, then, when } from 'test-fns';
 
 import { createExampleDomainObjectMetadata } from '@src/domain.operations/.test.assets/createExampleDomainObject';
 import { UserInputError } from '@src/domain.operations/UserInputError';
@@ -299,10 +299,8 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
       expect(error.message).toContain('domain-literals are unique on all');
     });
     it('should allow a matched _uuids reference array in a unique key (the complementary allowed branch)', () => {
-      // the guard rejects only NON-reference arrays. a _uuids array that matches a known domain
-      // object is an implicit by-uuid reference (it carries a .reference), so it is legitimately
-      // allowed in a unique key and must build without a throw — the positive counterpart to the
-      // two fail-loud cases above
+      // the guard rejects only non-reference arrays; a _uuids array of a known domain object is an
+      // implicit by-uuid reference, so it is allowed in a unique key
       const domainObject = new DomainObjectMetadata({
         name: 'Playlist',
         extends: DomainObjectVariant.DOMAIN_ENTITY,
@@ -337,5 +335,119 @@ describe('defineSqlSchemarelationshipForDomainObject', () => {
       expect(relationship).toBeDefined();
       expect(relationship.name.sqlSchema).toEqual('playlist');
     });
+  });
+  describe('reserved database-generated properties', () => {
+    /**
+     * .what = defines a domain object that declares one reserved property at a chosen type
+     * .why  = sql-schema-generator adds each reserved column regardless of the domain, so the
+     *         declared type must agree with it
+     */
+    const defineDomainObjectWithReservedProperty = ({
+      name,
+      type,
+    }: {
+      name: string;
+      type: DomainObjectPropertyType;
+    }) =>
+      new DomainObjectMetadata({
+        name: 'Track',
+        extends: DomainObjectVariant.DOMAIN_ENTITY,
+        properties: {
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+          tin: { name: 'tin', type: DomainObjectPropertyType.STRING },
+          [name]: { name, type },
+        },
+        decorations: {
+          origin: null,
+          alias: null,
+          primary: null,
+          unique: ['tin'],
+          updatable: [],
+        },
+      });
+
+    given('[case1] a domain that declares id as a STRING', () => {
+      // .why = id is a system bigserial, so a STRING declaration would get no cast and diverge:
+      //        a string raw, a number inside json. this throw keeps only DATE and NUMBER divergent
+      when('[t0] the relationship is defined', () => {
+        const error = getError(() =>
+          defineSqlSchemaRelationshipForDomainObject({
+            domainObject: defineDomainObjectWithReservedProperty({
+              name: 'id',
+              type: DomainObjectPropertyType.STRING,
+            }),
+            allDomainObjects: [],
+          }),
+        );
+
+        then('it throws a UserInputError that names the mismatch', () => {
+          expect(error).toBeInstanceOf(UserInputError);
+          expect(error.message).toContain('expected NUMBER');
+          expect(error.message).toContain('received STRING');
+          expect(error.message).toContain('id');
+        });
+      });
+    });
+
+    given('[case2] a domain that declares createdAt as a STRING', () => {
+      // .why = same defect, one column over: created_at is a timestamptz, so a STRING
+      //        declaration would get no cast and keep the Date-vs-iso-string divergence
+      when('[t0] the relationship is defined', () => {
+        const error = getError(() =>
+          defineSqlSchemaRelationshipForDomainObject({
+            domainObject: defineDomainObjectWithReservedProperty({
+              name: 'createdAt',
+              type: DomainObjectPropertyType.STRING,
+            }),
+            allDomainObjects: [],
+          }),
+        );
+
+        then('it throws a UserInputError that names the mismatch', () => {
+          expect(error).toBeInstanceOf(UserInputError);
+          expect(error.message).toContain('expected DATE');
+          expect(error.message).toContain('received STRING');
+        });
+      });
+    });
+
+    given('[case3] a domain that declares uuid as a NUMBER', () => {
+      when('[t0] the relationship is defined', () => {
+        const error = getError(() =>
+          defineSqlSchemaRelationshipForDomainObject({
+            domainObject: defineDomainObjectWithReservedProperty({
+              name: 'uuid',
+              type: DomainObjectPropertyType.NUMBER,
+            }),
+            allDomainObjects: [],
+          }),
+        );
+
+        then('it throws a UserInputError that names the mismatch', () => {
+          expect(error).toBeInstanceOf(UserInputError);
+          expect(error.message).toContain('expected STRING');
+          expect(error.message).toContain('received NUMBER');
+        });
+      });
+    });
+
+    given(
+      '[case4] a domain that declares id as the NUMBER the column is',
+      () => {
+        when('[t0] the relationship is defined', () => {
+          const relationship = defineSqlSchemaRelationshipForDomainObject({
+            domainObject: defineDomainObjectWithReservedProperty({
+              name: 'id',
+              type: DomainObjectPropertyType.NUMBER,
+            }),
+            allDomainObjects: [],
+          });
+
+          then('it is accepted, and names the sql schema', () => {
+            expect(relationship.name.sqlSchema).toEqual('track');
+          });
+        });
+      },
+    );
   });
 });

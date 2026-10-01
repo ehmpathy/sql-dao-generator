@@ -4,6 +4,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { TrainEngineer } from '../../../domain';
 import { sqlQueryUpsertTrainEngineer } from '../.generated/queryFunctions';
+import { asFromDatabase } from '../.generated/casts';
 import { certificateDao } from '../certificateDao';
 
 export const sql = `
@@ -37,5 +38,5 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new TrainEngineer({ ...trainEngineer, id, uuid }) as HasMetadata<TrainEngineer>;
+  return new TrainEngineer({ ...trainEngineer, id: asFromDatabase.number(id), uuid }) as HasMetadata<TrainEngineer>;
 };

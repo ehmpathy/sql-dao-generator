@@ -25,16 +25,27 @@ export const daoGeocode = geocodeDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindGeocodeByIdOutput as SqlQueryFindGeocodeByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import type { AsJsonFromDbObject } from '../.generated/casts';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindGeocodeByIdOutputStrict };
+
+export type SqlQueryFindGeocodeByIdOutputJsoned =
+  AsJsonFromDbObject<SqlQueryFindGeocodeByIdOutputStrict>;
+
+export type SqlQueryFindGeocodeByIdOutput =
+  | SqlQueryFindGeocodeByIdOutputStrict
+  | SqlQueryFindGeocodeByIdOutputJsoned;
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindGeocodeByIdOutput,
 ): HasMetadata<Geocode> =>
   new Geocode({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
-    latitude: dbObject.latitude,
-    longitude: dbObject.longitude,
+    latitude: asFromDatabase.number(dbObject.latitude),
+    longitude: asFromDatabase.number(dbObject.longitude),
   }) as HasMetadata<Geocode>;",
     "relpath": "geocodeDao/castFromDatabaseObject.ts",
   },
@@ -176,6 +187,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = \`
   -- query_name = upsert_geocode
@@ -204,7 +216,7 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new Geocode({ ...geocode, id, uuid }) as HasMetadata<Geocode>;
+  return new Geocode({ ...geocode, id: asFromDatabase.number(id), uuid }) as HasMetadata<Geocode>;
 };",
     "relpath": "geocodeDao/upsert.ts",
   },
@@ -234,15 +246,26 @@ export const daoGeocode = geocodeDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindGeocodeByIdOutput as SqlQueryFindGeocodeByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import type { AsJsonFromDbObject } from '../.generated/casts';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindGeocodeByIdOutputStrict };
+
+export type SqlQueryFindGeocodeByIdOutputJsoned =
+  AsJsonFromDbObject<SqlQueryFindGeocodeByIdOutputStrict>;
+
+export type SqlQueryFindGeocodeByIdOutput =
+  | SqlQueryFindGeocodeByIdOutputStrict
+  | SqlQueryFindGeocodeByIdOutputJsoned;
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindGeocodeByIdOutput,
 ): HasMetadata<Geocode> =>
   new Geocode({
-    id: dbObject.id,
-    latitude: dbObject.latitude,
-    longitude: dbObject.longitude,
+    id: asFromDatabase.number(dbObject.id),
+    latitude: asFromDatabase.number(dbObject.latitude),
+    longitude: asFromDatabase.number(dbObject.longitude),
   }) as HasMetadata<Geocode>;",
     "relpath": "geocodeDao/castFromDatabaseObject.ts",
   },
@@ -340,6 +363,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = \`
   -- query_name = upsert_geocode
@@ -368,7 +392,7 @@ export const upsert = async (
     },
   });
   const { id } = results[0]!; // grab the db generated values
-  return new Geocode({ ...geocode, id }) as HasMetadata<Geocode>;
+  return new Geocode({ ...geocode, id: asFromDatabase.number(id) }) as HasMetadata<Geocode>;
 };",
     "relpath": "geocodeDao/upsert.ts",
   },

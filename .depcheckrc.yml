@@ -1,3 +1,13 @@
+# .what = dirs depcheck must not scan for imports
+# .why  = `.agent/repo=*/` are SYMLINKS into node_modules, materialized by the installed role
+#         packages. depcheck follows them and reports their imports as deps absent from this
+#         repo — `playwright` and two declastruct packages, none of which this repo runs
+# .note  = scoped by PATH rather than by package name on purpose. a name list would go red
+#          again on the next role bump that ships a skill with a new import; the scan scope
+#          is the actual cause, since role boot material is not this repo's source
+ignore-patterns:
+  - .agent
+
 ignores:
   - depcheck
   - declapract

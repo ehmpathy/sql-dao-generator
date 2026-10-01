@@ -4,6 +4,7 @@ import {
   DomainObjectVariant,
 } from 'domain-objects-metadata';
 import { getError } from 'helpful-errors';
+import { given, then, when } from 'test-fns';
 
 import { SqlSchemaReferenceMethod } from '@src/domain.objects/SqlSchemaReferenceMetadata';
 
@@ -158,6 +159,41 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
         DirectlyNestedNonDomainObjectReferenceForbiddenError,
       );
     });
+    given(
+      '[case1] a domain-entity ARRAY named with a correct `Refs` suffix',
+      () => {
+        // .why = pins the reason, not just the outcome: `isDirectDeclarationReferenceCandidate`
+        //        gates on `type === REFERENCE`, and an array's type is ARRAY, so a `Ref`-suffixed
+        //        array is refused for its shape. DIRECT_BY_DECLARATION is solo-only today
+        // .note = ~6 definers carry an anticipatory `isArray` arm under DIRECT_BY_DECLARATION; when
+        //        the metadata parts `: Dobj` from `: Ref<typeof Dobj>`, this test goes red
+        when('[t0] the reference is defined for it', () => {
+          const error = getError(() =>
+            defineSqlSchemaReferenceForDomainObjectProperty({
+              property: {
+                name: 'trainEngineerRefs',
+                type: DomainObjectPropertyType.ARRAY,
+                of: {
+                  type: DomainObjectPropertyType.REFERENCE,
+                  of: {
+                    name: 'TrainEngineer',
+                    extends: DomainObjectVariant.DOMAIN_ENTITY,
+                  },
+                },
+              },
+              domainObject: { name: 'Train' } as DomainObjectMetadata,
+              allDomainObjects: [] as DomainObjectMetadata[],
+            }),
+          );
+
+          then('it is refused for its SHAPE, never for its name', () => {
+            expect(error).toBeInstanceOf(
+              DirectlyNestedNonDomainObjectReferenceForbiddenError,
+            );
+          });
+        });
+      },
+    );
     it('should get domain object reference from a direct nested reference, with prefix name', () => {
       const reference = defineSqlSchemaReferenceForDomainObjectProperty({
         property: {
@@ -394,11 +430,8 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
       });
     });
     it('should NOT infer a uuid array reference when `Uuids` is not the name suffix (agrees with the shared isUuidReferenceArrayProperty predicate the generator consumes)', () => {
-      // `imageUuidsAtCapture` (sql `image_uuids_at_capture`) contains `Uuids` but does not END in it,
-      // so the shared `_uuids$` predicate the generator + schema-control consume emits a NATIVE array
-      // column for it. this classifier must agree — an unanchored `/Uuids/` here would build an FK/join
-      // decoration the generator never emits, the exact manifest/generator mismatch the shared predicate
-      // exists to prevent. so this must return null (no implicit uuid reference).
+      // `imageUuidsAtCapture` contains `Uuids` but does not end in it, so the shared `_uuids$`
+      // predicate yields a native array column; this classifier must agree and return null
       const reference = defineSqlSchemaReferenceForDomainObjectProperty({
         property: {
           name: 'imageUuidsAtCapture',
@@ -418,9 +451,8 @@ describe('defineSqlSchemaReferenceForDomainObjectProperty', () => {
       expect(reference).toEqual(null);
     });
     it('should NOT infer a uuid array reference for a non-string `_uuids` array (element-type gate mirrors the shared predicate)', () => {
-      // `scoreUuids: number[]` ends in `Uuids` but its element is NUMBER, not STRING, so it is a native
-      // numeric array — not a uuid reference. the element-type gate (isPrimitiveArrayProperty + STRING)
-      // matches the shared predicate, so both layers agree it falls through to the native-array branch.
+      // `scoreUuids: number[]` ends in `Uuids` but its element is NUMBER, so a native array, not a
+      // uuid reference — the element-type gate matches the shared predicate
       const reference = defineSqlSchemaReferenceForDomainObjectProperty({
         property: {
           name: 'scoreUuids',

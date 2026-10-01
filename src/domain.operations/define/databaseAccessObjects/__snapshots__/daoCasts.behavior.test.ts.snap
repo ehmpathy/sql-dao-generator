@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`the dao casts this generator defines given: [case5] the full message of every arm a consumer can hit when: [t0] asDateFromDbValue refuses a value then: a value of neither declared type 1`] = `
+"✋ DbValueCastError: could not cast db value to Date: the value is neither a Date nor a string, so it did not come from a timestamp column. check the column it was read from, or declare the property as the type it actually holds
+
+{
+  "expected": "Date",
+  "value": null,
+  "valueTypeof": "object"
+}"
+`;
+
+exports[`the dao casts this generator defines given: [case5] the full message of every arm a consumer can hit when: [t0] asDateFromDbValue refuses a value then: a value this runtime can not parse 1`] = `
+"✋ DbValueCastError: could not cast db value to Date: the value is not a date this runtime can parse. check the column holds a timestamp, or declare the property as a string
+
+{
+  "expected": "Date",
+  "value": "not-a-date",
+  "valueTypeof": "string"
+}"
+`;
+
+exports[`the dao casts this generator defines given: [case5] the full message of every arm a consumer can hit when: [t1] asNumberFromDbValue refuses a value then: a value of neither declared type 1`] = `
+"✋ DbValueCastError: could not cast db value to number: the value is neither a number nor a string, so it did not come from a numeric column. check the column it was read from, or declare the property as the type it actually holds
+
+{
+  "expected": "number",
+  "value": null,
+  "valueTypeof": "object"
+}"
+`;
+
+exports[`the dao casts this generator defines given: [case5] the full message of every arm a consumer can hit when: [t1] asNumberFromDbValue refuses a value then: a value that is not a finite number 1`] = `
+"✋ DbValueCastError: could not cast db value to number: the value is not a finite number. check the column holds a numeric, or declare the property as a string
+
+{
+  "expected": "number",
+  "value": "abc",
+  "valueTypeof": "string"
+}"
+`;
+
+exports[`the dao casts this generator defines given: [case5] the full message of every arm a consumer can hit when: [t1] asNumberFromDbValue refuses a value then: an integer past Number.MAX_SAFE_INTEGER 1`] = `
+"✋ DbValueCastError: could not cast db value to number: the value is an integer beyond Number.MAX_SAFE_INTEGER, so it can not be held by a js number without loss. declare the property as a string, or narrow the column
+
+{
+  "expected": "number",
+  "value": "9007199254740993",
+  "valueTypeof": "string"
+}"
+`;

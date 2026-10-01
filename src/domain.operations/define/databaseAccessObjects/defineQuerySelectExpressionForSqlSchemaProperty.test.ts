@@ -889,6 +889,106 @@ describe('defineQuerySelectExpressionForSqlSchemaProperty', () => {
       expect(expression).toContain('AS line_item'); // with the correct output name
       expect(expression).toMatchSnapshot();
     });
+
+    describe('the json keys match the keys the nested cast reads', () => {
+      // a nested literal `Seat`, which references entities two ways
+      const seatRelationship = new SqlSchemaToDomainObjectRelationship({
+        name: { domainObject: 'Seat', sqlSchema: 'seat' },
+        properties: [
+          {
+            domainObject: {
+              name: 'ownerRef',
+              type: DomainObjectPropertyType.REFERENCE,
+            },
+            sqlSchema: {
+              name: 'owner_id',
+              isArray: false,
+              isNullable: false,
+              isUpdatable: false,
+              isDatabaseGenerated: false,
+              reference: {
+                method: SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION,
+                of: {
+                  name: 'Person',
+                  extends: DomainObjectVariant.DOMAIN_ENTITY,
+                },
+              },
+            },
+          },
+          {
+            domainObject: {
+              name: 'riderUuid',
+              type: DomainObjectPropertyType.STRING,
+            },
+            sqlSchema: {
+              name: 'rider_id',
+              isArray: false,
+              isNullable: false,
+              isUpdatable: false,
+              isDatabaseGenerated: false,
+              reference: {
+                method: SqlSchemaReferenceMethod.IMPLICIT_BY_UUID,
+                of: {
+                  name: 'Person',
+                  extends: DomainObjectVariant.DOMAIN_ENTITY,
+                },
+              },
+            },
+          },
+        ],
+        decorations: {
+          alias: { domainObject: null },
+          unique: { sqlSchema: null, domainObject: null },
+        },
+      });
+      const personRelationship = new SqlSchemaToDomainObjectRelationship({
+        name: { domainObject: 'Person', sqlSchema: 'person' },
+        properties: [],
+        decorations: {
+          alias: { domainObject: null },
+          unique: { sqlSchema: null, domainObject: null },
+        },
+      });
+      const expressionFor = (input: { isArray: boolean }) =>
+        defineQuerySelectExpressionForSqlSchemaProperty({
+          sqlSchemaName: 'train',
+          sqlSchemaProperty: {
+            name: input.isArray ? 'seat_ids' : 'seat_id',
+            isArray: input.isArray,
+            isNullable: false,
+            isUpdatable: false,
+            isDatabaseGenerated: false,
+            reference: {
+              method: SqlSchemaReferenceMethod.DIRECT_BY_NESTING,
+              of: { name: 'Seat', extends: DomainObjectVariant.DOMAIN_LITERAL },
+            },
+          },
+          domainObjectProperty: {
+            name: input.isArray ? 'seats' : 'seat',
+            type: DomainObjectPropertyType.REFERENCE,
+            of: { name: 'Seat', extends: DomainObjectVariant.DOMAIN_LITERAL },
+          },
+          allSqlSchemaRelationships: [seatRelationship, personRelationship],
+        });
+
+      it('names a declared ref by its uuid key, in a solo nest', () => {
+        const expression = expressionFor({ isArray: false });
+        expect(expression).toContain("'owner_uuid',");
+        expect(expression).not.toContain("'owner_id',");
+      });
+
+      it('names a declared ref by its uuid key, in an array nest', () => {
+        const expression = expressionFor({ isArray: true });
+        expect(expression).toContain("'owner_uuid',");
+        expect(expression).not.toContain("'owner_id',");
+      });
+
+      it('names an implicit uuid ref by its domain name, in an array nest', () => {
+        const expression = expressionFor({ isArray: true });
+        expect(expression).toContain("'rider_uuid',");
+        expect(expression).not.toContain("'rider_id',");
+      });
+    });
   });
 
   describe('reference: direct_by_declaration', () => {

@@ -4,6 +4,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Invoice } from '../../../domain';
 import { sqlQueryUpsertInvoice } from '../.generated/queryFunctions';
+import { asFromDatabase } from '../.generated/casts';
 import { invoiceLineItemDao } from '../invoiceLineItemDao';
 import { priceDao } from '../priceDao';
 
@@ -38,5 +39,5 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new Invoice({ ...invoice, id, uuid }) as HasMetadata<Invoice>;
+  return new Invoice({ ...invoice, id: asFromDatabase.number(id), uuid }) as HasMetadata<Invoice>;
 };

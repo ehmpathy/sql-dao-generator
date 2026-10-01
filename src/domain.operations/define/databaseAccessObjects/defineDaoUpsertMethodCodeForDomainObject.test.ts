@@ -75,6 +75,9 @@ export const upsert = async (
     }
       `.trim(),
     ); // defines inputs correctly
+
+    // this literal declares no db-generated property, so it reads none back and imports no casts
+    expect(code).not.toContain('asFromDatabase');
     expect(code).toMatchSnapshot();
   });
   it('should look correct for simple domain entity', () => {
@@ -163,6 +166,16 @@ async (
     }
       `.trim(),
     ); // defines inputs correctly
+
+    // `id` (bigserial) needs the number cast; `uuid` (varchar) stays a direct read. no DATE, so
+    // the date member is never called — the negative checks the call, since the import is one symbol
+    expect(code).toContain(
+      'return new Carriage({ ...carriage, id: asFromDatabase.number(id), uuid })',
+    );
+    expect(code).toContain(
+      "import { asFromDatabase } from '../.generated/casts';",
+    );
+    expect(code).not.toContain('asFromDatabase.date');
     expect(code).toMatchSnapshot();
   });
   it('should look correct for a simple domain entity with a custom alias', () => {
@@ -322,8 +335,16 @@ async (
       `.trim(),
     ); // defines inputs correctly
     expect(code).toContain('id, uuid, effective_at: effectiveAt');
+
+    // upsert reads db-generated values off its own select, so each is cast; `uuid` (varchar) alone
+    // stays a direct read
     expect(code).toContain(
-      'return new Carriage({ ...carriage, id, uuid, effectiveAt })',
+      'return new Carriage({ ...carriage, id: asFromDatabase.number(id), uuid, effectiveAt: asFromDatabase.date(effectiveAt) })',
+    );
+    // .note = ONE statement, both casts — they share one module now, so a second statement from
+    //         the same specifier would be the defect rather than the expectation
+    expect(code).toContain(
+      "import { asFromDatabase } from '../.generated/casts';",
     );
     expect(code).toMatchSnapshot();
   });
@@ -672,9 +693,8 @@ async (
     expect(code).toMatchSnapshot();
   });
   it('should look correct for a domain entity with native primitive and enum array columns', () => {
-    // the wish's day-in-the-life upsert path: a SurfSpot whose aliases (string[]) and swellWindows
-    // (enum[]) are native array columns must pass straight through as bind params — no join-table id
-    // lookup, no Promise.all/.map, unlike a reference array
+    // native array columns (string[], enum[]) pass straight through as bind params — no join-table
+    // id lookup, unlike a reference array
     const domainObject = new DomainObjectMetadata({
       name: 'SurfSpot',
       extends: DomainObjectVariant.DOMAIN_ENTITY,

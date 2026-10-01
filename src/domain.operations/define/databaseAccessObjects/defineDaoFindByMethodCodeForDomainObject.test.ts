@@ -3,6 +3,7 @@ import {
   DomainObjectPropertyType,
   DomainObjectVariant,
 } from 'domain-objects-metadata';
+import { given, then, when } from 'test-fns';
 
 import { defineSqlSchemaRelationshipForDomainObject } from '@src/domain.operations/define/sqlSchemaRelationship/defineSqlSchemaRelationshipForDomainObject';
 
@@ -10,8 +11,100 @@ import {
   defineDaoFindByMethodCodeForDomainObject,
   FindByQueryType,
 } from './defineDaoFindByMethodCodeForDomainObject';
+import { defineDaoUtilCastMethodCodeForDomainObject } from './defineDaoUtilCastMethodCodeForDomainObject';
 
 describe('defineDaoFindByMethodCodeForDomainObject', () => {
+  given('[case1] a domain entity with a solo declared ref property', () => {
+    // .why = the generated QUERY names this column and the generated CAST reads it. the two are
+    //        produced by different definers, and each once hand-rolled its own copy of the
+    //        `_ref` -> `_uuid` suffix rule. two copies that happen to agree is not agreement —
+    //        it is a coincidence with an expiry date, and a divergence between them would be a
+    //        silent column mismatch NO type-checker catches, since both sides are strings
+    // .why = they now both ask `asDbObjectKeyForDeclaredRef`, so they agree BY CONSTRUCTION.
+    //        this test is what refuses a future re-inline of either copy
+    const buildFor = (propertyName: string) => {
+      const domainObject = new DomainObjectMetadata({
+        name: 'CarriageCargo',
+        extends: DomainObjectVariant.DOMAIN_ENTITY,
+        properties: {
+          id: { name: 'id', type: DomainObjectPropertyType.NUMBER },
+          uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+          [propertyName]: {
+            name: propertyName,
+            type: DomainObjectPropertyType.REFERENCE,
+            required: true,
+            of: {
+              name: 'Carriage',
+              extends: DomainObjectVariant.DOMAIN_ENTITY,
+            },
+          },
+        },
+        decorations: {
+          origin: null,
+          alias: null,
+          primary: null,
+          unique: ['uuid'],
+          updatable: [],
+        },
+      });
+      const sqlSchemaRelationship = defineSqlSchemaRelationshipForDomainObject({
+        domainObject,
+        allDomainObjects: [domainObject],
+      });
+      const carriageSqlSchemaRelationship =
+        defineSqlSchemaRelationshipForDomainObject({
+          domainObject: new DomainObjectMetadata({
+            name: 'Carriage',
+            extends: DomainObjectVariant.DOMAIN_ENTITY,
+            properties: {
+              uuid: { name: 'uuid', type: DomainObjectPropertyType.STRING },
+            },
+            decorations: {
+              origin: null,
+              alias: null,
+              primary: ['uuid'],
+              unique: ['uuid'],
+              updatable: [],
+            },
+          }),
+          allDomainObjects: [domainObject],
+        });
+      return {
+        query: defineDaoFindByMethodCodeForDomainObject({
+          domainObject,
+          sqlSchemaRelationship,
+          allSqlSchemaRelationships: [
+            sqlSchemaRelationship,
+            carriageSqlSchemaRelationship,
+          ],
+          findByQueryType: FindByQueryType.ID,
+        }),
+        cast: defineDaoUtilCastMethodCodeForDomainObject({
+          domainObject,
+          sqlSchemaRelationship,
+        }),
+      };
+    };
+
+    when('[t0] the query and the cast are each defined for it', () => {
+      const built = buildFor('carriageRef');
+
+      then('the query selects the same column string the cast reads', () => {
+        expect(built.query).toContain('carriage_cargo.carriage_uuid');
+        expect(built.cast).toContain('dbObject.carriage_uuid');
+      });
+
+      then(
+        'neither names the plain snakeCase key, which is no column at all',
+        () => {
+          // .note = this is what makes the clamp bite. `carriage_ref` is what a plain `snakeCase` of
+          //         the property name yields, and it is a column the database object does not carry
+          expect(built.query).not.toContain('carriage_ref');
+          expect(built.cast).not.toContain('carriage_ref');
+        },
+      );
+    });
+  });
   describe('findById', () => {
     it('should look correct for simple literal', () => {
       // define what we're testing on

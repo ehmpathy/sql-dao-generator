@@ -4,6 +4,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { TrainStation, Geocode } from '../../../domain';
 import { sqlQueryUpsertTrainStation } from '../.generated/queryFunctions';
+import { asFromDatabase } from '../.generated/casts';
 import { geocodeDao } from '../geocodeDao';
 
 export const sql = `
@@ -33,5 +34,5 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new TrainStation({ ...trainStation, id, uuid }) as HasMetadata<TrainStation>;
+  return new TrainStation({ ...trainStation, id: asFromDatabase.number(id), uuid }) as HasMetadata<TrainStation>;
 };

@@ -4,6 +4,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Locomotive } from '../../../domain';
 import { sqlQueryUpsertLocomotive } from '../.generated/queryFunctions';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = `
   -- query_name = upsert_locomotive
@@ -36,5 +37,5 @@ export const upsert = async (
     },
   });
   const { id, uuid, created_at: createdAt, effective_at: effectiveAt, updated_at: updatedAt } = results[0]!; // grab the db generated values
-  return new Locomotive({ ...locomotive, id, uuid, createdAt, effectiveAt, updatedAt }) as HasMetadata<Locomotive>;
+  return new Locomotive({ ...locomotive, id: asFromDatabase.number(id), uuid, createdAt: asFromDatabase.date(createdAt), effectiveAt: asFromDatabase.date(effectiveAt), updatedAt: asFromDatabase.date(updatedAt) }) as HasMetadata<Locomotive>;
 };

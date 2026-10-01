@@ -5,6 +5,7 @@ import { isRefByPrimary } from 'domain-objects';
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { CarriageCargo, Carriage } from '../../../domain';
 import { sqlQueryUpsertCarriageCargo } from '../.generated/queryFunctions';
+import { asFromDatabase } from '../.generated/casts';
 import { carriageDao } from '../carriageDao';
 
 export const sql = `
@@ -38,5 +39,5 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new CarriageCargo({ ...carriageCargo, id, uuid }) as HasMetadata<CarriageCargo>;
+  return new CarriageCargo({ ...carriageCargo, id: asFromDatabase.number(id), uuid }) as HasMetadata<CarriageCargo>;
 };

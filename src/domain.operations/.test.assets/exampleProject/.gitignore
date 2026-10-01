@@ -2,4 +2,6 @@ provision/schema/declarations/**/*.ts
 !provision/schema/declarations/package.json
 provision/schema/sql/**/*
 provision/schema/sql/**/*
-src/access/daos
+# note: no rule for `src/access/daos`, deliberately. every generated dao file is tracked: a fresh
+#       clone must typecheck, and the snapshot suites compare against them. a rule there ignores
+#       no tracked file and silently swallows the next new generated directory.

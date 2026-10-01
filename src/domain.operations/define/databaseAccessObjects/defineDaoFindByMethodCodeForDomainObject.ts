@@ -20,6 +20,7 @@ import {
   GetTypescriptCodeForPropertyContext,
 } from './defineQueryFunctionInputExpressionForDomainObjectProperty';
 import { defineQueryInputExpressionForSqlSchemaProperty } from './defineQueryInputExpressionForSqlSchemaProperty';
+import { getOneDbObjectKeyForProperty } from './getOneDbObjectKeyForProperty';
 import { getReferencedDomainObjectNames } from './getReferencedDomainObjectNames';
 
 export enum FindByQueryType {
@@ -373,18 +374,19 @@ export const sql = \`
   -- query_name = find_${sqlSchemaName}_by_${snakeCase(findByQueryType)}
   SELECT
     ${sqlSchemaRelationship.properties
-      .map(({ domainObject: domainObjectProperty }) =>
-        !domainObjectProperty
-          ? null
-          : `${sqlSchemaName}.${
-              isReferenceProperty(domainObjectProperty) &&
-              domainObjectProperty.of.extends ===
-                DomainObjectVariant.DOMAIN_ENTITY // if its a DIRECT_BY_DECLARATION reference, then replace the name; // todo: upgrade to selecting the full ref-by-unique instead and leverage that to stop renaming adhoc to _uuid
-                ? snakeCase(domainObjectProperty.name)
-                    .replace(/_refs$/, '_uuids')
-                    .replace(/_ref$/, '_uuid')
-                : snakeCase(domainObjectProperty.name)
-            }`,
+      .map(
+        ({
+          domainObject: domainObjectProperty,
+          sqlSchema: sqlSchemaProperty,
+        }) => {
+          // .note = the query names this column and the cast reads it via one shared rule; a
+          //         divergence would be a silent string mismatch no type-checker catches
+          const dbObjectKey = getOneDbObjectKeyForProperty({
+            sqlSchemaProperty,
+            domainObjectProperty,
+          });
+          return dbObjectKey ? `${sqlSchemaName}.${dbObjectKey}` : null;
+        },
       )
       .filter(isPresent)
       .join(',\n    ')}

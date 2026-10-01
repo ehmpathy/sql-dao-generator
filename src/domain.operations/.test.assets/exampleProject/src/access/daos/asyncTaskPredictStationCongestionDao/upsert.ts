@@ -4,6 +4,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { AsyncTaskPredictStationCongestion } from '../../../domain';
 import { sqlQueryUpsertAsyncTaskPredictStationCongestion } from '../.generated/queryFunctions';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = `
   -- query_name = upsert_async_task_predict_station_congestion
@@ -34,5 +35,5 @@ export const upsert = async (
     },
   });
   const { id, uuid, created_at: createdAt, updated_at: updatedAt } = results[0]!; // grab the db generated values
-  return new AsyncTaskPredictStationCongestion({ ...asyncTaskPredictStationCongestion, id, uuid, createdAt, updatedAt }) as HasMetadata<AsyncTaskPredictStationCongestion>;
+  return new AsyncTaskPredictStationCongestion({ ...asyncTaskPredictStationCongestion, id: asFromDatabase.number(id), uuid, createdAt: asFromDatabase.date(createdAt), updatedAt: asFromDatabase.date(updatedAt) }) as HasMetadata<AsyncTaskPredictStationCongestion>;
 };
