@@ -40,7 +40,8 @@ if (
  * .why =
  *   - auto-inject keys into process.env
  *   - fail fast with helpful error if keyrack locked or keys absent
+ * .note = skipped in ci, which holds no keyrack; the workflow supplies credentials there
  */
 const keyrackYmlPath = join(process.cwd(), '.agent/keyrack.yml');
-if (existsSync(keyrackYmlPath))
+if (existsSync(keyrackYmlPath) && !process.env.CI)
   keyrack.source({ env: 'test', owner: 'ehmpath', mode: 'strict' });
