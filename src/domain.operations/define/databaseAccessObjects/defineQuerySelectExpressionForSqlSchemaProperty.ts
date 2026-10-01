@@ -4,10 +4,28 @@ import type { DomainObjectPropertyMetadata } from 'domain-objects-metadata';
 import type { SqlSchemaPropertyMetadata } from '@src/domain.objects/SqlSchemaPropertyMetadata';
 import { SqlSchemaReferenceMethod } from '@src/domain.objects/SqlSchemaReferenceMetadata';
 import type { SqlSchemaToDomainObjectRelationship } from '@src/domain.objects/SqlSchemaToDomainObjectRelationship';
-import { isADirectlyNestedDomainObjectProperty } from '@src/domain.operations/define/sqlSchemaRelationship/isADirectlyNestedDomainObjectProperty';
-import { isAnImplicitlyReferencedDomainObjectProperty } from '@src/domain.operations/define/sqlSchemaRelationship/isAnImplicitlyReferencedDomainObjectProperty';
+import { asDbObjectKeyForDeclaredRef } from '@src/domain.operations/define/databaseAccessObjects/asDbObjectKeyForDeclaredRef';
+import { getOneDbObjectKeyForProperty } from '@src/domain.operations/define/databaseAccessObjects/getOneDbObjectKeyForProperty';
 import { isAUserDefinedDomainObjectProperty } from '@src/domain.operations/define/sqlSchemaRelationship/isAUserDefinedDomainObjectProperty';
 import { UnexpectedCodePathDetectedError } from '@src/domain.operations/UnexpectedCodePathDetectedError';
+
+/**
+ * .what = the key a nested property is written under, inside `json_build_object`
+ * .why  = the nested dobj's cast reads each key via `getOneDbObjectKeyForProperty`; the same
+ *         function names the key here, so the json object and the cast agree by construction
+ */
+const asJsonKeyForNestedProperty = (
+  input: Parameters<typeof getOneDbObjectKeyForProperty>[0],
+): string => {
+  const key = getOneDbObjectKeyForProperty(input);
+  if (key === null)
+    throw new UnexpectedCodePathDetectedError({
+      reason:
+        'could not derive a json key for a nested property, for query select expression',
+      domainObjectPropertyName: input.domainObjectProperty?.name,
+    });
+  return key;
+};
 
 const indentByNestingDepth = ({
   depthOfNesting,
@@ -98,6 +116,17 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
     sqlSchemaProperty.reference.method ===
     SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION
   ) {
+    // a declared ref is persisted as the referenced entity's uuid, so the alias names the column
+    // the query reads from (`owner_uuid`), never how it was declared (`owner_ref`)
+    // todo: return a json object of the ref, preferably in ref-by-unique shape
+    const selectExpressionAliasForDeclaredRef =
+      depthOfNesting === 0
+        ? ` AS ${asDbObjectKeyForDeclaredRef({
+            propertyName: domainObjectProperty.name,
+            isArray: sqlSchemaProperty.isArray,
+          })}`
+        : '';
+
     // solo case;
     if (!sqlSchemaProperty.isArray)
       return `
@@ -106,9 +135,7 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
       FROM ${fromSqlSchemaExpression} WHERE ${referencedSqlSchemaName}.id = ${sqlSchemaName}.${
         sqlSchemaProperty.name
       }
-    )${
-      selectExpressionAlias.replace(/_ref$/, '_uuid') // todo: return a json object of the ref, preferably in ref-by-unique shape
-    }
+    )${selectExpressionAliasForDeclaredRef}
           `.trim();
 
     // array case
@@ -119,9 +146,7 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
       JOIN unnest(${sqlSchemaName}.${sqlSchemaProperty.name}) WITH ORDINALITY
         AS ${referencedSqlSchemaName}_ref (id, array_order_index)
         ON ${referencedSqlSchemaName}.id = ${referencedSqlSchemaName}_ref.id
-    )${
-      selectExpressionAlias.replace(/_refs$/, '_uuids') // todo: return a json object of the ref, preferably in ref-by-unique shape
-    }
+    )${selectExpressionAliasForDeclaredRef}
       `.trim();
   }
 
@@ -142,17 +167,10 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
               sqlSchema: referencedSqlSchemaProperty,
               domainObject: referencedDomainObjectProperty,
             }) => {
-              const jsonKey =
-                isADirectlyNestedDomainObjectProperty({
-                  sqlSchema: referencedSqlSchemaProperty,
-                  domainObject: referencedDomainObjectProperty,
-                }) ||
-                isAnImplicitlyReferencedDomainObjectProperty({
-                  sqlSchema: referencedSqlSchemaProperty,
-                  domainObject: referencedDomainObjectProperty,
-                })
-                  ? snakeCase(referencedDomainObjectProperty.name) // if its a reference, then refer to it by the dobj.property name
-                  : referencedSqlSchemaProperty.name; // otherwise, by the sql property name
+              const jsonKey = asJsonKeyForNestedProperty({
+                sqlSchemaProperty: referencedSqlSchemaProperty,
+                domainObjectProperty: referencedDomainObjectProperty,
+              });
               const jsonValueSelectExpression = indentByNestingDepth({
                 depthOfNesting,
                 selectExpression:
@@ -189,12 +207,10 @@ export const defineQuerySelectExpressionForSqlSchemaProperty = ({
                   sqlSchema: referencedSqlSchemaProperty,
                   domainObject: referencedDomainObjectProperty,
                 }) => {
-                  const jsonKey = isADirectlyNestedDomainObjectProperty({
-                    sqlSchema: referencedSqlSchemaProperty,
-                    domainObject: referencedDomainObjectProperty,
-                  })
-                    ? snakeCase(referencedDomainObjectProperty.name) // if its a directly nested domain object reference, then refer to it by domain object name
-                    : referencedSqlSchemaProperty.name; // otherwise, by the sql property name
+                  const jsonKey = asJsonKeyForNestedProperty({
+                    sqlSchemaProperty: referencedSqlSchemaProperty,
+                    domainObjectProperty: referencedDomainObjectProperty,
+                  });
                   const jsonValueSelectExpression = indentByNestingDepth({
                     depthOfNesting: depthOfNesting + 2, // 2, because we wrap in COALESCE + json_agg + json_build_object + its own padding
                     selectExpression:

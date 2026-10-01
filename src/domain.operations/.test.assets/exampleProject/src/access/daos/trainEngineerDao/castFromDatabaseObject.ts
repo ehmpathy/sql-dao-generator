@@ -1,17 +1,20 @@
 import { HasMetadata } from 'type-fns';
 
 import { TrainEngineer } from '../../../domain';
-import { SqlQueryFindCertificateByIdOutput, SqlQueryFindTrainEngineerByIdOutput } from '../.generated/types';
-import { castFromDatabaseObject as castCertificateFromDatabaseObject } from '../certificateDao/castFromDatabaseObject';
+import { SqlQueryFindTrainEngineerByIdOutput as SqlQueryFindTrainEngineerByIdOutputStrict } from '../.generated/types';
+import { asFromDatabase } from '../.generated/casts';
+import { castFromDatabaseObject as castCertificateFromDatabaseObject, SqlQueryFindCertificateByIdOutputJsoned } from '../certificateDao/castFromDatabaseObject';
+
+export type { SqlQueryFindTrainEngineerByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindTrainEngineerByIdOutput,
+  dbObject: SqlQueryFindTrainEngineerByIdOutputStrict,
 ): HasMetadata<TrainEngineer> =>
   new TrainEngineer({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
     socialSecurityNumberHash: dbObject.social_security_number_hash,
-    certificates: (dbObject.certificates as SqlQueryFindCertificateByIdOutput[]).map(castCertificateFromDatabaseObject),
+    certificates: (dbObject.certificates as SqlQueryFindCertificateByIdOutputJsoned[]).map(castCertificateFromDatabaseObject),
     licenseUuids: dbObject.license_uuids as string[],
     name: dbObject.name,
   }) as HasMetadata<TrainEngineer>;

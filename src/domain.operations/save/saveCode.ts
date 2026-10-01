@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import { makeDirectoryAsync } from '@src/utils/fileio/makeDirAsync';
 import { writeFileAsync } from '@src/utils/fileio/writeFileAsync';
 import { getDirOfPath } from '@src/utils/filepaths/getDirOfPath';
+import { getNormalizedPath } from '@src/utils/filepaths/getNormalizedPath';
 
 export const saveCode = async ({
   rootDir,
@@ -37,7 +38,11 @@ export const saveCode = async ({
   const successMessage = `  ${chalk.green('✔')} ${chalk.green(
     chalk.bold('[GENERATED]'),
   )} ${chalk.bold(
-    relativeFilePath.replace(/^\//, ''), // strip leading `/`'s, since these are all relative paths
+    // .what = the path the file ACTUALLY landed at, relative to rootDir
+    // .why  = the caller's join can carry `..` segments, which fs collapses on write; the log must
+    //         name where the file landed, not `declarations/../sql/views/x.sql`
+    // .note = the log alone reads this value, so the collapse lands here and no file moves
+    getNormalizedPath(relativeFilePath).replace(/^\//, ''),
   )}`;
   console.log(successMessage); // tslint:disable-line no-console
 };

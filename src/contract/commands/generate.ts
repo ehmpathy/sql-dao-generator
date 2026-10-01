@@ -1,4 +1,5 @@
 import { Command, Flags } from '@oclif/core';
+import { resolve as asAbsolutePath } from 'path';
 
 import { generate } from '@src/domain.operations/commands/generate';
 
@@ -9,10 +10,11 @@ export default class Generate extends Command {
 
   public static flags = {
     help: Flags.help({ char: 'h' }),
+    // .note = no `required: true`: a defaulted flag is always satisfied, so `required` only
+    //         printed a contradictory `(required)` in `--help`
     config: Flags.string({
       char: 'c',
       description: 'path to config yml',
-      required: true,
       default: 'codegen.sql.dao.yml',
     }),
   };
@@ -22,8 +24,9 @@ export default class Generate extends Command {
     const config = flags.config!;
 
     // generate the code
-    const configPath =
-      config.slice(0, 1) === '/' ? config : `${process.cwd()}/${config}`; // if starts with /, consider it as an absolute path
+    // .note = node's path operation keeps an absolute path, joins a relative one to cwd, and
+    //         collapses `./`, so errors show the path the human typed
+    const configPath = asAbsolutePath(config);
     await generate({ configPath });
   }
 }

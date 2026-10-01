@@ -34,7 +34,7 @@ export const generate = async ({ configPath }: { configPath: string }) => {
   // output the sql-schema-generator entities
   console.log(
     `${chalk.bold(
-      '\n🏗️️  Generating the sql schema:',
+      '\n🏗️  Generating the sql schema:',
     )} using sql-schema-generator...\n`,
   ); // tslint:disable-line no-console
   const sqlSchemaGeneratorCodeFiles =
@@ -67,8 +67,8 @@ export const generate = async ({ configPath }: { configPath: string }) => {
   // output the dao functions
   console.log(
     `${chalk.bold(
-      '️\n🔨 Generating data-access-objects:',
-    )} methods, casters, tests, and named exports...\n`,
+      '\n🔨 Generating data-access-objects:',
+    )} methods, casts, tests, and named exports...\n`,
   ); // tslint:disable-line no-console
   const daoCodeFiles = defineDaoCodeFilesForDomainObjects({
     domainObjects,

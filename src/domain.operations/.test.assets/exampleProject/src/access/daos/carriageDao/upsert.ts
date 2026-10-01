@@ -4,6 +4,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Carriage } from '../../../domain';
 import { sqlQueryUpsertCarriage } from '../.generated/queryFunctions';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = `
   -- query_name = upsert_carriage
@@ -34,5 +35,5 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new Carriage({ ...carriage, id, uuid }) as HasMetadata<Carriage>;
+  return new Carriage({ ...carriage, id: asFromDatabase.number(id), uuid }) as HasMetadata<Carriage>;
 };

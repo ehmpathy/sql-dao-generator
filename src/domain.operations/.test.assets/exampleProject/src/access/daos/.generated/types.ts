@@ -669,6 +669,7 @@ export interface SqlViewViewCertificateHydrated {
 // types for view 'view_geocode_hydrated'
 export interface SqlViewViewGeocodeHydrated {
   id: SqlTableGeocode['id'];
+  created_at: SqlTableGeocode['created_at'];
   latitude: SqlTableGeocode['latitude'];
   longitude: SqlTableGeocode['longitude'];
 }
@@ -955,6 +956,7 @@ export interface SqlQueryFindGeocodeByIdInput {
 }
 export interface SqlQueryFindGeocodeByIdOutput {
   id: SqlViewViewGeocodeHydrated['id'];
+  created_at: SqlViewViewGeocodeHydrated['created_at'];
   latitude: SqlViewViewGeocodeHydrated['latitude'];
   longitude: SqlViewViewGeocodeHydrated['longitude'];
 }
@@ -966,6 +968,7 @@ export interface SqlQueryFindGeocodeByUniqueInput {
 }
 export interface SqlQueryFindGeocodeByUniqueOutput {
   id: SqlViewViewGeocodeHydrated['id'];
+  created_at: SqlViewViewGeocodeHydrated['created_at'];
   latitude: SqlViewViewGeocodeHydrated['latitude'];
   longitude: SqlViewViewGeocodeHydrated['longitude'];
 }
@@ -1274,6 +1277,7 @@ export interface SqlQueryUpsertGeocodeInput {
 }
 export interface SqlQueryUpsertGeocodeOutput {
   id: SqlFunctionUpsertGeocodeOutput['id'];
+  created_at: SqlFunctionUpsertGeocodeOutput['created_at'];
 }
 
 // types for query 'upsert_invoice'

@@ -6,9 +6,7 @@ describe('asHelpfulSqlSchemaGeneratorError', () => {
   given(
     '[case1] the documented native-array-unsupported stderr from sql-schema-generator',
     () => {
-      // this is the exact error sql-schema-generator throws when a consumer models a
-      // primitive/enum array (e.g. tags: string[]) — the wish's headline example — because
-      // its ARRAY_OF accepts only REFERENCEs/UUIDs today. see handoff.sql-schema-generator.md
+      // the error sql-schema-generator throws on a primitive/enum array (e.g. tags: string[])
       const stderr =
         'Error: only arrays of REFERENCEs or UUIDs are supported\n    at ARRAY_OF (.../defineProperty.ts:367)';
 
@@ -26,8 +24,12 @@ describe('asHelpfulSqlSchemaGeneratorError', () => {
           expect(error.message).toContain('array of domain-object references');
         });
 
-        then('it points at the handoff for follow-up', () => {
-          expect(error.message).toContain('handoff.sql-schema-generator.md');
+        then('it cites no path the consumer can not dereference', () => {
+          // .why = a `.behavior/` path is absent from a consumer's install; the handoff is cited
+          //        in the source jsdoc instead, for the maintainer who can open it
+          // .note = an absence assertion stays green on an empty message; the cases above hold content
+          expect(error.message).not.toContain('handoff.');
+          expect(error.message).not.toContain('.behavior/');
         });
 
         then('it preserves the raw error for later diagnosis', () => {

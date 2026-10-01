@@ -4,14 +4,16 @@ exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for a do
 "import { HasMetadata } from 'type-fns';
 
 import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindCarriageByIdOutput, SqlQueryFindCarriageCargoByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castCarriageFromDatabaseObject } from '../carriageDao/castFromDatabaseObject';
+import { SqlQueryFindCarriageCargoByIdOutput as SqlQueryFindCarriageCargoByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindCarriageCargoByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindCarriageCargoByIdOutput,
+  dbObject: SqlQueryFindCarriageCargoByIdOutputStrict,
 ): HasMetadata<CarriageCargo> =>
   new CarriageCargo({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
     carriageRef: { uuid: dbObject.carriage_uuid },
   }) as HasMetadata<CarriageCargo>;"
@@ -21,17 +23,20 @@ exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for a do
 "import { HasMetadata } from 'type-fns';
 
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
+import { SqlQueryFindTrainLocatedEventByIdOutput as SqlQueryFindTrainLocatedEventByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject, SqlQueryFindGeocodeByIdOutputJsoned } from '../geocodeDao/castFromDatabaseObject';
+
+export type { SqlQueryFindTrainLocatedEventByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindTrainLocatedEventByIdOutput,
+  dbObject: SqlQueryFindTrainLocatedEventByIdOutputStrict,
 ): HasMetadata<TrainLocatedEvent> =>
   new TrainLocatedEvent({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     trainUuid: dbObject.train_uuid,
-    occurredAt: dbObject.occurred_at,
-    geocodes: (dbObject.geocodes as SqlQueryFindGeocodeByIdOutput[]).map(castGeocodeFromDatabaseObject),
+    occurredAt: asFromDatabase.date(dbObject.occurred_at),
+    geocodes: (dbObject.geocodes as SqlQueryFindGeocodeByIdOutputJsoned[]).map(castGeocodeFromDatabaseObject),
   }) as HasMetadata<TrainLocatedEvent>;"
 `;
 
@@ -39,20 +44,23 @@ exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for doma
 "import { HasMetadata } from 'type-fns';
 
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainBadgeByIdOutput, SqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
-import { castFromDatabaseObject as castTrainBadgeFromDatabaseObject } from '../trainBadgeDao/castFromDatabaseObject';
+import { SqlQueryFindTrainByIdOutput as SqlQueryFindTrainByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject, SqlQueryFindGeocodeByIdOutputJsoned } from '../geocodeDao/castFromDatabaseObject';
+import { castFromDatabaseObject as castTrainBadgeFromDatabaseObject, SqlQueryFindTrainBadgeByIdOutputJsoned } from '../trainBadgeDao/castFromDatabaseObject';
+
+export type { SqlQueryFindTrainByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindTrainByIdOutput,
+  dbObject: SqlQueryFindTrainByIdOutputStrict,
 ): HasMetadata<Train> =>
   new Train({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
     tin: dbObject.tin,
-    homeStationGeocode: castGeocodeFromDatabaseObject(dbObject.home_station_geocode as SqlQueryFindGeocodeByIdOutput),
+    homeStationGeocode: castGeocodeFromDatabaseObject(dbObject.home_station_geocode as SqlQueryFindGeocodeByIdOutputJsoned),
     leadEngineerUuid: dbObject.lead_engineer_uuid,
-    badges: (dbObject.badges as SqlQueryFindTrainBadgeByIdOutput[]).map(castTrainBadgeFromDatabaseObject),
+    badges: (dbObject.badges as SqlQueryFindTrainBadgeByIdOutputJsoned[]).map(castTrainBadgeFromDatabaseObject),
     locomotiveUuids: dbObject.locomotive_uuids as string[],
   }) as HasMetadata<Train>;"
 `;
@@ -61,17 +69,20 @@ exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for simp
 "import { HasMetadata } from 'type-fns';
 
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindCarriageByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindCarriageByIdOutput as SqlQueryFindCarriageByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindCarriageByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindCarriageByIdOutput,
+  dbObject: SqlQueryFindCarriageByIdOutputStrict,
 ): HasMetadata<Carriage> =>
   new Carriage({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
     cin: dbObject.cin,
     carries: dbObject.carries as Carriage['carries'],
-    capacity: dbObject.capacity,
+    capacity: dbObject.capacity === null ? null : asFromDatabase.number(dbObject.capacity),
   }) as HasMetadata<Carriage>;"
 `;
 
@@ -79,15 +90,26 @@ exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct for simp
 "import { HasMetadata } from 'type-fns';
 
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindGeocodeByIdOutput as SqlQueryFindGeocodeByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import type { AsJsonFromDbObject } from '../.generated/casts';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindGeocodeByIdOutputStrict };
+
+export type SqlQueryFindGeocodeByIdOutputJsoned =
+  AsJsonFromDbObject<SqlQueryFindGeocodeByIdOutputStrict>;
+
+export type SqlQueryFindGeocodeByIdOutput =
+  | SqlQueryFindGeocodeByIdOutputStrict
+  | SqlQueryFindGeocodeByIdOutputJsoned;
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindGeocodeByIdOutput,
 ): HasMetadata<Geocode> =>
   new Geocode({
-    id: dbObject.id,
-    latitude: dbObject.latitude,
-    longitude: dbObject.longitude,
+    id: asFromDatabase.number(dbObject.id),
+    latitude: asFromDatabase.number(dbObject.latitude),
+    longitude: asFromDatabase.number(dbObject.longitude),
   }) as HasMetadata<Geocode>;"
 `;
 
@@ -95,16 +117,38 @@ exports[`defineDaoUtilCastMethodCodeForDomainObject should look correct when the
 "import { HasMetadata } from 'type-fns';
 
 import { TravelRoute } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTravelRouteByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
+import { SqlQueryFindTravelRouteByIdOutput as SqlQueryFindTravelRouteByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject, SqlQueryFindGeocodeByIdOutputJsoned } from '../geocodeDao/castFromDatabaseObject';
+
+export type { SqlQueryFindTravelRouteByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindTravelRouteByIdOutput,
+  dbObject: SqlQueryFindTravelRouteByIdOutputStrict,
 ): HasMetadata<TravelRoute> =>
   new TravelRoute({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
-    originGeocode: castGeocodeFromDatabaseObject(dbObject.origin_geocode as SqlQueryFindGeocodeByIdOutput),
-    destinationGeocode: castGeocodeFromDatabaseObject(dbObject.destination_geocode as SqlQueryFindGeocodeByIdOutput),
+    originGeocode: castGeocodeFromDatabaseObject(dbObject.origin_geocode as SqlQueryFindGeocodeByIdOutputJsoned),
+    destinationGeocode: castGeocodeFromDatabaseObject(dbObject.destination_geocode as SqlQueryFindGeocodeByIdOutputJsoned),
   }) as HasMetadata<TravelRoute>;"
+`;
+
+exports[`defineDaoUtilCastMethodCodeForDomainObject should read a NULLABLE declared reference from the same key it null-checks 1`] = `
+"import { HasMetadata } from 'type-fns';
+
+import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
+import { SqlQueryFindCarriageCargoByIdOutput as SqlQueryFindCarriageCargoByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindCarriageCargoByIdOutputStrict };
+
+export const castFromDatabaseObject = (
+  dbObject: SqlQueryFindCarriageCargoByIdOutputStrict,
+): HasMetadata<CarriageCargo> =>
+  new CarriageCargo({
+    id: asFromDatabase.number(dbObject.id),
+    uuid: dbObject.uuid,
+    carriageRef: dbObject.carriage_uuid === null ? null : { uuid: dbObject.carriage_uuid },
+  }) as HasMetadata<CarriageCargo>;"
 `;

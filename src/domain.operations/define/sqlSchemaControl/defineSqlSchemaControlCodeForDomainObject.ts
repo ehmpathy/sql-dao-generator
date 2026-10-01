@@ -68,11 +68,8 @@ const defineArrayJoinTableRelpath = ({
       },
     )}.sql`;
 
-  // a _uuids-suffixed string array is an implicit by-uuid reference, so it joins to a uuid table
-  // (check this before the native-array check, since such an array is also a primitive string array).
-  // the shared predicate also gates on a string element, in agreement with the schema-generator, so a
-  // non-string _uuids array (e.g. score_uuids: number[]) falls through to the native branch in both
-  // layers instead of a join table the generator never builds
+  // a _uuids string array is an implicit by-uuid reference, so it joins to a uuid table. checked
+  // first, since it is also a primitive string array; a non-string _uuids array falls through
   if (
     isUuidReferenceArrayProperty({
       name: propertyRelationship.sqlSchema.name,

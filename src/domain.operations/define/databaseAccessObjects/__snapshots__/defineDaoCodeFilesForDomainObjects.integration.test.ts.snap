@@ -3,6 +3,149 @@
 exports[`defineSqlSchemaControlCodeFilesForDomainObjects should work on the example project 1`] = `
 [
   GeneratedCodeFile {
+    "content": "import { ConstraintError } from 'helpful-errors';
+import pg from 'pg';
+
+/**
+ * .what = restates a raw row type as the shape that same row takes inside a json column
+ * .why  = json has no date type, so a \`timestamptz\` that is a \`Date\` on the raw path is an
+ *         iso-8601 \`string\` here. every other primitive crosses unchanged
+ * .note = derived from the raw type rather than mirrored by hand. a nested json column stays
+ *         opaque — truth for that level is restored by that dao's own cast
+ */
+export type AsJsonFromDbObject<T> = T extends Date
+  ? string
+  : T extends (infer E)[]
+    ? AsJsonFromDbObject<E>[]
+    : T extends object
+      ? { [K in keyof T]: AsJsonFromDbObject<T[K]> }
+      : T;
+
+/**
+ * .what = thrown when a value from the database can not be cast to its declared domain type
+ * .why  = a cast may throw; it may never absorb. a wrong-but-plausible value would hide the defect
+ * .note = a \`ConstraintError\`, since the caller declared the type this value does not fit
+ * .note = the value lives in metadata, never in the message, so \`.redact(['metadata'])\` keeps
+ *         the diagnosis. the stack trace names the dao line that read it
+ * .note = no constructor — the inherited statics build via \`new this(message, metadata)\`
+ */
+export class DbValueCastError extends ConstraintError<{
+  expected: string;
+  value: unknown;
+  valueTypeof: string;
+}> {}
+
+/**
+ * .what = casts a db value to the \`Date\` its domain object declares
+ * .why  = a \`timestamptz\` is a \`Date\` from a raw select and an iso-8601 \`string\` from inside
+ *         \`json_build_object\`
+ */
+const asDateFromDbValue = (value: Date | string): Date => {
+  // pass through the \`Date\` node-postgres parsed on the raw path
+  if (value instanceof Date) return value;
+
+  // refuse a value that is neither — reachable from a hand-written query whose row is typed \`any\`
+  if (typeof value !== 'string')
+    throw new DbValueCastError(
+      \`could not cast db value to Date: the value is neither a Date nor a string, so it did not come from a timestamp column. check the column it was read from, or declare the property as the type it actually holds\`,
+      { expected: 'Date', value, valueTypeof: typeof value },
+    );
+
+  // parse the iso-8601 string postgres rendered into json
+  const cast = new Date(value);
+  if (Number.isNaN(cast.getTime()))
+    throw new DbValueCastError(
+      \`could not cast db value to Date: the value is not a date this runtime can parse. check the column holds a timestamp, or declare the property as a string\`,
+      { expected: 'Date', value, valueTypeof: typeof value },
+    );
+
+  return cast;
+};
+
+/**
+ * .what = casts a db value to the \`number\` its domain object declares
+ * .why  = \`bigint\` and \`numeric\` are \`string\` from a raw select and a json \`number\` from inside
+ *         \`json_build_object\`
+ */
+const asNumberFromDbValue = (value: number | string): number => {
+  // refuse a value that is neither — \`Number(null)\` and \`Number(true)\` are finite, so the
+  // guards below would admit them
+  if (typeof value !== 'number' && typeof value !== 'string')
+    throw new DbValueCastError(
+      \`could not cast db value to number: the value is neither a number nor a string, so it did not come from a numeric column. check the column it was read from, or declare the property as the type it actually holds\`,
+      { expected: 'number', value, valueTypeof: typeof value },
+    );
+
+  // refuse what no js number holds as a quantity: NaN, \`Infinity\`, and a blank, which
+  // \`Number\` reads as 0
+  const cast = typeof value === 'number' ? value : Number(value);
+  if (!Number.isFinite(cast) || (typeof value === 'string' && !value.trim()))
+    throw new DbValueCastError(
+      \`could not cast db value to number: the value is not a finite number. check the column holds a numeric, or declare the property as a string\`,
+      { expected: 'number', value, valueTypeof: typeof value },
+    );
+
+  // refuse an integer past float range — a truncated id points at the wrong row
+  if (Number.isInteger(cast) && !Number.isSafeInteger(cast))
+    throw new DbValueCastError(
+      \`could not cast db value to number: the value is an integer beyond Number.MAX_SAFE_INTEGER, so it can not be held by a js number without loss. declare the property as a string, or narrow the column\`,
+      { expected: 'number', value, valueTypeof: typeof value },
+    );
+
+  return cast;
+};
+
+/**
+ * .what = the casts that make a declared property type true, whichever way it was selected
+ * .why  = a \`timestamptz\` is a \`Date\` from a raw column and an iso-8601 string from inside
+ *         \`json_build_object\`; a \`bigint\` is a \`number\` or a \`string\`, per the pg type parsers
+ *         this process carries. each cast takes either and returns one
+ */
+export const asFromDatabase = {
+  date: asDateFromDbValue,
+  number: asNumberFromDbValue,
+};
+
+/**
+ * .what = reads one postgres \`int8[]\` wire value — \`{1,2}\`, with an unquoted \`NULL\` element
+ * .note = a NULL element stays \`null\`, as node-postgres' own parser does
+ */
+const asInt8ArrayFromDbValue = (value: string): (number | null)[] =>
+  value === '{}'
+    ? []
+    : value
+        .slice(1, -1)
+        .split(',')
+        .map((each) => (each === 'NULL' ? null : asNumberFromDbValue(each)));
+
+/**
+ * .what = registers the pg type parsers this schema needs, on the shared pg module
+ * .why  = a generated dao declares \`id: number\`; absent these parsers the raw-column path hands
+ *         back strings, so the declared type is false on any read that skips a generated cast
+ * .note = each parser refuses an integer past \`Number.MAX_SAFE_INTEGER\` rather than truncate it
+ * .note = it replaces any parser already registered for these oids. idempotent
+ *
+ * usage — from your own connection file, deliberately:
+ *
+ *   import { setDbTypeParsers } from '../access/daos/.generated/casts';
+ *
+ *   setDbTypeParsers();
+ *   const client = new Client({ ... });
+ */
+export const setDbTypeParsers = (): void => {
+  // int8 — bigint, bigserial, and every REFERENCES column
+  pg.types.setTypeParser(20, asNumberFromDbValue);
+
+  // numeric — every domain \`number\` property
+  pg.types.setTypeParser(1700, asNumberFromDbValue);
+
+  // int8[] — the bigint[] columns the _current views expose. \`as never\`: the \`pg\` typings' oid
+  // union omits 1016
+  pg.types.setTypeParser(1016 as never, asInt8ArrayFromDbValue);
+};",
+    "relpath": ".generated/casts.ts",
+  },
+  GeneratedCodeFile {
     "content": "import { withExpectOutput } from 'procedure-fns';
 
 import { findById } from './findById';
@@ -27,16 +170,19 @@ export const daoAsyncTaskPredictStationCongestion = asyncTaskPredictStationConge
     "content": "import { HasMetadata } from 'type-fns';
 
 import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindAsyncTaskPredictStationCongestionByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindAsyncTaskPredictStationCongestionByIdOutput as SqlQueryFindAsyncTaskPredictStationCongestionByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindAsyncTaskPredictStationCongestionByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindAsyncTaskPredictStationCongestionByIdOutput,
+  dbObject: SqlQueryFindAsyncTaskPredictStationCongestionByIdOutputStrict,
 ): HasMetadata<AsyncTaskPredictStationCongestion> =>
   new AsyncTaskPredictStationCongestion({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
-    createdAt: dbObject.created_at,
-    updatedAt: dbObject.updated_at,
+    createdAt: asFromDatabase.date(dbObject.created_at),
+    updatedAt: asFromDatabase.date(dbObject.updated_at),
     status: dbObject.status as AsyncTaskPredictStationCongestion['status'],
     stationUuid: dbObject.station_uuid,
     trainLocatedEventUuid: dbObject.train_located_event_uuid,
@@ -214,6 +360,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { AsyncTaskPredictStationCongestion } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertAsyncTaskPredictStationCongestion } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = \`
   -- query_name = upsert_async_task_predict_station_congestion
@@ -244,7 +391,7 @@ export const upsert = async (
     },
   });
   const { id, uuid, created_at: createdAt, updated_at: updatedAt } = results[0]!; // grab the db generated values
-  return new AsyncTaskPredictStationCongestion({ ...asyncTaskPredictStationCongestion, id, uuid, createdAt, updatedAt }) as HasMetadata<AsyncTaskPredictStationCongestion>;
+  return new AsyncTaskPredictStationCongestion({ ...asyncTaskPredictStationCongestion, id: asFromDatabase.number(id), uuid, createdAt: asFromDatabase.date(createdAt), updatedAt: asFromDatabase.date(updatedAt) }) as HasMetadata<AsyncTaskPredictStationCongestion>;
 };",
     "relpath": "asyncTaskPredictStationCongestionDao/upsert.ts",
   },
@@ -273,17 +420,20 @@ export const daoCarriage = carriageDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindCarriageByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindCarriageByIdOutput as SqlQueryFindCarriageByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindCarriageByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindCarriageByIdOutput,
+  dbObject: SqlQueryFindCarriageByIdOutputStrict,
 ): HasMetadata<Carriage> =>
   new Carriage({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
     cin: dbObject.cin,
     carries: dbObject.carries as Carriage['carries'],
-    capacity: dbObject.capacity,
+    capacity: asFromDatabase.number(dbObject.capacity),
   }) as HasMetadata<Carriage>;",
     "relpath": "carriageDao/castFromDatabaseObject.ts",
   },
@@ -447,6 +597,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertCarriage } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = \`
   -- query_name = upsert_carriage
@@ -477,7 +628,7 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new Carriage({ ...carriage, id, uuid }) as HasMetadata<Carriage>;
+  return new Carriage({ ...carriage, id: asFromDatabase.number(id), uuid }) as HasMetadata<Carriage>;
 };",
     "relpath": "carriageDao/upsert.ts",
   },
@@ -506,18 +657,20 @@ export const daoCarriageCargo = carriageCargoDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { CarriageCargo } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindCarriageByIdOutput, SqlQueryFindCarriageCargoByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castCarriageFromDatabaseObject } from '../carriageDao/castFromDatabaseObject';
+import { SqlQueryFindCarriageCargoByIdOutput as SqlQueryFindCarriageCargoByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindCarriageCargoByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindCarriageCargoByIdOutput,
+  dbObject: SqlQueryFindCarriageCargoByIdOutputStrict,
 ): HasMetadata<CarriageCargo> =>
   new CarriageCargo({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
     itineraryUuid: dbObject.itinerary_uuid,
     carriageRef: { uuid: dbObject.carriage_uuid },
-    slot: dbObject.slot,
+    slot: asFromDatabase.number(dbObject.slot),
     cargoExid: dbObject.cargo_exid,
   }) as HasMetadata<CarriageCargo>;",
     "relpath": "carriageCargoDao/castFromDatabaseObject.ts",
@@ -699,6 +852,7 @@ import { isRefByPrimary } from 'domain-objects';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { CarriageCargo, Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertCarriageCargo } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 import { carriageDao } from '../carriageDao';
 
 export const sql = \`
@@ -732,7 +886,7 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new CarriageCargo({ ...carriageCargo, id, uuid }) as HasMetadata<CarriageCargo>;
+  return new CarriageCargo({ ...carriageCargo, id: asFromDatabase.number(id), uuid }) as HasMetadata<CarriageCargo>;
 };",
     "relpath": "carriageCargoDao/upsert.ts",
   },
@@ -757,13 +911,24 @@ export const daoCertificate = certificateDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindCertificateByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindCertificateByIdOutput as SqlQueryFindCertificateByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import type { AsJsonFromDbObject } from '../.generated/casts';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindCertificateByIdOutputStrict };
+
+export type SqlQueryFindCertificateByIdOutputJsoned =
+  AsJsonFromDbObject<SqlQueryFindCertificateByIdOutputStrict>;
+
+export type SqlQueryFindCertificateByIdOutput =
+  | SqlQueryFindCertificateByIdOutputStrict
+  | SqlQueryFindCertificateByIdOutputJsoned;
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindCertificateByIdOutput,
 ): HasMetadata<Certificate> =>
   new Certificate({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     type: dbObject.type as Certificate['type'],
     industryId: dbObject.industry_id,
   }) as HasMetadata<Certificate>;",
@@ -863,6 +1028,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Certificate } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertCertificate } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = \`
   -- query_name = upsert_certificate
@@ -891,7 +1057,7 @@ export const upsert = async (
     },
   });
   const { id } = results[0]!; // grab the db generated values
-  return new Certificate({ ...certificate, id }) as HasMetadata<Certificate>;
+  return new Certificate({ ...certificate, id: asFromDatabase.number(id) }) as HasMetadata<Certificate>;
 };",
     "relpath": "certificateDao/upsert.ts",
   },
@@ -920,17 +1086,20 @@ export const daoTrainEngineer = trainEngineerDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindCertificateByIdOutput, SqlQueryFindTrainEngineerByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castCertificateFromDatabaseObject } from '../certificateDao/castFromDatabaseObject';
+import { SqlQueryFindTrainEngineerByIdOutput as SqlQueryFindTrainEngineerByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+import { castFromDatabaseObject as castCertificateFromDatabaseObject, SqlQueryFindCertificateByIdOutputJsoned } from '../certificateDao/castFromDatabaseObject';
+
+export type { SqlQueryFindTrainEngineerByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindTrainEngineerByIdOutput,
+  dbObject: SqlQueryFindTrainEngineerByIdOutputStrict,
 ): HasMetadata<TrainEngineer> =>
   new TrainEngineer({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
     socialSecurityNumberHash: dbObject.social_security_number_hash,
-    certificates: (dbObject.certificates as SqlQueryFindCertificateByIdOutput[]).map(castCertificateFromDatabaseObject),
+    certificates: (dbObject.certificates as SqlQueryFindCertificateByIdOutputJsoned[]).map(castCertificateFromDatabaseObject),
     licenseUuids: dbObject.license_uuids as string[],
     name: dbObject.name,
   }) as HasMetadata<TrainEngineer>;",
@@ -1099,6 +1268,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainEngineer } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertTrainEngineer } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 import { certificateDao } from '../certificateDao';
 
 export const sql = \`
@@ -1132,7 +1302,7 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new TrainEngineer({ ...trainEngineer, id, uuid }) as HasMetadata<TrainEngineer>;
+  return new TrainEngineer({ ...trainEngineer, id: asFromDatabase.number(id), uuid }) as HasMetadata<TrainEngineer>;
 };",
     "relpath": "trainEngineerDao/upsert.ts",
   },
@@ -1157,15 +1327,27 @@ export const daoGeocode = geocodeDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindGeocodeByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindGeocodeByIdOutput as SqlQueryFindGeocodeByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import type { AsJsonFromDbObject } from '../.generated/casts';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindGeocodeByIdOutputStrict };
+
+export type SqlQueryFindGeocodeByIdOutputJsoned =
+  AsJsonFromDbObject<SqlQueryFindGeocodeByIdOutputStrict>;
+
+export type SqlQueryFindGeocodeByIdOutput =
+  | SqlQueryFindGeocodeByIdOutputStrict
+  | SqlQueryFindGeocodeByIdOutputJsoned;
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindGeocodeByIdOutput,
 ): HasMetadata<Geocode> =>
   new Geocode({
-    id: dbObject.id,
-    latitude: dbObject.latitude,
-    longitude: dbObject.longitude,
+    id: asFromDatabase.number(dbObject.id),
+    createdAt: asFromDatabase.date(dbObject.created_at),
+    latitude: asFromDatabase.number(dbObject.latitude),
+    longitude: asFromDatabase.number(dbObject.longitude),
   }) as HasMetadata<Geocode>;",
     "relpath": "geocodeDao/castFromDatabaseObject.ts",
   },
@@ -1182,6 +1364,7 @@ export const sql = \`
   -- query_name = find_geocode_by_id
   SELECT
     geocode.id,
+    geocode.created_at,
     geocode.latitude,
     geocode.longitude
   FROM view_geocode_hydrated AS geocode
@@ -1223,6 +1406,7 @@ export const sql = \`
   -- query_name = find_geocode_by_unique
   SELECT
     geocode.id,
+    geocode.created_at,
     geocode.latitude,
     geocode.longitude
   FROM view_geocode_hydrated AS geocode
@@ -1263,11 +1447,12 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertGeocode } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = \`
   -- query_name = upsert_geocode
   SELECT
-    dgv.id
+    dgv.id, dgv.created_at
   FROM upsert_geocode(
     :latitude,
     :longitude
@@ -1290,8 +1475,8 @@ export const upsert = async (
       longitude: geocode.longitude,
     },
   });
-  const { id } = results[0]!; // grab the db generated values
-  return new Geocode({ ...geocode, id }) as HasMetadata<Geocode>;
+  const { id, created_at: createdAt } = results[0]!; // grab the db generated values
+  return new Geocode({ ...geocode, id: asFromDatabase.number(id), createdAt: asFromDatabase.date(createdAt) }) as HasMetadata<Geocode>;
 };",
     "relpath": "geocodeDao/upsert.ts",
   },
@@ -1316,14 +1501,25 @@ export const daoPrice = priceDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { Price } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindPriceByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindPriceByIdOutput as SqlQueryFindPriceByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import type { AsJsonFromDbObject } from '../.generated/casts';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindPriceByIdOutputStrict };
+
+export type SqlQueryFindPriceByIdOutputJsoned =
+  AsJsonFromDbObject<SqlQueryFindPriceByIdOutputStrict>;
+
+export type SqlQueryFindPriceByIdOutput =
+  | SqlQueryFindPriceByIdOutputStrict
+  | SqlQueryFindPriceByIdOutputJsoned;
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindPriceByIdOutput,
 ): HasMetadata<Price> =>
   new Price({
-    id: dbObject.id,
-    amount: dbObject.amount,
+    id: asFromDatabase.number(dbObject.id),
+    amount: asFromDatabase.number(dbObject.amount),
     currency: dbObject.currency as Price['currency'],
   }) as HasMetadata<Price>;",
     "relpath": "priceDao/castFromDatabaseObject.ts",
@@ -1422,6 +1618,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Price } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertPrice } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = \`
   -- query_name = upsert_price
@@ -1450,7 +1647,7 @@ export const upsert = async (
     },
   });
   const { id } = results[0]!; // grab the db generated values
-  return new Price({ ...price, id }) as HasMetadata<Price>;
+  return new Price({ ...price, id: asFromDatabase.number(id) }) as HasMetadata<Price>;
 };",
     "relpath": "priceDao/upsert.ts",
   },
@@ -1475,15 +1672,26 @@ export const daoInvoiceLineItem = invoiceLineItemDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { InvoiceLineItem } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindInvoiceLineItemByIdOutput, SqlQueryFindPriceByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castPriceFromDatabaseObject } from '../priceDao/castFromDatabaseObject';
+import { SqlQueryFindInvoiceLineItemByIdOutput as SqlQueryFindInvoiceLineItemByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import type { AsJsonFromDbObject } from '../.generated/casts';
+import { asFromDatabase } from '../.generated/casts';
+import { castFromDatabaseObject as castPriceFromDatabaseObject, SqlQueryFindPriceByIdOutputJsoned } from '../priceDao/castFromDatabaseObject';
+
+export type { SqlQueryFindInvoiceLineItemByIdOutputStrict };
+
+export type SqlQueryFindInvoiceLineItemByIdOutputJsoned =
+  AsJsonFromDbObject<SqlQueryFindInvoiceLineItemByIdOutputStrict>;
+
+export type SqlQueryFindInvoiceLineItemByIdOutput =
+  | SqlQueryFindInvoiceLineItemByIdOutputStrict
+  | SqlQueryFindInvoiceLineItemByIdOutputJsoned;
 
 export const castFromDatabaseObject = (
   dbObject: SqlQueryFindInvoiceLineItemByIdOutput,
 ): HasMetadata<InvoiceLineItem> =>
   new InvoiceLineItem({
-    id: dbObject.id,
-    price: castPriceFromDatabaseObject(dbObject.price as SqlQueryFindPriceByIdOutput),
+    id: asFromDatabase.number(dbObject.id),
+    price: castPriceFromDatabaseObject(dbObject.price as SqlQueryFindPriceByIdOutputJsoned),
     title: dbObject.title,
     explanation: dbObject.explanation,
   }) as HasMetadata<InvoiceLineItem>;",
@@ -1591,6 +1799,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { InvoiceLineItem, Price } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertInvoiceLineItem } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 import { priceDao } from '../priceDao';
 
 export const sql = \`
@@ -1622,7 +1831,7 @@ export const upsert = async (
     },
   });
   const { id } = results[0]!; // grab the db generated values
-  return new InvoiceLineItem({ ...invoiceLineItem, id }) as HasMetadata<InvoiceLineItem>;
+  return new InvoiceLineItem({ ...invoiceLineItem, id: asFromDatabase.number(id) }) as HasMetadata<InvoiceLineItem>;
 };",
     "relpath": "invoiceLineItemDao/upsert.ts",
   },
@@ -1651,19 +1860,22 @@ export const daoInvoice = invoiceDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindInvoiceByIdOutput, SqlQueryFindInvoiceLineItemByIdOutput, SqlQueryFindPriceByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castInvoiceLineItemFromDatabaseObject } from '../invoiceLineItemDao/castFromDatabaseObject';
-import { castFromDatabaseObject as castPriceFromDatabaseObject } from '../priceDao/castFromDatabaseObject';
+import { SqlQueryFindInvoiceByIdOutput as SqlQueryFindInvoiceByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+import { castFromDatabaseObject as castInvoiceLineItemFromDatabaseObject, SqlQueryFindInvoiceLineItemByIdOutputJsoned } from '../invoiceLineItemDao/castFromDatabaseObject';
+import { castFromDatabaseObject as castPriceFromDatabaseObject, SqlQueryFindPriceByIdOutputJsoned } from '../priceDao/castFromDatabaseObject';
+
+export type { SqlQueryFindInvoiceByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindInvoiceByIdOutput,
+  dbObject: SqlQueryFindInvoiceByIdOutputStrict,
 ): HasMetadata<Invoice> =>
   new Invoice({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
     externalId: dbObject.external_id,
-    items: (dbObject.items as SqlQueryFindInvoiceLineItemByIdOutput[]).map(castInvoiceLineItemFromDatabaseObject),
-    totalPrice: castPriceFromDatabaseObject(dbObject.total_price as SqlQueryFindPriceByIdOutput),
+    items: (dbObject.items as SqlQueryFindInvoiceLineItemByIdOutputJsoned[]).map(castInvoiceLineItemFromDatabaseObject),
+    totalPrice: castPriceFromDatabaseObject(dbObject.total_price as SqlQueryFindPriceByIdOutputJsoned),
     status: dbObject.status as Invoice['status'],
   }) as HasMetadata<Invoice>;",
     "relpath": "invoiceDao/castFromDatabaseObject.ts",
@@ -1831,6 +2043,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Invoice } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertInvoice } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 import { invoiceLineItemDao } from '../invoiceLineItemDao';
 import { priceDao } from '../priceDao';
 
@@ -1865,7 +2078,7 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new Invoice({ ...invoice, id, uuid }) as HasMetadata<Invoice>;
+  return new Invoice({ ...invoice, id: asFromDatabase.number(id), uuid }) as HasMetadata<Invoice>;
 };",
     "relpath": "invoiceDao/upsert.ts",
   },
@@ -1894,21 +2107,24 @@ export const daoLocomotive = locomotiveDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindLocomotiveByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { SqlQueryFindLocomotiveByIdOutput as SqlQueryFindLocomotiveByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindLocomotiveByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindLocomotiveByIdOutput,
+  dbObject: SqlQueryFindLocomotiveByIdOutputStrict,
 ): HasMetadata<Locomotive> =>
   new Locomotive({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
-    createdAt: dbObject.created_at,
-    effectiveAt: dbObject.effective_at,
-    updatedAt: dbObject.updated_at,
+    createdAt: asFromDatabase.date(dbObject.created_at),
+    effectiveAt: asFromDatabase.date(dbObject.effective_at),
+    updatedAt: asFromDatabase.date(dbObject.updated_at),
     ein: dbObject.ein,
     fuel: dbObject.fuel as Locomotive['fuel'],
-    capacity: dbObject.capacity,
-    milage: dbObject.milage,
+    capacity: asFromDatabase.number(dbObject.capacity),
+    milage: asFromDatabase.number(dbObject.milage),
   }) as HasMetadata<Locomotive>;",
     "relpath": "locomotiveDao/castFromDatabaseObject.ts",
   },
@@ -2084,6 +2300,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Locomotive } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertLocomotive } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = \`
   -- query_name = upsert_locomotive
@@ -2116,7 +2333,7 @@ export const upsert = async (
     },
   });
   const { id, uuid, created_at: createdAt, effective_at: effectiveAt, updated_at: updatedAt } = results[0]!; // grab the db generated values
-  return new Locomotive({ ...locomotive, id, uuid, createdAt, effectiveAt, updatedAt }) as HasMetadata<Locomotive>;
+  return new Locomotive({ ...locomotive, id: asFromDatabase.number(id), uuid, createdAt: asFromDatabase.date(createdAt), effectiveAt: asFromDatabase.date(effectiveAt), updatedAt: asFromDatabase.date(updatedAt) }) as HasMetadata<Locomotive>;
 };",
     "relpath": "locomotiveDao/upsert.ts",
   },
@@ -2145,16 +2362,19 @@ export const daoTrainStation = trainStationDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { TrainStation } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainStationByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
+import { SqlQueryFindTrainStationByIdOutput as SqlQueryFindTrainStationByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject, SqlQueryFindGeocodeByIdOutputJsoned } from '../geocodeDao/castFromDatabaseObject';
+
+export type { SqlQueryFindTrainStationByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindTrainStationByIdOutput,
+  dbObject: SqlQueryFindTrainStationByIdOutputStrict,
 ): HasMetadata<TrainStation> =>
   new TrainStation({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
-    geocode: castGeocodeFromDatabaseObject(dbObject.geocode as SqlQueryFindGeocodeByIdOutput),
+    geocode: castGeocodeFromDatabaseObject(dbObject.geocode as SqlQueryFindGeocodeByIdOutputJsoned),
     name: dbObject.name,
   }) as HasMetadata<TrainStation>;",
     "relpath": "trainStationDao/castFromDatabaseObject.ts",
@@ -2318,6 +2538,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainStation, Geocode } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertTrainStation } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 import { geocodeDao } from '../geocodeDao';
 
 export const sql = \`
@@ -2347,7 +2568,7 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new TrainStation({ ...trainStation, id, uuid }) as HasMetadata<TrainStation>;
+  return new TrainStation({ ...trainStation, id: asFromDatabase.number(id), uuid }) as HasMetadata<TrainStation>;
 };",
     "relpath": "trainStationDao/upsert.ts",
   },
@@ -2376,16 +2597,19 @@ export const daoTrain = trainDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
+import { SqlQueryFindTrainByIdOutput as SqlQueryFindTrainByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject, SqlQueryFindGeocodeByIdOutputJsoned } from '../geocodeDao/castFromDatabaseObject';
+
+export type { SqlQueryFindTrainByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindTrainByIdOutput,
+  dbObject: SqlQueryFindTrainByIdOutputStrict,
 ): HasMetadata<Train> =>
   new Train({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
-    homeStationGeocode: castGeocodeFromDatabaseObject(dbObject.home_station_geocode as SqlQueryFindGeocodeByIdOutput),
+    homeStationGeocode: castGeocodeFromDatabaseObject(dbObject.home_station_geocode as SqlQueryFindGeocodeByIdOutputJsoned),
     combinationId: dbObject.combination_id,
     locomotiveUuids: dbObject.locomotive_uuids as string[],
     carriageUuids: dbObject.carriage_uuids as string[],
@@ -2567,6 +2791,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertTrain } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 import { geocodeDao } from '../geocodeDao';
 
 export const sql = \`
@@ -2624,7 +2849,7 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new Train({ ...train, id, uuid }) as HasMetadata<Train>;
+  return new Train({ ...train, id: asFromDatabase.number(id), uuid }) as HasMetadata<Train>;
 };",
     "relpath": "trainDao/upsert.ts",
   },
@@ -2651,17 +2876,20 @@ export const daoTrainLocatedEvent = trainLocatedEventDao;",
     "content": "import { HasMetadata } from 'type-fns';
 
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
-import { SqlQueryFindGeocodeByIdOutput, SqlQueryFindTrainLocatedEventByIdOutput } from '$PATH_TO_GENERATED_SQL_TYPES';
-import { castFromDatabaseObject as castGeocodeFromDatabaseObject } from '../geocodeDao/castFromDatabaseObject';
+import { SqlQueryFindTrainLocatedEventByIdOutput as SqlQueryFindTrainLocatedEventByIdOutputStrict } from '$PATH_TO_GENERATED_SQL_TYPES';
+import { asFromDatabase } from '../.generated/casts';
+import { castFromDatabaseObject as castGeocodeFromDatabaseObject, SqlQueryFindGeocodeByIdOutputJsoned } from '../geocodeDao/castFromDatabaseObject';
+
+export type { SqlQueryFindTrainLocatedEventByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindTrainLocatedEventByIdOutput,
+  dbObject: SqlQueryFindTrainLocatedEventByIdOutputStrict,
 ): HasMetadata<TrainLocatedEvent> =>
   new TrainLocatedEvent({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     trainUuid: dbObject.train_uuid,
     occurredAt: dbObject.occurred_at,
-    geocode: castGeocodeFromDatabaseObject(dbObject.geocode as SqlQueryFindGeocodeByIdOutput),
+    geocode: castGeocodeFromDatabaseObject(dbObject.geocode as SqlQueryFindGeocodeByIdOutputJsoned),
   }) as HasMetadata<TrainLocatedEvent>;",
     "relpath": "trainLocatedEventDao/castFromDatabaseObject.ts",
   },
@@ -2785,6 +3013,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertTrainLocatedEvent } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 import { geocodeDao } from '../geocodeDao';
 
 export const sql = \`
@@ -2816,7 +3045,7 @@ export const upsert = async (
     },
   });
   const { id } = results[0]!; // grab the db generated values
-  return new TrainLocatedEvent({ ...trainLocatedEvent, id }) as HasMetadata<TrainLocatedEvent>;
+  return new TrainLocatedEvent({ ...trainLocatedEvent, id: asFromDatabase.number(id) }) as HasMetadata<TrainLocatedEvent>;
 };",
     "relpath": "trainLocatedEventDao/upsert.ts",
   },

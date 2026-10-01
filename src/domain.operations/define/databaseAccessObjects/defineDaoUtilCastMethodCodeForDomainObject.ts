@@ -1,19 +1,15 @@
-import { camelCase, snakeCase } from 'change-case';
-import {
-  type DomainObjectMetadata,
-  DomainObjectPropertyType,
-  isEnumArrayProperty,
-  isPrimitiveArrayProperty,
-  isReferenceArrayProperty,
-  isReferenceProperty,
-} from 'domain-objects-metadata';
+import { camelCase } from 'change-case';
+import type { DomainObjectMetadata } from 'domain-objects-metadata';
 import { isPresent } from 'type-fns';
 
-import { SqlSchemaReferenceMethod } from '@src/domain.objects/SqlSchemaReferenceMetadata';
 import type { SqlSchemaToDomainObjectRelationship } from '@src/domain.objects/SqlSchemaToDomainObjectRelationship';
-import { UnexpectedCodePathDetectedError } from '@src/domain.operations/UnexpectedCodePathDetectedError';
 
+import { DAO_CASTS_IMPORT_PATH, DAO_CASTS_NAMESPACE } from './constants';
+import { defineDbObjectShapesForCastMethod } from './defineDbObjectShapesForCastMethod';
 import { defineOutputTypeOfFoundDomainObject } from './defineOutputTypeOfFoundDomainObject';
+import { getAllNestedDomainObjectNames } from './getAllNestedDomainObjectNames';
+import { getOneCastExpressionForProperty } from './getOneCastExpressionForProperty';
+import { getOneCastNameForProperty } from './getOneCastNameForProperty';
 
 export const defineDaoUtilCastMethodCodeForDomainObject = ({
   domainObject,
@@ -22,23 +18,20 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
   domainObject: DomainObjectMetadata;
   sqlSchemaRelationship: SqlSchemaToDomainObjectRelationship;
 }) => {
-  // define the referenced domain objects to hydrate
-  const nestedDomainObjectNames = [
-    ...new Set(
-      Object.values(domainObject.properties)
-        .map((property) => {
-          if (isReferenceProperty(property)) return property.of.name;
-          if (
-            isReferenceArrayProperty(property) &&
-            isReferenceProperty(property.of)
-          )
-            return property.of.of.name;
-          return null;
-        })
-        .filter(isPresent)
-        .sort(),
-    ),
-  ];
+  // define the two shapes this domain object arrives in — `Output = Strict | Jsoned` — plus the
+  // cast input that accepts either
+  const dbObjectShapes = defineDbObjectShapesForCastMethod({ domainObject });
+
+  // define the domain objects this one NESTS, whose cast and json shape it therefore reads
+  const nestedDomainObjectNames = getAllNestedDomainObjectNames({
+    sqlSchemaRelationship,
+  });
+
+  // define whether this dao calls any shared cast, so we import the namespace only then
+  const hasSomeCast = sqlSchemaRelationship.properties.some(
+    ({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
+      getOneCastNameForProperty({ sqlSchemaProperty, domainObjectProperty }),
+  );
 
   // define the imports
   const imports = [
@@ -47,14 +40,18 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
       "import { HasMetadata } from 'type-fns';",
       '', // split module from relative imports
       `import { ${domainObject.name} } from '$PATH_TO_DOMAIN_OBJECT';`, // import this domain object; note: higher level function will swap out the import path
-      `import { ${[domainObject.name, ...nestedDomainObjectNames]
-        .map((domainObjectName) => `SqlQueryFind${domainObjectName}ByIdOutput`)
-        .sort()
-        .join(', ')} } from '$PATH_TO_GENERATED_SQL_TYPES';`,
+      // note: the shapes definer owns the upstream sql-types import (aliased `...Strict`); a nested
+      //   dobj's shape comes from its own dao's `...ByIdOutputJsoned` export
+      ...dbObjectShapes.imports,
+      // note: ONE symbol, however many casts — they are members of one namespace, so the import
+      //   line is the same whether this dao calls one cast or both
+      ...(hasSomeCast
+        ? [`import { ${DAO_CASTS_NAMESPACE} } from '${DAO_CASTS_IMPORT_PATH}';`]
+        : []),
       ...nestedDomainObjectNames
         .map(
           (domainObjectName) =>
-            `import { castFromDatabaseObject as cast${domainObjectName}FromDatabaseObject } from '../${camelCase(
+            `import { castFromDatabaseObject as cast${domainObjectName}FromDatabaseObject, SqlQueryFind${domainObjectName}ByIdOutputJsoned } from '../${camelCase(
               domainObjectName,
             )}Dao/castFromDatabaseObject';`,
         )
@@ -65,132 +62,23 @@ export const defineDaoUtilCastMethodCodeForDomainObject = ({
   // define the output type
   const outputType = defineOutputTypeOfFoundDomainObject(domainObject);
 
-  // define the properties
-  const propertiesToInstantiate = [
-    ...sqlSchemaRelationship.properties.map(
-      ({
-        sqlSchema: sqlSchemaProperty,
-        domainObject: domainObjectProperty,
-      }) => {
-        // if domain object property is not defined, then no need to define how to cast from it
-        if (!domainObjectProperty) return null;
-
-        // enum case
-        if (domainObjectProperty.type === DomainObjectPropertyType.ENUM)
-          return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name} as ${domainObject.name}['${domainObjectProperty.name}']`;
-
-        // enum array case: assure typescript of the domain enum[] type (the sql-generated element type is a loose string, not the enum union)
-        if (
-          isEnumArrayProperty(domainObjectProperty) &&
-          !sqlSchemaProperty.reference
-        )
-          return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name} as ${domainObject.name}['${domainObjectProperty.name}']`;
-
-        // non-reference primitive string array case (e.g. a native varchar[] column, or a _uuids array of non-fk uuids)
-        if (
-          isPrimitiveArrayProperty(domainObjectProperty) &&
-          domainObjectProperty.of.type === DomainObjectPropertyType.STRING &&
-          !sqlSchemaProperty.reference // only for cases where its not an fk based implicit-uuid-reference
-        )
-          return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name} as string[]`; // assure typescript that we _know_ its a string array (not null, or number[])
-
-        // note: NUMBER/BOOLEAN/DATE primitive arrays deliberately fall through to the generic no-assertion branch below. whether they need an `as <type>[]` narrow — and whether such an assertion is even a legal one — depends on the exact sql-generated element type, which is unknowable until sql-schema-generator can emit these native array columns (its ARRAY_OF accepts only REFERENCES/UUID today; see handoff.sql-schema-generator.md). added with the downstream round-trip rather than guessed here.
-
-        // non-reference case
-        if (!sqlSchemaProperty.reference) {
-          return `${domainObjectProperty.name}: dbObject.${sqlSchemaProperty.name}`;
-        }
-
-        // referenced by uuid case
-        if (
-          sqlSchemaProperty.reference.method ===
-          SqlSchemaReferenceMethod.IMPLICIT_BY_UUID
-        ) {
-          // solo reference case
-          if (!sqlSchemaProperty.isArray)
-            return `${domainObjectProperty.name}: dbObject.${snakeCase(
-              domainObjectProperty.name,
-            )}`;
-
-          // array reference case
-          return `${domainObjectProperty.name}: dbObject.${snakeCase(
-            domainObjectProperty.name,
-          )} as string[]`; // as string array since we have an array of uuids - but the type defs generated from sql will complain that it could be string[] or number[] or null (not smart enough to look all the way through fn defs yet)
-        }
-
-        // directly nested case
-        if (
-          sqlSchemaProperty.reference.method ===
-          SqlSchemaReferenceMethod.DIRECT_BY_NESTING
-        ) {
-          const nullabilityPrefix = sqlSchemaProperty.isNullable
-            ? `dbObject.${snakeCase(
-                domainObjectProperty.name,
-              )} === null ? null : `
-            : '';
-
-          // solo reference case
-          if (!sqlSchemaProperty.isArray)
-            return `${domainObjectProperty.name}: ${nullabilityPrefix}cast${
-              sqlSchemaProperty.reference.of.name
-            }FromDatabaseObject(dbObject.${snakeCase(
-              domainObjectProperty.name,
-            )} as SqlQueryFind${
-              sqlSchemaProperty.reference.of.name
-            }ByIdOutput)`;
-
-          // array reference case
-          return `${domainObjectProperty.name}: (dbObject.${snakeCase(
-            domainObjectProperty.name,
-          )} as SqlQueryFind${
-            sqlSchemaProperty.reference.of.name
-          }ByIdOutput[]).map(cast${
-            sqlSchemaProperty.reference.of.name
-          }FromDatabaseObject)`;
-        }
-
-        // directly declared case
-        if (
-          sqlSchemaProperty.reference.method ===
-          SqlSchemaReferenceMethod.DIRECT_BY_DECLARATION
-        ) {
-          const nullabilityPrefix = sqlSchemaProperty.isNullable
-            ? `dbObject.${snakeCase(
-                domainObjectProperty.name,
-              )} === null ? null : `
-            : '';
-
-          // solo reference case
-          if (!sqlSchemaProperty.isArray)
-            return `${
-              domainObjectProperty.name
-            }: ${nullabilityPrefix}{ uuid: dbObject.${
-              snakeCase(domainObjectProperty.name).replace(/_ref$/, '_uuid') // todo: get a ref-by-unique json object back, instead of just the uuid
-            } }`;
-
-          // array reference case
-          return `${domainObjectProperty.name}: (dbObject.${
-            snakeCase(domainObjectProperty.name).replace(/_refs$/, '_uuids') // todo: get a ref-by-unique json object back, instead of just the uuid
-          } as string[]).map(uuid => ({ uuid }))`; // as string array since we have an array of uuids - but the type defs generated from sql will complain that it could be string[] or number[] or null (not smart enough to look all the way through fn defs yet)
-        }
-
-        // handle unexpected case (each case should have been handled above)
-        throw new UnexpectedCodePathDetectedError({
-          reason:
-            'unexpected property type to instantiate in dao castFromDatabaseObject to generate',
-          domainObjectName: domainObject.name,
-          domainObjectPropertyName: domainObjectProperty.name,
-        }); // fail fast if reached here
-      },
-    ),
-  ].filter(isPresent);
+  // define the properties: one assignment per property, per its reference method, cardinality, and nullability
+  const propertiesToInstantiate = sqlSchemaRelationship.properties
+    .map(
+      ({ sqlSchema: sqlSchemaProperty, domainObject: domainObjectProperty }) =>
+        getOneCastExpressionForProperty({
+          sqlSchemaProperty,
+          domainObjectProperty,
+          domainObject,
+        }),
+    )
+    .filter(isPresent);
 
   // define the content
   const code = `
 ${imports.join('\n')}
-
-export const castFromDatabaseObject = (
-  dbObject: SqlQueryFind${domainObject.name}ByIdOutput,
+${dbObjectShapes.declarations}
+export const castFromDatabaseObject = (${dbObjectShapes.inputType}
 ): ${outputType} =>
   new ${domainObject.name}({
     ${propertiesToInstantiate.join(',\n    ')},

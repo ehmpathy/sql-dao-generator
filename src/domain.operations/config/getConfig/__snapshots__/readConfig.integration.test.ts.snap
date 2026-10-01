@@ -1,6 +1,51 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`readConfig should be able to read the example config provisioned in .test.assets 1`] = `
+exports[`readConfig given: [case1] a config path that points at no file — the commonest first-run failure when: [t0] the config is read then: the message matches snapshot 1`] = `
+"User input error. no config file was found at '{{dir}}/does-not-exist.yml'. Please correct this and try again.
+
+check the path handed to --config (-c), and that you are in the directory it is relative to.
+
+  sql-dao-generator generate --config path/to/codegen.sql.dao.yml"
+`;
+
+exports[`readConfig given: [case2] a config that parses but declares no \`language\` when: [t0] the config is read then: the message matches snapshot 1`] = `
+"User input error. config.language must be defined. Please correct this and try again.
+
+set \`language\` to the one value this generator supports.
+
+  language: postgres"
+`;
+
+exports[`readConfig given: [case3] a config that declares \`language\` but no \`dialect\` when: [t0] the config is read then: the message matches snapshot 1`] = `
+"User input error. config.dialect must be defined. Please correct this and try again.
+
+set \`dialect\` to the postgres version you run.
+
+  dialect: 10.7"
+`;
+
+exports[`readConfig given: [case4] a config that declares no \`generates\` key when: [t0] the config is read then: the message matches snapshot 1`] = `
+"User input error. config.generates key must be defined. Please correct this and try again.
+
+add a \`generates\` key that says where each artifact belongs.
+
+  generates:
+    daos:
+      to: src/access/daos
+      using:
+        log: src/util/log#log
+        DatabaseConnection: src/util/db#DatabaseConnection
+    schema:
+      config: codegen.sql.schema.yml
+    control:
+      config: provision/schema/control.yml
+    code:
+      config: codegen.sql.types.yml
+
+see "Define a config yml" in the sql-dao-generator readme for a complete example."
+`;
+
+exports[`readConfig given: [case5] the example config provisioned in .test.assets when: [t0] the config is read then: the hydrated config matches snapshot 1`] = `
 {
   "dialect": "10.7",
   "for": {
@@ -235,6 +280,12 @@ exports[`readConfig should be able to read the example config provisioned in .te
         "extends": "DomainLiteral",
         "name": "Geocode",
         "properties": {
+          "createdAt": DomainObjectPropertyMetadata {
+            "name": "createdAt",
+            "nullable": false,
+            "required": false,
+            "type": "DATE",
+          },
           "id": DomainObjectPropertyMetadata {
             "name": "id",
             "nullable": false,

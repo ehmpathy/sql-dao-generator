@@ -4,11 +4,12 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Geocode } from '../../../domain';
 import { sqlQueryUpsertGeocode } from '../.generated/queryFunctions';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = `
   -- query_name = upsert_geocode
   SELECT
-    dgv.id
+    dgv.id, dgv.created_at
   FROM upsert_geocode(
     :latitude,
     :longitude
@@ -31,6 +32,6 @@ export const upsert = async (
       longitude: geocode.longitude,
     },
   });
-  const { id } = results[0]!; // grab the db generated values
-  return new Geocode({ ...geocode, id }) as HasMetadata<Geocode>;
+  const { id, created_at: createdAt } = results[0]!; // grab the db generated values
+  return new Geocode({ ...geocode, id: asFromDatabase.number(id), createdAt: asFromDatabase.date(createdAt) }) as HasMetadata<Geocode>;
 };

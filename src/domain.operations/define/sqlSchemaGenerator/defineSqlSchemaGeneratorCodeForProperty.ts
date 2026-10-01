@@ -55,9 +55,7 @@ export const defineSqlSchemaGeneratorCodeForProperty = ({
           isSelfReference ? '() => ' : ''
         }${camelCase(sqlSchemaProperty.reference.of.name)}))`;
 
-      // handle case where its an implicit by-uuid reference array (a _uuids-suffixed string[]); the
-      // shared predicate is consumed here AND by schema-control's join-table decision, so the column
-      // and the manifest resource can not disagree on which arrays are uuid references
+      // handle an implicit by-uuid reference array (a _uuids string[]); schema-control shares the predicate
       if (
         isUuidReferenceArrayProperty({
           name: sqlSchemaProperty.name,

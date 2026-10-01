@@ -4,6 +4,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Price } from '../../../domain';
 import { sqlQueryUpsertPrice } from '../.generated/queryFunctions';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = `
   -- query_name = upsert_price
@@ -32,5 +33,5 @@ export const upsert = async (
     },
   });
   const { id } = results[0]!; // grab the db generated values
-  return new Price({ ...price, id }) as HasMetadata<Price>;
+  return new Price({ ...price, id: asFromDatabase.number(id) }) as HasMetadata<Price>;
 };

@@ -4,6 +4,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '../../../util/database/getDbConnection';
 import { Certificate } from '../../../domain';
 import { sqlQueryUpsertCertificate } from '../.generated/queryFunctions';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = `
   -- query_name = upsert_certificate
@@ -32,5 +33,5 @@ export const upsert = async (
     },
   });
   const { id } = results[0]!; // grab the db generated values
-  return new Certificate({ ...certificate, id }) as HasMetadata<Certificate>;
+  return new Certificate({ ...certificate, id: asFromDatabase.number(id) }) as HasMetadata<Certificate>;
 };

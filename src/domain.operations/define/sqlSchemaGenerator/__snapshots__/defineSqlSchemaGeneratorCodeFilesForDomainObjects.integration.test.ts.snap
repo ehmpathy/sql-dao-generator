@@ -366,6 +366,7 @@ export const trainLocatedEvent: Event = new Event({
     "content": "CREATE OR REPLACE VIEW view_geocode_hydrated AS
   SELECT
     geocode.id,
+    geocode.created_at,
     geocode.latitude,
     geocode.longitude
   FROM geocode;",
@@ -463,6 +464,7 @@ export const trainLocatedEvent: Event = new Event({
     (
       SELECT json_build_object(
         'id', geocode.id,
+        'created_at', geocode.created_at,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
       ) AS json_build_object
@@ -480,6 +482,7 @@ export const trainLocatedEvent: Event = new Event({
     (
       SELECT json_build_object(
         'id', geocode.id,
+        'created_at', geocode.created_at,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
       ) AS json_build_object
@@ -527,6 +530,7 @@ export const trainLocatedEvent: Event = new Event({
     (
       SELECT json_build_object(
         'id', geocode.id,
+        'created_at', geocode.created_at,
         'latitude', geocode.latitude,
         'longitude', geocode.longitude
       ) AS json_build_object

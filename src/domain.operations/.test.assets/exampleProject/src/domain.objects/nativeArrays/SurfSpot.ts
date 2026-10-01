@@ -15,10 +15,8 @@ export enum SwellDirection {
  * - swellWindows (SwellDirection[]) -> enum[]   the swell directions that light the break up
  * - lineupPhotoUuids (string[])   -> uuid[]     the _uuids implicit-reference array of lineup photos
  *
- * it lives in this dedicated subfolder — not the main index.ts and not matched by the cli's
- * `src/domain.objects/*.ts` glob — so real introspect() coverage of the array kinds can be proven
- * without a route through the cli `generate`, which shells out to sql-schema-generator (whose
- * ARRAY_OF still rejects native primitive/enum arrays today).
+ * it sits outside the cli's `src/domain.objects/*.ts` glob, so introspect() covers it while the cli
+ * `generate` skips it — sql-schema-generator's ARRAY_OF rejects native primitive/enum arrays.
  */
 export interface SurfSpot {
   id?: number;

@@ -313,9 +313,8 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
     expect(code).toMatchSnapshot();
   });
   it('should not emit a join table (and not crash) for updatable native primitive and enum arrays on the version table', () => {
-    // a domain entity whose native primitive/enum arrays are UPDATABLE, so they route
-    // through the version-table array loop (the exact branch that crashed pre-fix). the
-    // presence of an updatable scalar guarantees a version table exists to route them to.
+    // updatable native arrays route through the version-table array loop; the updatable scalar
+    // guarantees a version table exists
     const domainObject = new DomainObjectMetadata({
       name: 'Post',
       extends: DomainObjectVariant.DOMAIN_ENTITY,
@@ -368,10 +367,8 @@ describe('defineSqlSchemaControlCodeForDomainObject', () => {
     expect(code).toMatchSnapshot();
   });
   it('should not declare a uuid join table for a _uuids-suffix number[] (it is a native array, not a uuid reference)', () => {
-    // a _uuids suffix on a non-string array is a native primitive array, not a uuid reference. the
-    // shared predicate gates on a string element, so schema-control declares no join table for it —
-    // in agreement with the schema-generator, which emits a native numeric[] column. this locks the
-    // two layers together so the manifest can not declare a join table the generator never builds
+    // a non-string _uuids array is a native array: no join table here, a numeric[] column in the
+    // schema-generator. the shared predicate keeps the two layers in agreement
     const domainObject = new DomainObjectMetadata({
       name: 'Post',
       extends: DomainObjectVariant.DOMAIN_ENTITY,

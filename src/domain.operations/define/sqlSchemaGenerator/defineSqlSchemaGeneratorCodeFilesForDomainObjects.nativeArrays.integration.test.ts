@@ -4,13 +4,9 @@ import { defineSqlSchemaRelationshipsForDomainObjects } from '@src/domain.operat
 
 import { defineSqlSchemaGeneratorCodeFilesForDomainObjects } from './defineSqlSchemaGeneratorCodeFilesForDomainObjects';
 
-// prove the new array-kind branches survive a REAL domain-objects-metadata introspect() pass on
-// real typescript — not just hand-built DomainObjectPropertyMetadata doubles. this is the vision's
-// "real acceptance bar": a mismatch between introspect()'s hydrated output and the unit-test doubles
-// would slip past the hand-built cases but be caught here. the fixture lives in a dedicated subfolder
-// (not the main index.ts, not the cli's `src/domain.objects/*.ts` glob) so it never flows through the
-// cli `generate`, which shells out to sql-schema-generator (whose ARRAY_OF still rejects native
-// primitive/enum arrays today).
+// prove the array-kind branches survive a real introspect() pass, which catches a mismatch the
+// hand-built metadata doubles would miss. the fixture sits outside the cli glob, since
+// sql-schema-generator's ARRAY_OF rejects native primitive/enum arrays.
 describe('defineSqlSchemaGeneratorCodeFilesForDomainObjects', () => {
   it('should emit native array columns for primitive, enum, and _uuids arrays from real introspect', () => {
     const domainObjects = introspect(

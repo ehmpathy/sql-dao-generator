@@ -7,6 +7,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { SurfSpot } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertSurfSpot } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = \`
   -- query_name = upsert_surf_spot
@@ -37,7 +38,7 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new SurfSpot({ ...surfSpot, id, uuid }) as HasMetadata<SurfSpot>;
+  return new SurfSpot({ ...surfSpot, id: asFromDatabase.number(id), uuid }) as HasMetadata<SurfSpot>;
 };"
 `;
 
@@ -48,6 +49,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { TrainLocatedEvent } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertTrainLocatedEvent } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 import { geocodeDao } from '../geocodeDao';
 
 export const sql = \`
@@ -79,7 +81,7 @@ export const upsert = async (
     },
   });
   const { id } = results[0]!; // grab the db generated values
-  return new TrainLocatedEvent({ ...trainLocatedEvent, id }) as HasMetadata<TrainLocatedEvent>;
+  return new TrainLocatedEvent({ ...trainLocatedEvent, id: asFromDatabase.number(id) }) as HasMetadata<TrainLocatedEvent>;
 };"
 `;
 
@@ -90,6 +92,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { AsyncTaskGrantWish } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertAsyncTaskGrantWish } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = \`
   -- query_name = upsert_async_task_grant_wish
@@ -116,7 +119,7 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new AsyncTaskGrantWish({ ...task, id, uuid }) as HasMetadata<AsyncTaskGrantWish>;
+  return new AsyncTaskGrantWish({ ...task, id: asFromDatabase.number(id), uuid }) as HasMetadata<AsyncTaskGrantWish>;
 };"
 `;
 
@@ -127,6 +130,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Train } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertTrain } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 import { geocodeDao } from '../geocodeDao';
 import { trainBadgeDao } from '../trainBadgeDao';
 
@@ -169,7 +173,7 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new Train({ ...train, id, uuid }) as HasMetadata<Train>;
+  return new Train({ ...train, id: asFromDatabase.number(id), uuid }) as HasMetadata<Train>;
 };"
 `;
 
@@ -180,6 +184,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertCarriage } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = \`
   -- query_name = upsert_carriage
@@ -210,7 +215,7 @@ export const upsert = async (
     },
   });
   const { id, uuid } = results[0]!; // grab the db generated values
-  return new Carriage({ ...carriage, id, uuid }) as HasMetadata<Carriage>;
+  return new Carriage({ ...carriage, id: asFromDatabase.number(id), uuid }) as HasMetadata<Carriage>;
 };"
 `;
 
@@ -260,6 +265,7 @@ import { HasMetadata } from 'type-fns';
 import { DatabaseConnection } from '$PATH_TO_DATABASE_CONNECTION';
 import { Carriage } from '$PATH_TO_DOMAIN_OBJECT';
 import { sqlQueryUpsertCarriage } from '$PATH_TO_GENERATED_SQL_QUERY_FUNCTIONS';
+import { asFromDatabase } from '../.generated/casts';
 
 export const sql = \`
   -- query_name = upsert_carriage
@@ -290,6 +296,6 @@ export const upsert = async (
     },
   });
   const { id, uuid, effective_at: effectiveAt } = results[0]!; // grab the db generated values
-  return new Carriage({ ...carriage, id, uuid, effectiveAt }) as HasMetadata<Carriage>;
+  return new Carriage({ ...carriage, id: asFromDatabase.number(id), uuid, effectiveAt: asFromDatabase.date(effectiveAt) }) as HasMetadata<Carriage>;
 };"
 `;

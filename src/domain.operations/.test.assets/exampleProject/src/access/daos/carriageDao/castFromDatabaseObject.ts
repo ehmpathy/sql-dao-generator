@@ -1,15 +1,18 @@
 import { HasMetadata } from 'type-fns';
 
 import { Carriage } from '../../../domain';
-import { SqlQueryFindCarriageByIdOutput } from '../.generated/types';
+import { SqlQueryFindCarriageByIdOutput as SqlQueryFindCarriageByIdOutputStrict } from '../.generated/types';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindCarriageByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindCarriageByIdOutput,
+  dbObject: SqlQueryFindCarriageByIdOutputStrict,
 ): HasMetadata<Carriage> =>
   new Carriage({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
     cin: dbObject.cin,
     carries: dbObject.carries as Carriage['carries'],
-    capacity: dbObject.capacity,
+    capacity: asFromDatabase.number(dbObject.capacity),
   }) as HasMetadata<Carriage>;

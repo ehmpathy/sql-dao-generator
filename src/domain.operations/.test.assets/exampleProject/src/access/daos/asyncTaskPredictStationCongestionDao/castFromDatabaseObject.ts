@@ -1,16 +1,19 @@
 import { HasMetadata } from 'type-fns';
 
 import { AsyncTaskPredictStationCongestion } from '../../../domain';
-import { SqlQueryFindAsyncTaskPredictStationCongestionByIdOutput } from '../.generated/types';
+import { SqlQueryFindAsyncTaskPredictStationCongestionByIdOutput as SqlQueryFindAsyncTaskPredictStationCongestionByIdOutputStrict } from '../.generated/types';
+import { asFromDatabase } from '../.generated/casts';
+
+export type { SqlQueryFindAsyncTaskPredictStationCongestionByIdOutputStrict };
 
 export const castFromDatabaseObject = (
-  dbObject: SqlQueryFindAsyncTaskPredictStationCongestionByIdOutput,
+  dbObject: SqlQueryFindAsyncTaskPredictStationCongestionByIdOutputStrict,
 ): HasMetadata<AsyncTaskPredictStationCongestion> =>
   new AsyncTaskPredictStationCongestion({
-    id: dbObject.id,
+    id: asFromDatabase.number(dbObject.id),
     uuid: dbObject.uuid,
-    createdAt: dbObject.created_at,
-    updatedAt: dbObject.updated_at,
+    createdAt: asFromDatabase.date(dbObject.created_at),
+    updatedAt: asFromDatabase.date(dbObject.updated_at),
     status: dbObject.status as AsyncTaskPredictStationCongestion['status'],
     stationUuid: dbObject.station_uuid,
     trainLocatedEventUuid: dbObject.train_located_event_uuid,

@@ -10,6 +10,7 @@ export const sql = `
   -- query_name = find_geocode_by_unique
   SELECT
     geocode.id,
+    geocode.created_at,
     geocode.latitude,
     geocode.longitude
   FROM view_geocode_hydrated AS geocode
